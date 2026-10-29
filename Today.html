@@ -87,7 +87,8 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 .hm-bLab{position:relative;font-size:12px;letter-spacing:1px;opacity:0.55}
 .hm-bTitle{position:relative;font-size:26px;line-height:1;margin-top:4px;color:#172038;opacity:0.85}
 .hm-bSub{position:relative;font-size:14px;opacity:0.7;margin-top:2px}
-.hm-tapS{position:relative;margin-top:auto;display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 12px;background:#C6FF4D;color:#172038;border:2.5px solid #172038;border-radius:10px;font-size:18px;box-shadow:3px 4px 0 #FF6FB0;transform:rotate(-2deg);}
+.hm-tapS{position:relative;margin-top:auto;display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 12px;background:#C6FF4D;color:#172038;border:2.5px solid #172038;border-radius:10px;font-size:18px;box-shadow:3px 4px 0 #FF6FB0;transform:rotate(-2deg);animation:hmtap 2.8s ease-in-out infinite}
+@keyframes hmtap{0%,100%{translate:0 0}50%{translate:2px -1px}}
 .hm-peel{position:absolute;right:0;top:0;pointer-events:none}
 /* little stickers, slapped on (decoration only) */
 .hm-deco{position:absolute;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,0.35))}
