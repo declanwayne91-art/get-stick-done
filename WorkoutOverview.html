@@ -160,7 +160,7 @@ class Component extends DCLogic {
       this.setState({ stage: 'fly' });
       this.later(() => this.setState({ stage: 'stored', count: ((this.state && this.state.count) == null ? 7 : this.state.count) + 1, bump: true }), 420);
       this.later(() => this.setState({ bump: false }), 620);
-      this.later(() => { try { localStorage.removeItem('gsd.workout'); localStorage.setItem('gsd.newStickers', String((+localStorage.getItem('gsd.newStickers') || 0) + 1)); } catch (e) {} const a = document.getElementById('gym-toHub'); if (a) a.click(); }, 1400);
+      this.later(() => { try { localStorage.setItem('gsd.pendingLog', JSON.stringify({ type: 'gym', plan: 'push', title: 'PUSH DAY', mins: 45, at: Date.now() })); localStorage.removeItem('gsd.workout'); localStorage.setItem('gsd.newStickers', String((+localStorage.getItem('gsd.newStickers') || 0) + 1)); } catch (e) {} const a = document.getElementById('gym-toHub'); if (a) a.click(); }, 1400);
     };
     const finish = () => {
       if ((this.state || {}).stage && (this.state || {}).stage !== 'none') return;
