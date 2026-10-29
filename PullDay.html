@@ -53,6 +53,7 @@ button:focus-visible,a:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 
   <div style="position: absolute; left: 16px; top: 16px; right: 16px; display: flex; align-items: center; justify-content: space-between">
     <span style="padding: 6px 14px; background-color: rgba(122,196,170,0.7); background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.35) 0 6px, transparent 6px 12px); transform: rotate(-3deg); font-size: 13px; font-weight: 700; letter-spacing: 1px">FRI 30 OCT</span>
+    <button type="button" class="press" onClick="{{changeW}}" aria-label="Change workout" style="margin: 0 10px 0 auto; border: none; background: transparent; padding: 6px 4px; font-family: 'Kalam', cursive; font-weight: 700; font-size: 15px; color: #172038; text-decoration: underline; white-space: nowrap">{{changeText}}</button>
     <span role="img" aria-label="Sticker book, {{count}} stickers" style="position: relative; width: 44px; height: 44px; border-radius: 10px; background: #172038; display: flex; align-items: center; justify-content: center; transform: {{bookTransform}}; transition: transform 0.18s cubic-bezier(.3,1.8,.5,1)"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C6FF4D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z"></path></svg><span style="position: absolute; right: -6px; top: -6px; min-width: 20px; height: 20px; padding: 0 5px; box-sizing: border-box; border-radius: 999px; background: #FF6FB0; color: #172038; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{count}}</span></span>
   </div>
 
@@ -111,7 +112,8 @@ button:focus-visible,a:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
       <span style="display: block; width: max-content; margin: 2px auto 0; padding: 6px 16px; background: #FFFFFF; border: 2.5px solid #172038; border-radius: 999px; box-shadow: 0 3px 4px rgba(60,40,20,0.3); transform: rotate(-3deg); font-family: 'Kalam', cursive; font-size: 17px; font-weight: 700; color: #172038">tap to keep</span>
     </button>
   </sc-if>
-<sc-if value="{{setHint}}" hint-placeholder-val="{{ false }}"><div class="gym-hint" aria-hidden="true" style="position: absolute; left: 22px; top: 300px; z-index: 30; pointer-events: none; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; transform: rotate(-3deg)"><svg width="54" height="58" viewBox="0 0 54 58" aria-hidden="true" style="position: absolute; left: 176px; top: -48px"><path d="M6 54 Q12 18 44 8 M44 8 l-11 -2 M44 8 l-5 10" stroke="#172038" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6 54 Q12 18 44 8 M44 8 l-11 -2 M44 8 l-5 10" stroke="#FF6FB0" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="title-die" style="font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-weight: 800; font-size: 24px; line-height: 1; color: #172038; letter-spacing: 0.5px; white-space: nowrap">TAP A SET WHEN IT’S DONE</span><span style="margin-left: 6px; padding: 3px 10px; background-color: rgba(198,255,77,0.95); font-family: 'Kalam', cursive; font-weight: 700; font-size: 15px; color: #172038; white-space: nowrap">your rest timer starts itself</span></div></sc-if>
+<sc-if value="{{wHint}}" hint-placeholder-val="{{ false }}"><div class="gym-hint" aria-hidden="true" style="position: absolute; left: 22px; top: 300px; z-index: 30; pointer-events: none; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; transform: rotate(-3deg)"><svg class="gym-arrow" width="52" height="58" viewBox="0 0 52 58" aria-hidden="true" style="position: absolute; left: 40px; top: -52px"><path d="M22 54 Q18 30 26 8 M26 8 l-9 8 M26 8 l7 10" stroke="#172038" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path><path d="M22 54 Q18 30 26 8 M26 8 l-9 8 M26 8 l7 10" stroke="#FF6FB0" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="title-die" style="font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-weight: 800; font-size: 24px; line-height: 1; color: #172038; letter-spacing: 0.5px; white-space: nowrap">ADD YOUR WEIGHTS FIRST</span><span style="margin-left: 6px; padding: 3px 10px; background-color: rgba(198,255,77,0.95); font-family: 'Kalam', cursive; font-weight: 700; font-size: 15px; color: #172038; white-space: nowrap">tap + kg on each move · we can suggest one</span></div></sc-if>
+<sc-if value="{{setHint}}" hint-placeholder-val="{{ false }}"><div class="gym-hint" aria-hidden="true" style="position: absolute; left: 22px; top: 300px; z-index: 30; pointer-events: none; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; transform: rotate(-3deg)"><svg class="gym-arrow" width="52" height="58" viewBox="0 0 52 58" aria-hidden="true" style="position: absolute; left: 194px; top: -48px"><path d="M22 54 Q18 30 26 8 M26 8 l-9 8 M26 8 l7 10" stroke="#172038" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path><path d="M22 54 Q18 30 26 8 M26 8 l-9 8 M26 8 l7 10" stroke="#FF6FB0" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="title-die" style="font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-weight: 800; font-size: 24px; line-height: 1; color: #172038; letter-spacing: 0.5px; white-space: nowrap">TAP A SET WHEN IT’S DONE</span><span style="margin-left: 6px; padding: 3px 10px; background-color: rgba(198,255,77,0.95); font-family: 'Kalam', cursive; font-weight: 700; font-size: 15px; color: #172038; white-space: nowrap">your rest timer starts itself</span></div></sc-if>
 <a id="gym-toHub" href="GymHub.html" hidden tabindex="-1"></a>
 </div>
 </script>
@@ -174,7 +176,7 @@ class Component extends DCLogic {
     const onKey = (ev) => { if (ev.key === 'Escape') close(); if (ev.key === 'Enter') save(); };
     const save = () => {
       const v = cur(); if (v == null) delete WT[x.name]; else WT[x.name] = v;
-      try { localStorage.setItem('gsd.weights', JSON.stringify(WT));
+      try { localStorage.setItem('gsd.weights', JSON.stringify(WT)); localStorage.setItem('gsd.seenWeightHint', '1');
         if (this._wTip && P && P.gym && P.gym[PLAN]) { P.gym[PLAN].tip = false; localStorage.setItem('gsd.progress', JSON.stringify(P)); } } catch (er) {}
       this._wTip = false; buzz(10); close(); this.setState({ wv: Date.now() });
     };
@@ -214,7 +216,7 @@ class Component extends DCLogic {
     const toggle = (e, k) => {
       const cur = this.state || {};
       const nd = (cur.done || done).map((r) => r.slice());
-      nd[e][k] = !nd[e][k]; try { localStorage.setItem('gsd.seenSetHint', '1'); } catch (e) {}
+      nd[e][k] = !nd[e][k]; try { localStorage.setItem('gsd.seenSetHint', '1'); localStorage.setItem('gsd.seenWeightHint', '1'); } catch (e) {}
       this.setState({ done: nd });
       if (nd[e][k]) {
         this.tap(12);
@@ -245,7 +247,8 @@ class Component extends DCLogic {
     const transitions = { drop: 'none', landed: 'transform 0.3s cubic-bezier(.3,1.6,.5,1), opacity 0.15s ease', fly: 'transform 0.42s cubic-bezier(.55,0,.75,.35), opacity 0.42s ease-in' };
     const seenHint = (() => { try { return localStorage.getItem('gsd.seenSetHint') === '1'; } catch (e) { return false; } })();
     return {
-      setHint: !seenHint && doneSets === 0,
+      wHint: doneSets === 0 && !ex.some((x) => x.hasW) && (() => { try { return localStorage.getItem('gsd.seenWeightHint') !== '1'; } catch (e) { return false; } })(),
+      setHint: !seenHint && doneSets === 0 && !(doneSets === 0 && !ex.some((x) => x.hasW) && (() => { try { return localStorage.getItem('gsd.seenWeightHint') !== '1'; } catch (e) { return false; } })()),
       count,
       bookTransform: st.bump ? 'scale(1.25)' : 'scale(1)',
       doneSets,
@@ -275,14 +278,18 @@ class Component extends DCLogic {
       skipRest: () => { this.stopRest(); this.setState({ rest: null, restOver: false }); },
       skipLabel: st.restOver ? 'OK' : 'SKIP',
       skipAria: st.restOver ? 'Dismiss rest timer' : 'Skip rest',
-      showFinish: allDone && stage === 'none',
+      showFinish: stage === 'none' && !restOn,
       showIdleHint: !restOn && !allDone,
       finish,
       showSlap: stage === 'drop' || stage === 'landed' || stage === 'fly',
       slapTransform: transforms[stage] || 'none',
       slapOpacity: stage === 'drop' ? 0 : stage === 'fly' ? 0.2 : 1,
       slapTransition: transitions[stage] || 'none',
-      collect
+      collect,
+      changeText: st.chArm && Date.now() - st.chArm < 3000 ? 'tap again to pick another' : '‹ change workout',
+      changeW: () => { const cur = this.state || {};
+        if (!cur.chArm || Date.now() - cur.chArm >= 3000) { this.tap(6); this.setState({ chArm: Date.now() }); this.later(() => this.setState({ chArm: 0 }), 3000); return; }
+        try { localStorage.removeItem('gsd.workout'); } catch (e) {} const a = document.getElementById('gym-toHub'); if (a) a.click(); }
     };
   }
 }
