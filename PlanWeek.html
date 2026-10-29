@@ -59,6 +59,21 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 .qrow{display:flex;flex-direction:column;gap:6px}
 .qlabel{font-size:16px;font-weight:700}
 .qlabel b{font-weight:400;opacity:0.7}
+.kt-layer{position:fixed;inset:0;z-index:10000;pointer-events:none}
+.kt-spot{position:fixed;border:3px dashed #C6FF4D;box-shadow:0 0 0 4000px rgba(11,16,34,0.72);pointer-events:none;transition:left .28s cubic-bezier(.2,.9,.3,1),top .28s cubic-bezier(.2,.9,.3,1),width .28s cubic-bezier(.2,.9,.3,1),height .28s cubic-bezier(.2,.9,.3,1)}
+.kt-card{position:fixed;width:354px;transform-origin:0 0;background:#FBF4E6;padding:20px 16px 12px;box-sizing:border-box;box-shadow:0 14px 22px rgba(0,0,0,0.45);display:flex;flex-direction:column;gap:8px;pointer-events:auto;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;color:#172038}
+.kt-tape{position:absolute;left:50%;top:-12px;width:92px;height:24px;margin-left:-46px;background-color:rgba(198,255,77,0.85);background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.35) 0 5px,transparent 5px 10px);transform:rotate(-3deg)}
+.kt-title{align-self:flex-start;font-size:25px;color:#172038;text-shadow:3px 3px 0 #FF6FB0;transform:rotate(-2deg);transform-origin:left;white-space:nowrap}
+.kt-text{font-size:16px;font-weight:700;line-height:1.3}
+.kt-foot{display:flex;align-items:center;gap:10px;margin-top:2px}
+.kt-dots{display:flex;gap:5px;margin-right:auto}
+.kt-dots span{width:8px;height:8px;border-radius:8px;border:2px solid #172038}
+.kt-dots span.done{background:#172038}
+.kt-dots span.on{background:#FF6FB0;width:20px}
+.kt-skip{border:none;background:transparent;color:#172038;font-family:Kalam,cursive;font-weight:700;font-size:15px;text-decoration:underline;padding:8px 4px;cursor:pointer}
+.kt-btn{height:44px;padding:0 18px;border-radius:14px;border:3px solid #172038;background:#C6FF4D;color:#172038;font-size:18px;box-shadow:3px 3px 0 #172038;cursor:pointer}
+.kt-btn:focus-visible,.kt-skip:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}
+@media (prefers-reduced-motion: reduce){.kt-spot{transition:none}}
 </style>
 
 <style>html,body{margin:0;height:100%;overflow:hidden;background:#0B1022;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
@@ -68,15 +83,16 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 </head><body data-extra="84">
 <div id="dc-frame"><div id="dc-stage"></div><div style="position:relative;height:84px"><nav class="dcbar" aria-label="Main"><a class="dcnav" href="Today.html" aria-label="Today"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M20.0 12.0 L22.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 17.6 L19.4 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 20.0 L12.0 22.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 17.6 L4.7 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M4.0 12.0 L1.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 6.4 L4.7 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 4.0 L12.0 1.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 6.4 L19.4 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg><span>TODAY</span></a><a class="dcnav" href="LegDay.html" aria-label="Gym"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12 H21 M6 8 V16 M18 8 V16 M3 10 V14 M21 10 V14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"></path></svg><span>GYM</span></a><a class="dcnav on" href="PlanWeek.html" aria-label="Kitchen" aria-current="page"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 H21 Q20 19 12 19 Q4 19 3 11 Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"></path><path d="M9 7 q-1.5 -2 0 -4 M14 7 q-1.5 -2 0 -4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"></path></svg><span>KITCHEN</span></a><a class="dcnav" href="StickerAlbum.html" aria-label="Book"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5 Q8 4 12 6 Q16 4 20 5 V19 Q16 18 12 20 Q8 18 4 19 Z M12 6 V20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"></path></svg><span>BOOK</span></a><a class="dcnav" href="Profile.html" aria-label="Me"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="4" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M4 21 Q12 12 20 21" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg><span>ME</span></a></nav></div></div>
 <script type="text/x-dc-template" id="dc-tpl">
-<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background-color: #FBF4E6; background-image: linear-gradient(rgba(139,94,52,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(139,94,52,0.08) 1px, transparent 1px); background-size: 20px 20px; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #172038">
+<div data-tour-root style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background-color: #FBF4E6; background-image: linear-gradient(rgba(139,94,52,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(139,94,52,0.08) 1px, transparent 1px); background-size: 20px 20px; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #172038">
 <svg aria-hidden="true" width="0" height="0" style="position: absolute; width: 0; height: 0; overflow: hidden"><defs><filter id="tdie" x="-30%" y="-60%" width="160%" height="220%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="5" result="grow"></feMorphology><feGaussianBlur in="grow" stdDeviation="2.5" result="soft"></feGaussianBlur><feComponentTransfer in="soft" result="white-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feMorphology in="white-mask" operator="dilate" radius="3" result="key-grow"></feMorphology><feGaussianBlur in="key-grow" stdDeviation="1" result="key-soft"></feGaussianBlur><feComponentTransfer in="key-soft" result="key-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feFlood flood-color="#111111"></feFlood><feComposite in2="key-mask" operator="in" result="key"></feComposite><feFlood flood-color="#FFFFFF"></feFlood><feComposite in2="white-mask" operator="in" result="white"></feComposite><feMerge><feMergeNode in="key"></feMergeNode><feMergeNode in="white"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs></svg>
 
 <sc-if value="{{isPlan}}" hint-placeholder-val="{{ true }}">
   <div style="position: absolute; left: 16px; right: 16px; top: 18px; bottom: 16px; display: flex; flex-direction: column; gap: 6px">
     <span class="title-die bri" style="font-size: 40px; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">PLAN MY WEEK</span>
+    <button type="button" class="press bri" onClick="{{openTour}}" aria-label="How the kitchen works" style="position: absolute; right: 0; top: 4px; width: 32px; height: 32px; border-radius: 32px; border: 2.5px solid #172038; background: #FFFFFF; color: #172038; font-size: 18px; line-height: 1; padding: 0; display: flex; align-items: center; justify-content: center">i</button>
     <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 2px 0 6px">
       <span class="kal" style="font-size: 15px; line-height: 1.15">{{planSub}}</span>
-      <button type="button" class="press bri" onClick="{{openAuto}}" style="flex-shrink: 0; padding: 8px 12px; border-radius: 14px; border: 3px solid #FFFFFF; background: #FF6FB0; color: #172038; font-size: 17px; box-shadow: 0 0 0 2px #172038, 3px 4px 0 2px #C6FF4D; transform: rotate(2deg); white-space: nowrap">🎲 CHOOSE FOR ME</button>
+      <button type="button" class="press bri" data-tour="choose" onClick="{{openAuto}}" style="flex-shrink: 0; padding: 8px 12px; border-radius: 14px; border: 3px solid #FFFFFF; background: #FF6FB0; color: #172038; font-size: 17px; box-shadow: 0 0 0 2px #172038, 3px 4px 0 2px #C6FF4D; transform: rotate(2deg); white-space: nowrap">🎲 CHOOSE FOR ME</button>
     </div>
     <sc-if value="{{useOn}}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; margin: -2px 0 4px; padding: 6px 6px 6px 12px; border-radius: 12px; background: #FFD23F; border: 2.5px solid #172038">
       <span class="bri" style="font-size: 13px; letter-spacing: 0.5px; flex: 1">{{useText}}</span>
@@ -86,7 +102,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
       <div class="row">
         <span style="position: relative; flex-shrink: 0"><span class="day bri" style="display: block; transform: rotate({{d.rot}})">{{d.label}}</span><sc-if value="{{d.lunchFrom}}" hint-placeholder-val="{{ false }}"><span class="lbadge" role="img" aria-label="{{d.lunchAria}}">🍱</span></sc-if></span>
         <sc-if value="{{d.filled}}" hint-placeholder-val="{{ true }}">
-          <div class="slot" style="background: #FFFFFF; box-shadow: 0 5px 8px -5px rgba(60,40,20,0.45)">
+          <div class="slot" data-tour="meal" style="background: #FFFFFF; box-shadow: 0 5px 8px -5px rgba(60,40,20,0.45)">
             <button type="button" class="press" onClick="{{d.pick}}" aria-label="{{d.aria}}" style="flex-shrink: 0; border: none; background: transparent; padding: 0"><img src="{{d.img}}" alt="" width="58" height="47" style="display: block"></button>
             <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
               <button type="button" onClick="{{d.pick}}" tabindex="-1" class="bri" style="border: none; background: transparent; text-align: left; color: #172038; font-size: 16px; line-height: 0.95; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical">{{d.name}}</button>
@@ -108,7 +124,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
         </sc-if>
       </div>
     </sc-for>
-    <button type="button" class="press bri" onClick="{{toShop}}" style="margin-top: auto; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 23px; box-shadow: 4px 4px 0 #172038">{{shopBtn}}</button>
+    <button type="button" class="press bri" data-tour="shop" onClick="{{toShop}}" style="margin-top: auto; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 23px; box-shadow: 4px 4px 0 #172038">{{shopBtn}}</button>
   </div>
 </sc-if>
 
@@ -152,7 +168,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
       </div>
     </sc-for>
     <span class="kal" style="font-size: 14px; opacity: 0.75; margin-top: -4px">{{autoNote}}</span>
-    <button type="button" class="press bri" onClick="{{autoGo}}" style="margin-top: auto; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{autoBtn}}</button>
+    <button type="button" class="press bri" data-tour="pickweek" onClick="{{autoGo}}" style="margin-top: auto; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{autoBtn}}</button>
   </div>
 </sc-if>
 
@@ -224,6 +240,87 @@ class Component extends DCLogic {
         if (d >= 0) { s0.plan[d] = { r: add.r, n: s0.H, lunch: false, kids: false }; s0.toast = this.R[add.r].name + ' added to ' + FULL[d]; try { localStorage.setItem('gsd.plan', JSON.stringify(s0.plan)); } catch (e) {} }
         else s0.toast = 'Your week is full · tap a night to swap it in';
         this.tt = setTimeout(() => { s0.toast = ''; this.re(); }, 3600); } } catch (e) {}
+  }
+
+  componentDidMount() {
+    let seen = false; try { seen = localStorage.getItem('gsd.seenKitchenTour') === '1'; } catch (e) {}
+    if (!seen && !this.s.plan.some(Boolean)) this._ktT = setTimeout(() => this.tourStart(), 650);
+  }
+  componentWillUnmount() { clearTimeout(this._ktT); this.tourEnd(false); }
+  tourStart() {
+    this.tourEnd(false);
+    const STEPS = [
+  { key: 'welcome', target: null, title: 'YOUR KITCHEN HUB', text: 'Plan the week’s dinners, get one shopping list, and cook step by step. Let’s get your first meals in. It takes about a minute.', btn: 'LET’S GO →' },
+  { key: 'choose', target: 'choose', at: 'bottom', title: 'STEP 1 · FILL YOUR WEEK', text: 'Tap CHOOSE FOR ME and we’ll pick a week of dinners for you. Rather choose yourself? Tap + add a meal on any night.' },
+  { key: 'pickweek', target: 'pickweek', title: 'STEP 2 · YOUR NIGHTS', text: 'Weeknights are ticked. Change any you like, then tap PICK MY WEEK.' },
+  { key: 'meal', target: 'meal', title: 'STEP 3 · MAKE IT YOURS', text: '↻ swaps a meal, ×2 changes how many it serves, 🍱 cooks extra for lunch, and COOK → opens cooking mode.', btn: 'NEXT →' },
+  { key: 'shop', target: 'shop', title: 'STEP 4 · ONE SHOPPING LIST', text: 'Tap MAKE MY SHOPPING LIST to get everything you need in one list, sorted by aisle.' },
+  { key: 'done', target: null, title: 'WEEK PLANNED!', text: 'Tick off anything you already have, and the rest is your shopping list. Nice one.', btn: 'GOT IT', celebrate: true }
+];
+    const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
+    const L = document.createElement('div'); L.className = 'kt-layer'; L.setAttribute('role', 'dialog'); L.setAttribute('aria-modal', 'true'); L.setAttribute('aria-label', 'Getting started in the kitchen');
+    L.innerHTML = '<div class="kt-spot"></div><div class="kt-card"><span class="kt-tape"></span><span class="kt-title title-die bri"></span><span class="kt-text"></span>'
+      + '<div class="kt-foot"><span class="kt-dots"></span><button type="button" class="kt-skip">skip</button><button type="button" class="kt-btn bri"></button></div></div>';
+    document.body.appendChild(L);
+    const spot = L.querySelector('.kt-spot'), card = L.querySelector('.kt-card'), btn = L.querySelector('.kt-btn');
+    const kt = this.kt = { L, step: 0, STEPS, reduce, poll: 0 };
+    const rootEl = () => document.querySelector('[data-tour-root]');
+    const tgt = (k) => k && document.querySelector('[data-tour="' + k + '"]');
+    const place = () => {
+      const st = STEPS[kt.step], root = rootEl(); if (!root) return;
+      const R = root.getBoundingClientRect(), k = R.width / 390, el = tgt(st.target);
+      L.style.display = this.s.view === 'pick' ? 'none' : 'block';   // picking a meal by hand: step aside, come back after
+      card.style.transform = 'scale(' + k + ') rotate(-1deg)'; card.style.left = (R.left + 18 * k) + 'px';
+      let r = null;
+      if (el) { const b = el.getBoundingClientRect(), pad = 6 * k; r = { l: b.left - pad, t: b.top - pad, w: b.width + pad * 2, h: b.height + pad * 2 };
+        spot.style.borderWidth = 3 * k + 'px'; }
+      else { r = { l: R.left + R.width / 2, t: R.top + R.height / 2, w: 0, h: 0 }; spot.style.borderWidth = '0'; }
+      Object.assign(spot.style, { left: r.l + 'px', top: r.t + 'px', width: r.w + 'px', height: r.h + 'px', borderRadius: 18 * k + 'px' });
+      const ch = card.offsetHeight * k, gap = 18 * k;
+      // 'bottom' keeps the card clear of the week (so any night's + add a meal stays tappable)
+      let top = st.at === 'bottom' ? R.bottom - ch - 16 * k : el ? (r.t + r.h + gap + ch < R.bottom - 8 * k ? r.t + r.h + gap : r.t - gap - ch) : R.top + R.height / 2 - ch / 2;
+      card.style.top = Math.max(R.top + 8 * k, top) + 'px';
+    };
+    const show = () => {
+      const st = STEPS[kt.step];
+      L.querySelector('.kt-title').textContent = st.title; L.querySelector('.kt-text').textContent = st.text;
+      btn.style.display = st.btn ? 'block' : 'none'; btn.textContent = st.btn || '';
+      L.querySelector('.kt-dots').innerHTML = STEPS.map((x, i) => '<span class="' + (i === kt.step ? 'on' : i < kt.step ? 'done' : '') + '"></span>').join('');
+      place(); if (st.btn) btn.focus();
+      if (st.celebrate) { this.buzz([10, 40, 16]); if (!reduce) this.tourConfetti(); }
+    };
+    const go = (key) => { const i = STEPS.findIndex((x) => x.key === key); if (i >= 0 && i !== kt.step) { kt.step = i; this.buzz(6); show(); } };
+    kt.go = go;
+    btn.addEventListener('click', () => { const st = STEPS[kt.step];
+      if (st.key === 'welcome') go(this.s.plan.some(Boolean) ? 'meal' : 'choose');
+      else if (st.key === 'meal') go('shop');
+      else if (st.key === 'done') this.tourEnd(true); });
+    L.querySelector('.kt-skip').addEventListener('click', () => this.tourEnd(true));
+    kt.onKey = (e) => { if (e.key === 'Escape') this.tourEnd(true); }; document.addEventListener('keydown', kt.onKey);
+    kt.onResize = () => place(); addEventListener('resize', kt.onResize);
+    // the "doing" steps move on when the user has actually done the thing
+    kt.poll = setInterval(() => {
+      const st = STEPS[kt.step], v = this.s.view, has = this.s.plan.some(Boolean);
+      if (st.key === 'choose') { if (v === 'auto') go('pickweek'); else if (v === 'plan' && has) go('meal'); }
+      else if (st.key === 'pickweek') { if (v === 'plan') go(has ? 'meal' : 'choose'); }
+      else if (st.key === 'meal' || st.key === 'shop') { if (v === 'shop') go('done'); else if (!has && v === 'plan') go('choose'); }
+    }, 250);
+    // the highlight follows its target every frame (sheets slide in, rows re-render)
+    const track = () => { if (this.kt !== kt) return; place(); kt.raf = requestAnimationFrame(track); }; kt.raf = requestAnimationFrame(track);
+    show();
+  }
+  tourEnd(remember) {
+    const kt = this.kt; if (!kt) return; this.kt = null;
+    clearInterval(kt.poll); cancelAnimationFrame(kt.raf); document.removeEventListener('keydown', kt.onKey); removeEventListener('resize', kt.onResize); kt.L.remove();
+    if (remember) try { localStorage.setItem('gsd.seenKitchenTour', '1'); } catch (e) {}
+  }
+  tourConfetti() {
+    const root = document.querySelector('[data-tour-root]'); if (!root) return; const R = root.getBoundingClientRect();
+    const cols = ['#FF6FB0', '#C6FF4D', '#6EC8FF', '#FFD23F', '#A98BFF'];
+    for (let i = 0; i < 14; i++) { const s = document.createElement('span'), a = (i / 14) * Math.PI * 2, d = (90 + Math.random() * 60) * R.width / 390;
+      s.textContent = i % 3 === 0 ? '✦' : '●'; s.setAttribute('aria-hidden', 'true');
+      s.style.cssText = 'position:fixed;z-index:10001;left:' + (R.left + R.width / 2) + 'px;top:' + (R.top + R.height * 0.42) + 'px;color:' + cols[i % 5] + ';font-size:' + (i % 3 === 0 ? 22 : 12) + 'px;pointer-events:none;transition:transform .6s cubic-bezier(.2,.9,.3,1),opacity .5s ease .3s';
+      document.body.appendChild(s); requestAnimationFrame(() => { s.style.transform = 'translate(' + Math.cos(a) * d + 'px,' + Math.sin(a) * d + 'px)'; s.style.opacity = 0; }); setTimeout(() => s.remove(), 1000); }
   }
   re() { try { localStorage.setItem('gsd.plan', JSON.stringify(this.s.plan)); } catch (e) {} this.setState({ n: Date.now() }); }
   say(t) { const s = this.s; s.toast = t; clearTimeout(this.tt); this.tt = setTimeout(() => { s.toast = ''; this.re(); }, 3200); }
@@ -418,6 +515,7 @@ class Component extends DCLogic {
     }));
     return {
       isPlan: s.view === 'plan' || s.view === 'pick' || s.view === 'auto', isPick: s.view === 'pick', isShop: s.view === 'shop', isAuto: s.view === 'auto',
+      openTour: () => { this.tourStart(); },
       openAuto: () => { s.toast = ''; s.view = 'auto'; this.buzz(10); this.re(); },
       closeAuto: () => { s.view = 'plan'; this.re(); },
       showToast: !!s.toast && s.view === 'plan', toast: s.toast,
