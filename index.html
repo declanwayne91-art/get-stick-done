@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Get St*ck Done Alpha</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&family=Kalam:wght@400;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* one committed look: the app's navy world, so dark in both host themes. Phone in the middle, demo menu beside it (wide) or behind a DEMO pill (phone). */
+:root{color-scheme:dark;--bg:#0B1022;--navy:#172038;--ink:#F6EFE1;--lime:#C6FF4D;--pink:#FF6FB0;--line:rgba(246,239,225,0.18);--panel:#141C36}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0B1022;--navy:#172038;--ink:#F6EFE1;--lime:#C6FF4D;--pink:#FF6FB0;--line:rgba(246,239,225,0.18);--panel:#141C36;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0B1022;--navy:#172038;--ink:#F6EFE1;--lime:#C6FF4D;--pink:#FF6FB0;--line:rgba(246,239,225,0.18);--panel:#141C36;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:'Atkinson Hyperlegible',system-ui,sans-serif;overflow:hidden;overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
+.bri{font-family:'Bricolage Grotesque',sans-serif;font-stretch:75%;font-weight:800;line-height:0.95}
+.kal{font-family:Kalam,cursive;font-weight:700}
+#app{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;gap:36px}
+#phone{position:relative;width:100vw;height:100dvh;background:var(--navy);overflow:hidden}
+#phone iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:var(--navy)}
+#pill{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 2px);transform:translateX(-50%);z-index:30;height:24px;padding:0 10px;border-radius:999px;border:1.5px solid var(--line);background:rgba(11,16,34,0.72);color:var(--ink);font-size:11px;letter-spacing:1px;display:flex;align-items:center;gap:5px;cursor:pointer;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+#pill:focus-visible,#panel button:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}
+#scrim{position:fixed;inset:0;background:rgba(5,8,20,0.55);z-index:40;display:none}
+#panel{position:fixed;left:0;right:0;bottom:0;max-height:82dvh;z-index:41;background:var(--panel);border-top:2px solid var(--line);border-radius:22px 22px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom));overflow-y:auto;transform:translateY(105%);transition:transform 0.25s cubic-bezier(.2,.9,.3,1)}
+#panel.open{transform:none}
+#panel h1{margin:0;font-size:28px;color:var(--lime);text-shadow:2px 2px 0 var(--pink)}
+#panel .sub{margin:4px 0 14px;font-size:14px;opacity:0.75}
+.row{display:flex;gap:8px;margin-bottom:14px}
+.row button{flex:1;height:44px;border-radius:14px;border:2px solid var(--ink);background:transparent;color:var(--ink);font-size:17px;cursor:pointer}
+.row button.hot{background:var(--lime);color:var(--navy);border-color:var(--lime)}
+.row button.warn{border-color:var(--pink);color:var(--pink)}
+.grp{margin:12px 0 6px;font-size:12px;letter-spacing:1.5px;opacity:0.6;text-transform:uppercase}
+.scr{display:block;width:100%;text-align:left;min-height:42px;padding:8px 12px;margin:0 0 4px;border-radius:12px;border:1.5px solid transparent;background:rgba(246,239,225,0.05);color:var(--ink);font-family:inherit;font-size:16px;cursor:pointer}
+.scr[aria-current="page"]{border-color:var(--lime);background:rgba(198,255,77,0.12)}
+.note{font-size:13px;line-height:1.35;opacity:0.7;margin-top:14px}
+#close{position:absolute;right:12px;top:12px;width:40px;height:40px;border-radius:40px;border:none;background:rgba(246,239,225,0.1);color:var(--ink);font-size:20px;cursor:pointer}
+/* wide screens: the phone sits framed in the middle and the demo menu is always open beside it */
+@media (min-width: 900px){
+  #phone{width:calc(min(100dvh - 48px, 844px) * 390 / 844);height:min(100dvh - 48px, 844px);border-radius:38px;border:4px solid #2A3358;box-shadow:0 30px 60px rgba(0,0,0,0.5)}
+  #pill,#scrim,#close{display:none !important}
+  #panel{position:relative;inset:auto;width:330px;max-height:min(100dvh - 48px, 844px);transform:none;border:2px solid var(--line);border-radius:22px;transition:none}
+}
+@media (prefers-reduced-motion: reduce){#panel{transition:none}}
+</style>
+</head><body>
+<div id="app">
+  <div id="phone"><iframe id="screen" title="Get St*ck Done app" src="Splash.html"></iframe></div>
+  <div id="scrim"></div>
+  <aside id="panel" aria-label="Demo menu">
+    <button type="button" id="close" aria-label="Close demo menu">✕</button>
+    <h1 class="bri">GET ST*CK DONE!</h1>
+    <p class="sub kal">alpha demo · tap through it like the real app</p>
+    <div class="row"><button type="button" id="back" class="kal">‹ back</button><button type="button" id="home" class="kal hot">home</button></div>
+    <div class="row"><button type="button" id="restart" class="kal">start again</button><button type="button" id="reset" class="kal warn">reset demo</button></div>
+    <div id="list"></div>
+    <p class="note">Everything you do is saved in this browser only (your setup, plan, cover and stickers). <b>Reset demo</b> wipes it and starts as a brand-new user. Some numbers (level, streak-free stats, friends) are sample data.</p>
+  </aside>
+</div>
+<button type="button" id="pill" class="bri" aria-expanded="false" aria-controls="panel">DEMO ▾</button>
+<script>
+(function () {
+  const MENU = {"Start": [["Splash", "Splash"], ["Onboard", "Set up (onboarding)"], ["StickerBook", "Your first sticker"]], "Every day": [["Today", "Today (home)"], ["UseItUp", "Use it up"], ["PlanWeek", "Plan my week + shopping"]], "Gym": [["LegDay", "Leg day"], ["GuideSquat", "How-to: goblet squat"], ["PullDay", "Pull day"], ["GuidePulldown", "How-to: lat pulldown"], ["WorkoutOverview", "Push day"], ["GuideCurl", "How-to: barbell curl"]], "Kitchen": [["CookRice", "Cook: chilli-crisp fried rice"], ["CookGnocchi", "Cook: crispy gnocchi"], ["CookTacos", "Cook: smash burger tacos"], ["CookV2", "Cook: chicken Alfredo"]], "Book and me": [["StickerAlbum", "Sticker book"], ["CoverEdit", "Decorate your cover"], ["StickerAlbum#new", "New stickers to stick"], ["Profile", "My profile"], ["Friends", "Friends"]], "Wraps": [["WeekWrap", "Your week (pack)"], ["MonthWrap", "Your month (pack)"]], "Extras": [["HydroLearn", "Hydro Homie: why hydrate?"]]};
+  const $ = (id) => document.getElementById(id), frame = $('screen'), panel = $('panel'), scrim = $('scrim'), pill = $('pill');
+  const wide = () => matchMedia('(min-width: 900px)').matches;
+  const open = (on) => { panel.classList.toggle('open', on); scrim.style.display = on && !wide() ? 'block' : 'none'; pill.setAttribute('aria-expanded', on ? 'true' : 'false'); if (on) $('close').focus(); };
+  pill.addEventListener('click', () => open(true)); scrim.addEventListener('click', () => open(false)); $('close').addEventListener('click', () => { open(false); pill.focus(); });
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') open(false); });
+  const go = (f) => { const [n, h] = f.split('#'); frame.src = n + '.html' + (h ? '#' + h : ''); if (!wide()) open(false); };
+
+  // the screen list
+  const list = $('list');
+  Object.keys(MENU).forEach((g) => {
+    const h = document.createElement('div'); h.className = 'grp'; h.textContent = g; list.appendChild(h);
+    MENU[g].forEach(([f, lab]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'scr'; b.dataset.f = f; b.textContent = lab; b.addEventListener('click', () => go(f)); list.appendChild(b); });
+  });
+  const current = () => { try { return frame.contentWindow.location.pathname.split('/').pop().replace('.html', ''); } catch (e) { return ''; } };
+
+  $('back').addEventListener('click', () => { try { frame.contentWindow.history.back(); } catch (e) {} if (!wide()) open(false); });
+  $('home').addEventListener('click', () => go('Today'));
+  $('restart').addEventListener('click', () => go('Splash'));
+  let armed = 0;
+  $('reset').addEventListener('click', () => {
+    const b = $('reset');
+    if (Date.now() - armed > 3000) { armed = Date.now(); b.textContent = 'tap again to wipe it'; setTimeout(() => { b.textContent = 'reset demo'; }, 3000); return; }
+    try { Object.keys(localStorage).filter((k) => k.startsWith('gsd.')).forEach((k) => localStorage.removeItem(k)); } catch (e) {}
+    b.textContent = 'reset demo'; armed = 0; go('Splash');
+  });
+
+  // small bits of glue where a canvas board was a dead end, so the demo flows like the app would
+  const glue = {};   // per-screen demo glue (none needed right now)
+  frame.addEventListener('load', () => {
+    const f = current();
+    list.querySelectorAll('.scr').forEach((b) => b.toggleAttribute('aria-current', b.dataset.f === f));
+    list.querySelectorAll('.scr[aria-current]').forEach((b) => b.setAttribute('aria-current', 'page'));
+    if (glue[f]) { let n = 0; const t = setInterval(() => { let done = false; try { done = glue[f](frame.contentDocument); } catch (e) {} if (done || ++n > 40) clearInterval(t); }, 100); }
+  });
+  if (wide()) open(true);
+  addEventListener('resize', () => { if (wide()) { panel.classList.add('open'); scrim.style.display = 'none'; } });
+})();
+</script>
+
+</body></html>

@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Get St*ck Done!</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&amp;family=Kalam:wght@400;700&amp;family=Atkinson+Hyperlegible:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none;padding:0}
+button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
+.title-die{filter:url(#tdie) drop-shadow(0 6px 6px rgba(60,40,20,0.3))}
+.bri{font-family:'Bricolage Grotesque',sans-serif;font-stretch:75%;font-weight:800;line-height:0.9}
+.kal{font-family:'Kalam',cursive;font-weight:700}
+.press{transition:transform 0.09s ease-out}
+.press:active{transform:scale(0.92)}
+.dot{width:34px;height:34px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#172038;border:3px solid #FFFFFF;box-shadow:0 0 0 2px #172038}
+.chip{padding:5px 10px;border-radius:999px;background:#C6FF4D;border:2px solid #172038;font-weight:700;font-size:13px;color:#172038;white-space:nowrap}
+.box{width:24px;height:24px;flex-shrink:0;border:2.5px solid #172038;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#172038;font-weight:900}
+.tom{position:relative;width:60px;height:54px;border-radius:48% 48% 46% 46%;border:3px solid #FFFFFF;box-shadow:0 0 0 2px #2A1A10;display:flex;align-items:center;justify-content:center}
+@keyframes ring{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.ringing{animation:ring 0.4s ease-in-out infinite}
+@keyframes peelclip{0%{clip-path:inset(-20px -20px -20px -20px)}100%{clip-path:inset(-20px 100% -20px -20px)}}
+@keyframes peelflap{0%{left:146px;opacity:0;transform:scaleX(0.4)}12%{opacity:1}85%{opacity:1}100%{left:-14px;opacity:0;transform:scaleX(1.1)}}
+.face{display:block}
+.flap{position:absolute;top:-3px;width:22px;height:56px;border-radius:14px 4px 4px 14px;background:linear-gradient(90deg,#FFFFFF,#F1ECE3 55%,#CFC6B6);border:2px solid #111;box-shadow:-5px 4px 6px rgba(0,0,0,0.28);display:none;pointer-events:none}
+.peeling .face{animation:peelclip 0.6s cubic-bezier(.4,0,.55,1) forwards}
+.peeling .flap{display:block;animation:peelflap 0.6s cubic-bezier(.4,0,.55,1) forwards}
+.peeling{pointer-events:none}
+@keyframes nextpop{0%{transform:scale(1.7) rotate(-34deg);opacity:0}65%{transform:scale(0.94) rotate(-8deg);opacity:1}100%{transform:scale(1) rotate(-12deg);opacity:1}}
+.nextpop{animation:nextpop 0.34s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes bob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.02)}}
+.nextpop svg{animation:bob 2.2s ease-in-out 0.4s infinite}
+.peeling{transform:rotate(-12deg)}
+
+@keyframes slapin{0%{transform:scale(1.7) rotate(-22deg);opacity:0}60%{transform:scale(0.92) rotate(-4deg);opacity:1}100%{transform:scale(1) rotate(-6deg);opacity:1}}
+.slap{animation:slapin 0.32s cubic-bezier(.3,1.5,.5,1) both}
+.pic svg{height:100%;max-height:100%;width:auto;max-width:100%}
+.prepmid>*{flex-shrink:0}
+</style>
+<style>
+#sbk-sbroot *{-webkit-user-select:none;user-select:none}
+#sbk-stk{touch-action:none;cursor:grab}
+#sbk-stk:active{cursor:grabbing}
+.ring{position:absolute;left:-9px;width:22px;height:12px;border-radius:12px;background:#C9C2B4;border:2px solid #172038}
+#sbk-tray,#sbk-donePanel{transition:transform 0.35s cubic-bezier(.2,.9,.3,1), opacity 0.3s ease}
+#sbk-peelHint{transition:opacity 0.25s ease}
+@keyframes nudge{0%,100%{transform:translate(0,0)}50%{transform:translate(-5px,-5px)}}
+.nudge{animation:nudge 1.4s ease-in-out infinite}
+@keyframes selp{0%,100%{box-shadow:0 0 0 4px #C6FF4D, 0 0 0 7px #172038}50%{box-shadow:0 0 0 7px #C6FF4D, 0 0 0 10px #172038}}
+#sbk-selRing{animation:selp 1s ease-in-out infinite;transition:opacity 0.2s}
+@media (prefers-reduced-motion: reduce){.nudge,#sbk-selRing{animation:none}}
+</style>
+
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#0B1022;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+#dc-frame{position:absolute;left:0;top:0;transform-origin:0 0;background:#172038}
+#dc-stage{position:relative;overflow:hidden}
+</style>
+</head><body data-extra="0">
+<div id="dc-frame"><div id="dc-stage"></div></div>
+<script type="text/x-dc-template" id="dc-tpl">
+<div id="sbk-sbroot" style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background-color: #172038; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #172038">
+  <div style="position: absolute; left: 14px; right: 14px; top: 16px; display: flex; align-items: center; justify-content: space-between">
+    <span style="padding: 6px 12px; background-color: rgba(255,111,176,0.85); background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0 5px, transparent 5px 10px); transform: rotate(-3deg); font-size: 12px; font-weight: 700; letter-spacing: 1px">{{book}}</span>
+    <span style="display: flex; gap: 6px"><button type="button" id="sbk-helpBtn" class="press bri" aria-label="How the sticker book works" style="width: 30px; height: 30px; border-radius: 30px; border: 2px solid #F6EFE1; background: #FF6FB0; color: #172038; font-size: 17px; transform: rotate(8deg)">?</button><button type="button" id="sbk-hapBtn" class="press" aria-label="Haptics" style="height: 30px; padding: 0 10px; border-radius: 999px; border: 2px solid #F6EFE1; background: transparent; color: #F6EFE1; font-size: 13px; font-weight: 700">haptics on</button></span>
+  </div>
+  <div id="sbk-page" style="position: absolute; left: 14px; top: 66px; width: 362px; height: 522px; border-radius: 6px 18px 18px 6px; background-color: #FBF4E6; background-image: linear-gradient(rgba(139,94,52,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(139,94,52,0.08) 1px, transparent 1px); background-size: 20px 20px; box-shadow: inset 14px 0 18px -14px rgba(60,40,20,0.45), 0 10px 0 -4px #E9DFCC, 0 14px 0 -6px #D8CCB4">
+    <span class="ring" style="top: 40px"></span><span class="ring" style="top: 102px"></span><span class="ring" style="top: 164px"></span><span class="ring" style="top: 226px"></span><span class="ring" style="top: 288px"></span><span class="ring" style="top: 350px"></span><span class="ring" style="top: 412px"></span><span class="ring" style="top: 474px"></span>
+    <span class="kal" style="position: absolute; left: 30px; top: 16px; font-size: 18px">page 1</span>
+    <span class="kal" style="position: absolute; right: 18px; top: 16px; font-size: 15px; opacity: 0.6">29 · 10 · 26</span>
+    <div id="sbk-slot" style="position: absolute; left: 97px; top: 156px; width: 168px; height: 192px; border: 3px dashed rgba(23,32,56,0.35); border-radius: 30px; transform: rotate(-3deg); display: flex; align-items: center; justify-content: center; transition: background 0.15s, border-color 0.15s, opacity 0.3s">
+      <span class="kal" style="font-size: 18px; text-align: center; opacity: 0.6; line-height: 1.2">your first<br>sticker</span>
+    </div>
+    <span class="kal" style="position: absolute; left: 0; right: 0; bottom: 18px; text-align: center; font-size: 15px; opacity: 0.55">stick it anywhere you like</span>
+  </div>
+
+  <div id="sbk-tray" style="position: absolute; left: 14px; right: 14px; top: 600px; height: 230px; border-radius: 16px; background-color: #FFFFFF; background-image: repeating-linear-gradient(135deg, rgba(23,32,56,0.04) 0 2px, transparent 2px 9px); box-shadow: 0 -4px 0 #FF6FB0">
+    <span class="bri" style="position: absolute; left: 14px; top: 10px; font-size: 13px; letter-spacing: 1px; opacity: 0.55">STICKER SHEET · PEEL HERE</span>
+    <span id="sbk-trayMsg" class="kal" style="position: absolute; left: 222px; right: 10px; top: 44px; font-size: 18px; line-height: 1.25">Peel it from the corner, then stick it on your page.</span>
+    <span class="kal" style="position: absolute; left: 222px; right: 10px; bottom: 46px; font-size: 14px; line-height: 1.2; opacity: 0.7">or tap it, then tap your page</span>
+    <button type="button" id="sbk-autoBtn" class="kal" style="position: absolute; left: 222px; bottom: 14px; border: none; background: transparent; padding: 0; color: #172038; font-size: 15px; text-decoration: underline">stick it for me</button>
+  </div>
+  <div id="sbk-peelHint" class="nudge" style="position: absolute; left: 16px; top: 772px; z-index: 6; pointer-events: none; display: flex; align-items: center; gap: 2px">
+    <svg width="40" height="34" viewBox="0 0 40 34" aria-hidden="true"><path d="M6 30 Q10 10 32 6" stroke="#FF6FB0" stroke-width="4" fill="none" stroke-linecap="round"></path><path d="M32 6 l-9 -3 M32 6 l-5 8" stroke="#FF6FB0" stroke-width="4" fill="none" stroke-linecap="round"></path></svg>
+  </div>
+
+  <div id="sbk-stk" role="button" aria-label="Your first sticker, Day One. Peel from the corner and drag onto your page, or tap it and then tap the page." style="position: absolute; left: 54px; top: 632px; width: 150px; height: 170px; z-index: 5">
+    <div id="sbk-stkIn" style="position: absolute; inset: 0; transform-origin: 50% 50%">
+      <div id="sbk-selRing" style="position: absolute; inset: 0; border-radius: 22px; opacity: 0; pointer-events: none"></div>
+      <div id="sbk-stkShadow" style="position: absolute; inset: 3px; border-radius: 22px; box-shadow: 0 2px 3px rgba(60,40,20,0.25)"></div>
+      <div id="sbk-stkFace" style="position: absolute; inset: 0"><svg width="150" viewBox="0 0 200 227" style="display: block" aria-hidden="true">
+<rect x="4" y="4" width="192" height="219" rx="30" fill="#FFFFFF" stroke="#172038" stroke-width="4"></rect>
+<rect x="14" y="14" width="172" height="199" rx="22" fill="#FBF4E6"></rect>
+<pattern id="dotty" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.3" fill="#172038" opacity="0.12"></circle></pattern>
+<rect x="14" y="14" width="172" height="199" rx="22" fill="url(#dotty)"></rect>
+<g transform="translate(100 82) scale(0.7) translate(-100 -82)"><line x1="90.0" y1="100.0" x2="84.0" y2="186.0" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><line x1="110.0" y1="100.0" x2="116.0" y2="186.0" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><g transform="translate(82 192) scale(-1 1)"><path d="M-6 -8 C-6 -14 6 -14 8 -8 C16 -8 20 -2 18 4 L-8 4 C-12 4 -12 -6 -6 -8 Z" fill="#FF6FB0" stroke="#111111" stroke-width="3" stroke-linejoin="round"></path><path d="M-9 4 L18 4" stroke="#C6FF4D" stroke-width="4"></path><path d="M-10 6.5 L19 6.5" stroke="#111111" stroke-width="2.5" stroke-linecap="round"></path></g><g transform="translate(118 192) scale(1 1)"><path d="M-6 -8 C-6 -14 6 -14 8 -8 C16 -8 20 -2 18 4 L-8 4 C-12 4 -12 -6 -6 -8 Z" fill="#FF6FB0" stroke="#111111" stroke-width="3" stroke-linejoin="round"></path><path d="M-9 4 L18 4" stroke="#C6FF4D" stroke-width="4"></path><path d="M-10 6.5 L19 6.5" stroke="#111111" stroke-width="2.5" stroke-linecap="round"></path></g><line x1="74.0" y1="76.0" x2="48.0" y2="66.0" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><line x1="48.0" y1="66.0" x2="36.0" y2="30.0" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><line x1="126.0" y1="76.0" x2="152.0" y2="66.0" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><line x1="152.0" y1="66.0" x2="164.0" y2="30.0" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><ellipse cx="36.0" cy="30.0" rx="10" ry="9.2" fill="#FFFFFF" stroke="#111111" stroke-width="2.6"></ellipse><ellipse cx="164.0" cy="30.0" rx="10" ry="9.2" fill="#FFFFFF" stroke="#111111" stroke-width="2.6"></ellipse><line x1="66.0" y1="74.0" x2="134.0" y2="74.0" stroke="#111111" stroke-width="31" stroke-linecap="round"></line><line x1="100.0" y1="74.0" x2="83.0" y2="44.6" stroke="#111111" stroke-width="31" stroke-linecap="round"></line><line x1="100.0" y1="74.0" x2="85.5" y2="99.0" stroke="#111111" stroke-width="31" stroke-linecap="round"></line><line x1="100.0" y1="74.0" x2="117.0" y2="44.6" stroke="#111111" stroke-width="31" stroke-linecap="round"></line><line x1="100.0" y1="74.0" x2="114.5" y2="99.0" stroke="#111111" stroke-width="31" stroke-linecap="round"></line><line x1="66.0" y1="74.0" x2="134.0" y2="74.0" stroke="#FF6FB0" stroke-width="24" stroke-linecap="round"></line><line x1="100.0" y1="74.0" x2="83.0" y2="44.6" stroke="#FF6FB0" stroke-width="24" stroke-linecap="round"></line><line x1="100.0" y1="74.0" x2="85.5" y2="99.0" stroke="#FF6FB0" stroke-width="24" stroke-linecap="round"></line><line x1="100.0" y1="74.0" x2="117.0" y2="44.6" stroke="#FF6FB0" stroke-width="24" stroke-linecap="round"></line><line x1="100.0" y1="74.0" x2="114.5" y2="99.0" stroke="#FF6FB0" stroke-width="24" stroke-linecap="round"></line><ellipse cx="78" cy="69" rx="5" ry="2.5" fill="#FFFFFF" opacity="0.8"></ellipse><path d="M80 48 Q100 40 120 48" stroke="#111111" stroke-width="10" fill="none" stroke-linecap="round"></path><path d="M80 48 Q100 40 120 48" stroke="#C6FF4D" stroke-width="6" fill="none" stroke-linecap="round"></path><ellipse cx="94" cy="68" rx="3.4" ry="5.8" fill="#111111"></ellipse><path d="M94.4 62.8 L97.2 66 L94.4 66.8 Z" fill="#FFFFFF"></path><ellipse cx="106" cy="68" rx="3.4" ry="5.8" fill="#111111"></ellipse><path d="M106.4 62.8 L109.2 66 L106.4 66.8 Z" fill="#FFFFFF"></path><path d="M93 78 Q100 86 107 78" fill="#111111" stroke="#111111" stroke-width="2" stroke-linejoin="round"></path><path d="M97 82 Q100 80 103 82 Q100 85 97 82 Z" fill="#FF6FB0"></path><path d="M16 12 l-8 -6" stroke="#111111" stroke-width="4" stroke-linecap="round"></path><path d="M12 30 l-10 0" stroke="#111111" stroke-width="4" stroke-linecap="round"></path><path d="M184 12 l8 -6" stroke="#111111" stroke-width="4" stroke-linecap="round"></path><path d="M188 30 l10 0" stroke="#111111" stroke-width="4" stroke-linecap="round"></path></g>
+<g transform="rotate(-6 100 178)">
+<path d="M22 162 L178 162 L170 196 L30 196 Z" fill="#C6FF4D" stroke="#172038" stroke-width="4" stroke-linejoin="round"></path>
+<text x="100" y="188" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-stretch="75%" font-size="30" fill="#172038">DAY ONE</text>
+</g>
+<text x="100" y="212" text-anchor="middle" font-family="Kalam, cursive" font-weight="700" font-size="11" fill="#172038" opacity="0.6">29 · 10 · 26</text>
+</svg></div>
+      <div id="sbk-flapWrap" style="position: absolute; left: -150px; top: -170px; width: 450px; height: 510px; pointer-events: none; filter: drop-shadow(0 3px 4px rgba(60,40,20,0.35))"><div id="sbk-flap" style="position: absolute; inset: 0"></div></div>
+    </div>
+  </div>
+
+  <div id="sbk-donePanel" style="position: absolute; left: 14px; right: 14px; top: 604px; bottom: 16px; display: none; opacity: 0; transform: translateY(20px); flex-direction: column; align-items: center; gap: 8px; text-align: center; color: #F6EFE1">
+    <span class="title-die bri" style="font-size: 40px; color: #172038; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-3deg)">STUCK!</span>
+    <span class="bri" style="padding: 7px 14px 5px; background-color: rgba(198,255,77,0.92); background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.3) 0 6px, transparent 6px 12px); color: #172038; font-size: 19px; letter-spacing: 0.5px; transform: rotate(2deg); box-shadow: 0 4px 8px -4px rgba(0,0,0,0.4)">EVERY WIN WORKS LIKE THIS: PEEL IT, STICK IT</span>
+    <span class="kal" style="font-size: 15px; opacity: 0.8">long-press a sticker to move it</span>
+    <a id="sbk-toToday" href="Today.html" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
+    <button type="button" id="sbk-whatNext" class="press bri" style="margin-top: 4px; width: 100%; height: 56px; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 23px">HOW DO I GET MORE? →</button>
+    <button type="button" id="sbk-againBtn" class="kal" style="border: none; background: transparent; color: #F6EFE1; font-size: 13px; text-decoration: underline">(demo: peel it again)</button>
+  </div>
+<svg aria-hidden="true" width="0" height="0" style="position: absolute; width: 0; height: 0; overflow: hidden"><defs><filter id="kst" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="7" result="h"></feMorphology><feMorphology in="SourceAlpha" operator="dilate" radius="19" result="c1"></feMorphology><feMorphology in="c1" operator="erode" radius="16" result="c2"></feMorphology><feComposite in="h" in2="c2" operator="over" result="u"></feComposite><feGaussianBlur in="u" stdDeviation="2.4" result="ub"></feGaussianBlur><feComponentTransfer in="ub" result="back"><feFuncA type="linear" slope="6" intercept="-3.00"></feFuncA></feComponentTransfer><feMorphology in="back" operator="dilate" radius="3.2" result="eg"></feMorphology><feComposite in="eg" in2="back" operator="out" result="edge"></feComposite><feFlood flood-color="#2A1A10"></feFlood><feComposite in2="edge" operator="in" result="edgeC"></feComposite><feFlood flood-color="#FFF4DF"></feFlood><feComposite in2="back" operator="in" result="backC"></feComposite><feMerge><feMergeNode in="edgeC"></feMergeNode><feMergeNode in="backC"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter><pattern id="kht" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><circle cx="2.5" cy="2.5" r="1.2" fill="#2A1A10" fill-opacity="0.3"></circle></pattern><linearGradient id="steel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E9EEF3"></stop><stop offset="0.5" stop-color="#B9C3CE"></stop><stop offset="1" stop-color="#8E9AA8"></stop></linearGradient><linearGradient id="iron" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4A4A52"></stop><stop offset="1" stop-color="#1E1E24"></stop></linearGradient><filter id="stkR" x="-30%" y="-20%" width="160%" height="140%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="7" result="h"></feMorphology><feMorphology in="SourceAlpha" operator="dilate" radius="19" result="c1"></feMorphology><feMorphology in="c1" operator="erode" radius="16" result="c2"></feMorphology><feComposite in="h" in2="c2" operator="over" result="u"></feComposite><feGaussianBlur in="u" stdDeviation="2.4" result="ub"></feGaussianBlur><feComponentTransfer in="ub" result="back"><feFuncA type="linear" slope="6" intercept="-3.00"></feFuncA></feComponentTransfer><feMorphology in="back" operator="dilate" radius="3.5" result="eg"></feMorphology><feComposite in="eg" in2="back" operator="out" result="edge"></feComposite><feFlood flood-color="#111111"></feFlood><feComposite in2="edge" operator="in" result="edgeC"></feComposite><feFlood flood-color="#FFFFFF"></feFlood><feComposite in2="back" operator="in" result="backC"></feComposite><feMerge><feMergeNode in="edgeC"></feMergeNode><feMergeNode in="backC"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter><filter id="tdie" x="-30%" y="-60%" width="160%" height="220%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="5" result="grow"></feMorphology><feGaussianBlur in="grow" stdDeviation="2.5" result="soft"></feGaussianBlur><feComponentTransfer in="soft" result="white-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feMorphology in="white-mask" operator="dilate" radius="3" result="key-grow"></feMorphology><feGaussianBlur in="key-grow" stdDeviation="1" result="key-soft"></feGaussianBlur><feComponentTransfer in="key-soft" result="key-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feFlood flood-color="#111111"></feFlood><feComposite in2="key-mask" operator="in" result="key"></feComposite><feFlood flood-color="#FFFFFF"></feFlood><feComposite in2="white-mask" operator="in" result="white"></feComposite><feMerge><feMergeNode in="key"></feMergeNode><feMergeNode in="white"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs></svg>
+<div id="sbk-tips" role="dialog" aria-modal="true" aria-label="How your sticker book works" style="position: absolute; inset: 0; z-index: 20; display: none; background: rgba(23,32,56,0.82); opacity: 0; transition: opacity 0.22s ease"><div class="tipc" style="position: absolute; left: 22px; right: 22px; top: 110px; padding: 26px 20px 18px; background: #FFFFFF; box-shadow: 0 14px 22px rgba(10,14,30,0.45); display: none; flex-direction: column; gap: 12px; transition: transform 0.28s cubic-bezier(.2,.9,.3,1), opacity 0.22s ease" data-rot="-1.5"><span style="position: absolute; left: 50%; top: -14px; width: 110px; height: 26px; margin-left: -55px; background-color: rgba(198,255,77,0.8); background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0 5px, transparent 5px 10px); transform: rotate(-3deg)"></span><span class="title-die bri" style="align-self: flex-start; font-size: 28px; color: #172038; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">WHAT’S THIS BOOK?</span><div style="display: flex; justify-content: center; padding: 4px 0"><svg width="96" viewBox="0 0 200 227" style="display: block" aria-hidden="true">
+<rect x="4" y="4" width="192" height="219" rx="30" fill="#FFFFFF" stroke="#172038" stroke-width="4"></rect>
+<rect x="14" y="14" width="172" height="199" rx="22" fill="#FBF4E6"></rect>
+<pattern id="dotty" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.3" fill="#172038" opacity="0.12"></circle></pattern>
+<rect x="14" y="14" width="172" height="199" rx="22" fill="url(#dotty)"></rect>
+<g transform="translate(100 82) scale(0.7) translate(-100 -82)"><line x1="90.0" y1="100.0" x2="84.0" y2="186.0" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><line x1="110.0" y1="100.0" x2="116.0" y2="186.0" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><g transform="translate(82 192) scale(-1 1)"><path d="M-6 -8 C-6 -14 6 -14 8 -8 C16 -8 20 -2 18 4 L-8 4 C-12 4 -12 -6 -6 -8 Z" fill="#FF6FB0" stroke="#111111" stroke-width="3" stroke-linejoin="round"></path><path d="M-9 4 L18 4" stroke="#C6FF4D" stroke-width="4"></path><path d="M-10 6.5 L19 6.5" stroke="#111111" stroke-width="2.5" stroke-linecap="round"></path></g><g transform="translate(118 192) scale(1 1)"><path d="M-6 -8 C-6 -14 6 -14 8 -8 C16 -8 20 -2 18 4 L-8 4 C-12 4 -12 -6 -6 -8 Z" fill="#FF6FB0" stroke="#111111" stroke-width="3" stroke-linejoin="round"></path><path d="M-9 4 L18 4" stroke="#C6FF4D" stroke-width="4"></path><path d="M-10 6.5 L19 6.5" stroke="#111111" stroke-width="2.5" stroke-linecap="round"></path></g><line x1="74.0" y1="76.0" x2="48.0" y2="66.0" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><line x1="48.0" y1="66.0" x2="36.0" y2="30.0" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><line x1="126.0" y1="76.0" x2="152.0" y2="66.0" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><line x1="152.0" y1="66.0" x2="164.0" y2="30.0" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><ellipse cx="36.0" cy="30.0" rx="10" ry="9.2" fill="#FFFFFF" stroke="#111111" stroke-width="2.6"></ellipse><ellipse cx="164.0" cy="30.0" rx="10" ry="9.2" fill="#FFFFFF" stroke="#111111" stroke-width="2.6"></ellipse><line x1="66.0" y1="74.0" x2="134.0" y2="74.0" stroke="#111111" stroke-width="31" stroke-linecap="round"></line><line x1="100.0" y1="74.0" x2="83.0" y2="44.6" stroke="#111111" stroke-width="31" stroke-linecap="round"></line><line x1="100.0" y1="74.0" x2="85.5" y2="99.0" stroke="#111111" stroke-width="31" stroke-linecap="round"></line><line x1="100.0" y1="74.0" x2="117.0" y2="44.6" stroke="#111111" stroke-width="31" stroke-linecap="round"></line><line x1="100.0" y1="74.0" x2="114.5" y2="99.0" stroke="#111111" stroke-width="31" stroke-linecap="round"></line><line x1="66.0" y1="74.0" x2="134.0" y2="74.0" stroke="#FF6FB0" stroke-width="24" stroke-linecap="round"></line><line x1="100.0" y1="74.0" x2="83.0" y2="44.6" stroke="#FF6FB0" stroke-width="24" stroke-linecap="round"></line><line x1="100.0" y1="74.0" x2="85.5" y2="99.0" stroke="#FF6FB0" stroke-width="24" stroke-linecap="round"></line><line x1="100.0" y1="74.0" x2="117.0" y2="44.6" stroke="#FF6FB0" stroke-width="24" stroke-linecap="round"></line><line x1="100.0" y1="74.0" x2="114.5" y2="99.0" stroke="#FF6FB0" stroke-width="24" stroke-linecap="round"></line><ellipse cx="78" cy="69" rx="5" ry="2.5" fill="#FFFFFF" opacity="0.8"></ellipse><path d="M80 48 Q100 40 120 48" stroke="#111111" stroke-width="10" fill="none" stroke-linecap="round"></path><path d="M80 48 Q100 40 120 48" stroke="#C6FF4D" stroke-width="6" fill="none" stroke-linecap="round"></path><ellipse cx="94" cy="68" rx="3.4" ry="5.8" fill="#111111"></ellipse><path d="M94.4 62.8 L97.2 66 L94.4 66.8 Z" fill="#FFFFFF"></path><ellipse cx="106" cy="68" rx="3.4" ry="5.8" fill="#111111"></ellipse><path d="M106.4 62.8 L109.2 66 L106.4 66.8 Z" fill="#FFFFFF"></path><path d="M93 78 Q100 86 107 78" fill="#111111" stroke="#111111" stroke-width="2" stroke-linejoin="round"></path><path d="M97 82 Q100 80 103 82 Q100 85 97 82 Z" fill="#FF6FB0"></path><path d="M16 12 l-8 -6" stroke="#111111" stroke-width="4" stroke-linecap="round"></path><path d="M12 30 l-10 0" stroke="#111111" stroke-width="4" stroke-linecap="round"></path><path d="M184 12 l8 -6" stroke="#111111" stroke-width="4" stroke-linecap="round"></path><path d="M188 30 l10 0" stroke="#111111" stroke-width="4" stroke-linecap="round"></path></g>
+<g transform="rotate(-6 100 178)">
+<path d="M22 162 L178 162 L170 196 L30 196 Z" fill="#C6FF4D" stroke="#172038" stroke-width="4" stroke-linejoin="round"></path>
+<text x="100" y="188" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-stretch="75%" font-size="30" fill="#172038">DAY ONE</text>
+</g>
+<text x="100" y="212" text-anchor="middle" font-family="Kalam, cursive" font-weight="700" font-size="11" fill="#172038" opacity="0.6">29 · 10 · 26</text>
+</svg></div><span style="font-size: 17px; font-weight: 700; line-height: 1.3">Every sticker in here is something you actually did.</span><span style="font-size: 17px; font-weight: 700; line-height: 1.3">No streaks to break, no score to beat. Just a book that fills up with your wins.</span><span class="kal" style="font-size: 16px; line-height: 1.25; opacity: 0.75">Flick back through it any time a day feels like nothing got done.</span></div><div class="tipc" style="position: absolute; left: 22px; right: 22px; top: 110px; padding: 26px 20px 18px; background: #FFFFFF; box-shadow: 0 14px 22px rgba(10,14,30,0.45); display: none; flex-direction: column; gap: 12px; transition: transform 0.28s cubic-bezier(.2,.9,.3,1), opacity 0.22s ease" data-rot="1.2"><span style="position: absolute; left: 50%; top: -14px; width: 110px; height: 26px; margin-left: -55px; background-color: rgba(198,255,77,0.8); background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0 5px, transparent 5px 10px); transform: rotate(-3deg)"></span><span class="title-die bri" style="align-self: flex-start; font-size: 28px; color: #172038; text-shadow: 3px 3px 0 #C6FF4D; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">HOW YOU GET MORE</span><div style="display: flex; align-items: center; gap: 12px"><span style="width: 64px; display: flex; justify-content: center; flex-shrink: 0"><svg width="54" viewBox="-10 -10 120 120" style="overflow: visible" aria-hidden="true"><g filter="url(#kst)"><circle cx="50" cy="50" r="40" fill="#C6FF4D" stroke="#172038" stroke-width="5"></circle><path d="M30 52 L45 66 L72 34" stroke="#172038" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></g></svg></span><span class="kal" style="font-size: 18px; line-height: 1.2">tick off a task</span></div><div style="display: flex; align-items: center; gap: 12px"><span style="width: 64px; display: flex; justify-content: center; flex-shrink: 0"><svg width="62" viewBox="0 0 230 230" style="overflow: visible"><g filter="url(#stkR)"><line x1="100.0" y1="106.0" x2="96.0" y2="200.0" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><line x1="120.0" y1="106.0" x2="124.0" y2="200.0" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><g transform="translate(94 206) scale(-1 1)"><path d="M-6 -8 C-6 -14 6 -14 8 -8 C16 -8 20 -2 18 4 L-8 4 C-12 4 -12 -6 -6 -8 Z" fill="#FF6FB0" stroke="#111111" stroke-width="3" stroke-linejoin="round"></path><path d="M-9 4 L18 4" stroke="#C6FF4D" stroke-width="4"></path><path d="M-10 6.5 L19 6.5" stroke="#111111" stroke-width="2.5" stroke-linecap="round"></path></g><g transform="translate(126 206) scale(1 1)"><path d="M-6 -8 C-6 -14 6 -14 8 -8 C16 -8 20 -2 18 4 L-8 4 C-12 4 -12 -6 -6 -8 Z" fill="#FF6FB0" stroke="#111111" stroke-width="3" stroke-linejoin="round"></path><path d="M-9 4 L18 4" stroke="#C6FF4D" stroke-width="4"></path><path d="M-10 6.5 L19 6.5" stroke="#111111" stroke-width="2.5" stroke-linecap="round"></path></g><line x1="76.0" y1="80.0" x2="144.0" y2="80.0" stroke="#111111" stroke-width="31" stroke-linecap="round"></line><line x1="110.0" y1="80.0" x2="93.0" y2="50.6" stroke="#111111" stroke-width="31" stroke-linecap="round"></line><line x1="110.0" y1="80.0" x2="95.5" y2="105.0" stroke="#111111" stroke-width="31" stroke-linecap="round"></line><line x1="110.0" y1="80.0" x2="127.0" y2="50.6" stroke="#111111" stroke-width="31" stroke-linecap="round"></line><line x1="110.0" y1="80.0" x2="124.5" y2="105.0" stroke="#111111" stroke-width="31" stroke-linecap="round"></line><line x1="76.0" y1="80.0" x2="144.0" y2="80.0" stroke="#FF6FB0" stroke-width="24" stroke-linecap="round"></line><line x1="110.0" y1="80.0" x2="93.0" y2="50.6" stroke="#FF6FB0" stroke-width="24" stroke-linecap="round"></line><line x1="110.0" y1="80.0" x2="95.5" y2="105.0" stroke="#FF6FB0" stroke-width="24" stroke-linecap="round"></line><line x1="110.0" y1="80.0" x2="127.0" y2="50.6" stroke="#FF6FB0" stroke-width="24" stroke-linecap="round"></line><line x1="110.0" y1="80.0" x2="124.5" y2="105.0" stroke="#FF6FB0" stroke-width="24" stroke-linecap="round"></line><ellipse cx="88" cy="75" rx="5" ry="2.5" fill="#FFFFFF" opacity="0.8"></ellipse><path d="M90 54 Q110 46 130 54" stroke="#111111" stroke-width="10" fill="none" stroke-linecap="round"></path><path d="M90 54 Q110 46 130 54" stroke="#C6FF4D" stroke-width="6" fill="none" stroke-linecap="round"></path><ellipse cx="104" cy="74" rx="3.4" ry="5.8" fill="#111111"></ellipse><path d="M104.4 68.8 L107.2 72 L104.4 72.8 Z" fill="#FFFFFF"></path><ellipse cx="116" cy="74" rx="3.4" ry="5.8" fill="#111111"></ellipse><path d="M116.4 68.8 L119.2 72 L116.4 72.8 Z" fill="#FFFFFF"></path><path d="M103 84 Q110 92 117 84" fill="#111111" stroke="#111111" stroke-width="2" stroke-linejoin="round"></path><path d="M107 88 Q110 86 113 88 Q110 91 107 88 Z" fill="#FF6FB0"></path><line x1="84.0" y1="82.0" x2="82.0" y2="126.0" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><line x1="136.0" y1="82.0" x2="138.0" y2="126.0" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><circle cx="82" cy="126" r="4.5" fill="#111111"></circle><circle cx="138" cy="126" r="4.5" fill="#111111"></circle><line x1="82.0" y1="126.0" x2="82.0" y2="131.3" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><line x1="138.0" y1="126.0" x2="138.0" y2="131.3" stroke="#111111" stroke-width="7" stroke-linecap="round"></line><rect x="56.0" y="128.3" width="108.0" height="6" rx="3" fill="#9AA2B4" stroke="#111111" stroke-width="2"></rect><rect x="48.0" y="115.3" width="10" height="32" rx="3" fill="#172038" stroke="#111111" stroke-width="2.5"></rect><rect x="162.0" y="115.3" width="10" height="32" rx="3" fill="#172038" stroke="#111111" stroke-width="2.5"></rect><ellipse cx="82.0" cy="131.3" rx="11" ry="10.1" fill="#FFFFFF" stroke="#111111" stroke-width="2.6"></ellipse><ellipse cx="138.0" cy="131.3" rx="11" ry="10.1" fill="#FFFFFF" stroke="#111111" stroke-width="2.6"></ellipse></g></svg></span><span class="kal" style="font-size: 18px; line-height: 1.2">finish a workout</span></div><div style="display: flex; align-items: center; gap: 12px"><span style="width: 64px; display: flex; justify-content: center; flex-shrink: 0"><svg width="60" viewBox="0 0 220 220" style="overflow: visible"><g filter="url(#kst)" transform="translate(10 0)"><path d="M150 108 L196 84" stroke="#2A1A10" stroke-width="16" stroke-linecap="round"></path><path d="M150 108 L196 84" stroke="#2A2A30" stroke-width="10" stroke-linecap="round"></path><circle cx="190" cy="87" r="2.5" fill="#E9EEF3"></circle><path d="M58 130 Q34 150 44 170" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M128 136 Q150 154 150 176" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M84 168 Q82 182 80 196" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M116 168 Q118 182 120 196" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><ellipse cx="77" cy="198" rx="9" ry="5" fill="#2A1A10"></ellipse><ellipse cx="123" cy="198" rx="9" ry="5" fill="#2A1A10"></ellipse><path d="M40 112 Q42 62 100 60 Q158 64 158 112 Q156 164 100 168 Q44 164 40 112 Z" fill="url(#iron)" stroke="#2A1A10" stroke-width="4"></path><path d="M54 112 Q56 76 100 74 Q144 78 144 112 Q142 152 100 154 Q58 150 54 112 Z" fill="#3A3A42"></path><path d="M60 92 Q72 76 92 74" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity="0.5" fill="none"></path><path d="M66 130 Q100 150 136 128" stroke="url(#kht)" stroke-width="14" fill="none"></path><ellipse cx="100" cy="102" rx="34" ry="26" fill="#FFFFFF" opacity="0"></ellipse><ellipse cx="86" cy="104" rx="8.5" ry="10.5" fill="#FFFFFF"></ellipse><ellipse cx="114" cy="104" rx="8.5" ry="10.5" fill="#FFFFFF"></ellipse><ellipse cx="87.0" cy="106" rx="3.8" ry="6.2" fill="#2A1A10"></ellipse><circle cx="88.2" cy="103.6" r="1.5" fill="#FFFFFF"></circle><ellipse cx="115.0" cy="106" rx="3.8" ry="6.2" fill="#2A1A10"></ellipse><circle cx="116.2" cy="103.6" r="1.5" fill="#FFFFFF"></circle><path d="M92 124 Q100 134.4 108 124 Z" fill="#2A1A10"></path><path d="M96.4 130.0 Q100 126.8 103.6 130.0 Q100 133.2 96.4 130.0 Z" fill="#FF7A8A"></path><ellipse cx="78" cy="122" rx="5" ry="3" fill="#FF8FA0" opacity="0.8"></ellipse><ellipse cx="122" cy="122" rx="5" ry="3" fill="#FF8FA0" opacity="0.8"></ellipse><path d="M64 52 l-6 -10 M82 44 l-2 -12 M100 42 v-12 M118 44 l2 -12 M136 52 l6 -10" stroke="#E8442E" stroke-width="4" stroke-linecap="round"></path></g></svg></span><span class="kal" style="font-size: 18px; line-height: 1.2">cook a recipe</span></div><div style="display: flex; align-items: center; gap: 12px"><span style="width: 64px; display: flex; justify-content: center; flex-shrink: 0"><svg width="56" viewBox="-8 -18 236 240" style="overflow: visible"><g filter="url(#kst)" transform="translate(10 0)"><path d="M56 128 Q34 120 30 98" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M144 124 Q166 106 164 78" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M86 178 Q84 188 84 198" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M114 178 Q116 188 116 198" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><ellipse cx="81" cy="200" rx="9" ry="5" fill="#2A1A10"></ellipse><ellipse cx="119" cy="200" rx="9" ry="5" fill="#2A1A10"></ellipse><path d="M100 26 C100 26 150 92 152 124 C154 160 130 182 100 182 C70 182 46 160 48 124 C50 92 100 26 100 26 Z" fill="#6EC8FF" stroke="#2A1A10" stroke-width="4" stroke-linejoin="round"></path><path d="M78 88 Q66 110 66 132" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.85"></path><circle cx="74" cy="148" r="4" fill="#FFFFFF" opacity="0.8"></circle><path d="M130 104 Q148 132 136 166" stroke="url(#kht)" stroke-width="14" fill="none"></path><path d="M56 150 Q100 170 144 150 Q140 176 100 180 Q60 176 56 150 Z" fill="#3FA9E6" opacity="0.55"></path><ellipse cx="89.0" cy="124" rx="4.2" ry="6.8" fill="#2A1A10"></ellipse><circle cx="90.4" cy="121.4" r="1.7" fill="#FFFFFF"></circle><ellipse cx="111.0" cy="124" rx="4.2" ry="6.8" fill="#2A1A10"></ellipse><circle cx="112.4" cy="121.4" r="1.7" fill="#FFFFFF"></circle><path d="M93 142 Q100 151.1 107 142 Z" fill="#2A1A10"></path><path d="M96.8 147.2 Q100 144.4 103.2 147.2 Q100 150.1 96.8 147.2 Z" fill="#FF7A8A"></path><ellipse cx="80.0" cy="140" rx="4.5" ry="2.6" fill="#FF8FA0" opacity="0.75"></ellipse><ellipse cx="120.0" cy="140" rx="4.5" ry="2.6" fill="#FF8FA0" opacity="0.75"></ellipse><path d="M176 70 l8 -6" stroke="#6EC8FF" stroke-width="4" stroke-linecap="round"></path><path d="M178 86 l10 0" stroke="#6EC8FF" stroke-width="4" stroke-linecap="round"></path></g></svg></span><span class="kal" style="font-size: 18px; line-height: 1.2">hit your water goal</span></div><span class="kal" style="font-size: 16px; line-height: 1.25; opacity: 0.75">One peel, one stick, done. Same move every time.</span></div><div class="tipc" style="position: absolute; left: 22px; right: 22px; top: 110px; padding: 26px 20px 18px; background: #FFFFFF; box-shadow: 0 14px 22px rgba(10,14,30,0.45); display: none; flex-direction: column; gap: 12px; transition: transform 0.28s cubic-bezier(.2,.9,.3,1), opacity 0.22s ease" data-rot="-1"><span style="position: absolute; left: 50%; top: -14px; width: 110px; height: 26px; margin-left: -55px; background-color: rgba(198,255,77,0.8); background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0 5px, transparent 5px 10px); transform: rotate(-3deg)"></span><span class="title-die bri" style="align-self: flex-start; font-size: 28px; color: #172038; text-shadow: 3px 3px 0 #6EC8FF; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">SHINY ONES</span><div style="display: flex; justify-content: center; gap: 18px; padding: 4px 0"><svg width="78" viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="holoG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF9AD5"></stop><stop offset="0.25" stop-color="#FFE48A"></stop><stop offset="0.5" stop-color="#9BFFD9"></stop><stop offset="0.75" stop-color="#9CC9FF"></stop><stop offset="1" stop-color="#D3A6FF"></stop></linearGradient></defs><path d="M60 4 L74 40 L114 42 L83 66 L94 106 L60 84 L26 106 L37 66 L6 42 L46 40 Z" fill="url(#holoG)" stroke="#172038" stroke-width="5" stroke-linejoin="round"></path><path d="M40 30 L58 54" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity="0.8"></path><text x="60" y="72" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-stretch="75%" font-size="15" fill="#172038">BIG WIN</text></svg><svg width="70" viewBox="0 0 110 110" aria-hidden="true"><circle cx="55" cy="55" r="46" fill="#FF6FB0" stroke="#172038" stroke-width="5"></circle><circle cx="55" cy="55" r="36" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="6 6"></circle><text x="55" y="50" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-stretch="75%" font-size="17" fill="#172038">LEVEL</text><text x="55" y="80" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="30" fill="#172038">2</text></svg></div><span style="font-size: 17px; font-weight: 700; line-height: 1.3">Big moments earn rare holo stickers.</span><span style="font-size: 17px; font-weight: 700; line-height: 1.3">Every sticker adds XP. Level up and you unlock new stickers to send your friends.</span><span class="kal" style="font-size: 16px; line-height: 1.25; opacity: 0.75">Some are surprises. You’ll know one when you peel it.</span></div><div style="position: absolute; left: 22px; right: 22px; bottom: 30px; display: flex; flex-direction: column; gap: 10px; align-items: center"><div style="display: flex; gap: 6px"><span class="tipdot" style="width: 26px; height: 10px; border-radius: 10px; background: #FF6FB0; border: 2px solid #F6EFE1"></span><span class="tipdot" style="width: 10px; height: 10px; border-radius: 10px; background: transparent; border: 2px solid #F6EFE1"></span><span class="tipdot" style="width: 10px; height: 10px; border-radius: 10px; background: transparent; border: 2px solid #F6EFE1"></span></div><button type="button" id="sbk-tipNext" class="press bri" style="width: 100%; height: 58px; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 23px">NEXT →</button><button type="button" id="sbk-tipSkip" class="kal" style="border: none; background: transparent; color: #F6EFE1; font-size: 15px; text-decoration: underline">skip</button></div></div>
+</div>
+</script>
+<script type="text/x-dc-logic" id="dc-logic">
+
+class Component extends DCLogic {
+  renderVals() {
+    if (!this._bound) { this._bound = true; this._tries = 0; const go = () => { if (!this.mount() && this._tries++ < 60) setTimeout(go, 50); }; setTimeout(go, 0); }
+    let book = 'MY STICKER BOOK';
+    try { const pf = JSON.parse(localStorage.getItem('gsd.profile') || 'null'); if (pf && pf.bookName) book = pf.bookName.toUpperCase(); } catch (e) {}
+    return { book };
+  }
+  componentDidMount() { if (!this.mount()) { this._tries = 0; const go = () => { if (!this.mount() && this._tries++ < 60) setTimeout(go, 50); }; setTimeout(go, 50); } }
+  componentWillUnmount() { this.dead = true; cancelAnimationFrame(this.raf); clearTimeout(this.lp); }
+  mount() {
+    const $ = (id) => document.getElementById(id);
+    const root = $('sbk-sbroot'); if (!root || !$('sbk-stk')) return false;
+    if (root.dataset.bound === '1') return true; root.dataset.bound = '1';
+    const W = 150, H = 170, R = 22, DIAG = Math.hypot(W, H), DETACH = 0.95 * DIAG, FULL = 2.05 * DIAG;
+    const TRAY = { x: 54, y: 632 }, SLOT = { x: 195, y: 318 }, PAGE = { l: 14, t: 66, r: 376, b: 588 };
+    const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
+    const pref = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v === '1'; } catch (e) { return d; } };
+    const S = { mode: 'tray', x: TRAY.x, y: TRAY.y, rot: 0, scale: 1, P: null, haptics: pref('gsd.haptics', true), sound: pref('gsd.sound', true), select: false, ticks: 0, overSlot: false };
+    this.S = S;
+    const stk = $('sbk-stk'), inner = $('sbk-stkIn'), faceEl = $('sbk-stkFace'), flap = $('sbk-flap'), flapWrap = $('sbk-flapWrap'), shadow = $('sbk-stkShadow');
+    const slot = $('sbk-slot'), hint = $('sbk-peelHint'), msg = $('sbk-trayMsg'), tray = $('sbk-tray'), done = $('sbk-donePanel'), sel = $('sbk-selRing');
+
+    // ---- feel: haptics + sound (short, crisp, meaningful; both can be switched off)
+    const buzz = (p) => { if (!S.haptics) return; try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} };
+    let ac = null;
+    const audio = () => { if (!S.sound) return null; try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); return ac; } catch (e) { return null; } };
+    const noise = (a, dur, freq, q, gain) => { const n = a.createBuffer(1, Math.max(1, a.sampleRate * dur), a.sampleRate), d = n.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length); const s = a.createBufferSource(); s.buffer = n; const f = a.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = freq; f.Q.value = q; const g = a.createGain(); g.gain.value = gain; s.connect(f); f.connect(g); g.connect(a.destination); s.start(); };
+    const sfx = { tick: () => {}, lift: () => {}, land: () => {} };   // the book is haptics-only: real stickers don't make a sound
+
+    // ---- geometry: rounded-rect outline, fold line, clip + reflected flap
+    const outline = (() => { const pts = [], seg = 6, corners = [[W - R, H - R, 0], [R, H - R, 90], [R, R, 180], [W - R, R, 270]];
+      corners.forEach(([cx, cy, a0]) => { for (let i = 0; i <= seg; i++) { const a = (a0 + 90 * i / seg) * Math.PI / 180; pts.push([cx + R * Math.cos(a), cy + R * Math.sin(a)]); } }); return pts; })();
+    const C = [R * 0.29, H - R * 0.29];   // the corner the peel starts from: bottom-left, easy for a right thumb to pull up and across
+    const poly = (pts) => 'polygon(' + pts.map((p) => p[0].toFixed(1) + 'px ' + p[1].toFixed(1) + 'px').join(', ') + ')';
+    const setPeel = (P) => {
+      S.P = P;
+      if (!P) { faceEl.style.clipPath = 'none'; flapWrap.style.display = 'none'; return; }
+      const dx = C[0] - P[0], dy = C[1] - P[1], d = Math.hypot(dx, dy);
+      if (d < 0.5) { faceEl.style.clipPath = 'none'; flapWrap.style.display = 'none'; return; }
+      const n = [dx / d, dy / d], M = [(C[0] + P[0]) / 2, (C[1] + P[1]) / 2];
+      const side = (p) => (p[0] - M[0]) * n[0] + (p[1] - M[1]) * n[1];
+      const keep = [], cut = [];
+      for (let i = 0; i < outline.length; i++) {
+        const a = outline[i], b = outline[(i + 1) % outline.length], sa = side(a), sb = side(b);
+        if (sa <= 0) keep.push(a); else cut.push(a);
+        if ((sa <= 0) !== (sb <= 0)) { const t = sa / (sa - sb), q = [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; keep.push(q); cut.push(q); }
+      }
+      faceEl.style.clipPath = keep.length > 2 ? poly(keep) : 'polygon(0 0, 0 0, 0 0)';
+      const refl = cut.map((p) => { const s = side(p); return [p[0] - 2 * s * n[0] + W, p[1] - 2 * s * n[1] + H]; });
+      flapWrap.style.display = refl.length > 2 ? 'block' : 'none';
+      flap.style.clipPath = poly(refl);
+      const ang = Math.atan2(n[1], n[0]) * 180 / Math.PI + 90;
+      flap.style.background = 'linear-gradient(' + ang.toFixed(0) + 'deg, #FFFFFF 0%, #F4EFE6 55%, #D8D0C2 100%)';
+      shadow.style.opacity = Math.min(1, d / DETACH);
+      faceEl.style.opacity = d > DIAG * 1.85 ? 0 : 1;
+    };
+    const REST = [C[0] + 13, C[1] - 11];       // corner slightly lifted at rest: an invitation
+    const place = () => {
+      stk.style.transform = 'translate(' + S.x.toFixed(1) + 'px,' + S.y.toFixed(1) + 'px)';
+      inner.style.transform = 'rotate(' + S.rot.toFixed(2) + 'deg) scale(' + S.scale.toFixed(3) + ')';
+    };
+    const lifted = (on) => {
+      shadow.style.boxShadow = on ? '0 22px 28px rgba(60,40,20,0.35)' : '0 2px 3px rgba(60,40,20,0.25)';
+      shadow.style.opacity = 1;
+    };
+    stk.style.left = '0px'; stk.style.top = '0px'; place(); setPeel(REST); lifted(false);
+
+    // ---- helpers
+    const toBoard = (e) => { const r = root.getBoundingClientRect(), k = r.width / 390; return [(e.clientX - r.left) / k, (e.clientY - r.top) / k]; };
+    const animate = (from, to, ms, ease, step, end) => { const t0 = performance.now(); const f = (t) => { if (this.dead) return; let u = Math.min(1, (t - t0) / ms); u = ease(u); step(from.map((v, i) => v + (to[i] - v) * u)); if (u < 1 && (t - t0) < ms) this.raf = requestAnimationFrame(f); else { step(to); end && end(); } }; this.raf = requestAnimationFrame(f); };
+    const out = (u) => 1 - Math.pow(1 - u, 3);
+    const spring = (u) => { const c = 1.70158 * 1.2; return 1 + (c + 1) * Math.pow(u - 1, 3) + c * Math.pow(u - 1, 2); };
+    const say = (t) => { msg.textContent = t; };
+    const slotGlow = (on) => { if (on === S.overSlot) return; S.overSlot = on; slot.style.borderColor = on ? '#7FB800' : 'rgba(23,32,56,0.35)'; slot.style.background = on ? 'rgba(198,255,77,0.28)' : 'transparent'; if (on) { buzz(5); sfx.tick(); } };
+
+    // ---- states
+    const toFree = (fx, fy, gx, gy) => {
+      S.mode = 'free'; setPeel(null); lifted(true); hint.style.opacity = 0; sel.style.opacity = 0; S.select = false;
+      S.gx = gx; S.gy = gy; S.tx = fx - gx; S.ty = fy - gy; buzz(10); sfx.lift();
+      animate([S.scale], [1.08], reduce ? 1 : 140, out, (v) => { S.scale = v[0]; place(); });
+      const loop = () => { if (this.dead || S.mode !== 'free') return; const nx = S.x + (S.tx - S.x) * 0.38, ny = S.y + (S.ty - S.y) * 0.38;
+        const vx = nx - S.x; S.x = nx; S.y = ny; S.rot += (Math.max(-12, Math.min(12, vx * 0.9)) - S.rot) * 0.25; place();
+        const cx = S.x + W / 2, cy = S.y + H / 2; slotGlow(Math.hypot(cx - SLOT.x, cy - SLOT.y) < 110);
+        this.raf = requestAnimationFrame(loop); };
+      cancelAnimationFrame(this.raf); this.raf = requestAnimationFrame(loop);
+    };
+    const land = (tx, ty, rot) => {
+      S.mode = 'landing'; cancelAnimationFrame(this.raf);
+      animate([S.x, S.y, S.rot], [tx, ty, rot], reduce ? 1 : 170, out, (v) => { S.x = v[0]; S.y = v[1]; S.rot = v[2]; place(); }, () => {
+        lifted(false); buzz(12); sfx.land(); slotGlow(false);
+        if (reduce) { S.scale = 1; place(); } else animate([1.08], [1], 260, (u) => u < 0.4 ? 1 - 0.13 * (u / 0.4) * 1.4 : spring((u - 0.4) / 0.6), (v) => { S.scale = Math.max(0.9, v[0]); place(); });
+        S.mode = 'placed'; S.scale = 1;
+        if (!S.doneShown) { S.doneShown = true; tray.style.transform = 'translateY(260px)'; tray.style.opacity = 0; done.style.display = 'flex'; requestAnimationFrame(() => { done.style.opacity = 1; done.style.transform = 'none'; }); confetti(tx + W / 2, ty + H / 2); slot.style.opacity = 0; }
+      });
+    };
+    const dropAt = () => {
+      const cx = S.x + W / 2, cy = S.y + H / 2;
+      const onPage = cx > PAGE.l + 20 && cx < PAGE.r - 20 && cy > PAGE.t + 20 && cy < PAGE.b - 20;
+      if (!onPage) { backToTray(); return; }
+      if (Math.hypot(cx - SLOT.x, cy - SLOT.y) < 110) return land(SLOT.x - W / 2, SLOT.y - H / 2, -3);
+      const tx = Math.max(PAGE.l + 6, Math.min(PAGE.r - W - 6, S.x)), ty = Math.max(PAGE.t + 6, Math.min(PAGE.b - H - 6, S.y));
+      land(tx, ty, Math.round((Math.random() * 10 - 5) * 10) / 10);
+    };
+    const backToTray = () => {
+      S.mode = 'returning'; cancelAnimationFrame(this.raf); slotGlow(false); buzz(6); sfx.tick();
+      animate([S.x, S.y, S.rot, S.scale], [TRAY.x, TRAY.y, 0, 1], reduce ? 1 : 300, spring, (v) => { S.x = v[0]; S.y = v[1]; S.rot = v[2]; S.scale = v[3]; place(); }, () => { S.mode = 'tray'; lifted(false); setPeel(REST); hint.style.opacity = 1; say('Peel it from the corner, then stick it on your page.'); });
+    };
+    // past the halfway point the sticker lets go by itself: the fold runs the rest of the way over in one smooth pull, then it pops face-up in your fingers
+    const finishPeel = (P) => {
+      S.mode = 'releasing'; buzz([6, 30, 10]);
+      const dx = P[0] - C[0], dy = P[1] - C[1], d = Math.hypot(dx, dy) || 1, to = [C[0] + dx / d * FULL, C[1] + dy / d * FULL];
+      animate(P, to, reduce ? 1 : 170, (u) => u * u, (v) => setPeel(v), () => {
+        faceEl.style.opacity = 1; const f = (down && down.last) || [S.x + to[0], S.y + to[1]];
+        toFree(f[0], f[1], 26, H - 26); say('Now stick it on your page.');
+        if (S.releasedEarly) { S.releasedEarly = false; dropAt(); } });
+    };
+    const autoPeelTo = (tx, ty) => {   // tap-to-place and "stick it for me": peel, lift, fly, land
+      if (S.mode !== 'tray') return; S.mode = 'auto'; hint.style.opacity = 0; sel.style.opacity = 0; S.select = false;
+      const end = [C[0] + DETACH * 0.75, C[1] - DETACH * 0.66];
+      const fly = () => { setPeel(null); lifted(true); buzz(10); sfx.lift();
+        animate([S.x, S.y, S.scale, S.rot], [tx - W / 2, ty - H / 2, 1.08, 6], reduce ? 1 : 420, out, (v) => { S.x = v[0]; S.y = v[1]; S.scale = v[2]; S.rot = v[3]; place(); }, () => {
+          const near = Math.hypot(tx - SLOT.x, ty - SLOT.y) < 110;
+          land(near ? SLOT.x - W / 2 : Math.max(PAGE.l + 6, Math.min(PAGE.r - W - 6, tx - W / 2)), near ? SLOT.y - H / 2 : Math.max(PAGE.t + 6, Math.min(PAGE.b - H - 6, ty - H / 2)), near ? -3 : 4); }); };
+      if (reduce) fly(); else animate(REST, end, 300, out, (v) => { setPeel(v); }, () => { buzz([6, 30, 10]); const d = Math.hypot(end[0] - C[0], end[1] - C[1]); animate(end, [C[0] + (end[0] - C[0]) / d * FULL, C[1] + (end[1] - C[1]) / d * FULL], 170, (u) => u * u, (v) => setPeel(v), () => { faceEl.style.opacity = 1; fly(); }); });
+    };
+    const confetti = (x, y) => {
+      if (reduce) return;
+      const cols = ['#FF6FB0', '#C6FF4D', '#6EC8FF', '#FFD23F', '#A98BFF'];
+      for (let i = 0; i < 12; i++) { const s = document.createElement('span'); const a = (i / 12) * Math.PI * 2, r = 110 + Math.random() * 40;
+        s.className = 'cf'; s.textContent = i % 3 === 0 ? '✦' : '●'; s.style.cssText = 'position:absolute;left:' + x + 'px;top:' + y + 'px;color:' + cols[i % 5] + ';font-size:' + (i % 3 === 0 ? 22 : 12) + 'px;z-index:6;pointer-events:none;transition:transform 0.6s cubic-bezier(.2,.9,.3,1), opacity 0.6s ease 0.35s;-webkit-text-stroke:1.5px #172038';
+        root.appendChild(s); requestAnimationFrame(() => { s.style.transform = 'translate(' + (Math.cos(a) * r).toFixed(0) + 'px,' + (Math.sin(a) * r).toFixed(0) + 'px) rotate(' + (a * 60).toFixed(0) + 'deg)'; s.style.opacity = 0; });
+        setTimeout(() => s.remove(), 1100); }
+    };
+
+    // ---- pointer handling
+    let down = null;
+    stk.addEventListener('pointerdown', (e) => {
+      if (['auto', 'landing', 'returning', 'releasing'].indexOf(S.mode) >= 0) return;
+      e.preventDefault(); try { stk.setPointerCapture(e.pointerId); } catch (x) {}
+      audio();
+      const [fx, fy] = toBoard(e), L = [fx - S.x, fy - S.y];
+      down = { fx, fy, t: performance.now(), L, moved: false };
+      if (S.mode === 'tray') {
+        const nearCorner = Math.hypot(C[0] - L[0], C[1] - L[1]) < 64;
+        if (nearCorner) { S.mode = 'peeling'; S.grab = [C[0] - L[0], C[1] - L[1]]; S.ticks = 0; hint.style.opacity = 0; buzz(4); }
+        else { down.wiggle = true; }
+      } else if (S.mode === 'placed') {
+        clearTimeout(this.lp); this.lp = setTimeout(() => { if (down && !down.moved) { toFree(fx, fy, L[0], L[1]); say(''); } }, 350);
+      }
+    });
+    stk.addEventListener('pointermove', (e) => {
+      if (!down) return; const [fx, fy] = toBoard(e);
+      if (Math.hypot(fx - down.fx, fy - down.fy) > 6) down.moved = true;
+      if (S.mode === 'peeling') {
+        const P = [fx - S.x + S.grab[0], fy - S.y + S.grab[1]];
+        const d = Math.hypot(C[0] - P[0], C[1] - P[1]);
+        const k = Math.floor(d / 30); if (k > S.ticks) { S.ticks = k; buzz(4); sfx.tick(); }
+        if (d >= DETACH) finishPeel(P);
+        else setPeel(P);
+      } else if (S.mode === 'free') { S.tx = fx - S.gx; S.ty = fy - S.gy; }
+      if (down) down.last = [fx, fy];
+    });
+    const up = (e) => {
+      if (!down) return; clearTimeout(this.lp);
+      const quick = !down.moved && performance.now() - down.t < 300;
+      if (S.mode === 'peeling') {
+        if (quick) { S.mode = 'tray'; setPeel(REST); toggleSelect(); }
+        else { S.mode = 'tray'; const from = S.P || REST; animate(from, REST, reduce ? 1 : 220, spring, (v) => setPeel(v)); buzz(5); hint.style.opacity = 1; say('Almost! Keep peeling until it lifts off.'); }
+      } else if (S.mode === 'free') { dropAt(); }
+      else if (S.mode === 'releasing') { S.releasedEarly = true; }
+      else if (S.mode === 'tray' && down.wiggle) {
+        if (quick) toggleSelect();
+        else wiggle();
+      }
+      down = null;
+    };
+    stk.addEventListener('pointerup', up); stk.addEventListener('pointercancel', up);
+    const wiggle = () => { if (reduce) return; say('Try the corner: that’s where stickers peel from.'); hint.style.opacity = 1;
+      animate([0], [1], 360, (u) => u, (v) => { S.rot = Math.sin(v[0] * Math.PI * 4) * 3 * (1 - v[0]); place(); }); };
+    const toggleSelect = () => { S.select = !S.select; sel.style.opacity = S.select ? 1 : 0; buzz(6); say(S.select ? 'Now tap your page where it should go.' : 'Peel it from the corner, then stick it on your page.'); if (!S.select) hint.style.opacity = 1; };
+    $('sbk-page').addEventListener('pointerdown', (e) => { if (!S.select || S.mode !== 'tray') return; const [fx, fy] = toBoard(e); audio(); autoPeelTo(fx, fy); });
+    $('sbk-autoBtn').addEventListener('click', () => { audio(); autoPeelTo(SLOT.x, SLOT.y); });
+    const tg = (id, key, label) => { const b = $(id); const paint = () => { b.textContent = label + (S[key] ? ' on' : ' off'); b.style.opacity = S[key] ? 1 : 0.55; b.setAttribute('aria-pressed', S[key] ? 'true' : 'false'); };
+      paint(); b.addEventListener('click', () => { S[key] = !S[key]; try { localStorage.setItem('gsd.' + key, S[key] ? '1' : '0'); } catch (e) {} paint(); if (S[key] && key === 'haptics') buzz(8); }); };
+    tg('sbk-hapBtn', 'haptics', 'haptics');
+
+    // ---- explainer cards: one idea each, skippable, swipeable, reopen with "?"
+    const tips = $('sbk-tips'), cards = [...tips.querySelectorAll('.tipc')], dots = [...tips.querySelectorAll('.tipdot')], tnext = $('sbk-tipNext');
+    let ti = 0, tipsSeen = false;
+    const showCard = (i, dir) => {
+      cards.forEach((c, k) => { const rot = 'rotate(' + c.dataset.rot + 'deg)';
+        if (k === i) { c.style.display = 'flex'; c.style.opacity = 0; c.style.transform = 'translateX(' + (reduce ? 0 : 40 * dir) + 'px) ' + rot;
+          requestAnimationFrame(() => requestAnimationFrame(() => { c.style.opacity = 1; c.style.transform = 'translateX(0) ' + rot; })); }
+        else c.style.display = 'none'; });
+      dots.forEach((d, k) => { d.style.width = k === i ? '26px' : '10px'; d.style.background = k <= i ? '#FF6FB0' : 'transparent'; });
+      tnext.textContent = i === cards.length - 1 ? (S.doneShown ? 'LET’S GO →' : 'GOT IT') : 'NEXT →';
+    };
+    const openTips = () => { ti = 0; tips.style.display = 'block'; requestAnimationFrame(() => { tips.style.opacity = 1; }); showCard(0, 1); buzz(6); };
+    const closeTips = () => { tips.style.opacity = 0; setTimeout(() => { tips.style.display = 'none'; }, 220); tipsSeen = true; buzz(6);
+      if (S.doneShown) $('sbk-whatNext').textContent = 'LET’S GO →'; };
+    const goToday = () => { const a = $('sbk-toToday'); if (a) a.click(); };   // first run: on to the home screen
+    tnext.addEventListener('click', () => { if (ti < cards.length - 1) { ti++; showCard(ti, 1); sfx.tick(); } else { closeTips(); if (S.doneShown) goToday(); } });
+    $('sbk-tipSkip').addEventListener('click', closeTips);
+    let sx = null;
+    tips.addEventListener('pointerdown', (e) => { sx = e.clientX; });
+    tips.addEventListener('pointerup', (e) => { if (sx === null) return; const dx = e.clientX - sx; sx = null;
+      if (dx < -50 && ti < cards.length - 1) { ti++; showCard(ti, 1); } else if (dx > 50 && ti > 0) { ti--; showCard(ti, -1); } });
+    $('sbk-helpBtn').addEventListener('click', openTips);
+    $('sbk-whatNext').addEventListener('click', () => { if (!tipsSeen) openTips(); else goToday(); });
+    $('sbk-againBtn').addEventListener('click', () => { tipsSeen = false; $('sbk-whatNext').textContent = 'HOW DO I GET MORE? \u2192'; S.doneShown = false; done.style.opacity = 0; done.style.transform = 'translateY(20px)'; setTimeout(() => { done.style.display = 'none'; }, 200);
+      tray.style.transform = 'none'; tray.style.opacity = 1; slot.style.opacity = 1; S.mode = 'tray'; S.x = TRAY.x; S.y = TRAY.y; S.rot = 0; S.scale = 1; place(); setPeel(REST); lifted(false); hint.style.opacity = 1; say('Peel it from the corner, then stick it on your page.'); });
+    return true;
+  }
+}
+
+</script>
+<script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
+<script src="https://cdn.jsdelivr.net/npm/morphdom@2.7.4/dist/morphdom-umd.min.js"></script>
+<script src="dc.js"></script>
+</body></html>

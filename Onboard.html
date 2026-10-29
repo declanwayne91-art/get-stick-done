@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Get St*ck Done!</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&amp;family=Kalam:wght@400;700&amp;family=Atkinson+Hyperlegible:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none;padding:0}
+button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
+.title-die{filter:url(#tdie) drop-shadow(0 6px 6px rgba(60,40,20,0.3))}
+.bri{font-family:'Bricolage Grotesque',sans-serif;font-stretch:75%;font-weight:800;line-height:0.9}
+.kal{font-family:'Kalam',cursive;font-weight:700}
+.press{transition:transform 0.09s ease-out}
+.press:active{transform:scale(0.92)}
+.dot{width:34px;height:34px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#172038;border:3px solid #FFFFFF;box-shadow:0 0 0 2px #172038}
+.chip{padding:5px 10px;border-radius:999px;background:#C6FF4D;border:2px solid #172038;font-weight:700;font-size:13px;color:#172038;white-space:nowrap}
+.box{width:24px;height:24px;flex-shrink:0;border:2.5px solid #172038;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#172038;font-weight:900}
+.tom{position:relative;width:60px;height:54px;border-radius:48% 48% 46% 46%;border:3px solid #FFFFFF;box-shadow:0 0 0 2px #2A1A10;display:flex;align-items:center;justify-content:center}
+@keyframes ring{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.ringing{animation:ring 0.4s ease-in-out infinite}
+@keyframes peelclip{0%{clip-path:inset(-20px -20px -20px -20px)}100%{clip-path:inset(-20px 100% -20px -20px)}}
+@keyframes peelflap{0%{left:146px;opacity:0;transform:scaleX(0.4)}12%{opacity:1}85%{opacity:1}100%{left:-14px;opacity:0;transform:scaleX(1.1)}}
+.face{display:block}
+.flap{position:absolute;top:-3px;width:22px;height:56px;border-radius:14px 4px 4px 14px;background:linear-gradient(90deg,#FFFFFF,#F1ECE3 55%,#CFC6B6);border:2px solid #111;box-shadow:-5px 4px 6px rgba(0,0,0,0.28);display:none;pointer-events:none}
+.peeling .face{animation:peelclip 0.6s cubic-bezier(.4,0,.55,1) forwards}
+.peeling .flap{display:block;animation:peelflap 0.6s cubic-bezier(.4,0,.55,1) forwards}
+.peeling{pointer-events:none}
+@keyframes nextpop{0%{transform:scale(1.7) rotate(-34deg);opacity:0}65%{transform:scale(0.94) rotate(-8deg);opacity:1}100%{transform:scale(1) rotate(-12deg);opacity:1}}
+.nextpop{animation:nextpop 0.34s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes bob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.02)}}
+.nextpop svg{animation:bob 2.2s ease-in-out 0.4s infinite}
+.peeling{transform:rotate(-12deg)}
+
+@keyframes slapin{0%{transform:scale(1.7) rotate(-22deg);opacity:0}60%{transform:scale(0.92) rotate(-4deg);opacity:1}100%{transform:scale(1) rotate(-6deg);opacity:1}}
+.slap{animation:slapin 0.32s cubic-bezier(.3,1.5,.5,1) both}
+.pic svg{height:100%;max-height:100%;width:auto;max-width:100%}
+.prepmid>*{flex-shrink:0}
+</style>
+<style>
+.tile{width:58px;height:66px;border-radius:16px;border:3px solid #172038;font-size:34px;color:#172038;display:flex;align-items:center;justify-content:center}
+.chipb{height:42px;padding:0 14px;border-radius:999px;border:2.5px solid #172038;font-size:16px;color:#172038}
+.dchip{width:44px;height:42px;border-radius:12px;border:2.5px solid #172038;font-size:15px;color:#172038;display:flex;align-items:center;justify-content:center}
+.q{font-size:20px;font-weight:700;line-height:1.2}
+@keyframes sheetup{from{transform:translateY(100%)}to{transform:none}}
+.sheet{animation:sheetup 0.24s cubic-bezier(.2,.9,.3,1) both}
+.hint{font-size:15px;opacity:0.75}
+@keyframes coverin{0%{transform:scale(1.5) rotate(-14deg);opacity:0}60%{transform:scale(0.95) rotate(-2deg);opacity:1}100%{transform:scale(1) rotate(-3deg)}}
+.coverin{animation:coverin 0.4s cubic-bezier(.3,1.5,.5,1) both}
+input:focus{outline:none;box-shadow:0 0 0 3px #FF6FB0}
+</style>
+
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#0B1022;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+#dc-frame{position:absolute;left:0;top:0;transform-origin:0 0;background:#172038}
+#dc-stage{position:relative;overflow:hidden}
+</style>
+</head><body data-extra="0">
+<div id="dc-frame"><div id="dc-stage"></div></div>
+<script type="text/x-dc-template" id="dc-tpl">
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background-color: #FBF4E6; background-image: linear-gradient(rgba(139,94,52,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(139,94,52,0.08) 1px, transparent 1px); background-size: 20px 20px; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #172038">
+<svg aria-hidden="true" width="0" height="0" style="position: absolute; width: 0; height: 0; overflow: hidden"><defs><filter id="tdie" x="-30%" y="-60%" width="160%" height="220%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="5" result="grow"></feMorphology><feGaussianBlur in="grow" stdDeviation="2.5" result="soft"></feGaussianBlur><feComponentTransfer in="soft" result="white-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feMorphology in="white-mask" operator="dilate" radius="3" result="key-grow"></feMorphology><feGaussianBlur in="key-grow" stdDeviation="1" result="key-soft"></feGaussianBlur><feComponentTransfer in="key-soft" result="key-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feFlood flood-color="#111111"></feFlood><feComposite in2="key-mask" operator="in" result="key"></feComposite><feFlood flood-color="#FFFFFF"></feFlood><feComposite in2="white-mask" operator="in" result="white"></feComposite><feMerge><feMergeNode in="key"></feMergeNode><feMergeNode in="white"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter><filter id="kst" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="7" result="h"></feMorphology><feMorphology in="SourceAlpha" operator="dilate" radius="19" result="c1"></feMorphology><feMorphology in="c1" operator="erode" radius="16" result="c2"></feMorphology><feComposite in="h" in2="c2" operator="over" result="u"></feComposite><feGaussianBlur in="u" stdDeviation="2.4" result="ub"></feGaussianBlur><feComponentTransfer in="ub" result="back"><feFuncA type="linear" slope="6" intercept="-3.00"></feFuncA></feComponentTransfer><feMorphology in="back" operator="dilate" radius="3.2" result="eg"></feMorphology><feComposite in="eg" in2="back" operator="out" result="edge"></feComposite><feFlood flood-color="#2A1A10"></feFlood><feComposite in2="edge" operator="in" result="edgeC"></feComposite><feFlood flood-color="#FFF4DF"></feFlood><feComposite in2="back" operator="in" result="backC"></feComposite><feMerge><feMergeNode in="edgeC"></feMergeNode><feMergeNode in="backC"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter><pattern id="kht" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><circle cx="2.5" cy="2.5" r="1.2" fill="#2A1A10" fill-opacity="0.3"></circle></pattern><linearGradient id="steel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E9EEF3"></stop><stop offset="0.5" stop-color="#B9C3CE"></stop><stop offset="1" stop-color="#8E9AA8"></stop></linearGradient><linearGradient id="iron" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4A4A52"></stop><stop offset="1" stop-color="#1E1E24"></stop></linearGradient></defs></svg>
+  <div style="position: absolute; left: 18px; right: 18px; top: 18px; display: flex; align-items: center; justify-content: space-between">
+    <div style="display: flex; gap: 6px"><sc-for list="{{dots}}" as="d" hint-placeholder-count="5"><span style="width: {{d.w}}; height: 10px; border-radius: 10px; background: {{d.bg}}; border: 2px solid #172038"></span></sc-for></div>
+    <sc-if value="{{canSkip}}" hint-placeholder-val="{{ true }}"><button type="button" class="press kal" onClick="{{skip}}" style="border: none; background: transparent; color: #172038; font-size: 17px; text-decoration: underline">skip</button></sc-if>
+  </div>
+
+  <div style="position: absolute; left: 18px; right: 18px; top: 58px; bottom: 104px; display: flex; flex-direction: column; gap: 14px">
+    <sc-if value="{{showCover}}" hint-placeholder-val="{{ true }}">
+      <div class="{{coverCls}}" style="align-self: center; width: 250px; height: 310px; margin: 6px 0 4px; border-radius: 10px 22px 22px 10px; background: #172038; box-shadow: inset 14px 0 0 #0E1528, 6px 8px 0 #FF6FB0, 0 14px 20px rgba(0,0,0,0.25); position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 0 18px 0 30px; box-sizing: border-box; transform: rotate(-3deg)">
+        <span class="bri" style="font-size: {{nameSize}}; color: #C6FF4D; text-align: center; line-height: 0.9; text-shadow: 3px 3px 0 #FF6FB0; word-break: break-word">{{coverName}}</span>
+        <span class="bri" style="font-size: 26px; color: #FFFFFF; letter-spacing: 1px; text-align: center">STICKER BOOK</span>
+        <span class="bri" style="position: absolute; right: -14px; top: -16px; width: 56px; height: 56px; border-radius: 56px; background: #FF6FB0; border: 4px solid #FFFFFF; box-shadow: 0 0 0 2.5px #172038; color: #172038; font-size: 52px; display: flex; align-items: center; justify-content: center; padding-top: 14px; box-sizing: border-box; transform: rotate(12deg)">*</span>
+        <span class="kal" style="position: absolute; bottom: 14px; left: 30px; right: 18px; text-align: center; color: #F6EFE1; opacity: 0.7; font-size: 13px">get st*ck done!</span>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{s0}}" hint-placeholder-val="{{ true }}">
+      <span class="title-die bri" style="font-size: 36px; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">YOUR NAME?</span>
+      <span class="q">It goes on the front of your sticker book.</span>
+      <input type="text" value="{{name}}" onInput="{{setName}}" maxlength="14" placeholder="your name" aria-label="Your name" style="height: 54px; border-radius: 14px; border: 3px solid #172038; padding: 0 16px; font-family: 'Kalam', cursive; font-weight: 700; font-size: 24px; color: #172038; background: #FFFFFF">
+    </sc-if>
+
+    <sc-if value="{{s1}}" hint-placeholder-val="{{ false }}">
+      <span class="title-die bri" style="font-size: 36px; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">WHO’S EATING?</span>
+      <span class="q">How many do you usually cook for?</span>
+      <div style="display: flex; justify-content: space-between"><sc-for list="{{people}}" as="p" hint-placeholder-count="5"><button type="button" class="tile bri press" onClick="{{p.tap}}" aria-pressed="{{p.on}}" aria-label="{{p.aria}}" style="background: {{p.bg}}; transform: rotate({{p.rot}})">{{p.label}}</button></sc-for></div>
+      <span class="hint">{{peopleHint}}</span>
+      <span class="q" style="margin-top: 10px">Love leftovers for lunch?</span>
+      <div style="display: flex; gap: 10px"><sc-for list="{{lunchOpts}}" as="o" hint-placeholder-count="2"><button type="button" class="chipb bri press" onClick="{{o.tap}}" aria-pressed="{{o.on}}" style="background: {{o.bg}}">{{o.label}}</button></sc-for></div>
+      <span class="hint">{{lunchHint}}</span>
+      <span class="q" style="margin-top: 10px">Little ones eating with you?</span>
+      <div style="display: flex; gap: 10px"><sc-for list="{{kidOpts}}" as="o" hint-placeholder-count="2"><button type="button" class="chipb bri press" onClick="{{o.tap}}" aria-pressed="{{o.on}}" style="background: {{o.bg}}">{{o.label}}</button></sc-for></div>
+      <span class="hint">{{kidHint}}</span>
+    </sc-if>
+
+    <sc-if value="{{s2}}" hint-placeholder-val="{{ false }}">
+      <span class="title-die bri" style="font-size: 36px; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">FOOD NO-GOS</span>
+      <span class="q">Anything you don’t eat? Tap any that apply and we won’t suggest recipes with them.</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px"><sc-for list="{{avoids}}" as="a" hint-placeholder-count="6"><button type="button" class="chipb bri press" onClick="{{a.tap}}" aria-pressed="{{a.on}}" style="background: {{a.bg}}; transform: rotate({{a.rot}})">{{a.label}}</button></sc-for></div>
+      <span class="hint">{{avoidHint}}</span>
+      <span class="hint" style="font-size: 13px">For allergies, always check the labels too. Recipes can’t know every brand.</span>
+    </sc-if>
+
+    <sc-if value="{{s3}}" hint-placeholder-val="{{ false }}">
+      <span class="title-die bri" style="font-size: 36px; text-shadow: 3px 3px 0 #6EC8FF; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">HYDRO HOMIE</span>
+      <div style="display: flex; align-items: center; gap: 8px"><svg width="120" viewBox="-8 -18 236 240" style="overflow: visible"><g filter="url(#kst)" transform="translate(10 0)"><path d="M56 128 Q34 120 30 98" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M144 124 Q166 106 164 78" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M86 178 Q84 188 84 198" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M114 178 Q116 188 116 198" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><ellipse cx="81" cy="200" rx="9" ry="5" fill="#2A1A10"></ellipse><ellipse cx="119" cy="200" rx="9" ry="5" fill="#2A1A10"></ellipse><path d="M100 26 C100 26 150 92 152 124 C154 160 130 182 100 182 C70 182 46 160 48 124 C50 92 100 26 100 26 Z" fill="#6EC8FF" stroke="#2A1A10" stroke-width="4" stroke-linejoin="round"></path><path d="M78 88 Q66 110 66 132" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.85"></path><circle cx="74" cy="148" r="4" fill="#FFFFFF" opacity="0.8"></circle><path d="M130 104 Q148 132 136 166" stroke="url(#kht)" stroke-width="14" fill="none"></path><path d="M56 150 Q100 170 144 150 Q140 176 100 180 Q60 176 56 150 Z" fill="#3FA9E6" opacity="0.55"></path><ellipse cx="89.0" cy="124" rx="4.2" ry="6.8" fill="#2A1A10"></ellipse><circle cx="90.4" cy="121.4" r="1.7" fill="#FFFFFF"></circle><ellipse cx="111.0" cy="124" rx="4.2" ry="6.8" fill="#2A1A10"></ellipse><circle cx="112.4" cy="121.4" r="1.7" fill="#FFFFFF"></circle><path d="M93 142 Q100 151.1 107 142 Z" fill="#2A1A10"></path><path d="M96.8 147.2 Q100 144.4 103.2 147.2 Q100 150.1 96.8 147.2 Z" fill="#FF7A8A"></path><ellipse cx="80.0" cy="140" rx="4.5" ry="2.6" fill="#FF8FA0" opacity="0.75"></ellipse><ellipse cx="120.0" cy="140" rx="4.5" ry="2.6" fill="#FF8FA0" opacity="0.75"></ellipse><path d="M176 70 l8 -6" stroke="#6EC8FF" stroke-width="4" stroke-linecap="round"></path><path d="M178 86 l10 0" stroke="#6EC8FF" stroke-width="4" stroke-linecap="round"></path></g></svg><span class="q">Want a gentle nudge to drink water? A quick push on your phone, or a soft tap on your watch if you wear one.</span></div>
+      <div style="display: flex; gap: 10px"><sc-for list="{{hydroOpts}}" as="o" hint-placeholder-count="2"><button type="button" class="chipb bri press" onClick="{{o.tap}}" aria-pressed="{{o.on}}" style="background: {{o.bg}}">{{o.label}}</button></sc-for></div>
+      <span class="hint">{{hydroHint}}</span>
+      <button type="button" class="press kal" onClick="{{openLearn}}" style="align-self: flex-start; border: none; background: transparent; padding: 0; color: #172038; font-size: 17px; text-decoration: underline">Learn more about hydration</button>
+    </sc-if>
+    <sc-if value="{{s4}}" hint-placeholder-val="{{ false }}">
+      <span style="align-self: center"><span class="title-die bri" style="font-size: 36px; text-shadow: 3px 3px 0 #C6FF4D; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">ALL SET!</span></span>
+      <span class="q" style="text-align: center">Here’s what we’ve set up:</span>
+      <div style="background: #FFFFFF; padding: 6px 14px 8px; box-shadow: 0 6px 10px -6px rgba(60,40,20,0.4); display: flex; flex-direction: column">
+        <sc-for list="{{summary}}" as="m" hint-placeholder-count="4"><span class="kal" style="display: flex; align-items: center; gap: 10px; font-size: 16px; padding: 6px 0; border-bottom: 1.5px solid #E9D9C0; line-height: 1.2"><sc-if value="{{m.book}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#172038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M4 4h9a3 3 0 0 1 3 3v10H7a3 3 0 0 1-3-3z" /><path d="M7 17a3 3 0 0 1 0-6h9" /></svg></sc-if><sc-if value="{{m.serve}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#172038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M5 3v6a2 2 0 0 0 4 0V3 M7 3v16" /><path d="M15 3c-2 2-2 6 0 8v8" /></svg></sc-if><sc-if value="{{m.kids}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#172038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><circle cx="10" cy="11" r="6" /><circle cx="5" cy="5" r="2.2" /><circle cx="15" cy="5" r="2.2" /><path d="M8 13q2 2 4 0" /></svg></sc-if><sc-if value="{{m.no}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#172038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><circle cx="10" cy="10" r="7" /><path d="M5 15L15 5" /></svg></sc-if><sc-if value="{{m.hydro}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#172038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M10 2q6 8 6 11a6 6 0 0 1-12 0q0-3 6-11z" /></svg></sc-if><span>{{m.t}}</span></span></sc-for>
+      </div>
+      <span class="hint" style="text-align: center">Change any of it later in settings.</span>
+      <span class="bri" style="align-self: center; margin-top: 8px; padding: 8px 16px 6px; background-color: rgba(255,111,176,0.92); background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.3) 0 6px, transparent 6px 12px); color: #172038; font-size: 19px; letter-spacing: 0.5px; transform: rotate(-2deg); box-shadow: 0 4px 8px -4px rgba(60,40,20,0.4)">YOUR FIRST STICKER IS WAITING INSIDE</span>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{learn}}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; z-index: 8; background: rgba(23,32,56,0.45)"></div>
+    <div class="sheet" style="position: absolute; left: 0; right: 0; top: 40px; bottom: 0; z-index: 9; background: #EEF6FA; background-image: linear-gradient(rgba(23,32,56,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(23,32,56,0.06) 1px, transparent 1px); background-size: 20px 20px; border-radius: 26px 26px 0 0; border-top: 3px solid #172038; display: flex; flex-direction: column">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 6px">
+        <span class="title-die bri" style="font-size: 32px; text-shadow: 3px 3px 0 #6EC8FF; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">WHY HYDRATE?</span>
+        <button type="button" class="press bri" onClick="{{closeLearn}}" aria-label="Close" style="width: 36px; height: 36px; border-radius: 36px; border: 2.5px solid #172038; background: #FFFFFF; color: #172038; font-size: 20px">×</button>
+      </div>
+      <div style="flex: 1; min-height: 0; overflow-y: auto; padding: 6px 16px 16px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; align-items: center; gap: 6px"><svg width="96" viewBox="-8 -18 236 240" style="overflow: visible"><g filter="url(#kst)" transform="translate(10 0)"><path d="M56 124 Q30 108 28 80" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M144 124 Q170 108 172 80" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M86 178 Q84 188 84 198" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M114 178 Q116 188 116 198" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><ellipse cx="81" cy="200" rx="9" ry="5" fill="#2A1A10"></ellipse><ellipse cx="119" cy="200" rx="9" ry="5" fill="#2A1A10"></ellipse><path d="M100 26 C100 26 150 92 152 124 C154 160 130 182 100 182 C70 182 46 160 48 124 C50 92 100 26 100 26 Z" fill="#6EC8FF" stroke="#2A1A10" stroke-width="4" stroke-linejoin="round"></path><path d="M78 88 Q66 110 66 132" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.85"></path><circle cx="74" cy="148" r="4" fill="#FFFFFF" opacity="0.8"></circle><path d="M130 104 Q148 132 136 166" stroke="url(#kht)" stroke-width="14" fill="none"></path><path d="M56 150 Q100 170 144 150 Q140 176 100 180 Q60 176 56 150 Z" fill="#3FA9E6" opacity="0.55"></path><ellipse cx="89.0" cy="122" rx="4.2" ry="6.8" fill="#2A1A10"></ellipse><circle cx="90.4" cy="119.4" r="1.7" fill="#FFFFFF"></circle><ellipse cx="111.0" cy="122" rx="4.2" ry="6.8" fill="#2A1A10"></ellipse><circle cx="112.4" cy="119.4" r="1.7" fill="#FFFFFF"></circle><path d="M92 140 Q100 150.4 108 140 Z" fill="#2A1A10"></path><path d="M96.4 146.0 Q100 142.8 103.6 146.0 Q100 149.2 96.4 146.0 Z" fill="#FF7A8A"></path><ellipse cx="80.0" cy="138" rx="4.5" ry="2.6" fill="#FF8FA0" opacity="0.75"></ellipse><ellipse cx="120.0" cy="138" rx="4.5" ry="2.6" fill="#FF8FA0" opacity="0.75"></ellipse><path d="M30 47 C30 47 37 57 37 60 C37 65 23 65 23 60 C23 57 30 47 30 47 Z" fill="#6EC8FF" stroke="#2A1A10" stroke-width="2"></path><path d="M172 47 C172 47 179 57 179 60 C179 65 165 65 165 60 C165 57 172 47 172 47 Z" fill="#6EC8FF" stroke="#2A1A10" stroke-width="2"></path><path d="M52 26 C52 26 57 33 57 36 C57 39 47 39 47 36 C47 33 52 26 52 26 Z" fill="#6EC8FF" stroke="#2A1A10" stroke-width="2"></path><path d="M150 20 C150 20 156 29 156 32 C156 36 144 36 144 32 C144 29 150 20 150 20 Z" fill="#6EC8FF" stroke="#2A1A10" stroke-width="2"></path><path d="M100 0 C100 0 105 7 105 10 C105 13 95 13 95 10 C95 7 100 0 100 0 Z" fill="#6EC8FF" stroke="#2A1A10" stroke-width="2"></path></g></svg><span class="kal" style="font-size: 18px; line-height: 1.25">Hydro Homie’s quick guide to drinking enough. Two minutes, promise.</span></div>
+<div style="background: #FFFFFF; padding: 12px 14px; box-shadow: 0 6px 10px -6px rgba(23,32,56,0.35); display: flex; flex-direction: column; gap: 8px; transform: rotate(-0.6deg)"><span class="title-die bri" style="font-size: 26px; color: #172038; text-shadow: 3px 3px 0 #6EC8FF; transform: rotate(-1.5deg); transform-origin: left; white-space: nowrap; align-self: flex-start">WHY BOTHER?</span>
+<span style="font-size: 16px; line-height: 1.3; padding-left: 20px; position: relative"><span style="position: absolute; left: 0; color: #3FA9E6">●</span>Water keeps your temperature steady.</span><span style="font-size: 16px; line-height: 1.3; padding-left: 20px; position: relative"><span style="position: absolute; left: 0; color: #3FA9E6">●</span>It helps your body move nutrients around and clear out waste.</span><span style="font-size: 16px; line-height: 1.3; padding-left: 20px; position: relative"><span style="position: absolute; left: 0; color: #3FA9E6">●</span>Not drinking enough can leave you <b>tired, foggy and headachy</b>, often before you even feel thirsty.</span></div>
+<div style="background: #FFFFFF; padding: 12px 14px; box-shadow: 0 6px 10px -6px rgba(23,32,56,0.35); display: flex; flex-direction: column; gap: 8px; transform: rotate(0.5deg)"><span class="title-die bri" style="font-size: 26px; color: #172038; text-shadow: 3px 3px 0 #6EC8FF; transform: rotate(-1deg); transform-origin: left; white-space: nowrap; align-self: flex-start">6 GLASSES IS…</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 4px 0"><span style="display: flex; gap: 2px"><svg width="30" viewBox="0 0 40 52" aria-hidden="true"><path d="M5 4 L35 4 L31 48 L9 48 Z" fill="#FFFFFF" stroke="#2A1A10" stroke-width="3" stroke-linejoin="round"></path><path d="M8 16 L32 16 L29.4 45.5 L10.6 45.5 Z" fill="#6EC8FF"></path><path d="M11 20 L12.5 40" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.8"></path></svg><svg width="30" viewBox="0 0 40 52" aria-hidden="true"><path d="M5 4 L35 4 L31 48 L9 48 Z" fill="#FFFFFF" stroke="#2A1A10" stroke-width="3" stroke-linejoin="round"></path><path d="M8 16 L32 16 L29.4 45.5 L10.6 45.5 Z" fill="#6EC8FF"></path><path d="M11 20 L12.5 40" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.8"></path></svg><svg width="30" viewBox="0 0 40 52" aria-hidden="true"><path d="M5 4 L35 4 L31 48 L9 48 Z" fill="#FFFFFF" stroke="#2A1A10" stroke-width="3" stroke-linejoin="round"></path><path d="M8 16 L32 16 L29.4 45.5 L10.6 45.5 Z" fill="#6EC8FF"></path><path d="M11 20 L12.5 40" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.8"></path></svg><svg width="30" viewBox="0 0 40 52" aria-hidden="true"><path d="M5 4 L35 4 L31 48 L9 48 Z" fill="#FFFFFF" stroke="#2A1A10" stroke-width="3" stroke-linejoin="round"></path><path d="M8 16 L32 16 L29.4 45.5 L10.6 45.5 Z" fill="#6EC8FF"></path><path d="M11 20 L12.5 40" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.8"></path></svg><svg width="30" viewBox="0 0 40 52" aria-hidden="true"><path d="M5 4 L35 4 L31 48 L9 48 Z" fill="#FFFFFF" stroke="#2A1A10" stroke-width="3" stroke-linejoin="round"></path><path d="M8 16 L32 16 L29.4 45.5 L10.6 45.5 Z" fill="#6EC8FF"></path><path d="M11 20 L12.5 40" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.8"></path></svg><svg width="30" viewBox="0 0 40 52" aria-hidden="true"><path d="M5 4 L35 4 L31 48 L9 48 Z" fill="#FFFFFF" stroke="#2A1A10" stroke-width="3" stroke-linejoin="round"></path><path d="M8 16 L32 16 L29.4 45.5 L10.6 45.5 Z" fill="#6EC8FF"></path><path d="M11 20 L12.5 40" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.8"></path></svg></span><span class="bri" style="font-size: 26px">=</span><span style="display: flex; gap: 4px"><svg width="36" viewBox="0 0 40 92" aria-hidden="true"><rect x="13" y="2" width="14" height="10" rx="3" fill="#C6FF4D" stroke="#2A1A10" stroke-width="3"></rect><path d="M14 12 L26 12 L26 20 Q36 26 36 36 L36 84 Q36 90 30 90 L10 90 Q4 90 4 84 L4 36 Q4 26 14 20 Z" fill="#FFFFFF" stroke="#2A1A10" stroke-width="3" stroke-linejoin="round"></path><path d="M7 40 L33 40 L33 83 Q33 87 29 87 L11 87 Q7 87 7 83 Z" fill="#6EC8FF"></path><rect x="7" y="52" width="26" height="12" fill="#FF6FB0" opacity="0.9"></rect><path d="M10 44 L10 80" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.8"></path></svg><svg width="36" viewBox="0 0 40 92" aria-hidden="true"><rect x="13" y="2" width="14" height="10" rx="3" fill="#C6FF4D" stroke="#2A1A10" stroke-width="3"></rect><path d="M14 12 L26 12 L26 20 Q36 26 36 36 L36 84 Q36 90 30 90 L10 90 Q4 90 4 84 L4 36 Q4 26 14 20 Z" fill="#FFFFFF" stroke="#2A1A10" stroke-width="3" stroke-linejoin="round"></path><path d="M7 40 L33 40 L33 83 Q33 87 29 87 L11 87 Q7 87 7 83 Z" fill="#6EC8FF"></path><rect x="7" y="52" width="26" height="12" fill="#FF6FB0" opacity="0.9"></rect><path d="M10 44 L10 80" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.8"></path></svg><svg width="36" viewBox="0 0 40 92" aria-hidden="true"><rect x="13" y="2" width="14" height="10" rx="3" fill="#C6FF4D" stroke="#2A1A10" stroke-width="3"></rect><path d="M14 12 L26 12 L26 20 Q36 26 36 36 L36 84 Q36 90 30 90 L10 90 Q4 90 4 84 L4 36 Q4 26 14 20 Z" fill="#FFFFFF" stroke="#2A1A10" stroke-width="3" stroke-linejoin="round"></path><path d="M7 40 L33 40 L33 83 Q33 87 29 87 L11 87 Q7 87 7 83 Z" fill="#6EC8FF"></path><rect x="7" y="52" width="26" height="12" fill="#FF6FB0" opacity="0.9"></rect><path d="M10 44 L10 80" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.8"></path></svg></span></div>
+<span style="font-size: 16px; line-height: 1.3">A glass is about <b>250 ml</b>, so 6 glasses is about <b>1.5 litres</b>: three 500 ml bottles.</span>
+<span style="font-size: 15px; line-height: 1.3; opacity: 0.8">The NHS suggests 6 to 8 glasses a day (1.5 to 2 litres). Rough guide: about 1.6 litres for women and 2 litres for men.</span></div>
+<div style="background: #FFFFFF; padding: 12px 14px; box-shadow: 0 6px 10px -6px rgba(23,32,56,0.35); display: flex; flex-direction: column; gap: 8px; transform: rotate(-0.4deg)"><span class="title-die bri" style="font-size: 26px; color: #172038; text-shadow: 3px 3px 0 #6EC8FF; transform: rotate(-1.5deg); transform-origin: left; white-space: nowrap; align-self: flex-start">IT ALL COUNTS</span>
+<div style="display: flex; flex-wrap: wrap; gap: 6px"><span class="bri" style="padding: 4px 10px; border-radius: 999px; border: 2px solid #172038; background: #C6FF4D; font-size: 15px">WATER</span><span class="bri" style="padding: 4px 10px; border-radius: 999px; border: 2px solid #172038; background: #C6FF4D; font-size: 15px">TEA</span><span class="bri" style="padding: 4px 10px; border-radius: 999px; border: 2px solid #172038; background: #C6FF4D; font-size: 15px">COFFEE</span><span class="bri" style="padding: 4px 10px; border-radius: 999px; border: 2px solid #172038; background: #C6FF4D; font-size: 15px">MILK</span><span class="bri" style="padding: 4px 10px; border-radius: 999px; border: 2px solid #172038; background: #C6FF4D; font-size: 15px">SUGAR-FREE SQUASH</span></div>
+<span style="font-size: 15px; line-height: 1.3">A mug of tea counts as a glass. Keep fruit juice to one small glass (150 ml) a day, and alcohol doesn’t count.</span></div>
+<div style="background: #FFFFFF; padding: 12px 14px; box-shadow: 0 6px 10px -6px rgba(23,32,56,0.35); display: flex; flex-direction: column; gap: 8px; transform: rotate(0.6deg)"><span class="title-die bri" style="font-size: 26px; color: #172038; text-shadow: 3px 3px 0 #6EC8FF; transform: rotate(-1.5deg); transform-origin: left; white-space: nowrap; align-self: flex-start">CHECK THE COLOUR</span>
+<div style="display: flex; gap: 6px"><div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="width: 100%; height: 28px; border-radius: 8px; border: 2px solid #172038; background: #FBF3B9"></span><span class="kal" style="font-size: 14px; text-align: center; line-height: 1.1">pale straw:<br>spot on</span></div><div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="width: 100%; height: 28px; border-radius: 8px; border: 2px solid #172038; background: #F4D35E"></span><span class="kal" style="font-size: 14px; text-align: center; line-height: 1.1">darker:<br>have a drink</span></div><div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px"><span style="width: 100%; height: 28px; border-radius: 8px; border: 2px solid #172038; background: #C9961E"></span><span class="kal" style="font-size: 14px; text-align: center; line-height: 1.1">dark &amp; strong:<br>drink up now</span></div></div>
+<span style="font-size: 15px; line-height: 1.3">The easiest check there is: pale straw-coloured pee means you’re drinking enough.</span></div>
+<div style="background: #FFFFFF; padding: 12px 14px; box-shadow: 0 6px 10px -6px rgba(23,32,56,0.35); display: flex; flex-direction: column; gap: 8px; transform: rotate(-0.5deg)"><span class="title-die bri" style="font-size: 26px; color: #172038; text-shadow: 3px 3px 0 #6EC8FF; transform: rotate(-1.5deg); transform-origin: left; white-space: nowrap; align-self: flex-start">A BIT MORE WHEN…</span>
+<span style="font-size: 16px; line-height: 1.3; padding-left: 20px; position: relative"><span style="position: absolute; left: 0; color: #3FA9E6">●</span>it’s a hot day</span><span style="font-size: 16px; line-height: 1.3; padding-left: 20px; position: relative"><span style="position: absolute; left: 0; color: #3FA9E6">●</span>you’ve been exercising. Hydro Homie gives you one top-up nudge after a workout.</span><span style="font-size: 16px; line-height: 1.3; padding-left: 20px; position: relative"><span style="position: absolute; left: 0; color: #3FA9E6">●</span>you’re feeling unwell</span></div>
+<span style="font-size: 13px; line-height: 1.3; opacity: 0.75">If a doctor has given you a fluid limit, follow that. Sources: NHS Eatwell Guide, NHS hydration advice, European Food Safety Authority.</span>
+        <button type="button" class="press bri" onClick="{{closeLearn}}" style="flex-shrink: 0; height: 56px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 22px; box-shadow: 4px 4px 0 #172038">GOT IT</button>
+      </div>
+    </div>
+  </sc-if>
+  <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; gap: 10px">
+    <sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}"><button type="button" class="press bri" onClick="{{back}}" aria-label="Back" style="width: 62px; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #FFFFFF; color: #172038; font-size: 26px">←</button></sc-if>
+    <sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{next}}" style="flex: 1; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{nextText}}</button></sc-if>
+    <sc-if value="{{s4}}" hint-placeholder-val="{{ false }}"><a href="StickerBook.html" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">OPEN MY STICKER BOOK →</a></sc-if>
+  </div>
+</div>
+</script>
+<script type="text/x-dc-logic" id="dc-logic">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+    this.FULL = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    this.AV = [['vegetarian', 'VEGETARIAN'], ['pork', 'NO PORK'], ['beef', 'NO BEEF'], ['fish', 'NO FISH'], ['nuts', 'NO NUTS'], ['dairy', 'NO DAIRY']];
+    this.s = { step: 0, name: '', household: null, lunches: null, avoid: {}, kids: null, hydro: null, every: 2, dayStart: 8, dayEnd: 21, learn: false, landed: false };
+  }
+  re() { this.setState({ n: Date.now() }); }
+  buzz(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
+  hr(h) { const hh = ((h % 24) + 24) % 24; return (hh % 12 === 0 ? 12 : hh % 12) + (hh < 12 ? 'am' : 'pm'); }
+  bookName() {
+    const n = this.s.name.trim();
+    if (!n) return 'MY';
+    return n.toUpperCase() + '’S';
+  }
+  profile() {
+    const s = this.s;
+    return { bookName: s.name.trim() ? s.name.trim() + '’s Sticker Book' : 'My Sticker Book', household: s.household || 2, lunches: s.lunches === true, littleOnes: s.kids === true,
+      avoid: Object.keys(s.avoid).filter((k) => s.avoid[k]), hydro: s.hydro === true ? { every: s.every, goal: 6, dayStart: s.dayStart, dayEnd: s.dayEnd } : null };
+  }
+  save() { try { localStorage.setItem('gsd.profile', JSON.stringify(this.profile())); } catch (e) {} }
+  list(days) {
+    const names = days.map((d) => this.FULL[d].slice(0, 3));
+    return names.length < 2 ? names.join('') : names.slice(0, -1).join(', ') + ' & ' + names[names.length - 1];
+  }
+  summary() {
+    const p = this.profile(), s = this.s, out = [];
+    out.push({ book: true, t: p.bookName });
+    out.push({ serve: true, t: 'Recipes serve ' + p.household + (s.household ? '' : ' (the usual)') + (p.lunches ? ' · leftovers add ' + p.household + (p.household === 1 ? ' lunch' : ' lunches') : '') });
+    if (p.littleOnes) out.push({ kids: true, t: 'Little-one tips on every recipe' });
+    if (p.avoid.length) out.push({ no: true, t: 'No ' + p.avoid.map((a) => a === 'vegetarian' ? 'meat or fish' : a).join(', ').replace(/, ([^,]*)$/, ' or $1') + ' suggestions' });
+    if (p.hydro) out.push({ hydro: true, t: 'Hydro Homie on: every 2 hrs, 8am–9pm' });
+    return out;
+  }
+  renderVals() {
+    const s = this.s, st = s.step, N = 5;
+    const go = (n) => { s.step = n; if (n === 4) { this.save(); this.buzz([10, 50, 20]); } this.re(); };
+    const nm = this.bookName();
+    return {
+      dots: Array.from({ length: N }, (_, n) => ({ w: n === st ? '26px' : '10px', bg: n <= st ? '#FF6FB0' : '#FFFFFF' })),
+      canSkip: st < 4, skip: () => go(st + 1),
+      canBack: st > 0 && st < 4, back: () => go(st - 1),
+      nextText: st === 0 ? (s.name.trim() ? 'THAT’S ME →' : 'NEXT →') : st === 4 ? 'OPEN MY STICKER BOOK →' : 'NEXT →',
+      next: () => { if (st < 4) go(st + 1); else { s.landed = true; this.save(); this.re(); } },
+      notLast: st < 4, saveNow: () => { this.save(); },
+      s0: st === 0, s1: st === 1, s2: st === 2, s3: st === 3, s4: st === 4,
+      showCover: st === 0 || st === 4, coverCls: st === 4 ? 'coverin' : '',
+      coverName: nm, nameSize: nm.length > 10 ? '34px' : nm.length > 7 ? '44px' : '56px',
+      name: s.name, setName: (e) => { s.name = String(e && e.target ? e.target.value : '').slice(0, 14); this.re(); },
+      kidOpts: [[true, 'YES'], [false, 'NO']].map((o) => ({ label: o[1], on: s.kids === o[0], bg: s.kids === o[0] ? (o[0] ? '#C6FF4D' : '#FF6FB0') : '#FFFFFF', tap: () => { s.kids = o[0]; this.buzz(8); this.re(); } })),
+      kidHint: s.kids === true ? 'Every recipe will show when to take their portion out, before the salt or spice, plus any prep tips.' : s.kids === false ? 'You’ll still get the option when you cook for more than usual, like when friends bring their kids.' : 'For toddlers and up. Tips only show if you say yes.',
+      people: [1, 2, 3, 4, 5].map((n, i) => ({ label: n === 5 ? '5+' : String(n), on: s.household === n, bg: s.household === n ? '#C6FF4D' : '#FFFFFF', rot: ((i % 2) ? 2 : -2) + 'deg',
+        aria: (n === 5 ? '5 or more' : n) + (n === 1 ? ' person' : ' people'), tap: () => { s.household = n; this.buzz(8); this.re(); } })),
+      peopleHint: s.household ? 'Every recipe will start at serves ' + s.household + '. You can change it on any recipe.' : 'Skip this and recipes start at serves 2.',
+      lunchOpts: [[true, 'YES PLEASE'], [false, 'NOT REALLY']].map((o) => ({ label: o[1], on: s.lunches === o[0], bg: s.lunches === o[0] ? (o[0] ? '#C6FF4D' : '#FF6FB0') : '#FFFFFF', tap: () => { s.lunches = o[0]; this.buzz(8); this.re(); } })),
+      lunchHint: s.lunches === true ? 'Choose for me will plan lunches for your workdays, ' + (s.household || 2) + ((s.household || 2) === 1 ? ' portion' : ' portions') + ' each.' : s.lunches === false ? 'No problem, you can still add a lunch to any meal.' : '',
+      avoids: this.AV.map((a, i) => ({ label: a[1], on: !!s.avoid[a[0]], bg: s.avoid[a[0]] ? '#FF6FB0' : '#FFFFFF', rot: ((i * 37) % 5 - 2) + 'deg', tap: () => { s.avoid[a[0]] = !s.avoid[a[0]]; this.buzz(8); this.re(); } })),
+      avoidHint: Object.values(s.avoid).some(Boolean) ? 'Got it. Those recipes just won’t come up.' : 'Nothing? Lovely, everything’s on the menu.',
+      hydroOpts: [[true, 'YES, NUDGE ME'], [false, 'NOT NOW']].map((o) => ({ label: o[1], on: s.hydro === o[0], bg: s.hydro === o[0] ? (o[0] ? '#6EC8FF' : '#FF6FB0') : '#FFFFFF', tap: () => { s.hydro = o[0]; this.buzz(8); this.re(); } })),
+      hydroOn: s.hydro === true,
+      dayEnds: [['dayStart', 'start'], ['dayEnd', 'end']].map((e, i) => ({ text: this.hr(s[e[0]]), first: i === 0,
+        lessAria: 'Earlier ' + e[1], moreAria: 'Later ' + e[1],
+        less: () => { const v = s[e[0]] - 1; if (i === 0 ? v >= 0 : v > s.dayStart + 3) { s[e[0]] = v; this.re(); } },
+        more: () => { const v = s[e[0]] + 1; if (i === 0 ? v < s.dayEnd - 3 : v <= s.dayStart + 20) { s[e[0]] = v; this.re(); } } })),
+      learn: s.learn, openLearn: () => { s.learn = true; this.re(); }, closeLearn: () => { s.learn = false; this.re(); },
+      everyOpts: [[1.5, '1½ HRS'], [2, '2 HRS'], [3, '3 HRS']].map((o) => ({ label: o[1], on: s.every === o[0], bg: s.every === o[0] ? '#C6FF4D' : '#FFFFFF', tap: () => { s.every = o[0]; this.buzz(6); this.re(); } })),
+      hydroHint: s.hydro === true ? 'Every 2 hours between 8am and 9pm, never overnight. Logging a drink resets the timer, and you can tap “done for today” any time. You can change the hours in settings.' : s.hydro === false ? 'No worries. You can switch Hydro Homie on any time.' : 'Totally optional, and you can turn it off any time.',
+      summary: this.summary()
+    };
+  }
+}
+</script>
+<script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
+<script src="https://cdn.jsdelivr.net/npm/morphdom@2.7.4/dist/morphdom-umd.min.js"></script>
+<script src="dc.js"></script>
+</body></html>

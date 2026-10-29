@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Get St*ck Done!</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&amp;family=Kalam:wght@400;700&amp;family=Atkinson+Hyperlegible:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.title-die{filter:url(#tdie) drop-shadow(0 6px 6px rgba(60,40,20,0.3))}
+.dc{filter:url(#tdie) drop-shadow(0 3px 4px rgba(20,15,10,0.3))}
+button{font-family:inherit;-webkit-tap-highlight-color:transparent;outline:none;cursor:pointer}
+button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
+.press{transition:transform 0.09s ease-out}
+.press:active{transform:scale(0.92)}
+.bri{font-family:'Bricolage Grotesque',sans-serif;font-stretch:75%;font-weight:800;line-height:0.9}
+.kal{font-family:'Kalam',cursive;font-weight:700}
+.card{position:absolute;left:16px;right:16px;height:104px;background:#FFFFFF;border-radius:14px;box-shadow:0 3px 0 #CDB894,0 8px 14px -8px rgba(90,60,30,0.4)}
+.slap{animation:slap 0.32s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes slap{0%{transform:scale(2.2) rotate(-24deg);opacity:0}60%{transform:scale(0.9) rotate(var(--r));opacity:1}100%{transform:scale(1) rotate(var(--r));opacity:1}}
+.rise{animation:rise 0.28s ease-out both}
+@keyframes rise{0%{transform:translateY(100%)}100%{transform:translateY(0)}}
+.fade{animation:fade 0.2s ease-out both}
+@keyframes fade{0%{opacity:0}100%{opacity:1}}
+.cheer{border:none;padding:0;background:transparent}
+.tog{width:52px;height:30px;border-radius:999px;border:3px solid #172038;position:relative;padding:0}
+.knob{position:absolute;top:2px;width:20px;height:20px;border-radius:999px;background:#FFFFFF;border:2px solid #172038;transition:left 0.15s}
+</style>
+
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#0B1022;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+#dc-frame{position:absolute;left:0;top:0;transform-origin:0 0;background:#172038}
+#dc-stage{position:relative;overflow:hidden}
+.dcbar{position:absolute;left:12px;right:12px;bottom:10px;height:64px;border-radius:22px;background:#0E1428;border:2px solid rgba(246,239,225,0.15);display:flex;align-items:center;gap:4px;padding:0 6px;box-sizing:border-box}.dcnav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;border-radius:16px;height:52px;text-decoration:none;border:none;background:transparent;cursor:pointer}.dcnav.on{background:#C6FF4D;color:#172038}.dcnav:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}.dcback{flex:1;height:48px;border-radius:16px;border:2px solid rgba(246,239,225,0.4);background:transparent;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:17px;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;cursor:pointer}.dcback.home{flex:0 0 auto;padding:0 18px;background:#C6FF4D;border-color:#C6FF4D;color:#172038}</style>
+</head><body data-extra="84">
+<div id="dc-frame"><div id="dc-stage"></div><div style="position:relative;height:84px"><div class="dcbar" role="navigation" aria-label="Back"><button type="button" class="dcback" onclick="if (history.length > 1) history.back(); else location.href = 'Today.html'">‹ BACK</button><a class="dcback home" href="Today.html" aria-label="Home"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M20.0 12.0 L22.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 17.6 L19.4 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 20.0 L12.0 22.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 17.6 L4.7 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M4.0 12.0 L1.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 6.4 L4.7 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 4.0 L12.0 1.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 6.4 L19.4 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg><span>HOME</span></a></div></div></div>
+<script type="text/x-dc-template" id="dc-tpl">
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background-color: #F6EFE1; background-image: linear-gradient(rgba(139,94,52,0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(139,94,52,0.10) 1px, transparent 1px); background-size: 24px 24px; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #172038">
+<svg aria-hidden="true" width="0" height="0" style="position: absolute; width: 0; height: 0; overflow: hidden"><defs><filter id="tdie" x="-30%" y="-60%" width="160%" height="220%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="5" result="grow"></feMorphology><feGaussianBlur in="grow" stdDeviation="2.5" result="soft"></feGaussianBlur><feComponentTransfer in="soft" result="white-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feMorphology in="white-mask" operator="dilate" radius="3" result="key-grow"></feMorphology><feGaussianBlur in="key-grow" stdDeviation="1" result="key-soft"></feGaussianBlur><feComponentTransfer in="key-soft" result="key-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feFlood flood-color="#111111"></feFlood><feComposite in2="key-mask" operator="in" result="key"></feComposite><feFlood flood-color="#FFFFFF"></feFlood><feComposite in2="white-mask" operator="in" result="white"></feComposite><feMerge><feMergeNode in="key"></feMergeNode><feMergeNode in="white"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter><g id="astk"><g stroke-width="20" stroke-linecap="round"><line x1="0" y1="-34" x2="0" y2="34"></line><line x1="-29.4" y1="-17" x2="29.4" y2="17"></line><line x1="-29.4" y1="17" x2="29.4" y2="-17"></line></g></g></defs></svg>
+
+  <div style="position: absolute; left: 18px; top: 26px; right: 18px; display: flex; align-items: flex-end; justify-content: space-between">
+    <div style="display: flex; flex-direction: column">
+      <h1 class="title-die bri" style="margin: 0; font-size: 56px; color: #172038; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-2deg); transform-origin: left">FRIENDS</h1>
+      <span class="kal" style="font-size: 16px; margin-top: 4px">cheering only · no leaderboards</span>
+    </div>
+    <div class="dc" style="transform: rotate(8deg)"><svg width="40" height="40" viewBox="-50 -50 100 100"><use href="#astk" stroke="#FF6FB0"></use></svg></div>
+  </div>
+
+  <sc-if value="{{showIncoming}}" hint-placeholder-val="{{ true }}">
+    <button type="button" class="press" onClick="{{openIncoming}}" aria-label="Jo reacted to your leg day, tap to see" style="position: absolute; left: 16px; right: 16px; top: 132px; height: 62px; border: none; border-radius: 14px; background: #172038; display: flex; align-items: center; gap: 12px; padding: 0 14px; text-align: left">
+      <span style="width: 40px; height: 40px; border-radius: 999px; background: #FFE45C; border: 3px solid #FFFFFF; display: flex; align-items: center; justify-content: center" class="bri"><span style="font-size: 22px; color: #172038">J</span></span>
+      <span style="display: flex; flex-direction: column; flex-grow: 1"><span style="font-weight: 700; font-size: 15px; color: #F6EFE1">Jo reacted to your leg day</span><span class="kal" style="font-size: 14px; color: #C6FF4D">tap to see it</span></span>
+      <span style="width: 42px; height: 42px; background: #FF6FB0; clip-path: polygon(0 0, 70% 0, 100% 30%, 100% 100%, 0 100%); border-radius: 6px"></span>
+    </button>
+  </sc-if>
+
+  <sc-for list="{{friends}}" as="f" hint-placeholder-count="3">
+    <div class="card" style="top: {{f.top}}">
+      <div style="position: absolute; left: 14px; top: 14px; width: 48px; height: 48px; border-radius: 999px; background: {{f.colour}}; border: 3px solid #FFFFFF; box-shadow: 0 0 0 2px #172038; display: flex; align-items: center; justify-content: center"><span class="bri" style="font-size: 26px; color: #172038">{{f.initial}}</span></div>
+      <div style="position: absolute; left: 76px; top: 14px; right: 14px; display: flex; flex-direction: column; gap: 5px">
+        <span style="font-weight: 700; font-size: 17px">{{f.name}} <span style="font-weight: 400; font-size: 13px; color: #6A6A7A">· {{f.when}}</span></span>
+        <span style="display: flex; align-items: center; gap: 6px; font-size: 14px">earned <span class="bri" style="padding: 3px 9px; border-radius: 999px; background: {{f.badgeBg}}; color: #172038; font-size: 15px; border: 2px solid #172038">{{f.badge}}</span></span>
+      </div>
+      <sc-if value="{{f.canSend}}" hint-placeholder-val="{{ true }}">
+        <button type="button" class="press bri" onClick="{{f.open}}" aria-label="{{f.aria}}" style="position: absolute; left: 76px; bottom: 12px; height: 34px; padding: 0 14px; border: none; border-radius: 999px; background: #FF6FB0; color: #172038; font-size: 17px; box-shadow: 2px 2px 0 #172038">SEND A STICKER</button>
+      </sc-if>
+      <sc-if value="{{f.sent}}" hint-placeholder-val="{{ false }}">
+        <span class="kal" style="position: absolute; left: 76px; bottom: 16px; font-size: 15px; color: #1F3FB0">sent ✓</span>
+        <div class="slap" style="--r: {{f.sentRot}}; position: absolute; right: 12px; bottom: 8px">
+          <div class="dc"><span class="bri" style="display: block; padding: {{f.sentPad}}; background: {{f.sentBg}}; color: {{f.sentInk}}; font-size: 18px; border-radius: {{f.sentRadius}}; white-space: nowrap">{{f.sentLabel}}</span></div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 16px; right: 16px; top: 570px; display: flex; flex-direction: column; gap: 10px">
+    <span class="kal" style="font-size: 16px">what you hear about</span>
+    <sc-for list="{{toggles}}" as="t" hint-placeholder-count="1">
+      <div style="display: flex; align-items: center; justify-content: space-between; background: #FFFFFF; border-radius: 12px; padding: 10px 14px">
+        <span style="display: flex; flex-direction: column"><span style="font-weight: 700; font-size: 15px">{{t.label}}</span><span style="font-size: 13px; color: #6A6A7A">{{t.sub}}</span></span>
+        <button type="button" class="tog" onClick="{{t.flip}}" role="switch" aria-checked="{{t.on}}" aria-label="{{t.label}}" style="background: {{t.bg}}"><span class="knob" style="left: {{t.knob}}"></span></button>
+      </div>
+    </sc-for>
+  </div>
+
+  <button type="button" class="press bri" style="position: absolute; left: 16px; right: 16px; bottom: 22px; height: 50px; border: 3px dashed #172038; border-radius: 14px; background: transparent; color: #172038; font-size: 22px">+ INVITE A FRIEND</button>
+
+  <sc-if value="{{trayOpen}}" hint-placeholder-val="{{ false }}">
+    <div class="fade" onClick="{{closeTray}}" style="position: absolute; inset: 0; background: rgba(23,32,56,0.45)"></div>
+    <div class="rise" style="position: absolute; left: 0; right: 0; bottom: 0; height: 400px; background: #172038; border-radius: 22px 22px 0 0; padding: 18px 18px 0; box-sizing: border-box">
+      <div style="display: flex; justify-content: space-between; align-items: baseline"><span class="bri" style="font-size: 30px; color: #C6FF4D">PICK A CHEER</span><span class="kal" style="font-size: 16px; color: #F6EFE1">for {{trayName}}</span></div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 8px; margin-top: 22px; justify-items: center; align-items: center">
+        <sc-for list="{{cheers}}" as="c" hint-placeholder-count="6">
+          <button type="button" class="cheer press" onClick="{{c.send}}" aria-label="Send {{c.aria}}" style="transform: rotate({{c.rot}})">
+            <div class="dc">
+              <sc-if value="{{c.isAst}}" hint-placeholder-val="{{ false }}"><svg width="62" height="62" viewBox="-50 -50 100 100"><use href="#astk" stroke="#FF6FB0"></use></svg></sc-if>
+              <sc-if value="{{c.isText}}" hint-placeholder-val="{{ true }}"><span class="bri" style="display: block; padding: {{c.pad}}; background: {{c.bg}}; color: {{c.ink}}; font-size: 20px; border-radius: {{c.radius}}; white-space: nowrap">{{c.label}}</span></sc-if>
+            </div>
+          </button>
+        </sc-for>
+        <sc-for list="{{locked}}" as="l" hint-placeholder-count="3">
+          <div aria-label="{{l.aria}}" style="display: flex; flex-direction: column; align-items: center; gap: 4px; opacity: 0.55; transform: rotate({{l.rot}})">
+            <span class="bri" style="display: block; padding: 8px 12px; background: transparent; border: 3px dashed #F6EFE1; color: #F6EFE1; font-size: 18px; border-radius: 10px; white-space: nowrap">{{l.label}}</span>
+            <span class="kal" style="font-size: 13px; color: #C6FF4D">🔒 level {{l.level}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <span class="kal" style="position: absolute; left: 0; right: 0; bottom: 22px; text-align: center; font-size: 15px; color: #F6EFE1; opacity: 0.8">reactions, not keepsakes · level up to unlock more</span>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{showGift}}" hint-placeholder-val="{{ false }}">
+    <div class="fade" style="position: absolute; inset: 0; background: rgba(23,32,56,0.55)"></div>
+    <button type="button" class="cheer" onClick="{{keepGift}}" aria-label="Close Jo's reaction" style="position: absolute; left: 0; right: 0; top: 280px; display: flex; flex-direction: column; align-items: center; gap: 22px">
+      <div class="slap" style="--r: -6deg"><div class="dc"><span class="bri" style="display: block; padding: 22px 30px; background: #C6FF4D; color: #172038; font-size: 54px; border-radius: 18px; text-shadow: 3px 3px 0 #FF6FB0; white-space: nowrap">STICK WITH IT!</span></div></div>
+      <span class="kal" style="font-size: 18px; color: #F6EFE1">from Jo · "you've got this, leg day hero"</span>
+      <span class="kal" style="font-size: 15px; color: #F6EFE1; opacity: 0.75">reactions pop up, then go: nothing to file away</span>
+    </button>
+  </sc-if>
+
+  <sc-if value="{{showToast}}" hint-placeholder-val="{{ false }}">
+    <div class="fade kal" style="position: absolute; left: 50%; bottom: 86px; transform: translateX(-50%); padding: 8px 16px; background: #172038; color: #C6FF4D; border-radius: 999px; font-size: 16px; white-space: nowrap">{{toastText}}</div>
+  </sc-if>
+</div>
+</script>
+<script type="text/x-dc-logic" id="dc-logic">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.friendsData = [
+      { name: 'Maya', initial: 'M', colour: '#C6FF4D', when: '2h ago', badge: 'LEVEL 10', badgeBg: 'conic-gradient(from 30deg, #FFB3E6, #B3F0FF, #D9FFB3, #FFF2B3, #E0B3FF, #FFB3E6)' },
+      { name: 'Sam', initial: 'S', colour: '#FF6FB0', when: 'yesterday', badge: 'LEG DAY VARSITY', badgeBg: '#FFE45C' },
+      { name: 'Jo', initial: 'J', colour: '#FFE45C', when: 'Monday', badge: 'COMEBACK KID', badgeBg: '#FF8A4C' }
+    ];
+    this.cheersData = [
+      { label: 'NICE ONE!', bg: '#C6FF4D', ink: '#172038', radius: '999px', pad: '8px 14px', rot: '-6deg' },
+      { label: 'GAINS!', bg: '#FFE45C', ink: '#172038', radius: '6px', pad: '8px 12px', rot: '5deg' },
+      { label: '', ast: true, rot: '12deg', aria: 'an asterisk high five' },
+      { label: 'PROUD!', bg: '#FF6FB0', ink: '#172038', radius: '14px', pad: '8px 14px', rot: '4deg' },
+      { label: 'YUM!', bg: '#FF8A4C', ink: '#172038', radius: '999px', pad: '8px 14px', rot: '-4deg' },
+      { label: 'STICK WITH IT!', bg: '#1F3FB0', ink: '#F6EFE1', radius: '8px', pad: '8px 10px', rot: '-3deg' }
+    ];
+    this.sent = {};
+    this.tray = null;
+    this.incoming = true;
+    this.gift = false;
+    this.toggles = [true];
+    this.toast = '';
+  }
+  rerender() { this.setState({ n: Date.now() }); }
+  send(ci) {
+    const fi = this.tray;
+    if (fi === null) return;
+    this.sent[fi] = ci;
+    const name = this.friendsData[fi].name;
+    this.tray = null;
+    this.toast = 'sent to ' + name;
+    try { if (navigator.vibrate) navigator.vibrate(12); } catch (e) {}
+    this.rerender();
+    clearTimeout(this.tt);
+    this.tt = setTimeout(() => { this.toast = ''; this.rerender(); }, 1600);
+  }
+  renderVals() {
+    const friends = this.friendsData.map((f, i) => {
+      const ci = this.sent[i];
+      const c = ci !== undefined ? this.cheersData[ci] : null;
+      const isAst = !!(c && c.ast);
+      return Object.assign({}, f, {
+        top: (212 + i * 116) + 'px',
+        canSend: !c,
+        sent: !!c,
+        aria: 'Send ' + f.name + ' a sticker',
+        sentLabel: c ? (isAst ? '✱ HIGH FIVE' : c.label) : '',
+        sentBg: c ? (isAst ? '#FF6FB0' : c.bg) : '',
+        sentInk: c ? (isAst ? '#172038' : c.ink) : '',
+        sentRadius: c ? (isAst ? '999px' : c.radius) : '',
+        sentPad: '6px 10px',
+        sentRot: c ? c.rot : '0deg',
+        open: () => { this.tray = i; this.rerender(); }
+      });
+    });
+    const cheers = this.cheersData.map((c, ci) => ({
+      label: c.label, bg: c.bg || '', ink: c.ink || '', radius: c.radius || '', pad: c.pad || '', rot: c.rot,
+      isAst: !!c.ast, isText: !c.ast, aria: c.aria || c.label,
+      send: () => this.send(ci)
+    }));
+    const tLabels = [["Friends' big wins", 'holo stickers and pins only']];
+    const toggles = tLabels.map((t, i) => ({
+      label: t[0], sub: t[1], on: this.toggles[i] ? 'true' : 'false',
+      bg: this.toggles[i] ? '#C6FF4D' : '#E4DED2', knob: this.toggles[i] ? '25px' : '3px',
+      flip: () => { this.toggles[i] = !this.toggles[i]; this.rerender(); }
+    }));
+    return {
+      friends, cheers, toggles,
+      locked: [{ label: 'FLAME ON', level: 12, rot: '4deg' }, { label: 'CHEF\'S KISS', level: 15, rot: '-5deg' }, { label: 'HOLO HYPE', level: 20, rot: '3deg' }].map(l => Object.assign(l, { aria: l.label + ', unlocks at level ' + l.level })),
+      trayOpen: this.tray !== null,
+      trayName: this.tray !== null ? this.friendsData[this.tray].name : '',
+      closeTray: () => { this.tray = null; this.rerender(); },
+      showIncoming: this.incoming && !this.gift,
+      openIncoming: () => { this.gift = true; this.rerender(); clearTimeout(this.gt); this.gt = setTimeout(() => { this.gift = false; this.incoming = false; this.rerender(); }, 2600); },
+      showGift: this.gift,
+      keepGift: () => { clearTimeout(this.gt); this.gift = false; this.incoming = false; this.rerender(); },
+      showToast: !!this.toast,
+      toastText: this.toast
+    };
+  }
+}
+</script>
+<script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
+<script src="https://cdn.jsdelivr.net/npm/morphdom@2.7.4/dist/morphdom-umd.min.js"></script>
+<script src="dc.js"></script>
+</body></html>
