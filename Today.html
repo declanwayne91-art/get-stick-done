@@ -46,6 +46,13 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 .hm-dr{position:absolute;left:4px;top:22px;width:6px;height:8px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:#6EC8FF;border:1.5px solid #172038;opacity:0}
 .hm-pour .hm-dr{animation:hmdrop 0.45s ease-in infinite}
 @keyframes hmdrop{0%{opacity:0;transform:translateY(0)}25%{opacity:1}100%{opacity:0;transform:translateY(16px)}}
+#hm-spot,#hm-spot2{position:absolute;border-radius:20px;border:3px dashed #C6FF4D;pointer-events:none;transition:left .28s cubic-bezier(.2,.9,.3,1),top .28s cubic-bezier(.2,.9,.3,1),width .28s cubic-bezier(.2,.9,.3,1),height .28s cubic-bezier(.2,.9,.3,1)}
+#hm-spot{box-shadow:0 0 0 2000px rgba(11,16,34,0.8)}
+#hm-spot2{display:none}
+#hm-tcard{position:absolute;left:18px;right:18px;background:#FBF4E6;padding:20px 16px 12px;box-shadow:0 14px 22px rgba(0,0,0,0.45);display:flex;flex-direction:column;gap:8px;transform:rotate(-1deg);transition:top .28s cubic-bezier(.2,.9,.3,1)}
+#hm-tDots span{width:8px;height:8px;border-radius:8px;border:2px solid #172038}
+#hm-tDots span.on{background:#FF6FB0;width:20px}
+@media (prefers-reduced-motion: reduce){#hm-spot,#hm-spot2,#hm-tcard{transition:none}}
 .hm-onething .hm-sec{opacity:0;pointer-events:none;transform:translateY(12px)}
 .hm-onething #hm-next{transform:translateY(150px) scale(1.04)}
 #hm-next{transition:transform 0.3s cubic-bezier(.2,.9,.3,1)}
@@ -83,6 +90,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 <div id="hm-root" style="width: 390px; height: 844px; position: relative; overflow: hidden; background-color: #172038; background-image: radial-gradient(rgba(255,255,255,0.05) 1.2px, transparent 1.2px); background-size: 18px 18px; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #F6EFE1">
   <div id="hm-scroll" style="position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch"><div id="hm-page" style="position: relative; height: 844px">
   <span class="bri" style="position: absolute; left: 18px; top: 18px; padding: 5px 10px; background-color: rgba(198,255,77,0.9); background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0 5px, transparent 5px 10px); color: #172038; font-size: 13px; letter-spacing: 1px; transform: rotate(-2deg)">THURSDAY 29 OCTOBER</span>
+  <button type="button" id="hm-info" class="press bri" aria-label="How Today works" style="position: absolute; left: 196px; top: 15px; width: 30px; height: 30px; border-radius: 30px; border: 2px solid #F6EFE1; background: transparent; color: #F6EFE1; font-size: 17px; line-height: 1; padding: 0; display: flex; align-items: center; justify-content: center">i</button>
   <a id="hm-wait" href="StickerAlbum.html#new" aria-label="Stickers waiting in your book" style="position: absolute; right: 16px; top: 14px; height: 36px; padding: 0 12px 0 6px; border-radius: 999px; background: #FBF4E6; color: #172038; display: flex; align-items: center; gap: 6px; box-shadow: 3px 3px 0 #FF6FB0">
     <img data-k="tick1" alt="" style="width: 28px; height: 28px; transform: rotate(-8deg)"><span class="bri" style="font-size: 15px"><span id="hm-waitN"></span> to stick</span></a>
   <span id="hm-hello" class="bri" style="position: absolute; left: 18px; top: 50px; font-size: 34px; line-height: 1; color: #C6FF4D; text-shadow: 3px 3px 0 #FF6FB0"></span>
@@ -104,7 +112,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
     <img data-k="squat" alt="" style="position: absolute; right: 8px; top: 4px; width: 104px; transform: rotate(4deg)">
   </div>
 
-  <div class="hm-sec" style="position: absolute; left: 16px; right: 16px; top: 270px; height: 112px; border-radius: 20px; background: #FFD23F; color: #172038; border: 3px solid #172038">
+  <div id="hm-tonight" class="hm-sec" style="position: absolute; left: 16px; right: 16px; top: 270px; height: 112px; border-radius: 20px; background: #FFD23F; color: #172038; border: 3px solid #172038">
     <span class="bri" style="position: absolute; left: 16px; top: 12px; font-size: 12px; letter-spacing: 1px; opacity: 0.65">TONIGHT</span>
     <div id="hm-planned" style="position: absolute; inset: 26px 12px 8px 14px; display: flex; align-items: center; gap: 10px">
       <img id="hm-tImg" alt="" style="width: 76px; height: 76px; object-fit: contain; flex-shrink: 0">
@@ -139,7 +147,20 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
     <span class="bri" style="font-size: 18px">→</span></a>
   </div></div>
   <div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px; background: linear-gradient(rgba(23,32,56,0), #172038 55%); pointer-events: none; z-index: 19"></div>
-  <nav aria-label="Main" style="position: absolute; z-index: 20; left: 12px; right: 12px; bottom: 14px; height: 68px; border-radius: 22px; background: #0E1428; border: 2px solid rgba(246,239,225,0.15); display: flex; align-items: center; gap: 4px; padding: 0 6px"><a href="#" class="hm-nav on" aria-label="Today" aria-current="page"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M20.0 12.0 L22.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 17.6 L19.4 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 20.0 L12.0 22.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 17.6 L4.7 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M4.0 12.0 L1.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 6.4 L4.7 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 4.0 L12.0 1.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 6.4 L19.4 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg><span>TODAY</span></a><a href="LegDay.html" class="hm-nav" aria-label="Gym"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12 H21 M6 8 V16 M18 8 V16 M3 10 V14 M21 10 V14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"></path></svg><span>GYM</span></a><a href="PlanWeek.html" class="hm-nav" aria-label="Kitchen"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 H21 Q20 19 12 19 Q4 19 3 11 Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"></path><path d="M9 7 q-1.5 -2 0 -4 M14 7 q-1.5 -2 0 -4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"></path></svg><span>KITCHEN</span></a><a href="StickerAlbum.html" class="hm-nav" aria-label="Book"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5 Q8 4 12 6 Q16 4 20 5 V19 Q16 18 12 20 Q8 18 4 19 Z M12 6 V20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"></path></svg><span>BOOK</span></a><a href="Profile.html" class="hm-nav" aria-label="Me"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="4" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M4 21 Q12 12 20 21" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg><span>ME</span></a></nav>
+  <div id="hm-tour" role="dialog" aria-modal="true" aria-labelledby="hm-tTitle" style="position: absolute; inset: 0; z-index: 60; display: none">
+    <div id="hm-spot" aria-hidden="true"></div><div id="hm-spot2" aria-hidden="true"></div>
+    <div id="hm-tcard">
+      <span aria-hidden="true" style="position: absolute; left: 50%; top: -12px; width: 92px; height: 24px; margin-left: -46px; background-color: rgba(198,255,77,0.85); background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0 5px, transparent 5px 10px); transform: rotate(-3deg)"></span>
+      <span id="hm-tTitle" class="title-die bri" style="align-self: flex-start; font-size: 26px; color: #172038; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-2deg); transform-origin: left; white-space: nowrap"></span>
+      <span id="hm-tText" style="font-size: 16px; font-weight: 700; line-height: 1.3; color: #172038"></span>
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 2px">
+        <span id="hm-tDots" aria-hidden="true" style="display: flex; gap: 5px; margin-right: auto"></span>
+        <button type="button" id="hm-tSkip" class="kal" style="border: none; background: transparent; color: #172038; font-size: 15px; text-decoration: underline; padding: 8px 4px">skip</button>
+        <button type="button" id="hm-tNext" class="press bri" style="height: 44px; padding: 0 18px; border-radius: 14px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 18px; box-shadow: 3px 3px 0 #172038">NEXT →</button>
+      </div>
+    </div>
+  </div>
+  <nav id="hm-nav" aria-label="Main" style="position: absolute; z-index: 20; left: 12px; right: 12px; bottom: 14px; height: 68px; border-radius: 22px; background: #0E1428; border: 2px solid rgba(246,239,225,0.15); display: flex; align-items: center; gap: 4px; padding: 0 6px"><a href="#" class="hm-nav on" aria-label="Today" aria-current="page"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M20.0 12.0 L22.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 17.6 L19.4 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 20.0 L12.0 22.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 17.6 L4.7 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M4.0 12.0 L1.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 6.4 L4.7 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 4.0 L12.0 1.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 6.4 L19.4 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg><span>TODAY</span></a><a href="LegDay.html" class="hm-nav" aria-label="Gym"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12 H21 M6 8 V16 M18 8 V16 M3 10 V14 M21 10 V14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"></path></svg><span>GYM</span></a><a href="PlanWeek.html" class="hm-nav" aria-label="Kitchen"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 H21 Q20 19 12 19 Q4 19 3 11 Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"></path><path d="M9 7 q-1.5 -2 0 -4 M14 7 q-1.5 -2 0 -4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"></path></svg><span>KITCHEN</span></a><a href="StickerAlbum.html" class="hm-nav" aria-label="Book"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5 Q8 4 12 6 Q16 4 20 5 V19 Q16 18 12 20 Q8 18 4 19 Z M12 6 V20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"></path></svg><span>BOOK</span></a><a href="Profile.html" class="hm-nav" aria-label="Me"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="4" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M4 21 Q12 12 20 21" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg><span>ME</span></a></nav>
 </div>
 </script>
 <script type="text/x-dc-logic" id="dc-logic">
@@ -241,6 +262,41 @@ class Component extends DCLogic {
     // one thing: tuck the rest away and show only what's next
     const one = $('hm-one');
     one.addEventListener('click', () => { const on = root.classList.toggle('hm-onething'); one.setAttribute('aria-pressed', on ? 'true' : 'false'); one.textContent = on ? 'show everything' : 'just one thing'; buzz(6); });
+
+    // ---- first-visit tour: a few taped cards, one section at a time (gsd.seenTodayTips). The "i" at the top replays it.
+    const TOUR = [
+      ['hm-wait', 'STICKERS TO STICK', 'Every win earns a sticker. They wait here until you stick them in your book.'],
+      ['hm-xp', 'YOUR LEVEL', 'Stickers earn XP. Fill the bar to level up and unlock new name-plate colours. Tap it to see your profile.'],
+      ['hm-next', 'NEXT UP', 'The next thing in your day. Tap START when you’re ready, or pick the 10-minute version.'],
+      ['hm-tonight', 'TONIGHT', 'Tonight’s meal. Nothing planned? Pick how you feel and it chooses for you, or use up something you’ve got.'],
+      ['hm-hydro', 'HYDRO HOMIE', 'One tap for each glass of water.'],
+      ['hm-listSec', 'MY LIST', 'Your own list for today. Add anything, then tick it off when it’s done.'],
+      ['hm-nav', 'GETTING AROUND', 'The bar at the bottom takes you to the gym, the kitchen, your book and your profile. Busy day? “just one thing” shows only what’s next.', 'hm-one'],
+    ].filter((t) => t[0] !== 'hm-hydro' || hydroOn);
+    const tour = $('hm-tour'), spot = $('hm-spot'), spot2 = $('hm-spot2'), tcard = $('hm-tcard'), tnext = $('hm-tNext'), scroller = $('hm-scroll');
+    let ti = 0;
+    const boardRect = (el) => { const rr = root.getBoundingClientRect(), k = rr.width / 390, r = el.getBoundingClientRect();
+      return { l: (r.left - rr.left) / k, t: (r.top - rr.top) / k, w: r.width / k, h: r.height / k }; };
+    const ring = (sp, el) => { const r = boardRect(el), pad = 6;
+      sp.style.left = (r.l - pad) + 'px'; sp.style.top = (r.t - pad) + 'px'; sp.style.width = (r.w + pad * 2) + 'px'; sp.style.height = (r.h + pad * 2) + 'px'; return r; };
+    const showStep = () => {
+      const [id, title, text, id2] = TOUR[ti], el = $(id);
+      if (scroller.contains(el)) { const r0 = boardRect(el); if (r0.t < 90 || r0.t + r0.h > 744) scroller.scrollTop += r0.t - 200; }
+      const r = ring(spot, el);
+      if (id2) { spot2.style.display = 'block'; ring(spot2, $(id2)); } else spot2.style.display = 'none';
+      $('hm-tTitle').textContent = title; $('hm-tText').textContent = text;
+      tnext.textContent = ti === TOUR.length - 1 ? 'GOT IT' : 'NEXT →';
+      $('hm-tDots').innerHTML = TOUR.map((x, k) => '<span class="' + (k === ti ? 'on' : '') + '"></span>').join('');
+      const ch = tcard.offsetHeight, below = r.t + r.h + 22;
+      tcard.style.top = (below + ch < 830 ? below : Math.max(12, r.t - ch - 22)) + 'px';
+    };
+    const openTour = () => { ti = 0; tour.style.display = 'block'; showStep(); buzz(6); tnext.focus(); };
+    const closeTour = () => { tour.style.display = 'none'; spot2.style.display = 'none'; try { localStorage.setItem('gsd.seenTodayTips', '1'); } catch (e) {} $('hm-info').focus(); };
+    tnext.addEventListener('click', () => { if (ti < TOUR.length - 1) { ti++; showStep(); buzz(4); } else closeTour(); });
+    $('hm-tSkip').addEventListener('click', closeTour);
+    $('hm-info').addEventListener('click', openTour);
+    tour.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeTour(); });
+    if (ls('gsd.seenTodayTips', '') !== '1') setTimeout(() => { if (!this.dead) openTour(); }, 700);
 
     paintWait(); paintDrops(); paintTonight(); paintXP();
     return true;
