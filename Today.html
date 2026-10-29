@@ -88,8 +88,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 .hm-bTitle{position:relative;font-size:26px;line-height:1;margin-top:4px;color:#172038;opacity:0.85}
 .hm-bSub{position:relative;font-size:14px;opacity:0.7;margin-top:2px}
 .hm-tapS{position:relative;margin-top:auto;display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 12px;background:#C6FF4D;color:#172038;border:2.5px solid #172038;border-radius:10px;font-size:18px;box-shadow:3px 4px 0 #FF6FB0;transform:rotate(-2deg);}
-.hm-peel{position:absolute;right:7px;top:7px;width:44px;height:44px;background:linear-gradient(225deg,transparent 0 49%,var(--pc) 50% 100%);border-radius:0 15px 0 0;filter:drop-shadow(-3px 3px 2px rgba(23,32,56,0.25));transform-origin:100% 0}
-.hm-peel::after{content:'';position:absolute;inset:0;background:linear-gradient(225deg,transparent 0 49%,rgba(23,32,56,0.18) 50%,transparent 70%)}
+.hm-peel{position:absolute;right:0;top:0;pointer-events:none}
 /* little stickers, slapped on (decoration only) */
 .hm-deco{position:absolute;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,0.35))}
 
@@ -133,7 +132,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
     <a id="hm-nextNone" href="GymHub.html" class="hm-backing press" aria-label="No workout yet. Tap here to get started in the gym">
       <span class="bri hm-bLab">NEXT UP</span><span class="bri hm-bTitle">NO WORKOUT YET</span><span class="kal hm-bSub">walk, run, swim, the gym: it all counts</span>
       <span class="hm-tapS title-die bri">TAP HERE TO GET STARTED<svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><path d="M2 10 H22 M15 3 L22 10 L15 17" stroke="#172038" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
-      <span class="hm-die" aria-hidden="true"></span><span class="hm-peel" aria-hidden="true" style="--pc: #C6FF4D"></span></a>
+      <span class="hm-die" aria-hidden="true"></span><svg class="hm-peel" width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><path d="M13 7 H45 Q57 7 57 19 V51 Z" fill="#C6FF4D" stroke="#FFFFFF" stroke-width="5" stroke-linejoin="round" paint-order="stroke"></path><path d="M13 7 H45 Q57 7 57 19 V51 Z" fill="none" stroke="#172038" stroke-width="2" stroke-linejoin="round"></path><path d="M13 7 L57 51 Q47 55 37 50 Q30 46 26 38 Q19 26 13 7 Z" fill="#FFFFFF" stroke="#172038" stroke-width="2" stroke-linejoin="round" style="filter: drop-shadow(-2px 3px 1.5px rgba(23,32,56,0.3))"></path><path d="M17 12 L52 47" stroke="rgba(23,32,56,0.13)" stroke-width="5" stroke-linecap="round"></path><path d="M28 39 Q33 46 41 49" stroke="rgba(23,32,56,0.18)" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></a>
   </div>
 
   <div id="hm-tonight" class="hm-sec" style="position: absolute; left: 16px; right: 16px; top: 270px; height: 112px; border-radius: 20px; background: #FFD23F; color: #172038; border: 3px solid #172038">
@@ -150,7 +149,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
       <a href="PlanWeek.html" class="hm-backing press" aria-label="Nothing for tonight yet. Tap here to plan your meals">
         <span class="bri hm-bLab">TONIGHT’S MEAL PLAN</span><span class="bri hm-bTitle" style="font-size: 22px">NOTHING FOR TONIGHT YET</span>
         <span class="hm-tapS title-die bri">TAP TO PLAN MEALS<svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><path d="M2 10 H22 M15 3 L22 10 L15 17" stroke="#172038" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
-        <span class="hm-die" aria-hidden="true"></span><span class="hm-peel" aria-hidden="true" style="--pc: #FF6FB0"></span></a>
+        <span class="hm-die" aria-hidden="true"></span><svg class="hm-peel" width="64" height="64" viewBox="0 0 64 64" aria-hidden="true"><path d="M13 7 H45 Q57 7 57 19 V51 Z" fill="#FF6FB0" stroke="#FFFFFF" stroke-width="5" stroke-linejoin="round" paint-order="stroke"></path><path d="M13 7 H45 Q57 7 57 19 V51 Z" fill="none" stroke="#172038" stroke-width="2" stroke-linejoin="round"></path><path d="M13 7 L57 51 Q47 55 37 50 Q30 46 26 38 Q19 26 13 7 Z" fill="#FFFFFF" stroke="#172038" stroke-width="2" stroke-linejoin="round" style="filter: drop-shadow(-2px 3px 1.5px rgba(23,32,56,0.3))"></path><path d="M17 12 L52 47" stroke="rgba(23,32,56,0.13)" stroke-width="5" stroke-linecap="round"></path><path d="M28 39 Q33 46 41 49" stroke="rgba(23,32,56,0.18)" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></a>
       <button type="button" id="hm-moodLink" class="kal" style="position: absolute; right: 12px; bottom: 12px; border: none; background: transparent; color: #172038; font-size: 14px; text-decoration: underline; padding: 4px; cursor: pointer; z-index: 2">or pick by mood</button>
     </div>
     <div id="hm-none" style="position: absolute; inset: 28px 14px 10px 14px; display: none; flex-direction: column; gap: 10px">
