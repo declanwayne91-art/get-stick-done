@@ -36,7 +36,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
     <span aria-hidden="true" style="padding: 8px 16px; background: #D93A3A; color: #FFFFFF; font-family: 'DM Mono', monospace; font-size: 26px; font-weight: 500; letter-spacing: 4px; text-shadow: 0 1px 0 rgba(0,0,0,0.35); transform: rotate(-4deg); box-shadow: 0 3px 4px rgba(60,40,20,0.3)">LAT</span>
     <span aria-hidden="true" style="margin-left: 34px; padding: 8px 16px; background: #1F3FB0; color: #FFFFFF; font-family: 'DM Mono', monospace; font-size: 26px; font-weight: 500; letter-spacing: 4px; text-shadow: 0 1px 0 rgba(0,0,0,0.35); transform: rotate(2deg); box-shadow: 0 3px 4px rgba(60,40,20,0.3)">PULLDOWN</span>
   </h1>
-  <span style="position: absolute; left: 150px; top: 72px; font-family: 'Kalam', cursive; font-size: 17px; font-weight: 700; transform: rotate(-3deg)">back · 3 × 10<br>today: 45 kg</span>
+  <span style="position: absolute; left: 150px; top: 72px; font-family: 'Kalam', cursive; font-size: 17px; font-weight: 700; transform: rotate(-3deg)">back · 3 × 10<br>today: {{wToday}}</span>
 
   <div style="position: absolute; left: 22px; top: 190px; width: 250px; background: #FFFFFF; padding: 10px 10px 8px; box-shadow: 0 8px 12px -6px rgba(60,40,20,0.4); transform: rotate(-2deg)">
     <div style="height: 204px; background: #FFF7E8; display: flex; align-items: center; justify-content: center">
@@ -136,6 +136,7 @@ class Component extends DCLogic {
     const transitions = { drop: 'none', landed: 'transform 0.3s cubic-bezier(.3,1.6,.5,1), opacity 0.15s ease', fly: 'transform 0.42s cubic-bezier(.55,0,.75,.35), opacity 0.42s ease-in' };
     const seenHint = (() => { try { return localStorage.getItem('gsd.seenSetHint') === '1'; } catch (e) { return false; } })();
     return {
+      wToday: (() => { try { const v = JSON.parse(localStorage.getItem('gsd.weights') || '{}')['LAT PULLDOWN']; return v != null ? v + ' kg' : 'your weight'; } catch (e) { return 'your weight'; } })(),
       setHint: !seenHint && !done.some(Boolean),
       count,
       bookTransform: st.bump ? 'scale(1.25)' : 'scale(1)',

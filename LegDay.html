@@ -18,6 +18,27 @@ button:focus-visible,a:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 </style>
 <style>@keyframes gymhint{0%,100%{translate:0 0}50%{translate:0 -4px}} .gym-hint{animation:gymhint 1.6s ease-in-out infinite} @media (prefers-reduced-motion: reduce){.gym-hint{animation:none}}</style>
 <style data-lm>.lm{font-family:"DM Mono",ui-monospace,monospace !important;font-weight:500;text-transform:uppercase;color:#FFFFFF !important;letter-spacing:3px;background-image:linear-gradient(rgba(255,255,255,0.22),rgba(255,255,255,0) 45%,rgba(0,0,0,0.12)) !important;text-shadow:0 -1px 0 rgba(0,0,0,0.55),0 1px 0 rgba(255,255,255,0.4) !important;box-shadow:inset 0 2px 0 rgba(255,255,255,0.28),inset 0 -3px 0 rgba(0,0,0,0.22),0 3px 5px rgba(60,40,20,0.35) !important;border-radius:3px}[style*="DM Mono"][style*="background: #"]{background-image:linear-gradient(rgba(255,255,255,0.22),rgba(255,255,255,0) 45%,rgba(0,0,0,0.12));text-shadow:0 -1px 0 rgba(0,0,0,0.55),0 1px 0 rgba(255,255,255,0.4) !important;box-shadow:inset 0 2px 0 rgba(255,255,255,0.28),inset 0 -3px 0 rgba(0,0,0,0.22),0 3px 5px rgba(60,40,20,0.35) !important;border-radius:3px}</style>
+<style data-wt>.wbtn{border:none;background:transparent;padding:4px 0;font-family:'DM Mono',monospace;font-size:14px;white-space:nowrap;color:#172038;cursor:pointer;text-align:left}
+.wbtn.w-none{padding:3px 8px;border:2px dashed #FF6FB0;border-radius:8px;color:#C2185B;font-weight:700}
+.wbtn.w-has{text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}.wbtn.w-bw{cursor:default}
+.wt-layer{position:fixed;inset:0;z-index:10000;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;color:#172038}
+.wt-scrim{position:absolute;inset:0;background:rgba(11,16,34,0.6)}
+.wt-card{position:absolute;left:50%;top:50%;width:330px;transform-origin:50% 50%;background:#FBF4E6;padding:22px 18px 12px;box-sizing:border-box;box-shadow:0 14px 22px rgba(0,0,0,0.45);display:flex;flex-direction:column;gap:10px}
+.wt-tape{position:absolute;left:50%;top:-12px;width:92px;height:24px;margin-left:-46px;background-color:rgba(198,255,77,0.85);background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.35) 0 5px,transparent 5px 10px);transform:rotate(-3deg)}
+.wt-t{align-self:flex-start;font-family:'Bricolage Grotesque',sans-serif;font-stretch:75%;font-weight:800;font-size:28px;line-height:1;text-shadow:3px 3px 0 #FF6FB0;transform:rotate(-2deg);white-space:nowrap}
+.wt-s{font-family:Kalam,cursive;font-weight:700;font-size:15px;margin-top:-4px}
+.wt-row{display:flex;align-items:center;gap:10px}
+.wt-pm{width:54px;height:54px;border-radius:54px;border:3px solid #172038;background:#FFFFFF;color:#172038;font-size:28px;font-weight:800;line-height:1;cursor:pointer;flex-shrink:0}
+.wt-box{flex:1;min-width:0;height:64px;border-radius:16px;border:3px solid #172038;background:#FFFFFF;display:flex;align-items:center;justify-content:center;gap:4px;padding:0 10px}
+.wt-in{width:100%;min-width:0;border:none;background:transparent;text-align:right;font-family:'DM Mono',monospace;font-size:32px;color:#172038;outline:none;-webkit-user-select:text;user-select:text}
+.wt-box span{font-family:'DM Mono',monospace;font-size:18px}
+.wt-box:focus-within{border-color:#6EC8FF}
+.wt-sug,.wt-tip{height:44px;border-radius:14px;border:2.5px dashed #172038;background:#FFD23F;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-stretch:80%;font-weight:800;font-size:17px;cursor:pointer}
+.wt-tip{border-style:solid;background:#C6FF4D;box-shadow:3px 3px 0 #172038}
+.wt-why{font-size:14px;line-height:1.3;font-weight:700}.wt-why:empty{display:none}
+.wt-save{height:54px;border-radius:16px;border:3px solid #172038;background:#C6FF4D;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-stretch:80%;font-weight:800;font-size:22px;box-shadow:4px 4px 0 #172038;cursor:pointer}
+.wt-x{border:none;background:transparent;color:#172038;font-family:Kalam,cursive;font-weight:700;font-size:15px;text-decoration:underline;padding:6px;cursor:pointer}
+.wt-layer button:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}</style>
 
 <style>html,body{margin:0;height:100%;overflow:hidden;background:#0B1022;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
 #dc-frame{position:absolute;left:0;top:0;transform-origin:0 0;background:#172038}
@@ -51,7 +72,7 @@ button:focus-visible,a:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
           <a href="{{r.guide}}" class="press" aria-label="How to do {{r.name}}" style="flex-shrink: 0; height: 32px; padding: 0 12px; border: 2.5px solid #1F3FB0; border-radius: 999px; background: #FFFFFF; color: #1F3FB0; text-decoration: none; display: flex; align-items: center; gap: 4px; font-family: 'Kalam', cursive; font-size: 15px; font-weight: 700">how to ↗</a>
         </div>
         <div style="display: flex; align-items: center; justify-content: space-between">
-          <span style="font-family: 'DM Mono', monospace; font-size: 14px; color: #172038">{{r.meta}}</span>
+          <button type="button" class="press wbtn {{r.wCls}}" onClick="{{r.editW}}" aria-label="{{r.wAria}}">{{r.meta}}</button>
           <div style="display: flex; gap: 6px">
             <sc-for list="{{r.sets}}" as="s" hint-placeholder-count="3">
               <button type="button" class="set press" onClick="{{s.toggle}}" aria-pressed="{{s.pressed}}" aria-label="{{s.aria}}" style="background: {{s.fill}}; transform: rotate({{s.rot}})">{{s.mark}}</button>
@@ -119,6 +140,48 @@ class Component extends DCLogic {
       }
     }, 100);
   }
+
+  openW(e, x) {
+    if (x.bw || this._wL) return;
+    const SUG = {"GOBLET SQUAT": [8, 12, 16, 2, "one dumbbell, held at your chest"], "ROMANIAN DEADLIFT": [20, 30, 40, 2.5, "the whole bar, plates included"], "WALKING LUNGE": [4, 6, 10, 1, "in each hand"], "LEG PRESS": [30, 50, 80, 5, "on the machine"], "LAT PULLDOWN": [20, 30, 40, 2.5, "on the stack"], "SEATED ROW": [20, 30, 40, 2.5, "on the stack"], "DUMBBELL ROW": [8, 12, 18, 2, "one dumbbell"], "FACE PULL": [7.5, 10, 15, 2.5, "on the cable"], "HAMMER CURL": [4, 6, 10, 1, "in each hand"], "BENCH PRESS": [20, 30, 45, 2.5, "the whole bar: an empty Olympic bar is 20 kg"], "OVERHEAD PRESS": [15, 20, 30, 2.5, "the whole bar"], "BARBELL CURL": [10, 15, 20, 2.5, "the whole bar"], "LATERAL RAISE": [2, 4, 6, 1, "in each hand"]}, PLAN = 'leg', sug = SUG[x.name];
+    const ls = (k) => { try { return localStorage.getItem(k); } catch (er) { return null; } };
+    let WT = {}; try { WT = JSON.parse(ls('gsd.weights') || '{}'); } catch (er) {}
+    let P = null; try { P = JSON.parse(ls('gsd.progress') || 'null'); } catch (er) {}
+    const tip = !!(x.first && P && P.gym && P.gym[PLAN] && P.gym[PLAN].tip && WT[x.name] != null);
+    const lv = ls('gsd.fitLevel') || 'new', LVN = { new: 'just starting', back: 'getting back into it', regular: 'pretty regular' };
+    const step = sug ? sug[3] : 2.5;
+    const L = document.createElement('div'); L.className = 'wt-layer'; L.setAttribute('role', 'dialog'); L.setAttribute('aria-modal', 'true'); L.setAttribute('aria-label', 'Your weight for ' + x.name.toLowerCase());
+    L.innerHTML = '<div class="wt-scrim"></div><div class="wt-card"><span class="wt-tape"></span><span class="wt-t title-die">' + x.name + '</span><span class="wt-s">your working weight · ' + x.reps + '</span>'
+      + (tip ? '<button type="button" class="wt-tip">⬆ READY FOR MORE: +2.5 KG</button>' : '')
+      + '<div class="wt-row"><button type="button" class="wt-pm" data-d="-1" aria-label="Less">−</button><label class="wt-box"><input class="wt-in" type="text" inputmode="decimal" aria-label="Weight in kilograms" placeholder="?"><span>kg</span></label><button type="button" class="wt-pm" data-d="1" aria-label="More">+</button></div>'
+      + (sug ? '<button type="button" class="wt-sug">SUGGEST A WEIGHT</button><span class="wt-why" aria-live="polite"></span>' : '')
+      + '<button type="button" class="wt-save">SAVE</button><button type="button" class="wt-x">cancel</button></div>';
+    document.body.appendChild(L); this._wL = L;
+    const card = L.querySelector('.wt-card'), inp = L.querySelector('.wt-in');
+    const stage = document.getElementById('dc-stage') || document.querySelector('[data-dc-root]') || document.body, R = stage.getBoundingClientRect(), k = Math.min(1.4, (R.width || innerWidth) / 390);
+    card.style.transform = 'translate(-50%, -50%) scale(' + k + ') rotate(-1deg)';
+    const cur = () => { const v = parseFloat(String(inp.value).replace(',', '.')); return isFinite(v) && v >= 0 ? v : null; };
+    const set = (v) => { inp.value = v == null ? '' : String(Math.round(v * 10) / 10); };
+    set(WT[x.name]);
+    const buzz = (p) => { try { if (ls('gsd.haptics') !== '0' && navigator.vibrate) navigator.vibrate(p); } catch (er) {} };
+    L.querySelectorAll('.wt-pm').forEach((b) => b.addEventListener('click', () => { const v = cur(); set(Math.max(0, (v == null ? (sug ? sug[{ new: 0, back: 1, regular: 2 }[lv] || 0] : 0) : v + step * +b.dataset.d))); buzz(6); }));
+    const sb = L.querySelector('.wt-sug'); if (sb) sb.addEventListener('click', () => {
+      const v = sug[{ new: 0, back: 1, regular: 2 }[lv] || 0]; set(v); buzz(10);
+      L.querySelector('.wt-why').textContent = 'For someone ' + (LVN[lv] || 'just starting') + ': start around ' + v + ' kg (' + sug[4] + '). Do one test set. If the last 2 reps feel easy, go up ' + step + ' kg. If your form slips, go down. Everyone’s different, so trust how it feels.';
+    });
+    const tb = L.querySelector('.wt-tip'); if (tb) tb.addEventListener('click', () => { set((cur() || 0) + 2.5); buzz([10, 40, 16]); tb.textContent = 'NICE. SAVE TO KEEP IT'; tb.disabled = true; this._wTip = true; });
+    const close = () => { if (!this._wL) return; this._wL.remove(); this._wL = null; document.removeEventListener('keydown', onKey); };
+    const onKey = (ev) => { if (ev.key === 'Escape') close(); if (ev.key === 'Enter') save(); };
+    const save = () => {
+      const v = cur(); if (v == null) delete WT[x.name]; else WT[x.name] = v;
+      try { localStorage.setItem('gsd.weights', JSON.stringify(WT));
+        if (this._wTip && P && P.gym && P.gym[PLAN]) { P.gym[PLAN].tip = false; localStorage.setItem('gsd.progress', JSON.stringify(P)); } } catch (er) {}
+      this._wTip = false; buzz(10); close(); this.setState({ wv: Date.now() });
+    };
+    document.addEventListener('keydown', onKey);
+    L.querySelector('.wt-save').addEventListener('click', save); L.querySelector('.wt-x').addEventListener('click', close); L.querySelector('.wt-scrim').addEventListener('click', close);
+    setTimeout(() => inp.focus(), 50);
+  }
   renderVals() {
     if (!this._wk) { this._wk = 1; try { if (!localStorage.getItem('gsd.workout')) localStorage.setItem('gsd.workout', JSON.stringify({ type: 'gym', plan: 'LegDay', title: 'LEG DAY', page: 'LegDay' })); } catch (e) {} }
     const st = this.state || {};
@@ -129,6 +192,13 @@ class Component extends DCLogic {
       { name: 'LEG PRESS', meta: '80 kg · 3 × 10', bg: '#FFFDF6', rot: '0.6deg' },
       { name: 'CALF RAISE', meta: 'bodyweight · 3 × 15', bg: '#FFFFFF', rot: '-0.5deg' }
     ];
+    const WT = (() => { try { return JSON.parse(localStorage.getItem('gsd.weights') || '{}'); } catch (e) { return {}; } })();
+    let PRG = null; try { PRG = JSON.parse(localStorage.getItem('gsd.progress') || 'null'); } catch (e) {}
+    const wTip = !!(PRG && PRG.gym && PRG.gym['leg'] && PRG.gym['leg'].tip);
+    let firstW = true;
+    ex.forEach((x) => { const m = x.meta.split(' · '); x.reps = m[1]; x.bw = m[0] === 'bodyweight'; const v = WT[x.name];
+      x.hasW = v != null; x.first = !x.bw && firstW; if (!x.bw) firstW = false;
+      x.meta = x.bw ? x.meta : (x.hasW ? v + ' kg' + (x.first && wTip ? ' ⬆' : '') + ' · ' + x.reps : '+ kg · ' + x.reps); });
     const done = st.done || ex.map(() => [false, false, false]);
     const total = ex.length * 3;
     const doneSets = done.reduce((n, r) => n + r.filter(Boolean).length, 0);
@@ -182,6 +252,8 @@ class Component extends DCLogic {
       rows: ex.map((x, e) => ({
         guide: x.guide || '#',
         name: x.name, meta: x.meta, bg: x.bg, rot: x.rot,
+        editW: () => this.openW(e, x), wCls: x.bw ? 'w-bw' : x.hasW ? 'w-has' : 'w-none',
+        wAria: x.bw ? x.name.toLowerCase() + ': bodyweight' : x.hasW ? x.name.toLowerCase() + ': ' + x.meta + '. Tap to change the weight' : x.name.toLowerCase() + ': add your weight',
         hl: e === current ? '#C6FF4D' : 'transparent',
         current: e === current,
         sets: [0, 1, 2].map((k) => ({
