@@ -265,6 +265,7 @@ class Component extends DCLogic {
 
     // ---- first-visit tour: a few taped cards, one section at a time (gsd.seenTodayTips). The "i" at the top replays it.
     const TOUR = [
+      [null, 'YOUR TODAY SCREEN', 'Welcome to your Today screen! Here’s a quick look at each part.'],
       ['hm-wait', 'STICKERS TO STICK', 'Every win earns a sticker. They wait here until you stick them in your book.'],
       ['hm-xp', 'YOUR LEVEL', 'XP (experience points) are points you earn every time you get something done. Fill the bar to level up and earn new name-plate colours and stickers you can send to your friends. Tap it to see your profile.'],
       ['hm-next', 'NEXT UP', 'The next thing in your day. Tap START when you’re ready, or pick the 10-minute version if you want a shorter workout.'],
@@ -280,15 +281,17 @@ class Component extends DCLogic {
     const ring = (sp, el) => { const r = boardRect(el), pad = 6;
       sp.style.left = (r.l - pad) + 'px'; sp.style.top = (r.t - pad) + 'px'; sp.style.width = (r.w + pad * 2) + 'px'; sp.style.height = (r.h + pad * 2) + 'px'; return r; };
     const showStep = () => {
-      const [id, title, text, id2] = TOUR[ti], el = $(id);
-      if (scroller.contains(el)) { const r0 = boardRect(el); if (r0.t < 90 || r0.t + r0.h > 744) scroller.scrollTop += r0.t - 200; }
-      const r = ring(spot, el);
+      const [id, title, text, id2] = TOUR[ti], el = id ? $(id) : null;
+      if (el && scroller.contains(el)) { const r0 = boardRect(el); if (r0.t < 90 || r0.t + r0.h > 744) scroller.scrollTop += r0.t - 200; }
+      // the welcome card has no section to point at: the whole screen dims and the card sits in the middle
+      const r = el ? ring(spot, el) : (() => { spot.style.left = '195px'; spot.style.top = '300px'; spot.style.width = '0px'; spot.style.height = '0px'; return { l: 195, t: 300, w: 0, h: 0 }; })();
+      spot.style.borderWidth = el ? '3px' : '0';
       if (id2) { spot2.style.display = 'block'; ring(spot2, $(id2)); } else spot2.style.display = 'none';
       $('hm-tTitle').textContent = title; $('hm-tText').textContent = text;
       tnext.textContent = ti === TOUR.length - 1 ? 'GOT IT' : 'NEXT →';
       $('hm-tDots').innerHTML = TOUR.map((x, k) => '<span class="' + (k === ti ? 'on' : '') + '"></span>').join('');
       const ch = tcard.offsetHeight, below = r.t + r.h + 22;
-      tcard.style.top = (below + ch < 830 ? below : Math.max(12, r.t - ch - 22)) + 'px';
+      tcard.style.top = (el ? (below + ch < 830 ? below : Math.max(12, r.t - ch - 22)) : Math.round(422 - ch / 2)) + 'px';
     };
     const openTour = () => { ti = 0; tour.style.display = 'block'; showStep(); buzz(6); tnext.focus(); };
     const closeTour = () => { tour.style.display = 'none'; spot2.style.display = 'none'; try { localStorage.setItem('gsd.seenTodayTips', '1'); } catch (e) {} $('hm-info').focus(); };
