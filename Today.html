@@ -58,8 +58,6 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 #hm-tDots span.on{background:#FF6FB0;width:20px}
 @media (prefers-reduced-motion: reduce){#hm-spot,#hm-spot2,#hm-tcard{transition:none}}
 .hm-onething .hm-sec{opacity:0;pointer-events:none;transform:translateY(12px)}
-.hm-onething #hm-next{transform:translateY(150px) scale(1.04)}
-#hm-next{transition:transform 0.3s cubic-bezier(.2,.9,.3,1)}
 .hm-row{display:flex;align-items:center;border-bottom:2px dashed rgba(246,239,225,0.18)}
 .hm-row .hm-task{border-bottom:none}
 .hm-x{flex-shrink:0;width:40px;height:44px;border:none;background:transparent;color:#F6EFE1;opacity:0.45;font-size:22px;cursor:pointer}
@@ -81,7 +79,16 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 .hm-mood{height:40px;padding:0 14px;border-radius:999px;border:2.5px solid #172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:15px;color:#172038;cursor:pointer}
 .hm-nav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#F6EFE1;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;border-radius:16px;height:56px}
 #hm-root .hm-nav.on{background:#C6FF4D;color:#172038}
-@media (prefers-reduced-motion: reduce){.hm-sec,#hm-next{transition:none}}
+@media (prefers-reduced-motion: reduce){.hm-sec{transition:none}.hm-tapS{animation:none}}
+/* blank sticker backing: where a card will go once there's something in it */
+#hm-next.hm-empty,#hm-tonight.hm-empty{background:repeating-linear-gradient(-45deg,rgba(246,239,225,0.07) 0 10px,rgba(246,239,225,0.03) 10px 20px) !important;border:3px dashed rgba(246,239,225,0.55) !important;box-shadow:none !important;color:#F6EFE1 !important}
+.hm-backing{position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;padding:12px 16px;text-decoration:none;color:#F6EFE1;border-radius:18px}
+.hm-bLab{font-size:12px;letter-spacing:1px;opacity:0.6}
+.hm-bTitle{font-size:26px;line-height:1;margin-top:4px;color:#F6EFE1;opacity:0.9}
+.hm-bSub{font-size:14px;opacity:0.75;margin-top:2px}
+.hm-tapS{margin-top:auto;display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 12px;background:#C6FF4D;color:#172038;border:2.5px solid #172038;border-radius:10px;font-size:18px;box-shadow:0 0 0 3px #FFFFFF,3px 4px 0 3px #FF6FB0;transform:rotate(-2deg);animation:hmtap 1.4s ease-in-out infinite}
+@keyframes hmtap{0%,100%{translate:0 0}50%{translate:3px -2px}}
+.hm-peel{position:absolute;right:-3px;top:-3px;width:30px;height:30px;background:linear-gradient(225deg,#172038 0 50%,#FBF4E6 50% 100%);border-radius:0 18px 0 8px;opacity:0.9}
 </style>
 
 <style>html,body{margin:0;height:100%;overflow:hidden;background:#0B1022;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
@@ -109,15 +116,22 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
       <span class="hm-dr"></span><span class="hm-dr" style="animation-delay: 0.15s"></span><span class="hm-dr" style="animation-delay: 0.3s"></span></span>
     <span id="hm-xpPop" class="bri" aria-hidden="true" style="position: absolute; right: 70px; top: -4px; font-size: 14px; color: #C6FF4D; opacity: 0; pointer-events: none"></span></a>
   <div id="hm-next" style="position: absolute; left: 16px; right: 16px; top: 128px; height: 132px; border-radius: 20px; background: #FBF4E6; color: #172038; border: 3px solid #172038; box-shadow: 5px 5px 0 #FF6FB0; overflow: hidden">
-    <span class="bri" style="position: absolute; left: 16px; top: 12px; font-size: 12px; letter-spacing: 1px; opacity: 0.6">NEXT UP · 6:00 PM</span>
-    <span class="bri" style="position: absolute; left: 16px; top: 30px; font-size: 34px; line-height: 1; text-shadow: 3px 3px 0 #C6FF4D">LEG DAY</span>
-    <span class="kal" style="position: absolute; left: 18px; top: 62px; font-size: 14px">45 min · or the 10-min version</span>
-    <a href="LegDay.html" class="press bri" style="position: absolute; left: 16px; bottom: 12px; height: 34px; padding: 0 16px; border-radius: 12px; background: #172038; color: #C6FF4D; display: flex; align-items: center; font-size: 15px">START →</a>
-    <img data-k="squat" alt="" style="position: absolute; right: 8px; top: 4px; width: 104px; transform: rotate(4deg)">
+    <div id="hm-nextOn" style="display: none">
+    <span id="hm-nLab" class="bri" style="position: absolute; left: 16px; top: 12px; font-size: 12px; letter-spacing: 1px; opacity: 0.6">IN PROGRESS</span>
+    <span id="hm-nTitle" class="bri" style="position: absolute; left: 16px; right: 120px; top: 30px; font-size: 30px; line-height: 1; text-shadow: 3px 3px 0 #C6FF4D; overflow: hidden; text-overflow: ellipsis; white-space: nowrap"></span>
+    <span id="hm-nMeta" class="kal" style="position: absolute; left: 18px; right: 120px; top: 62px; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"></span>
+    <a href="GymHub.html" class="press bri" style="position: absolute; left: 16px; bottom: 12px; height: 34px; padding: 0 16px; border-radius: 12px; background: #172038; color: #C6FF4D; display: flex; align-items: center; font-size: 15px">CONTINUE →</a>
+    <img id="hm-nImg" data-k="squat" alt="" style="position: absolute; right: 8px; top: 4px; width: 104px; transform: rotate(4deg)">
+    <span id="hm-nIco" aria-hidden="true" style="position: absolute; right: 18px; top: 22px; width: 84px; height: 84px; border-radius: 22px; border: 3px solid #172038; display: none; align-items: center; justify-content: center; transform: rotate(5deg); box-shadow: 0 0 0 4px #FFFFFF"></span>
+    </div>
+    <a id="hm-nextNone" href="GymHub.html" class="hm-backing press" aria-label="No workout yet. Tap here to get started in the gym">
+      <span class="bri hm-bLab">NEXT UP</span><span class="bri hm-bTitle">NO WORKOUT YET</span><span class="kal hm-bSub">walk, run, swim, the gym: it all counts</span>
+      <span class="hm-tapS title-die bri">TAP HERE TO GET STARTED<svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><path d="M2 10 H22 M15 3 L22 10 L15 17" stroke="#172038" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+      <span class="hm-peel" aria-hidden="true"></span></a>
   </div>
 
   <div id="hm-tonight" class="hm-sec" style="position: absolute; left: 16px; right: 16px; top: 270px; height: 112px; border-radius: 20px; background: #FFD23F; color: #172038; border: 3px solid #172038">
-    <span class="bri" style="position: absolute; left: 16px; top: 12px; font-size: 12px; letter-spacing: 1px; opacity: 0.65">TONIGHT</span>
+    <span id="hm-tLab" class="bri" style="position: absolute; left: 16px; top: 12px; font-size: 12px; letter-spacing: 1px; opacity: 0.65">TONIGHT</span>
     <div id="hm-planned" style="position: absolute; inset: 26px 12px 8px 14px; display: flex; align-items: center; gap: 10px">
       <img id="hm-tImg" alt="" style="width: 76px; height: 76px; object-fit: contain; flex-shrink: 0">
       <div style="flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0">
@@ -125,6 +139,13 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
         <span style="display: flex; gap: 10px; align-items: center"><a id="hm-cook" href="#" class="press bri" style="height: 34px; padding: 0 14px; border-radius: 12px; background: #172038; color: #FFD23F; display: flex; align-items: center; font-size: 15px">COOK IT →</a>
           <button type="button" id="hm-swap" class="kal" style="border: none; background: transparent; font-size: 14px; text-decoration: underline; color: #172038; padding: 6px 0">swap</button></span>
       </div>
+    </div>
+    <div id="hm-empty" style="position: absolute; inset: 0; display: none">
+      <a href="PlanWeek.html" class="hm-backing press" aria-label="Nothing for tonight yet. Tap here to plan your meals">
+        <span class="bri hm-bLab">TONIGHT</span><span class="bri hm-bTitle" style="font-size: 22px">NOTHING FOR TONIGHT YET</span>
+        <span class="hm-tapS title-die bri">TAP TO PLAN MEALS<svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><path d="M2 10 H22 M15 3 L22 10 L15 17" stroke="#172038" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+        <span class="hm-peel" aria-hidden="true"></span></a>
+      <button type="button" id="hm-moodLink" class="kal" style="position: absolute; right: 12px; bottom: 12px; border: none; background: transparent; color: #F6EFE1; font-size: 14px; text-decoration: underline; padding: 4px; cursor: pointer">or pick by mood</button>
     </div>
     <div id="hm-none" style="position: absolute; inset: 28px 14px 10px 14px; display: none; flex-direction: column; gap: 10px">
       <span class="bri" style="font-size: 19px; line-height: 1.05">Nothing planned. How are you feeling?</span>
@@ -193,7 +214,7 @@ class Component extends DCLogic {
     let name = 'Dex'; try { const pf = JSON.parse(ls('gsd.profile', 'null')); if (pf && pf.bookName) { const m = pf.bookName.match(/^(.*?)[’']s Sticker Book$/i); if (m) name = m[1]; } } catch (e) {}
     $('hm-hello').textContent = 'Afternoon, ' + name;
     const hydroOn = (() => { try { const pf = JSON.parse(ls('gsd.profile', 'null')); return !pf || pf.hydro !== null; } catch (e) { return true; } })();
-    if (!hydroOn) $('hm-hydro').style.display = 'none';
+    if (!hydroOn) $('hm-hydro').style.display = 'none';   // (stack() closes the gap)
 
     // stickers waiting to be stuck (they collect here and in the book; never a red badge)
     let waiting = 2; try { waiting += +localStorage.getItem('gsd.newStickers') || 0; } catch (e) {}  /* + any earned elsewhere (workouts) */ const paintWait = () => { $('hm-waitN').textContent = waiting; $('hm-wait').style.display = waiting ? 'flex' : 'none'; };
@@ -223,6 +244,10 @@ class Component extends DCLogic {
     let TASKS = []; try { TASKS = JSON.parse(ls('gsd.tasks', '[]')) || []; } catch (e) { TASKS = []; }
     const saveTasks = () => { try { localStorage.setItem('gsd.tasks', JSON.stringify(TASKS)); } catch (e) {} };
     const TICK = '<svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 8.5 L6.5 12 L13 4.5" stroke="#172038" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+    const stack = () => {   // cards sit one under the other; a hidden card (Hydro Homie switched off) leaves no gap
+      let y = 128; ['hm-next', 'hm-tonight', 'hm-hydro', 'hm-weekCard', 'hm-listSec'].forEach((id) => { const el = $(id); if (!el || getComputedStyle(el).display === 'none') return;
+        if (id === 'hm-listSec') y += 2; el.style.top = y + 'px'; y += el.offsetHeight + 10; });
+      if ($('hm-page')) fitPage(); };
     const fitPage = () => {   // one screen by default; the page grows (and scrolls) only when the list does
       const sec = $('hm-listSec'), need = sec.offsetTop + sec.offsetHeight + 104;
       $('hm-page').style.height = Math.max(844, need) + 'px'; };
@@ -244,7 +269,7 @@ class Component extends DCLogic {
     };
     $('hm-addForm').addEventListener('submit', (e) => { e.preventDefault(); const v = $('hm-addIn').value.trim(); if (!v) { $('hm-addIn').focus(); return; }
       TASKS.push({ t: v, done: false }); $('hm-addIn').value = ''; saveTasks(); paintTasks(); buzz(8); $('hm-addIn').focus(); });
-    paintTasks();
+    paintTasks(); stack();
 
     // Hydro Homie: one tap for a glass
     let glasses = 3; const GOAL = 6;
@@ -252,18 +277,34 @@ class Component extends DCLogic {
     $('hm-glass').addEventListener('click', () => { if (glasses >= GOAL) return; glasses++; paintDrops(); buzz(8); addXP(5); pop(root.querySelectorAll('.hm-drop')[glasses - 1]); if (glasses === GOAL) { buzz([10, 40, 14]); earned(); } });
 
     // tonight: planned -> cook it; nothing planned -> choose a mood and it picks
-    let tonight = ls('gsd.tonight', '') || 'harissa-chicken-orzo', last = null;   // picked on "What have you got?" (board 65) lands here
-    if (!RECIPES.some((x) => x.id === tonight)) tonight = 'harissa-chicken-orzo';
+    // tonight's meal: picked on "What have you got?" (gsd.tonight), else tonight's night in the week plan, else nothing yet
+    const dow = (new Date().getDay() + 6) % 7;
+    let tonight = ls('gsd.tonight', ''), last = null, moodOpen = false;
+    if (!RECIPES.some((x) => x.id === tonight)) { tonight = null; try { const pl = JSON.parse(ls('gsd.plan', 'null')); if (pl && pl[dow] && RECIPES.some((x) => x.id === pl[dow].r)) tonight = pl[dow].r; } catch (e) {} }
     const paintTonight = () => {
       const r = RECIPES.find((x) => x.id === tonight), has = !!r;
-      $('hm-planned').style.display = has ? 'flex' : 'none'; $('hm-none').style.display = has ? 'none' : 'flex';
+      $('hm-tonight').classList.toggle('hm-empty', !has && !moodOpen); $('hm-tLab').style.display = !has && !moodOpen ? 'none' : 'block';
+      $('hm-planned').style.display = has ? 'flex' : 'none'; $('hm-none').style.display = !has && moodOpen ? 'flex' : 'none'; $('hm-empty').style.display = !has && !moodOpen ? 'block' : 'none';
+      stack();
       if (has) { $('hm-tImg').src = IMG[r.dish]; $('hm-tName').textContent = r.name; $('hm-tMin').textContent = r.min + ' min'; $('hm-cook').setAttribute('href', r.board); }
     };
     root.querySelectorAll('[data-mood]').forEach((b) => b.addEventListener('click', () => {
       const pool = RECIPES.filter((x) => x.mood === b.dataset.mood && x.id !== last); const r = pool[Math.floor(Math.random() * pool.length)];
       tonight = r.id; last = r.id; paintTonight(); buzz([6, 30, 10]); pop($('hm-tImg'));
     }));
-    $('hm-swap').addEventListener('click', () => { last = tonight; tonight = null; paintTonight(); buzz(5); });
+    $('hm-swap').addEventListener('click', () => { last = tonight; tonight = null; moodOpen = true; paintTonight(); buzz(5); });
+    $('hm-moodLink').addEventListener('click', () => { moodOpen = true; paintTonight(); buzz(5); });
+
+    // next up: the workout you're in the middle of (from the gym), or a blank backing that says where it'll go
+    const WICON = {"gym": "<svg width=\"56\" height=\"56\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><path d=\"M8 24 H40\" fill=\"none\" stroke=\"#172038\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path><rect x=\"9\" y=\"15\" width=\"6\" height=\"18\" rx=\"2\" fill=\"none\" stroke=\"#172038\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></rect><rect x=\"33\" y=\"15\" width=\"6\" height=\"18\" rx=\"2\" fill=\"none\" stroke=\"#172038\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></rect><path d=\"M4 20 V28 M44 20 V28\" fill=\"none\" stroke=\"#172038\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path></svg>", "walk": "<svg width=\"56\" height=\"56\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><path d=\"M8 32 Q8 24 14 22 L20 14 Q22 11 25 13 L28 20 Q34 22 40 24 Q44 26 42 32 Z\" fill=\"none\" stroke=\"#172038\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path><path d=\"M8 36 H42 M18 22 l4 3 M22 18 l4 3\" fill=\"none\" stroke=\"#172038\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path></svg>", "run": "<svg width=\"56\" height=\"56\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><circle cx=\"30\" cy=\"9\" r=\"4\" fill=\"none\" stroke=\"#172038\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></circle><path d=\"M27 16 L20 27 L28 31 L24 42 M20 27 L12 26 M27 16 L33 22 L40 21 M21 23 L15 31 L8 31\" fill=\"none\" stroke=\"#172038\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path></svg>", "cycle": "<svg width=\"56\" height=\"56\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"32\" r=\"8\" fill=\"none\" stroke=\"#172038\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></circle><circle cx=\"36\" cy=\"32\" r=\"8\" fill=\"none\" stroke=\"#172038\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></circle><path d=\"M12 32 L19 18 H31 L36 32 M19 18 L25 32 L31 18 M17 14 H22 M31 18 L29 12 H34\" fill=\"none\" stroke=\"#172038\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path></svg>", "swim": "<svg width=\"56\" height=\"56\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><circle cx=\"33\" cy=\"13\" r=\"4\" fill=\"none\" stroke=\"#172038\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></circle><path d=\"M8 22 Q16 12 26 19 L32 23\" fill=\"none\" stroke=\"#172038\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path><path d=\"M4 31 Q10 27 16 31 T28 31 T40 31 T46 30 M4 39 Q10 35 16 39 T28 39 T40 39 T46 38\" fill=\"none\" stroke=\"#172038\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path></svg>", "stretch": "<svg width=\"56\" height=\"56\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><circle cx=\"24\" cy=\"8\" r=\"4\" fill=\"none\" stroke=\"#172038\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></circle><path d=\"M24 14 V28 M24 18 L12 6 M24 18 L36 6 M24 28 L14 42 M24 28 L34 42\" fill=\"none\" stroke=\"#172038\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path></svg>", "other": "<svg width=\"56\" height=\"56\" viewBox=\"0 0 48 48\" aria-hidden=\"true\"><path d=\"M24 5 L29 18 L43 18 L32 27 L36 41 L24 33 L12 41 L16 27 L5 18 L19 18 Z\" fill=\"none\" stroke=\"#172038\" stroke-width=\"3.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path></svg>"}, WCOL = {"gym": "#C6FF4D", "walk": "#FF9A3C", "run": "#FF6FB0", "cycle": "#FFD23F", "swim": "#6EC8FF", "stretch": "#A98BFF", "other": "#FFFFFF"};
+    let wk = null; try { wk = JSON.parse(ls('gsd.workout', 'null')); } catch (e) {}
+    const hasW = !!(wk && wk.type);
+    $('hm-next').classList.toggle('hm-empty', !hasW); $('hm-nextOn').style.display = hasW ? 'block' : 'none'; $('hm-nextNone').style.display = hasW ? 'none' : 'flex';
+    if (hasW) {
+      $('hm-nTitle').textContent = wk.title || 'WORKOUT'; if ((wk.title || '').length > 10) $('hm-nTitle').style.fontSize = '24px';
+      $('hm-nMeta').textContent = wk.type === 'gym' ? 'gym session · carry on' : (wk.meta || 'carry on where you left off');
+      if (wk.type !== 'gym') { $('hm-nImg').style.display = 'none'; const ic = $('hm-nIco'); ic.style.display = 'flex'; ic.innerHTML = WICON[wk.type] || WICON.other; ic.style.background = WCOL[wk.type] || '#FFFFFF'; }
+    }
 
     // one thing: tuck the rest away and show only what's next
     const one = $('hm-one');
@@ -274,7 +315,7 @@ class Component extends DCLogic {
       [null, 'WELCOME TO YOUR TODAY SCREEN', 'Here’s a quick look at each part.'],
       ['hm-wait', 'STICKERS TO STICK', 'Every win earns a sticker. They wait here until you stick them in your book.'],
       ['hm-xp', 'YOUR LEVEL', 'XP (experience points) are points you earn every time you get something done. Fill the bar to level up and earn new name-plate colours and stickers you can send to your friends. Tap it to see your profile.'],
-      ['hm-next', 'NEXT UP', 'The next thing in your day. Tap START when you’re ready, or pick the 10-minute version if you want a shorter workout.'],
+      ['hm-next', 'NEXT UP', 'Your workout lives here. Tap to pick one in the gym (a walk, a run, a swim or a gym session) and it stays here until you finish it.'],
       ['hm-tonight', 'TONIGHT', 'Tonight’s meal. Nothing planned? Pick how you feel and we’ll pick for you, or let us know what’s in your fridge or cupboards and we’ll create something that uses those ingredients.'],
       ['hm-hydro', 'HYDRO HOMIE', 'Track your daily hydration. Earn a drop each time you hydrate.'],
       ['hm-listSec', 'MY LIST', 'Your own list for today. Add any chores you want to complete, then tick them off when they’re done to earn stickers.'],
