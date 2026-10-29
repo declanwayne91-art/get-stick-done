@@ -104,17 +104,30 @@ input:focus{outline:none;box-shadow:0 0 0 3px #FF6FB0}
     </sc-if>
 
     <sc-if value="{{s3}}" hint-placeholder-val="{{ false }}">
+      <span class="title-die bri" style="font-size: 36px; text-shadow: 3px 3px 0 #C6FF4D; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">GET MOVING</span>
+      <span class="q">How new are you to exercise?</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px"><sc-for list="{{fitOpts}}" as="o" hint-placeholder-count="3"><button type="button" class="chipb bri press" onClick="{{o.tap}}" aria-pressed="{{o.on}}" style="background: {{o.bg}}; transform: rotate({{o.rot}})">{{o.label}}</button></sc-for></div>
+      <span class="hint">{{fitHint}}</span>
+      <span class="q" style="margin-top: 6px">What do you enjoy? Tap any.</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px"><sc-for list="{{likeOpts}}" as="o" hint-placeholder-count="7"><button type="button" class="chipb bri press" onClick="{{o.tap}}" aria-pressed="{{o.on}}" style="background: {{o.bg}}; transform: rotate({{o.rot}})">{{o.label}}</button></sc-for></div>
+      <span class="q" style="margin-top: 6px">Step workouts up as you get fitter?</span>
+      <div style="display: flex; gap: 10px"><sc-for list="{{growOpts}}" as="o" hint-placeholder-count="2"><button type="button" class="chipb bri press" onClick="{{o.tap}}" aria-pressed="{{o.on}}" style="background: {{o.bg}}">{{o.label}}</button></sc-for></div>
+      <span class="hint">{{growHint}}</span>
+      <span class="hint" style="font-size: 13px">New to exercise or living with a health condition? Have a quick word with your GP first.</span>
+    </sc-if>
+
+    <sc-if value="{{s4}}" hint-placeholder-val="{{ false }}">
       <span class="title-die bri" style="font-size: 36px; text-shadow: 3px 3px 0 #6EC8FF; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">HYDRO HOMIE</span>
       <div style="display: flex; align-items: center; gap: 8px"><svg width="120" viewBox="-8 -18 236 240" style="overflow: visible"><g filter="url(#kst)" transform="translate(10 0)"><path d="M56 128 Q34 120 30 98" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M144 124 Q166 106 164 78" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M86 178 Q84 188 84 198" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M114 178 Q116 188 116 198" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><ellipse cx="81" cy="200" rx="9" ry="5" fill="#2A1A10"></ellipse><ellipse cx="119" cy="200" rx="9" ry="5" fill="#2A1A10"></ellipse><path d="M100 26 C100 26 150 92 152 124 C154 160 130 182 100 182 C70 182 46 160 48 124 C50 92 100 26 100 26 Z" fill="#6EC8FF" stroke="#2A1A10" stroke-width="4" stroke-linejoin="round"></path><path d="M78 88 Q66 110 66 132" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.85"></path><circle cx="74" cy="148" r="4" fill="#FFFFFF" opacity="0.8"></circle><path d="M130 104 Q148 132 136 166" stroke="url(#kht)" stroke-width="14" fill="none"></path><path d="M56 150 Q100 170 144 150 Q140 176 100 180 Q60 176 56 150 Z" fill="#3FA9E6" opacity="0.55"></path><ellipse cx="89.0" cy="124" rx="4.2" ry="6.8" fill="#2A1A10"></ellipse><circle cx="90.4" cy="121.4" r="1.7" fill="#FFFFFF"></circle><ellipse cx="111.0" cy="124" rx="4.2" ry="6.8" fill="#2A1A10"></ellipse><circle cx="112.4" cy="121.4" r="1.7" fill="#FFFFFF"></circle><path d="M93 142 Q100 151.1 107 142 Z" fill="#2A1A10"></path><path d="M96.8 147.2 Q100 144.4 103.2 147.2 Q100 150.1 96.8 147.2 Z" fill="#FF7A8A"></path><ellipse cx="80.0" cy="140" rx="4.5" ry="2.6" fill="#FF8FA0" opacity="0.75"></ellipse><ellipse cx="120.0" cy="140" rx="4.5" ry="2.6" fill="#FF8FA0" opacity="0.75"></ellipse><path d="M176 70 l8 -6" stroke="#6EC8FF" stroke-width="4" stroke-linecap="round"></path><path d="M178 86 l10 0" stroke="#6EC8FF" stroke-width="4" stroke-linecap="round"></path></g></svg><span class="q">Want a gentle nudge to drink water? A quick push on your phone, or a soft tap on your watch if you wear one.</span></div>
       <div style="display: flex; gap: 10px"><sc-for list="{{hydroOpts}}" as="o" hint-placeholder-count="2"><button type="button" class="chipb bri press" onClick="{{o.tap}}" aria-pressed="{{o.on}}" style="background: {{o.bg}}">{{o.label}}</button></sc-for></div>
       <span class="hint">{{hydroHint}}</span>
       <button type="button" class="press kal" onClick="{{openLearn}}" style="align-self: flex-start; border: none; background: transparent; padding: 0; color: #172038; font-size: 17px; text-decoration: underline">Learn more about hydration</button>
     </sc-if>
-    <sc-if value="{{s4}}" hint-placeholder-val="{{ false }}">
+    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}">
       <span style="align-self: center"><span class="title-die bri" style="font-size: 36px; text-shadow: 3px 3px 0 #C6FF4D; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">ALL SET!</span></span>
       <span class="q" style="text-align: center">Here’s what we’ve set up:</span>
       <div style="background: #FFFFFF; padding: 6px 14px 8px; box-shadow: 0 6px 10px -6px rgba(60,40,20,0.4); display: flex; flex-direction: column">
-        <sc-for list="{{summary}}" as="m" hint-placeholder-count="4"><span class="kal" style="display: flex; align-items: center; gap: 10px; font-size: 16px; padding: 6px 0; border-bottom: 1.5px solid #E9D9C0; line-height: 1.2"><sc-if value="{{m.book}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#172038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M4 4h9a3 3 0 0 1 3 3v10H7a3 3 0 0 1-3-3z" /><path d="M7 17a3 3 0 0 1 0-6h9" /></svg></sc-if><sc-if value="{{m.serve}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#172038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M5 3v6a2 2 0 0 0 4 0V3 M7 3v16" /><path d="M15 3c-2 2-2 6 0 8v8" /></svg></sc-if><sc-if value="{{m.kids}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#172038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><circle cx="10" cy="11" r="6" /><circle cx="5" cy="5" r="2.2" /><circle cx="15" cy="5" r="2.2" /><path d="M8 13q2 2 4 0" /></svg></sc-if><sc-if value="{{m.no}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#172038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><circle cx="10" cy="10" r="7" /><path d="M5 15L15 5" /></svg></sc-if><sc-if value="{{m.hydro}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#172038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M10 2q6 8 6 11a6 6 0 0 1-12 0q0-3 6-11z" /></svg></sc-if><span>{{m.t}}</span></span></sc-for>
+        <sc-for list="{{summary}}" as="m" hint-placeholder-count="4"><span class="kal" style="display: flex; align-items: center; gap: 10px; font-size: 16px; padding: 6px 0; border-bottom: 1.5px solid #E9D9C0; line-height: 1.2"><sc-if value="{{m.book}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#172038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M4 4h9a3 3 0 0 1 3 3v10H7a3 3 0 0 1-3-3z" /><path d="M7 17a3 3 0 0 1 0-6h9" /></svg></sc-if><sc-if value="{{m.serve}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#172038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M5 3v6a2 2 0 0 0 4 0V3 M7 3v16" /><path d="M15 3c-2 2-2 6 0 8v8" /></svg></sc-if><sc-if value="{{m.kids}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#172038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><circle cx="10" cy="11" r="6" /><circle cx="5" cy="5" r="2.2" /><circle cx="15" cy="5" r="2.2" /><path d="M8 13q2 2 4 0" /></svg></sc-if><sc-if value="{{m.no}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#172038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><circle cx="10" cy="10" r="7" /><path d="M5 15L15 5" /></svg></sc-if><sc-if value="{{m.move}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#172038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M4 10h12M5 6v8M15 6v8M2 8v4M18 8v4" /></svg></sc-if><sc-if value="{{m.hydro}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#172038" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0"><path d="M10 2q6 8 6 11a6 6 0 0 1-12 0q0-3 6-11z" /></svg></sc-if><span>{{m.t}}</span></span></sc-for>
       </div>
       <span class="hint" style="text-align: center">Change any of it later in settings.</span>
       <span class="bri" style="align-self: center; margin-top: 8px; padding: 8px 16px 6px; background-color: rgba(255,111,176,0.92); background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.3) 0 6px, transparent 6px 12px); color: #172038; font-size: 19px; letter-spacing: 0.5px; transform: rotate(-2deg); box-shadow: 0 4px 8px -4px rgba(60,40,20,0.4)">YOUR FIRST STICKER IS WAITING INSIDE</span>
@@ -152,7 +165,7 @@ input:focus{outline:none;box-shadow:0 0 0 3px #FF6FB0}
   <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; gap: 10px">
     <sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}"><button type="button" class="press bri" onClick="{{back}}" aria-label="Back" style="width: 62px; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #FFFFFF; color: #172038; font-size: 26px">←</button></sc-if>
     <sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{next}}" style="flex: 1; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{nextText}}</button></sc-if>
-    <sc-if value="{{s4}}" hint-placeholder-val="{{ false }}"><a href="StickerBook.html" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">OPEN MY STICKER BOOK →</a></sc-if>
+    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="StickerBook.html" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">OPEN MY STICKER BOOK →</a></sc-if>
   </div>
 </div>
 </script>
@@ -162,8 +175,10 @@ class Component extends DCLogic {
     super(props);
     this.DAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
     this.FULL = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    this.MOVE = [['gym', 'GYM', 'gym'], ['walk', 'WALKING', 'walking'], ['run', 'RUNNING', 'running'], ['cycle', 'CYCLING', 'cycling'], ['swim', 'SWIMMING', 'swimming'], ['stretch', 'STRETCHING', 'stretching'], ['other', 'SPORT & CLASSES', 'sport']];
+    this.LAD = {"run": 11, "walk": 6, "cycle": 6, "swim": 6, "stretch": 3};
     this.AV = [['vegetarian', 'VEGETARIAN'], ['pork', 'NO PORK'], ['beef', 'NO BEEF'], ['fish', 'NO FISH'], ['nuts', 'NO NUTS'], ['dairy', 'NO DAIRY']];
-    this.s = { step: 0, name: '', household: null, lunches: null, avoid: {}, kids: null, hydro: null, every: 2, dayStart: 8, dayEnd: 21, learn: false, landed: false };
+    this.s = { step: 0, name: '', household: null, lunches: null, avoid: {}, kids: null, hydro: null, every: 2, dayStart: 8, dayEnd: 21, learn: false, landed: false, fit: null, likes: {}, grow: null };
   }
   re() { this.setState({ n: Date.now() }); }
   buzz(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
@@ -178,7 +193,22 @@ class Component extends DCLogic {
     return { bookName: s.name.trim() ? s.name.trim() + '’s Sticker Book' : 'My Sticker Book', household: s.household || 2, lunches: s.lunches === true, littleOnes: s.kids === true,
       avoid: Object.keys(s.avoid).filter((k) => s.avoid[k]), hydro: s.hydro === true ? { every: s.every, goal: 6, dayStart: s.dayStart, dayEnd: s.dayEnd } : null };
   }
-  save() { try { localStorage.setItem('gsd.profile', JSON.stringify(this.profile())); } catch (e) {} }
+  save() {
+    const s = this.s;
+    try {
+      localStorage.setItem('gsd.profile', JSON.stringify(this.profile()));
+      // get moving: level (where plans and ladders start), what they enjoy (first in the gym), GROW for those
+      if (s.fit) localStorage.setItem('gsd.fitLevel', s.fit);
+      const likes = this.MOVE.map((m) => m[0]).filter((k) => s.likes[k]);
+      localStorage.setItem('gsd.fitLikes', JSON.stringify(likes));
+      if (s.grow === true && likes.length) {
+        const P = JSON.parse(localStorage.getItem('gsd.progress') || '{}'); P.areas = P.areas || {};
+        likes.forEach((k) => { if (k === 'other') return; const n = this.LAD[k] || 1, st = s.fit === 'regular' ? Math.floor(n * 0.5) : s.fit === 'back' ? Math.floor(n * 0.3) : 0;
+          const A = P.areas[k] || (P.areas[k] = { stage: st, pts: 0, tough: 0 }); A.on = true; });
+        localStorage.setItem('gsd.progress', JSON.stringify(P));
+      }
+    } catch (e) {}
+  }
   list(days) {
     const names = days.map((d) => this.FULL[d].slice(0, 3));
     return names.length < 2 ? names.join('') : names.slice(0, -1).join(', ') + ' & ' + names[names.length - 1];
@@ -189,22 +219,24 @@ class Component extends DCLogic {
     out.push({ serve: true, t: 'Recipes serve ' + p.household + (s.household ? '' : ' (the usual)') + (p.lunches ? ' · leftovers add ' + p.household + (p.household === 1 ? ' lunch' : ' lunches') : '') });
     if (p.littleOnes) out.push({ kids: true, t: 'Little-one tips on every recipe' });
     if (p.avoid.length) out.push({ no: true, t: 'No ' + p.avoid.map((a) => a === 'vegetarian' ? 'meat or fish' : a).join(', ').replace(/, ([^,]*)$/, ' or $1') + ' suggestions' });
+    const lk = this.MOVE.filter((m) => s.likes[m[0]]).map((m) => m[2]);
+    if (s.fit || lk.length) out.push({ move: true, t: (s.fit ? { new: 'Just starting', back: 'Getting back into it', regular: 'Pretty regular' }[s.fit] : 'Workouts') + (lk.length ? ': ' + (lk.length > 2 ? lk.slice(0, 2).join(', ') + ' and more' : lk.join(' and ')) : '') + (s.grow === true ? ', stepping up' : '') });
     if (p.hydro) out.push({ hydro: true, t: 'Hydro Homie on: every 2 hrs, 8am–9pm' });
     return out;
   }
   renderVals() {
-    const s = this.s, st = s.step, N = 5;
-    const go = (n) => { s.step = n; if (n === 4) { this.save(); this.buzz([10, 50, 20]); } this.re(); };
+    const s = this.s, st = s.step, N = 6;
+    const go = (n) => { s.step = n; if (n === 5) { this.save(); this.buzz([10, 50, 20]); } this.re(); };
     const nm = this.bookName();
     return {
       dots: Array.from({ length: N }, (_, n) => ({ w: n === st ? '26px' : '10px', bg: n <= st ? '#FF6FB0' : '#FFFFFF' })),
-      canSkip: st < 4, skip: () => go(st + 1),
-      canBack: st > 0 && st < 4, back: () => go(st - 1),
-      nextText: st === 0 ? (s.name.trim() ? 'THAT’S ME →' : 'NEXT →') : st === 4 ? 'OPEN MY STICKER BOOK →' : 'NEXT →',
-      next: () => { if (st < 4) go(st + 1); else { s.landed = true; this.save(); this.re(); } },
-      notLast: st < 4, saveNow: () => { this.save(); },
-      s0: st === 0, s1: st === 1, s2: st === 2, s3: st === 3, s4: st === 4,
-      showCover: st === 0 || st === 4, coverCls: st === 4 ? 'coverin' : '',
+      canSkip: st < 5, skip: () => go(st + 1),
+      canBack: st > 0 && st < 5, back: () => go(st - 1),
+      nextText: st === 0 ? (s.name.trim() ? 'THAT’S ME →' : 'NEXT →') : st === 5 ? 'OPEN MY STICKER BOOK →' : 'NEXT →',
+      next: () => { if (st < 5) go(st + 1); else { s.landed = true; this.save(); this.re(); } },
+      notLast: st < 5, saveNow: () => { this.save(); },
+      s0: st === 0, s1: st === 1, s2: st === 2, s3: st === 3, s4: st === 4, s5: st === 5,
+      showCover: st === 0 || st === 5, coverCls: st === 5 ? 'coverin' : '',
       coverName: nm, nameSize: nm.length > 10 ? '34px' : nm.length > 7 ? '44px' : '56px',
       name: s.name, setName: (e) => { s.name = String(e && e.target ? e.target.value : '').slice(0, 14); this.re(); },
       kidOpts: [[true, 'YES'], [false, 'NO']].map((o) => ({ label: o[1], on: s.kids === o[0], bg: s.kids === o[0] ? (o[0] ? '#C6FF4D' : '#FF6FB0') : '#FFFFFF', tap: () => { s.kids = o[0]; this.buzz(8); this.re(); } })),
@@ -225,6 +257,11 @@ class Component extends DCLogic {
       learn: s.learn, openLearn: () => { s.learn = true; this.re(); }, closeLearn: () => { s.learn = false; this.re(); },
       everyOpts: [[1.5, '1½ HRS'], [2, '2 HRS'], [3, '3 HRS']].map((o) => ({ label: o[1], on: s.every === o[0], bg: s.every === o[0] ? '#C6FF4D' : '#FFFFFF', tap: () => { s.every = o[0]; this.buzz(6); this.re(); } })),
       hydroHint: s.hydro === true ? 'Every few hours in the day, Homie will give you a nudge to get hydrated.' : s.hydro === false ? 'No worries. You can switch Hydro Homie on any time.' : 'Totally optional, and you can turn it off any time.',
+      fitOpts: [['new', 'JUST STARTING'], ['back', 'GETTING BACK INTO IT'], ['regular', 'PRETTY REGULAR']].map((o, i) => ({ label: o[1], on: s.fit === o[0], bg: s.fit === o[0] ? '#C6FF4D' : '#FFFFFF', rot: ((i % 2) ? 1.5 : -1.5) + 'deg', tap: () => { s.fit = o[0]; this.buzz(8); this.re(); } })),
+      fitHint: s.fit === 'new' ? 'Lovely. Everything starts gentle, with short plans and light weights.' : s.fit === 'back' ? 'Nice. We’ll start you a few steps up, not from scratch.' : s.fit === 'regular' ? 'Great. Plans start further up the ladder.' : 'It sets where your plans start. No wrong answer.',
+      likeOpts: this.MOVE.map((m, i) => ({ label: m[1], on: !!s.likes[m[0]], bg: s.likes[m[0]] ? '#FF6FB0' : '#FFFFFF', rot: ((i * 37) % 5 - 2) + 'deg', tap: () => { s.likes[m[0]] = !s.likes[m[0]]; this.buzz(8); this.re(); } })),
+      growOpts: [[true, 'YES PLEASE'], [false, 'NOT NOW']].map((o) => ({ label: o[1], on: s.grow === o[0], bg: s.grow === o[0] ? (o[0] ? '#C6FF4D' : '#FF6FB0') : '#FFFFFF', tap: () => { s.grow = o[0]; this.buzz(8); this.re(); } })),
+      growHint: s.grow === true ? 'After each workout you rate how it felt, and we step things up when you’re ready.' : s.grow === false ? 'No problem. Turn it on for any workout later.' : 'Your favourites show first in the gym.',
       summary: this.summary()
     };
   }

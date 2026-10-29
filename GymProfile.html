@@ -111,6 +111,20 @@ button:focus-visible,a:focus-visible{outline:3px solid #6EC8FF;outline-offset:2p
 .kt-btn:focus-visible,.kt-skip:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}
 .kt-dis{display:flex;flex-direction:column;gap:6px;margin:2px -16px 0;padding:8px 16px 6px;background:#FFFFFF;border-top:2px dashed #E9D9C0;border-bottom:2px dashed #E9D9C0}
 .kt-disH{font-size:12px;letter-spacing:1px;color:#FF6FB0}
+.kt-disQ{font-size:16px;line-height:1.2;color:#172038;margin-bottom:2px}
+.kt-stripW{position:relative}
+.kt-sc{position:absolute;top:50%;margin-top:-20px;width:40px;height:40px;border-radius:40px;border:2.5px solid #172038;background:#FFD23F;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:26px;line-height:1;display:none;align-items:center;justify-content:center;padding:0 0 3px;cursor:pointer;box-shadow:2px 3px 0 #172038;z-index:2}
+.kt-sc.r{right:-8px;animation:ktnudge 1.4s ease-in-out infinite}.kt-sc.l{left:-8px}
+@keyframes ktnudge{0%,100%{translate:0 0}50%{translate:4px 0}}
+.kt-rows{display:none;flex-direction:column;gap:6px;margin:0 0 2px}
+.kt-row{display:flex;align-items:flex-start;gap:8px;font-size:14px;line-height:1.2}
+.kt-row b{flex-shrink:0;width:104px;padding:3px 6px;border-radius:7px;border:2px solid #172038;font-size:12px;letter-spacing:0.3px;text-align:center}
+.kt-tap{position:fixed;z-index:3;display:none;flex-direction:column;align-items:center;width:140px;transform-origin:0 0;pointer-events:none}
+.kt-tapT{font-size:22px;color:#172038;background:#FFFFFF;padding:2px 10px;border:2.5px solid #172038;border-radius:10px;transform:rotate(-4deg);box-shadow:2px 3px 0 #FF6FB0;white-space:nowrap;order:2}
+.kt-tapA{order:1;transform:rotate(200deg)}
+.kt-tap:not(.up) .kt-tapT{order:1}.kt-tap:not(.up) .kt-tapA{order:2;transform:rotate(20deg)}
+.kt-tap{animation:kttap 1.2s ease-in-out infinite}
+@keyframes kttap{0%,100%{translate:0 0}50%{translate:0 -5px}}
 .kt-strip{display:flex;gap:6px;overflow-x:auto;padding:6px 24px 4px 4px;margin:0 -4px;-webkit-mask-image:linear-gradient(90deg,#000 82%,transparent);mask-image:linear-gradient(90deg,#000 82%,transparent);touch-action:pan-x;scrollbar-width:none}
 .kt-strip::-webkit-scrollbar{display:none}
 .kt-food{position:relative;flex-shrink:0;width:62px;height:72px;border-radius:14px;border:2.5px solid #172038;background:#FBF4E6;padding:4px 2px 3px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;cursor:pointer;color:#172038}
@@ -127,7 +141,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #6EC8FF;outline-offset:2p
 .kt-typed{display:flex;flex-wrap:wrap;gap:6px}
 .kt-chip{height:28px;padding:0 10px;border-radius:999px;border:2px solid #172038;background:#FF6FB0;color:#172038;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer}
 .kt-food:focus-visible,.kt-chip:focus-visible,.kt-addB:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}
-@media (prefers-reduced-motion: reduce){.kt-spot{transition:none}}
+@media (prefers-reduced-motion: reduce){.kt-spot{transition:none}.kt-tap,.kt-sc.r{animation:none}}
 </style>
 
 <style>html,body{margin:0;height:100%;overflow:hidden;background:#0B1022;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
