@@ -75,6 +75,20 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 .kt-btn:focus-visible,.kt-skip:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}
 .kt-dis{display:flex;flex-direction:column;gap:6px;margin:2px -16px 0;padding:8px 16px 6px;background:#FFFFFF;border-top:2px dashed #E9D9C0;border-bottom:2px dashed #E9D9C0}
 .kt-disH{font-size:12px;letter-spacing:1px;color:#FF6FB0}
+.kt-disQ{font-size:16px;line-height:1.2;color:#172038;margin-bottom:2px}
+.kt-stripW{position:relative}
+.kt-sc{position:absolute;top:50%;margin-top:-20px;width:40px;height:40px;border-radius:40px;border:2.5px solid #172038;background:#FFD23F;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:26px;line-height:1;display:none;align-items:center;justify-content:center;padding:0 0 3px;cursor:pointer;box-shadow:2px 3px 0 #172038;z-index:2}
+.kt-sc.r{right:-8px;animation:ktnudge 1.4s ease-in-out infinite}.kt-sc.l{left:-8px}
+@keyframes ktnudge{0%,100%{translate:0 0}50%{translate:4px 0}}
+.kt-rows{display:none;flex-direction:column;gap:6px;margin:0 0 2px}
+.kt-row{display:flex;align-items:flex-start;gap:8px;font-size:14px;line-height:1.2}
+.kt-row b{flex-shrink:0;width:104px;padding:3px 6px;border-radius:7px;border:2px solid #172038;font-size:12px;letter-spacing:0.3px;text-align:center}
+.kt-tap{position:fixed;z-index:3;display:none;flex-direction:column;align-items:center;width:140px;transform-origin:0 0;pointer-events:none}
+.kt-tapT{font-size:22px;color:#172038;background:#FFFFFF;padding:2px 10px;border:2.5px solid #172038;border-radius:10px;transform:rotate(-4deg);box-shadow:2px 3px 0 #FF6FB0;white-space:nowrap;order:2}
+.kt-tapA{order:1;transform:rotate(200deg)}
+.kt-tap:not(.up) .kt-tapT{order:1}.kt-tap:not(.up) .kt-tapA{order:2;transform:rotate(20deg)}
+.kt-tap{animation:kttap 1.2s ease-in-out infinite}
+@keyframes kttap{0%,100%{translate:0 0}50%{translate:0 -5px}}
 .kt-strip{display:flex;gap:6px;overflow-x:auto;padding:6px 24px 4px 4px;margin:0 -4px;-webkit-mask-image:linear-gradient(90deg,#000 82%,transparent);mask-image:linear-gradient(90deg,#000 82%,transparent);touch-action:pan-x;scrollbar-width:none}
 .kt-strip::-webkit-scrollbar{display:none}
 .kt-food{position:relative;flex-shrink:0;width:62px;height:72px;border-radius:14px;border:2.5px solid #172038;background:#FBF4E6;padding:4px 2px 3px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;cursor:pointer;color:#172038}
@@ -91,7 +105,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 .kt-typed{display:flex;flex-wrap:wrap;gap:6px}
 .kt-chip{height:28px;padding:0 10px;border-radius:999px;border:2px solid #172038;background:#FF6FB0;color:#172038;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer}
 .kt-food:focus-visible,.kt-chip:focus-visible,.kt-addB:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}
-@media (prefers-reduced-motion: reduce){.kt-spot{transition:none}}
+@media (prefers-reduced-motion: reduce){.kt-spot{transition:none}.kt-tap,.kt-sc.r{animation:none}}
 </style>
 
 <style>html,body{margin:0;height:100%;overflow:hidden;background:#0B1022;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
@@ -181,14 +195,14 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
       <button type="button" class="mini press" onClick="{{closeAuto}}" aria-label="Close" style="width: 34px; height: 34px; font-size: 20px">×</button>
     </div>
     <span class="kal" style="font-size: 16px; line-height: 1.2; margin-top: -6px">Tap the nights you’re cooking. Everything else is optional.</span>
-    <sc-for list="{{qrows}}" as="q" hint-placeholder-count="4">
+    <div data-tour="nights" style="display: flex; flex-direction: column; gap: 10px"><sc-for list="{{qrows}}" as="q" hint-placeholder-count="4">
       <div class="qrow">
         <span class="qlabel">{{q.label}} <b>{{q.hint}}</b></span>
         <div style="display: flex; justify-content: space-between">
           <sc-for list="{{q.chips}}" as="c" hint-placeholder-count="7"><button type="button" class="dchip bri press" onClick="{{c.tap}}" aria-pressed="{{c.on}}" aria-label="{{c.aria}}" style="background: {{c.bg}}; color: {{c.fg}}; opacity: {{c.op}}; border-style: {{c.bs}}">{{c.text}}</button></sc-for>
         </div>
       </div>
-    </sc-for>
+    </sc-for></div>
     <span class="kal" style="font-size: 14px; opacity: 0.75; margin-top: -4px">{{autoNote}}</span>
     <button type="button" class="press bri" data-tour="pickweek" onClick="{{autoGo}}" style="margin-top: auto; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{autoBtn}}</button>
   </div>
@@ -274,20 +288,27 @@ class Component extends DCLogic {
   tourStart() {
     this.tourEnd(false);
     const STEPS = [
-  { key: 'welcome', target: null, title: 'YOUR KITCHEN HUB', text: 'Plan your dinners, get one shopping list and cook step by step. First, anything you don’t like? We’ll never suggest it.', btn: 'LET’S GO →', dislikes: true },
-  { key: 'choose', target: 'choose', at: 'bottom', title: 'STEP 1 · FILL YOUR WEEK', text: 'Tap CHOOSE FOR ME and we’ll pick a week of dinners for you. Rather choose yourself? Tap + add a meal on any night.' },
-  { key: 'pickweek', target: 'pickweek', title: 'STEP 2 · YOUR NIGHTS', text: 'Weeknights are ticked. Change any you like, then tap PICK MY WEEK.' },
+  { key: 'welcome', target: null, title: 'YOUR KITCHEN HUB', text: 'Plan your dinners, get one shopping list and cook step by step.', btn: 'LET’S GO →', dislikes: true },
+  { key: 'choose', target: 'choose', at: 'bottom', tap: true, title: 'STEP 1 · FILL YOUR WEEK', text: 'Tap CHOOSE FOR ME and we’ll pick a week of dinners for you. Rather choose yourself? Tap + add a meal on any night.' },
+  { key: 'nights', target: 'nights', at: 'bottom', title: 'STEP 2 · YOUR NIGHTS', text: 'Each row is a choice for the week. Tap a day in any row:', btn: 'NEXT →', rows: [
+      ['#172038', '#C6FF4D', 'COOKING ON', 'the nights you’re cooking. Weeknights are ticked to start'],
+      ['#FF6FB0', '#172038', 'BUSY NIGHT?', 'short on time? We’ll pick something quick'],
+      ['#A98BFF', '#172038', 'TIME TO COOK?', 'a free evening: we’ll pick something special'],
+      ['#C6FF4D', '#172038', 'FEEDING MORE?', 'friends or family over? That night serves more'],
+      ['#C6FF4D', '#172038', 'LITTLE ONES?', 'kids eating too? We’ll pick family-friendly meals']] },
+  { key: 'pickweek', target: 'pickweek', tap: true, title: 'STEP 2 · PICK MY WEEK', text: 'Happy with your nights? Tap PICK MY WEEK and we’ll fill them in.' },
   { key: 'meal', target: 'meal', title: 'STEP 3 · MAKE IT YOURS', text: '↻ swaps a meal, ×2 changes how many it serves, 🍱 cooks extra for lunch, and COOK → opens cooking mode.', btn: 'NEXT →' },
   { key: 'basket', target: 'basket', title: 'STEP 4 · USE IT UP', text: 'Tap here any time, pick what’s in your fridge or cupboards, and we’ll find recipes that use it.', btn: 'NEXT →' },
-  { key: 'shop', target: 'shop', title: 'STEP 5 · ONE SHOPPING LIST', text: 'Tap MAKE MY SHOPPING LIST to get everything you need in one list, sorted by aisle.' },
-  { key: 'done', target: null, title: 'WEEK PLANNED!', text: 'Tick off anything you already have, and the rest is your shopping list. Nice one.', btn: 'GOT IT', celebrate: true }
+  { key: 'shop', target: 'shop', tap: true, title: 'STEP 5 · ONE SHOPPING LIST', text: 'Tap MAKE MY SHOPPING LIST to get everything you need in one list, sorted by aisle.' },
+  { key: 'done', target: null, title: 'WEEK PLANNED!', text: 'Tick off anything you already have, and the rest is your shopping list. Check the bottom of the list for cupboard staples too. Awesome!', btn: 'GOT IT', celebrate: true }
 ];
     const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
     const L = document.createElement('div'); L.className = 'kt-layer'; L.setAttribute('role', 'dialog'); L.setAttribute('aria-modal', 'true'); L.setAttribute('aria-label', 'Getting started in the kitchen');
     L.innerHTML = '<div class="kt-spot"></div><div class="kt-card"><span class="kt-tape"></span><span class="kt-title title-die bri"></span><span class="kt-text"></span>'
-      + '<div class="kt-dis"><span class="kt-disH bri">NOT FOR ME</span><div class="kt-strip" role="group" aria-label="Foods you don’t like"></div>'
+      + '<div class="kt-rows"></div><div class="kt-dis"><span class="kt-disQ kal">First, anything you don’t like? We’ll never suggest it.</span><span class="kt-disH bri">NOT FOR ME</span><div class="kt-stripW"><div class="kt-strip" role="group" aria-label="Foods you don’t like"></div><button type="button" class="kt-sc l" aria-label="Scroll back">‹</button><button type="button" class="kt-sc r" aria-label="More foods">›</button></div>'
       + '<form class="kt-add"><input type="text" class="kt-in" placeholder="or type one, e.g. coriander" aria-label="Type a food you don’t like" autocomplete="off" enterkeyhint="done"><button type="submit" class="kt-addB bri">+ ADD</button></form><div class="kt-typed"></div></div>'
       + '<div class="kt-foot"><span class="kt-dots"></span><button type="button" class="kt-skip">skip</button><button type="button" class="kt-btn bri"></button></div></div>';
+    L.insertAdjacentHTML('beforeend', '<div class="kt-tap" aria-hidden="true"><span class="kt-tapT title-die bri">TAP HERE</span><svg class="kt-tapA" width="46" height="50" viewBox="0 0 46 50"><path d="M8 4 Q8 30 34 40 M34 40 l-11 2 M34 40 l-3 -11" stroke="#172038" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8 4 Q8 30 34 40 M34 40 l-11 2 M34 40 l-3 -11" stroke="#FF6FB0" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>');
     document.body.appendChild(L);
     const spot = L.querySelector('.kt-spot'), card = L.querySelector('.kt-card'), btn = L.querySelector('.kt-btn');
     const kt = this.kt = { L, step: 0, STEPS, reduce, poll: 0 };
@@ -312,6 +333,10 @@ class Component extends DCLogic {
       if (d && !has(d)) { this.s.dislikes.push(d); this.buzz(10); save(); paintDis(); const b = strip.querySelector('[data-id="' + d + '"]'); if (b) b.scrollIntoView({ inline: 'center', block: 'nearest' }); } });
     inp.addEventListener('keydown', (e) => e.stopPropagation());   // typing never triggers the tour's Esc
     paintDis();
+    const scB = (dir) => { strip.scrollBy({ left: dir * 200, behavior: reduce ? 'auto' : 'smooth' }); this.buzz(4); };
+    const scL = L.querySelector('.kt-sc.l'), scR = L.querySelector('.kt-sc.r');
+    const scPaint = () => { scL.style.display = strip.scrollLeft > 4 ? 'flex' : 'none'; scR.style.display = strip.scrollLeft + strip.clientWidth < strip.scrollWidth - 4 ? 'flex' : 'none'; };
+    scL.addEventListener('click', () => scB(-1)); scR.addEventListener('click', () => scB(1)); strip.addEventListener('scroll', scPaint, { passive: true }); setTimeout(scPaint, 60);
     const rootEl = () => document.querySelector('[data-tour-root]');
     const tgt = (k) => k && document.querySelector('[data-tour="' + k + '"]');
     const place = () => {
@@ -326,13 +351,22 @@ class Component extends DCLogic {
       Object.assign(spot.style, { left: r.l + 'px', top: r.t + 'px', width: r.w + 'px', height: r.h + 'px', borderRadius: 18 * k + 'px' });
       const ch = card.offsetHeight * k, gap = 18 * k;
       // 'bottom' keeps the card clear of the week (so any night's + add a meal stays tappable)
-      let top = st.at === 'bottom' ? R.bottom - ch - 16 * k : el ? (r.t + r.h + gap + ch < R.bottom - 8 * k ? r.t + r.h + gap : r.t - gap - ch) : R.top + R.height / 2 - ch / 2;
+      const tapUp = el && r.t + r.h / 2 < R.top + R.height / 2, room = st.tap ? 78 * k : 0;   // leave room for the TAP HERE arrow
+      let top = st.at === 'bottom' ? R.bottom - ch - 16 * k : el ? (r.t + r.h + gap + ch + (tapUp ? room : 0) < R.bottom - 8 * k ? r.t + r.h + gap + (tapUp ? room : 0) : r.t - gap - ch - (tapUp ? 0 : room)) : R.top + R.height / 2 - ch / 2;
       card.style.top = Math.max(R.top + 8 * k, top) + 'px';
+      const tap = L.querySelector('.kt-tap');
+      if (st.tap && el) {   // "TAP HERE": below the target pointing up when it's high on the screen, above it pointing down when it's low
+        const up = r.t + r.h / 2 < R.top + R.height / 2, cx = Math.min(R.right - 80 * k, Math.max(R.left + 80 * k, r.l + r.w / 2));
+        tap.style.display = 'flex'; tap.classList.toggle('up', up); tap.style.transform = 'scale(' + k + ')';
+        tap.style.left = (cx - 70 * k) + 'px'; tap.style.top = (up ? r.t + r.h + 2 * k : r.t - 74 * k) + 'px';
+      } else tap.style.display = 'none';
     };
     const show = () => {
       const st = STEPS[kt.step];
       L.querySelector('.kt-title').textContent = st.title; L.querySelector('.kt-text').textContent = st.text;
       btn.style.display = st.btn ? 'block' : 'none'; btn.textContent = st.btn || ''; dis.style.display = st.dislikes ? 'flex' : 'none';
+      const rowsEl = L.querySelector('.kt-rows'); rowsEl.style.display = st.rows ? 'flex' : 'none';
+      rowsEl.innerHTML = st.rows ? st.rows.map((x) => '<span class="kt-row"><b class="bri" style="background:' + x[0] + ';color:' + x[1] + '">' + x[2] + '</b><span>' + x[3] + '</span></span>').join('') : '';
       L.querySelector('.kt-dots').innerHTML = STEPS.map((x, i) => '<span class="' + (i === kt.step ? 'on' : i < kt.step ? 'done' : '') + '"></span>').join('');
       place(); if (st.btn) btn.focus();
       if (st.celebrate) { this.buzz([10, 40, 16]); if (!reduce) this.tourConfetti(); }
@@ -343,6 +377,7 @@ class Component extends DCLogic {
       if (st.key === 'welcome') go(this.s.plan.some(Boolean) ? 'meal' : 'choose');
       else if (st.key === 'meal') go('basket');
       else if (st.key === 'basket') go('shop');
+      else if (st.key === 'nights') go('pickweek');
       else if (st.key === 'done') this.tourEnd(true); });
     L.querySelector('.kt-skip').addEventListener('click', () => this.tourEnd(true));
     kt.onKey = (e) => { if (e.key === 'Escape') this.tourEnd(true); }; document.addEventListener('keydown', kt.onKey);
@@ -350,8 +385,8 @@ class Component extends DCLogic {
     // the "doing" steps move on when the user has actually done the thing
     kt.poll = setInterval(() => {
       const st = STEPS[kt.step], v = this.s.view, has = this.s.plan.some(Boolean);
-      if (st.key === 'choose') { if (v === 'auto') go('pickweek'); else if (v === 'plan' && has) go('meal'); }
-      else if (st.key === 'pickweek') { if (v === 'plan') go(has ? 'meal' : 'choose'); }
+      if (st.key === 'choose') { if (v === 'auto') go('nights'); else if (v === 'plan' && has) go('meal'); }
+      else if (st.key === 'pickweek' || st.key === 'nights') { if (v === 'plan') go(has ? 'meal' : 'choose'); }
       else if (st.key === 'meal' || st.key === 'basket' || st.key === 'shop') { if (v === 'shop') go('done'); else if (!has && v === 'plan') go('choose'); }
     }, 250);
     // the highlight follows its target every frame (sheets slide in, rows re-render)
