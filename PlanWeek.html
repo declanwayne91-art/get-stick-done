@@ -115,7 +115,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
     <sc-if value="{{useOn}}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; margin: -2px 0 4px; padding: 6px 6px 6px 12px; border-radius: 12px; background: #FFD23F; border: 2.5px solid #172038">
       <span class="bri" style="font-size: 13px; letter-spacing: 0.5px; flex: 1">{{useText}}</span>
       <button type="button" class="press" onClick="{{clearUse}}" aria-label="Stop using this up" style="width: 28px; height: 28px; border-radius: 28px; border: 2px solid #172038; background: #FFFFFF; font-size: 15px; color: #172038">×</button></div></sc-if>
-    <sc-if value="{{showToast}}" hint-placeholder-val="{{ false }}"><span class="kal toast" style="position: absolute; left: 50%; margin-left: -150px; width: 300px; bottom: 96px; z-index: 4; text-align: center; padding: 6px 12px; background: #172038; color: #C6FF4D; border-radius: 999px; font-size: 15px">{{toast}}</span></sc-if>
+    <sc-if value="{{showToast}}" hint-placeholder-val="{{ false }}"><span class="kal toast" style="position: absolute; left: 50%; margin-left: -150px; width: 300px; bottom: 74px; z-index: 4; text-align: center; padding: 6px 12px; background: #172038; color: #C6FF4D; border-radius: 999px; font-size: 15px">{{toast}}</span></sc-if>
     <sc-for list="{{days}}" as="d" hint-placeholder-count="7">
       <div class="row">
         <span style="position: relative; flex-shrink: 0"><span class="day bri" style="display: block; transform: rotate({{d.rot}})">{{d.label}}</span><sc-if value="{{d.lunchFrom}}" hint-placeholder-val="{{ false }}"><span class="lbadge" role="img" aria-label="{{d.lunchAria}}">🍱</span></sc-if></span>
@@ -142,6 +142,10 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
         </sc-if>
       </div>
     </sc-for>
+    <a href="UseItUp.html" class="press" data-tour="basket" aria-label="What have you got? Pick what’s in your fridge and we’ll find recipes" style="margin-top: 10px; display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 8px; border-radius: 16px; border: 2.5px solid #172038; background: #FFFFFF; box-shadow: 3px 4px 0 #FFD23F; color: #172038; text-decoration: none; transform: rotate(-1deg)">
+      <span aria-hidden="true" style="flex-shrink: 0; width: 46px; height: 46px; border-radius: 12px; background: #FFD23F; border: 2.5px solid #172038; display: flex; align-items: center; justify-content: center"><svg width="30" height="30" viewBox="0 0 32 32"><path d="M10 13 L14 5 M22 13 L18 5" stroke="#172038" stroke-width="2.6" stroke-linecap="round" fill="none"></path><path d="M3 13 H29 L26 27 Q25.6 28.5 24 28.5 H8 Q6.4 28.5 6 27 Z" fill="#FF6FB0" stroke="#172038" stroke-width="2.4" stroke-linejoin="round"></path><path d="M11 17 V24 M16 17 V24 M21 17 V24" stroke="#172038" stroke-width="2.2" stroke-linecap="round"></path></svg></span>
+      <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span class="bri" style="font-size: 18px; letter-spacing: 0.3px">WHAT HAVE YOU GOT?</span><span class="kal" style="font-size: 14px; line-height: 1.1">find recipes for what’s in your fridge</span></span>
+      <span class="bri" aria-hidden="true" style="font-size: 22px">→</span></a>
     <button type="button" class="press bri" data-tour="shop" onClick="{{toShop}}" style="margin-top: auto; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 23px; box-shadow: 4px 4px 0 #172038">{{shopBtn}}</button>
   </div>
 </sc-if>
@@ -274,7 +278,8 @@ class Component extends DCLogic {
   { key: 'choose', target: 'choose', at: 'bottom', title: 'STEP 1 · FILL YOUR WEEK', text: 'Tap CHOOSE FOR ME and we’ll pick a week of dinners for you. Rather choose yourself? Tap + add a meal on any night.' },
   { key: 'pickweek', target: 'pickweek', title: 'STEP 2 · YOUR NIGHTS', text: 'Weeknights are ticked. Change any you like, then tap PICK MY WEEK.' },
   { key: 'meal', target: 'meal', title: 'STEP 3 · MAKE IT YOURS', text: '↻ swaps a meal, ×2 changes how many it serves, 🍱 cooks extra for lunch, and COOK → opens cooking mode.', btn: 'NEXT →' },
-  { key: 'shop', target: 'shop', title: 'STEP 4 · ONE SHOPPING LIST', text: 'Tap MAKE MY SHOPPING LIST to get everything you need in one list, sorted by aisle.' },
+  { key: 'basket', target: 'basket', title: 'STEP 4 · USE IT UP', text: 'Tap here any time, pick what’s in your fridge or cupboards, and we’ll find recipes that use it.', btn: 'NEXT →' },
+  { key: 'shop', target: 'shop', title: 'STEP 5 · ONE SHOPPING LIST', text: 'Tap MAKE MY SHOPPING LIST to get everything you need in one list, sorted by aisle.' },
   { key: 'done', target: null, title: 'WEEK PLANNED!', text: 'Tick off anything you already have, and the rest is your shopping list. Nice one.', btn: 'GOT IT', celebrate: true }
 ];
     const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
@@ -336,7 +341,8 @@ class Component extends DCLogic {
     kt.go = go;
     btn.addEventListener('click', () => { const st = STEPS[kt.step];
       if (st.key === 'welcome') go(this.s.plan.some(Boolean) ? 'meal' : 'choose');
-      else if (st.key === 'meal') go('shop');
+      else if (st.key === 'meal') go('basket');
+      else if (st.key === 'basket') go('shop');
       else if (st.key === 'done') this.tourEnd(true); });
     L.querySelector('.kt-skip').addEventListener('click', () => this.tourEnd(true));
     kt.onKey = (e) => { if (e.key === 'Escape') this.tourEnd(true); }; document.addEventListener('keydown', kt.onKey);
@@ -346,7 +352,7 @@ class Component extends DCLogic {
       const st = STEPS[kt.step], v = this.s.view, has = this.s.plan.some(Boolean);
       if (st.key === 'choose') { if (v === 'auto') go('pickweek'); else if (v === 'plan' && has) go('meal'); }
       else if (st.key === 'pickweek') { if (v === 'plan') go(has ? 'meal' : 'choose'); }
-      else if (st.key === 'meal' || st.key === 'shop') { if (v === 'shop') go('done'); else if (!has && v === 'plan') go('choose'); }
+      else if (st.key === 'meal' || st.key === 'basket' || st.key === 'shop') { if (v === 'shop') go('done'); else if (!has && v === 'plan') go('choose'); }
     }, 250);
     // the highlight follows its target every frame (sheets slide in, rows re-render)
     const track = () => { if (this.kt !== kt) return; place(); kt.raf = requestAnimationFrame(track); }; kt.raf = requestAnimationFrame(track);
