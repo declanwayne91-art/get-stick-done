@@ -50,9 +50,9 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 <div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background-color: #FBF4E6; background-image: linear-gradient(rgba(139,94,52,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(139,94,52,0.08) 1px, transparent 1px); background-size: 20px 20px; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #172038">
 <svg aria-hidden="true" width="0" height="0" style="position: absolute; width: 0; height: 0; overflow: hidden"><defs><filter id="tdie" x="-30%" y="-60%" width="160%" height="220%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="5" result="grow"></feMorphology><feGaussianBlur in="grow" stdDeviation="2.5" result="soft"></feGaussianBlur><feComponentTransfer in="soft" result="white-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feMorphology in="white-mask" operator="dilate" radius="3" result="key-grow"></feMorphology><feGaussianBlur in="key-grow" stdDeviation="1" result="key-soft"></feGaussianBlur><feComponentTransfer in="key-soft" result="key-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feFlood flood-color="#111111"></feFlood><feComposite in2="key-mask" operator="in" result="key"></feComposite><feFlood flood-color="#FFFFFF"></feFlood><feComposite in2="white-mask" operator="in" result="white"></feComposite><feMerge><feMergeNode in="key"></feMergeNode><feMergeNode in="white"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter><filter id="kst" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="7" result="h"></feMorphology><feMorphology in="SourceAlpha" operator="dilate" radius="19" result="c1"></feMorphology><feMorphology in="c1" operator="erode" radius="16" result="c2"></feMorphology><feComposite in="h" in2="c2" operator="over" result="u"></feComposite><feGaussianBlur in="u" stdDeviation="2.4" result="ub"></feGaussianBlur><feComponentTransfer in="ub" result="back"><feFuncA type="linear" slope="6" intercept="-3.00"></feFuncA></feComponentTransfer><feMorphology in="back" operator="dilate" radius="3.2" result="eg"></feMorphology><feComposite in="eg" in2="back" operator="out" result="edge"></feComposite><feFlood flood-color="#2A1A10"></feFlood><feComposite in2="edge" operator="in" result="edgeC"></feComposite><feFlood flood-color="#FFF4DF"></feFlood><feComposite in2="back" operator="in" result="backC"></feComposite><feMerge><feMergeNode in="edgeC"></feMergeNode><feMergeNode in="backC"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter><pattern id="kht" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><circle cx="2.5" cy="2.5" r="1.2" fill="#2A1A10" fill-opacity="0.3"></circle></pattern><linearGradient id="steel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E9EEF3"></stop><stop offset="0.5" stop-color="#B9C3CE"></stop><stop offset="1" stop-color="#8E9AA8"></stop></linearGradient><linearGradient id="iron" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4A4A52"></stop><stop offset="1" stop-color="#1E1E24"></stop></linearGradient></defs></svg>
   <div style="position: absolute; left: 14px; right: 14px; top: 14px; display: flex; align-items: center; justify-content: space-between">
-    <button type="button" class="press lm" onClick="{{openPrep}}" aria-label="Show the ingredients list" style="border: none; padding: 7px 10px 6px; background-color: #D93A3A; transform: rotate(-2deg); font-size: 13px; letter-spacing: 1.5px; flex-shrink: 0; white-space: nowrap">CHICKEN ALFREDO ≡</button>
+    <button type="button" class="press lm" onClick="{{openPrep}}" aria-label="Show the ingredients list" style="border: none; padding: 7px 10px 6px; background-color: #D93A3A; transform: rotate(-2deg); font-size: 13px; letter-spacing: 1px; flex-shrink: 0; white-space: nowrap">CHICKEN ALFREDO ≡</button>
     <span style="display: flex; align-items: center; gap: 6px; padding: 4px 6px; background: #FF6FB0; border: 2px solid #172038; border-radius: 999px; font-weight: 700; font-size: 13px; white-space: nowrap; flex-shrink: 0">
-      <button type="button" class="press" onClick="{{less}}" aria-label="Fewer servings" style="width: 24px; height: 24px; border-radius: 999px; border: none; background: #FFFFFF; color: #172038; font-weight: 900">−</button>serves {{serves}}<button type="button" class="press" onClick="{{more}}" aria-label="More servings" style="width: 24px; height: 24px; border-radius: 999px; border: none; background: #FFFFFF; color: #172038; font-weight: 900">+</button>
+      <button type="button" class="press" onClick="{{less}}" aria-label="Fewer servings" style="width: 24px; height: 24px; border-radius: 999px; border: none; background: #FFFFFF; color: #172038; font-weight: 900">−</button><span aria-label="serves {{serves}}">×{{serves}}</span><button type="button" class="press" onClick="{{more}}" aria-label="More servings" style="width: 24px; height: 24px; border-radius: 999px; border: none; background: #FFFFFF; color: #172038; font-weight: 900">+</button>
     </span>
   </div>
   <div style="position: absolute; left: 14px; right: 14px; top: 58px; display: flex; justify-content: space-between">
@@ -116,7 +116,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
     </button>
   </sc-if>
   <sc-if value="{{prep}}" hint-placeholder-val="{{ true }}">
-    <div style="position: absolute; left: 0; right: 0; top: 64px; bottom: 0; z-index: 6; background-color: #FBF4E6; background-image: linear-gradient(rgba(139,94,52,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(139,94,52,0.08) 1px, transparent 1px); background-size: 20px 20px; padding: 10px 16px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px">
+    <div style="position: absolute; left: 0; right: 0; top: 104px; bottom: 0; z-index: 6; background-color: #FBF4E6; background-image: linear-gradient(rgba(139,94,52,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(139,94,52,0.08) 1px, transparent 1px); background-size: 20px 20px; padding: 10px 16px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px">
       <span class="title-die bri" style="font-size: 34px; color: #172038; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">BEFORE YOU START</span>
       <span style="font-size: 18px; font-weight: 700; line-height: 1.2">Tick what you’ve got. Anything left can go on your shopping list.</span>
       <button type="button" class="press bri" onClick="{{tickAll}}" aria-pressed="{{allGot}}" style="align-self: flex-start; height: 40px; padding: 0 16px 0 10px; border-radius: 999px; border: 2.5px solid #172038; background: {{tickAllBg}}; color: #172038; font-size: 16px; display: flex; align-items: center; gap: 8px; box-shadow: 3px 3px 0 #172038"><span style="width: 22px; height: 22px; border-radius: 6px; border: 2.5px solid #172038; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 14px">{{tickAllMark}}</span>{{tickAllText}}</button>
@@ -207,7 +207,7 @@ class Component extends DCLogic {
   fmt(t) { return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); }
   qty(c) {
     if (c[0] === null) return c[1];
-    const v = c[0] * (this.s.serves + (this.s.lunch ? this.lunchN : 0));
+    const v = c[0] * (this.s.serves + (this.s.lunch ? this.lunchN * 0.5 : 0));
     const nice = Number.isInteger(v) ? String(v) : (v % 1 === 0.5 ? (v === 0.5 ? '½' : Math.floor(v) + '½') : v.toFixed(1));
     return nice + ' ' + ((v > 1 && c[2]) ? c[2] : c[1]);
   }
@@ -248,7 +248,7 @@ class Component extends DCLogic {
     return {
       prep: s.prep,
       ingRows: rows.map((r) => ({
-        text: this.fq(r.g, s.serves + (s.lunch ? this.lunchN : 0), false),
+        text: this.fq(r.g, s.serves + (s.lunch ? this.lunchN * 0.5 : 0), false),
         box: s.got[r.k] ? '#C6FF4D' : '#FFFFFF', tick: s.got[r.k] ? '✓' : '', op: s.got[r.k] ? 0.55 : 1,
         aria: (s.got[r.k] ? 'Got ' : 'Need ') + r.g[2],
         toggle: () => { s.got[r.k] = !s.got[r.k]; s.added = -1; this.buzz(8); this.re(); }
@@ -274,7 +274,7 @@ class Component extends DCLogic {
       toggleKids: () => { s.kids = !s.kids; this.applyKids(s.kids); this.buzz(8); this.re(); },
       lunchOk: this.lunchInfo[0] !== 'no', lunchNo: this.lunchInfo[0] === 'no', lunchNoText: 'best eaten fresh: ' + this.lunchInfo[1],
       lunchOn: s.lunch, lunchBg: s.lunch ? '#C6FF4D' : '#FFFFFF', lunchBs: s.lunch ? 'solid' : 'dashed',
-      lunchBtn: s.lunch ? '🍱 +' + this.lunchN + ' for lunch tomorrow ✓' : '🍱 + ' + this.lunchN + ' for lunch tomorrow?',
+      lunchBtn: (s.lunch ? '🍱 +' : '🍱 + ') + this.lunchN + (this.lunchN === 1 ? ' lunch' : ' lunches') + ' tomorrow' + (s.lunch ? ' ✓' : '?') + ' (half-size)',
       toggleLunch: () => {
         s.lunch = !s.lunch; this.buzz(8);
         const last = this.steps[this.steps.length - 1];
@@ -302,7 +302,7 @@ class Component extends DCLogic {
     const showWait = waiting && mw !== null && mw !== undefined && !this.stepDone(mw) && mw !== i;
     const ring = s.timers.find((t) => t.left === 0 && t.step !== i && !this.stepDone(t.step));
     const out = {
-      serves: s.serves + (s.lunch ? ' + ' + this.lunchN + ' 🍱' : ''),
+      serves: s.serves + (s.lunch ? ' +🍱' : ''),
       less: () => { if (s.serves > 1) { s.serves -= 1; this.lunchN = s.serves; if (!this.little && s.serves <= this.H && s.kids) { s.kids = false; this.applyKids(false); } this.re(); } },
       more: () => { if (s.serves < 6) { s.serves += 1; this.lunchN = s.serves; this.re(); } },
       dots: this.steps.map((x, n) => {
