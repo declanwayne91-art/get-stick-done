@@ -38,7 +38,7 @@ window.GSN = (function () {
     if (!canPush()) return Promise.resolve('unsupported');
     return navigator.serviceWorker.ready.then(function (reg) {
       return reg.pushManager.getSubscription().then(function (s) {
-        if (!on) return (s ? post('/unsubscribe', { endpoint: s.endpoint }).catch(function () {}).then(function () { return s.unsubscribe(); }) : Promise.resolve()).then(function () { return 'off'; });
+        if (!on) return (s ? post('/unsubscribe', { endpoint: s.endpoint }).catch(function () {}).then(function () { return prof().friendPush ? null : s.unsubscribe(); }) : Promise.resolve()).then(function () { return 'off'; });   // friend alerts share the subscription: keep it if they're on
         return (Notification.permission === 'granted' ? Promise.resolve('granted') : Notification.requestPermission()).then(function (p) {
           if (p !== 'granted') return 'denied';
           return (s ? Promise.resolve(s) : fetch(PUSH + '/key').then(function (r) { return r.json(); }).then(function (k) { return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: key(k.key) }); }))
@@ -52,7 +52,27 @@ window.GSN = (function () {
   function glass(count, goal) { store({ day: day(), count: count, goal: goal }); if (!canPush()) return; sub().then(function (s) { if (s) post('/drank', { endpoint: s.endpoint, day: day(), count: count, goal: goal }).catch(function () {}); }).catch(function () {}); }
   function readGlasses() { return new Promise(function (ok) { try { var r = indexedDB.open('gsd', 1); r.onupgradeneeded = function () { r.result.createObjectStore('kv'); }; r.onsuccess = function () { var q = r.result.transaction('kv').objectStore('kv').get('glasses'); q.onsuccess = function () { ok(q.result && q.result.day === day() ? q.result : null); }; q.onerror = function () { ok(null); }; }; r.onerror = function () { ok(null); }; } catch (e) { ok(null); } }); }
   function testNudge() { if (!canPush()) return Promise.resolve(false); return sub().then(function (s) { return s ? post('/test', { endpoint: s.endpoint }).then(function (j) { return !!(j && j.ok); }) : false; }).catch(function () { return false; }); }
-  return { on: on, tap: tap, keepAwake: keepAwake, canPush: canPush, nudges: nudges, glass: glass, testNudge: testNudge, readGlasses: readGlasses };
+  // friend alerts: this phone's push subscription (the same one the water nudges use), without signing up for water nudges.
+  // ask = true may show the permission prompt (call it from a tap). Resolves the subscription as JSON, or null.
+  function friendSub(ask) {
+    if (!canPush()) return Promise.resolve(null);
+    if (Notification.permission !== 'granted' && !ask) return Promise.resolve(null);
+    return navigator.serviceWorker.ready.then(function (reg) {
+      return (Notification.permission === 'granted' ? Promise.resolve('granted') : Notification.requestPermission()).then(function (p) {
+        if (p !== 'granted') return null;
+        return reg.pushManager.getSubscription().then(function (s) { return s || fetch(PUSH + '/key').then(function (r) { return r.json(); }).then(function (k) { return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: key(k.key) }); }); })
+          .then(function (s) { return s ? s.toJSON() : null; });
+      });
+    }).catch(function () { return null; });
+  }
+  // start fresh: water nudges and friend alerts off, here and on the worker
+  function allOff() {
+    if (!canPush()) return Promise.resolve();
+    var fk = null; try { fk = localStorage.getItem('gsb.friendKey'); } catch (e) {}
+    return sub().then(function (s) { return Promise.all([s ? post('/unsubscribe', { endpoint: s.endpoint }).catch(function () {}) : null, fk ? post('/f/push', { secret: fk, sub: null }).catch(function () {}) : null])
+      .then(function () { return s ? s.unsubscribe() : null; }); }).catch(function () {});
+  }
+  return { on: on, tap: tap, keepAwake: keepAwake, canPush: canPush, nudges: nudges, glass: glass, testNudge: testNudge, readGlasses: readGlasses, friendSub: friendSub, allOff: allOff };
 })();</script>
 <title>Get St*ck Done!</title>
 <script>/* size the phone frame before anything paints, so nothing (e.g. the nav bar) shows in the wrong place while the page loads */
@@ -101,12 +121,14 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 .pic svg{height:100%;max-height:100%;width:auto;max-width:100%}
 .prepmid>*{flex-shrink:0}
 .pic > svg{height:calc(100% - 12px) !important;width:auto !important;max-width:100%}
+.ovw-card{display:flex;gap:10px;align-items:flex-start;background:#FFFFFF;border-radius:12px;padding:10px 12px;box-shadow:0 3px 0 #CDB894,0 8px 12px -8px rgba(90,60,30,0.4)}.ovw-n{flex:none;width:30px;height:30px;border-radius:30px;background:#172038;color:#C6FF4D;display:flex;align-items:center;justify-content:center;font-size:17px}.ovw-t{align-self:flex-start;margin-top:2px;padding:2px 9px;border-radius:999px;background:#FF6FB0;border:2px solid #172038;font-size:13px;white-space:nowrap}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&display=swap" rel="stylesheet">
 <style data-lm>.lm{font-family:"DM Mono",ui-monospace,monospace !important;font-weight:500;text-transform:uppercase;color:#FFFFFF !important;letter-spacing:3px;background-image:linear-gradient(rgba(255,255,255,0.22),rgba(255,255,255,0) 45%,rgba(0,0,0,0.12)) !important;text-shadow:0 -1px 0 rgba(0,0,0,0.55),0 1px 0 rgba(255,255,255,0.4) !important;box-shadow:inset 0 2px 0 rgba(255,255,255,0.28),inset 0 -3px 0 rgba(0,0,0,0.22),0 3px 5px rgba(60,40,20,0.35) !important;border-radius:3px}[style*="DM Mono"][style*="background: #"]{background-image:linear-gradient(rgba(255,255,255,0.22),rgba(255,255,255,0) 45%,rgba(0,0,0,0.12));text-shadow:0 -1px 0 rgba(0,0,0,0.55),0 1px 0 rgba(255,255,255,0.4) !important;box-shadow:inset 0 2px 0 rgba(255,255,255,0.28),inset 0 -3px 0 rgba(0,0,0,0.22),0 3px 5px rgba(60,40,20,0.35) !important;border-radius:3px}</style>
 <style>
 .tile{width:58px;height:66px;border-radius:16px;border:3px solid #172038;font-size:34px;color:#172038;display:flex;align-items:center;justify-content:center}
 .chipb{height:42px;padding:0 14px;border-radius:999px;border:2.5px solid #172038;font-size:16px;color:#172038}
+.chips{height:36px;padding:0 11px;font-size:14px}
 .dchip{width:44px;height:42px;border-radius:12px;border:2.5px solid #172038;font-size:15px;color:#172038;display:flex;align-items:center;justify-content:center}
 .q{font-size:20px;font-weight:700;line-height:1.2}
 @keyframes sheetup{from{transform:translateY(100%)}to{transform:none}}
@@ -165,8 +187,11 @@ input:focus{outline:none;box-shadow:0 0 0 3px #FF6FB0}
 
     <sc-if value="{{s2}}" hint-placeholder-val="{{ false }}">
       <span class="title-die bri" style="font-size: 36px; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">FOOD NO-GOS</span>
-      <span class="q">Anything you don’t eat? Tap any that apply and we won’t suggest recipes with them.</span>
-      <div style="display: flex; flex-wrap: wrap; gap: 10px"><sc-for list="{{avoids}}" as="a" hint-placeholder-count="6"><button type="button" class="chipb bri press" onClick="{{a.tap}}" aria-pressed="{{a.on}}" style="background: {{a.bg}}; transform: rotate({{a.rot}})">{{a.label}}</button></sc-for></div>
+      <span class="q">Anything you don’t eat, or can’t? Tap any that apply and we won’t suggest recipes with them.</span>
+      <span class="bri" style="font-size: 15px; letter-spacing: 0.5px; margin-bottom: -4px">I DON’T EAT</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px"><sc-for list="{{avoids}}" as="a" hint-placeholder-count="4"><button type="button" class="chipb bri press" onClick="{{a.tap}}" aria-pressed="{{a.on}}" style="background: {{a.bg}}; transform: rotate({{a.rot}})">{{a.label}}</button></sc-for></div>
+      <span class="bri" style="font-size: 15px; letter-spacing: 0.5px; margin: 4px 0 -4px">ALLERGIES</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px"><sc-for list="{{allergies}}" as="a" hint-placeholder-count="13"><button type="button" class="chipb chips bri press" onClick="{{a.tap}}" aria-pressed="{{a.on}}" style="background: {{a.bg}}; transform: rotate({{a.rot}})">{{a.label}}</button></sc-for></div>
       <span class="hint">{{avoidHint}}</span>
       <span class="hint" style="font-size: 13px">For allergies, always check the labels too. Recipes can’t know every brand.</span>
     </sc-if>
@@ -241,7 +266,7 @@ input:focus{outline:none;box-shadow:0 0 0 3px #FF6FB0}
   <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; gap: 10px">
     <sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}"><button type="button" class="press bri" onClick="{{back}}" aria-label="Back" style="width: 62px; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #FFFFFF; color: #172038; font-size: 26px">←</button></sc-if>
     <sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{next}}" style="flex: 1; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{nextText}}</button></sc-if>
-    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793376124" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
+    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793378467" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
   </div>
 </div>
 </script>
@@ -253,7 +278,9 @@ class Component extends DCLogic {
     this.FULL = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     this.MOVE = [['gym', 'GYM', 'gym'], ['walk', 'WALKING', 'walking'], ['run', 'RUNNING', 'running'], ['cycle', 'CYCLING', 'cycling'], ['swim', 'SWIMMING', 'swimming'], ['stretch', 'STRETCHING', 'stretching'], ['other', 'SPORT & CLASSES', 'sport']];
     this.LAD = {"run": 11, "walk": 6, "cycle": 6, "swim": 6, "stretch": 3};
-    this.AV = [['vegetarian', 'VEGETARIAN'], ['pork', 'NO PORK'], ['beef', 'NO BEEF'], ['fish', 'NO FISH'], ['nuts', 'NO NUTS'], ['dairy', 'NO DAIRY']];
+    this.AV = [['vegetarian', 'VEGETARIAN'], ['pork', 'NO PORK'], ['beef', 'NO BEEF'], ['fish', 'NO FISH']];
+    this.AL = [["gluten", "GLUTEN", "gluten"], ["milk", "DAIRY", "dairy"], ["eggs", "EGGS", "eggs"], ["peanuts", "PEANUTS", "peanuts"], ["treenuts", "TREE NUTS", "tree nuts"], ["sesame", "SESAME", "sesame"], ["soya", "SOYA", "soya"], ["crustaceans", "SHELLFISH", "shellfish"], ["molluscs", "MOLLUSCS", "molluscs"], ["mustard", "MUSTARD", "mustard"], ["celery", "CELERY", "celery"], ["sulphites", "SULPHITES", "sulphites"], ["lupin", "LUPIN", "lupin"]];   // the UK's 14 allergens (allergens.py); fish is NO FISH above
+    this.AVNAME = Object.assign({ vegetarian: 'meat or fish' }, Object.fromEntries(this.AL.map((a) => [a[0], a[2]])));
     this.s = { step: 0, name: '', household: null, lunches: null, avoid: {}, kids: null, hydro: null, watch: null, notif: '', every: 2, dayStart: 8, dayEnd: 21, learn: false, landed: false, fit: null, likes: {}, grow: null };
   }
   re() { this.setState({ n: Date.now() }); }
@@ -294,7 +321,7 @@ class Component extends DCLogic {
     out.push({ book: true, t: p.bookName });
     out.push({ serve: true, t: 'Recipes serve ' + p.household + (s.household ? '' : ' (the usual)') + (p.lunches ? ' · leftovers add ' + p.household + (p.household === 1 ? ' lunch' : ' lunches') : '') });
     if (p.littleOnes) out.push({ kids: true, t: 'Little-one tips on every recipe' });
-    if (p.avoid.length) out.push({ no: true, t: 'No ' + p.avoid.map((a) => a === 'vegetarian' ? 'meat or fish' : a).join(', ').replace(/, ([^,]*)$/, ' or $1') + ' suggestions' });
+    if (p.avoid.length) out.push({ no: true, t: 'No ' + p.avoid.map((a) => this.AVNAME[a] || a).join(', ').replace(/, ([^,]*)$/, ' or $1') + ' suggestions' });
     const lk = this.MOVE.filter((m) => s.likes[m[0]]).map((m) => m[2]);
     if (s.fit || lk.length) out.push({ move: true, t: (s.fit ? { new: 'Just starting', back: 'Getting back into it', regular: 'Pretty regular' }[s.fit] : 'Workouts') + (lk.length ? ': ' + (lk.length > 2 ? lk.slice(0, 2).join(', ') + ' and more' : lk.join(' and ')) : '') + (s.grow === true ? ', stepping up' : '') });
     if (p.hydro) out.push({ hydro: true, t: 'Hydro Homie on: every 2 hrs, 8am–9pm' });
@@ -323,6 +350,7 @@ class Component extends DCLogic {
       peopleHint: s.household ? 'Every recipe will start at serves ' + s.household + '. You can change it on any recipe.' : 'Skip this and recipes start at serves 2.',
       lunchOpts: [[true, 'YES PLEASE'], [false, 'NOT REALLY']].map((o) => ({ label: o[1], on: s.lunches === o[0], bg: s.lunches === o[0] ? (o[0] ? '#C6FF4D' : '#FF6FB0') : '#FFFFFF', tap: () => { s.lunches = o[0]; this.buzz(8); this.re(); } })),
       lunchHint: s.lunches === true ? 'Choose for me will plan lunches for your workdays, ' + (s.household || 2) + ((s.household || 2) === 1 ? ' portion' : ' portions') + ' each.' : s.lunches === false ? 'No problem, you can still add a lunch to any meal.' : '',
+      allergies: this.AL.map((a, i) => ({ label: a[1], on: !!s.avoid[a[0]], bg: s.avoid[a[0]] ? '#FF6FB0' : '#FFFFFF', rot: ((i * 29) % 5 - 2) + 'deg', tap: () => { s.avoid[a[0]] = !s.avoid[a[0]]; this.buzz(8); this.re(); } })),
       avoids: this.AV.map((a, i) => ({ label: a[1], on: !!s.avoid[a[0]], bg: s.avoid[a[0]] ? '#FF6FB0' : '#FFFFFF', rot: ((i * 37) % 5 - 2) + 'deg', tap: () => { s.avoid[a[0]] = !s.avoid[a[0]]; this.buzz(8); this.re(); } })),
       avoidHint: Object.values(s.avoid).some(Boolean) ? 'Got it. Those recipes just won’t come up.' : 'Nothing? Lovely, everything’s on the menu.',
       hydroOpts: [[true, 'YES, NUDGE ME'], [false, 'NOT NOW']].map((o) => ({ label: o[1], on: s.hydro === o[0], bg: s.hydro === o[0] ? (o[0] ? '#6EC8FF' : '#FF6FB0') : '#FFFFFF', tap: () => { s.hydro = o[0]; this.buzz(8); this.re();
@@ -351,6 +379,6 @@ class Component extends DCLogic {
 }
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793376124"></script>
-<script src="dc.js?v=1793376124"></script>
+<script src="morphdom.js?v=1793378467"></script>
+<script src="dc.js?v=1793378467"></script>
 </body></html>

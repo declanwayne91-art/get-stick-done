@@ -9,6 +9,10 @@
 //   /f/seen   { secret, id }                           you've seen that one
 //   /f/cheer  { secret, to, c }                        send a cheer (c = which one)
 //   /f/remove { secret, id }   /f/block { secret, id } (block = remove, and they can't add you again)
+//   /f/push   { secret, sub }                          friend alerts: this phone's push subscription (null = off)
+// A new friend or a cheer sends that friend an encrypted push (send.js): "Dex sent you a cheer!" / "NICE ONE!".
+
+import { push } from './send.js';
 
 const SCHEMA = [
   'CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, key TEXT UNIQUE NOT NULL, code TEXT UNIQUE NOT NULL, name TEXT, plate TEXT, lv INTEGER, st TEXT, pin TEXT, created INTEGER, seen INTEGER)',
@@ -19,7 +23,9 @@ const SCHEMA = [
   'CREATE INDEX IF NOT EXISTS events_src ON events (src, at)',
 ];
 let ready = null;
-const init = (env) => ready || (ready = env.DB.batch(SCHEMA.map((q) => env.DB.prepare(q))).catch((e) => { ready = null; throw e; }));
+const init = (env) => ready || (ready = env.DB.batch(SCHEMA.map((q) => env.DB.prepare(q)))
+  .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN push TEXT').run().catch(() => {}))   // friend alerts: the phone's push address (added later; already there = fine)
+  .catch((e) => { ready = null; throw e; }));
 
 const ABC = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';   // no 0/O, 1/I/L
 const PLATES = ['cream', 'lime', 'pink', 'sky', 'holo'];
@@ -34,6 +40,20 @@ export function cleanPlate(p) {
   const name = String(p.name || '').normalize('NFC').replace(/[^\p{L}\p{N} '’.\-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 20) || 'A friend';
   const key = (x) => (typeof x === 'string' && /^[a-z0-9-]{1,32}$/.test(x) ? x : null);
   return { name, plate: PLATES.includes(p.plate) ? p.plate : 'cream', lv: Math.max(1, Math.min(99, Math.floor(+p.lv) || 1)), st: key(p.st), pin: key(p.pin) };
+}
+// what a friend alert says (cheers in the Friends screen's order)
+const CHEERS = ['NICE ONE!', 'GAINS!', '✱ HIGH FIVE', 'PROUD!', 'YUM!', 'STICK WITH IT!'];
+async function alert(env, them, msg) {
+  if (!them || !them.push) return;
+  let sub = null; try { sub = JSON.parse(them.push); } catch (e) { return; }
+  const st = await push(env, sub, 'friend', Object.assign({ t: 'friend', url: 'Friends.html' }, msg)).catch(() => 0);
+  if (st === 404 || st === 410) await env.DB.prepare('UPDATE users SET push = NULL WHERE id = ?').bind(them.id).run();
+}
+export function cleanSub(x, env) {   // env.TEST_PUSH_HTTP (local tests only) also allows http://127.0.0.1
+  const okUrl = (u) => /^https:\/\//.test(u) || (!!(env && env.TEST_PUSH_HTTP) && /^http:\/\/127\.0\.0\.1:/.test(u));
+  if (!x || typeof x !== 'object' || !okUrl(x.endpoint || '') || x.endpoint.length > 1000) return null;
+  const k = x.keys || {}; if (typeof k.p256dh !== 'string' || typeof k.auth !== 'string' || k.p256dh.length > 120 || k.auth.length > 40) return null;
+  return JSON.stringify({ endpoint: x.endpoint, keys: { p256dh: k.p256dh, auth: k.auth } });
 }
 const pub = (u) => u && { id: u.id, name: u.name, plate: u.plate, lv: u.lv, st: u.st, pin: u.pin };
 
@@ -74,6 +94,7 @@ export async function friends(path, b, env, out) {
         env.DB.prepare('INSERT OR IGNORE INTO links (a, b, at) VALUES (?, ?, ?)').bind(them.id, me.id, now),
         env.DB.prepare('INSERT INTO events (dest, src, kind, c, at) VALUES (?, ?, ?, ?, ?)').bind(them.id, me.id, 'hello', null, now),
       ]);
+      await alert(env, them, { title: me.name + ' added you as a friend', body: 'Say hi back with a cheer', tag: 'hello-' + me.id });
     }
     return out({ ok: true, friend: pub(them), already });
   }
@@ -83,6 +104,7 @@ export async function friends(path, b, env, out) {
     const inbox = (await env.DB.prepare('SELECT e.id, e.src, e.kind, e.c, e.at FROM events e JOIN links l ON l.a = e.dest AND l.b = e.src WHERE e.dest = ? AND e.seen = 0 ORDER BY e.at LIMIT 20').bind(me.id).all()).results;
     return out({ ok: true, code: showCode(me.code), friends: fr, inbox });
   }
+  if (path === '/f/push') { await env.DB.prepare('UPDATE users SET push = ? WHERE id = ?').bind(cleanSub(b.sub, env), me.id).run(); return out({ ok: true, on: !!cleanSub(b.sub, env) }); }
   if (path === '/f/seen') { await env.DB.prepare('UPDATE events SET seen = 1 WHERE id = ? AND dest = ?').bind(Math.floor(+b.id) || 0, me.id).run(); return out({ ok: true }); }
   const other = String(b.id || b.to || '').slice(0, 40);
   if (path === '/f/cheer') {
@@ -91,6 +113,8 @@ export async function friends(path, b, env, out) {
     const recent = await env.DB.prepare('SELECT COUNT(*) AS n, MAX(CASE WHEN dest = ? THEN at END) AS last FROM events WHERE src = ? AND kind = ? AND at > ?').bind(other, me.id, 'cheer', now - 864e5).first();
     if (recent.n >= CHEERS_A_DAY || (recent.last && now - recent.last < CHEER_GAP)) return out({ error: 'slow down' }, 429);
     await env.DB.prepare('INSERT INTO events (dest, src, kind, c, at) VALUES (?, ?, ?, ?, ?)').bind(other, me.id, 'cheer', c, now).run();
+    const them = await env.DB.prepare('SELECT id, push FROM users WHERE id = ?').bind(other).first();
+    await alert(env, them, { title: me.name + ' sent you a cheer!', body: CHEERS[c] || 'Open Friends to see it', tag: 'cheer-' + me.id, image: 'icons/watch-sticker.png' });
     return out({ ok: true });
   }
   if (path === '/f/remove' || path === '/f/block') {

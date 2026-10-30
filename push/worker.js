@@ -20,37 +20,11 @@
 import { friends, tidy } from './friends.js';
 
 const ORIGINS = ['https://declanwayne91-art.github.io', 'http://127.0.0.1:8765', 'http://localhost:8765'];
-const CONTACT = 'https://declanwayne91-art.github.io/get-stick-done/';
 const WINDOW_MIN = 30;   // a slot can still be sent up to 30 min late (cron runs every 15)
 
-const b64u = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-const utf8 = (s) => new TextEncoder().encode(s);
+import { push, vapid, b64u, utf8 } from './send.js';
+export { push };
 async function idOf(endpoint) { return 'sub:' + b64u(await crypto.subtle.digest('SHA-256', utf8(endpoint))).slice(0, 32); }
-
-async function vapid(env) {
-  let v = await env.SUBS.get('vapid', 'json');
-  if (!v) {
-    const k = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, true, ['sign', 'verify']);
-    v = { pub: b64u(await crypto.subtle.exportKey('raw', k.publicKey)), jwk: await crypto.subtle.exportKey('jwk', k.privateKey) };
-    await env.SUBS.put('vapid', JSON.stringify(v));
-  }
-  return v;
-}
-
-async function jwt(v, aud) {
-  const head = b64u(utf8(JSON.stringify({ typ: 'JWT', alg: 'ES256' })));
-  const body = b64u(utf8(JSON.stringify({ aud, exp: Math.floor(Date.now() / 1000) + 12 * 3600, sub: CONTACT })));
-  const key = await crypto.subtle.importKey('jwk', v.jwk, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign']);
-  const sig = await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, key, utf8(head + '.' + body));   // raw r||s, as JWT wants
-  return head + '.' + body + '.' + b64u(sig);
-}
-
-// one push, no payload; returns the push service's status (404 / 410 = that phone has gone, forget it)
-export async function push(env, sub, topic = 'water') {
-  const v = await vapid(env), url = new URL(sub.endpoint);
-  const res = await fetch(sub.endpoint, { method: 'POST', headers: { Authorization: 'vapid t=' + await jwt(v, url.origin) + ', k=' + v.pub, TTL: '1800', Urgency: 'normal', Topic: topic, 'Content-Length': '0' } });
-  return res.status;
-}
 
 // local time in the phone's zone: { day: '2026-10-30', min: minutes since midnight }
 export function local(tz, now = new Date()) {
