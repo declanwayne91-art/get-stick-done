@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<script>window.GSD_BETA = true;</script>
+<style>.sp-demo,#gp-demo,#cv-demoLater,#cv-demoReset{display:none !important}</style>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#172038"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="St*ck Done">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" type="image/png" href="icons/favicon-64.png">
+<script>if ('serviceWorker' in navigator) addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });</script>
+<title>Get St*ck Done!</title>
+<script>/* size the phone frame before anything paints, so nothing (e.g. the nav bar) shows in the wrong place while the page loads */
+(function () { var W = 390, H = 844 + 0, w = innerWidth, h = innerHeight, k = Math.min(w / W, h / H), r = document.documentElement.style;
+  r.setProperty('--k', k); r.setProperty('--l', Math.max(0, (w - W * k) / 2) + 'px'); r.setProperty('--t', Math.max(0, (h - H * k) / 2) + 'px'); })();</script>
+<script>/* merged duplicate recipes: move saved plans, tonight's pick and the cooked log over to the recipe we kept */
+(function () { var M = {"din-tai-fung-egg-fried-rice": "chilli-crisp-fried-rice"}; try { ['gsb.plan', 'gsb.tonight', 'gsb.progress', 'gsb.planAdd', 'gsb.useUp'].forEach(function (k) { var v = localStorage.getItem(k); if (!v) return; var n = v;
+  for (var o in M) n = n.split(o).join(M[o]); if (n !== v) localStorage.setItem(k, n); }); } catch (e) {} })();</script>
+<script type="speculationrules">{"prefetch": [{"where": {"selector_matches": "a[href]"}, "eagerness": "moderate"}]}</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&amp;family=Kalam:wght@400;700&amp;family=Atkinson+Hyperlegible:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none;padding:0}
+button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
+.title-die{filter:url(#tdie) drop-shadow(0 6px 6px rgba(60,40,20,0.3))}
+.bri{font-family:'Bricolage Grotesque',sans-serif;font-stretch:75%;font-weight:800;line-height:0.9}
+.kal{font-family:'Kalam',cursive;font-weight:700}
+.press{transition:transform 0.09s ease-out}
+.press:active{transform:scale(0.92)}
+.dot{width:34px;height:34px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#172038;border:3px solid #FFFFFF;box-shadow:0 0 0 2px #172038}
+.chip{padding:5px 10px;border-radius:999px;background:#C6FF4D;border:2px solid #172038;font-weight:700;font-size:13px;color:#172038;white-space:nowrap}
+.box{width:24px;height:24px;flex-shrink:0;border:2.5px solid #172038;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#172038;font-weight:900}
+.tom{position:relative;width:60px;height:54px;border-radius:48% 48% 46% 46%;border:3px solid #FFFFFF;box-shadow:0 0 0 2px #2A1A10;display:flex;align-items:center;justify-content:center}
+@keyframes ring{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.ringing{animation:ring 0.4s ease-in-out infinite}
+@keyframes peelclip{0%{clip-path:inset(-20px -20px -20px -20px)}100%{clip-path:inset(-20px 100% -20px -20px)}}
+@keyframes peelflap{0%{left:146px;opacity:0;transform:scaleX(0.4)}12%{opacity:1}85%{opacity:1}100%{left:-14px;opacity:0;transform:scaleX(1.1)}}
+.face{display:block}
+.flap{position:absolute;top:-3px;width:22px;height:56px;border-radius:14px 4px 4px 14px;background:linear-gradient(90deg,#FFFFFF,#F1ECE3 55%,#CFC6B6);border:2px solid #111;box-shadow:-5px 4px 6px rgba(0,0,0,0.28);display:none;pointer-events:none}
+.peeling .face{animation:peelclip 0.6s cubic-bezier(.4,0,.55,1) forwards}
+.peeling .flap{display:block;animation:peelflap 0.6s cubic-bezier(.4,0,.55,1) forwards}
+.peeling{pointer-events:none}
+@keyframes nextpop{0%{transform:scale(1.7) rotate(-34deg);opacity:0}65%{transform:scale(0.94) rotate(-8deg);opacity:1}100%{transform:scale(1) rotate(-12deg);opacity:1}}
+.nextpop{animation:nextpop 0.34s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes bob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.02)}}
+.nextpop svg{animation:bob 2.2s ease-in-out 0.4s infinite}
+.peeling{transform:rotate(-12deg)}
+
+@keyframes slapin{0%{transform:scale(1.7) rotate(-22deg);opacity:0}60%{transform:scale(0.92) rotate(-4deg);opacity:1}100%{transform:scale(1) rotate(-6deg);opacity:1}}
+.slap{animation:slapin 0.32s cubic-bezier(.3,1.5,.5,1) both}
+.pic svg{height:100%;max-height:100%;width:auto;max-width:100%}
+.prepmid>*{flex-shrink:0}
+</style>
+<style>
+
+#sp-root .bri{font-family:'Bricolage Grotesque',sans-serif;font-stretch:75%;font-weight:800;line-height:0.9}
+#sp-root .tt{font-family:'Bricolage Grotesque',sans-serif;font-stretch:100%;font-weight:800;line-height:0.9;color:#C6FF4D;text-shadow:5px 4px 0 #111111}
+#sp-root .kal{font-family:Kalam,cursive;font-weight:700}
+#sp-root .stack{display:flex;flex-direction:column;align-items:flex-start}
+#sp-root .word{display:inline-flex;align-items:flex-start}
+#sp-stk{touch-action:none;cursor:grab;outline:none}
+#sp-stk:focus-visible{outline:4px solid #6EC8FF;outline-offset:8px;border-radius:24px}
+#sp-flap .tt{color:#F2ECE2;text-shadow:none}
+#sp-flap svg use{stroke:#F2ECE2}
+#sp-hint svg{animation:sphint 1.4s ease-in-out infinite}
+@keyframes sphint{0%,100%{transform:translate(0,0)}50%{transform:translate(4px,-4px)}}
+#sp-root .sp-demo button{border:1.5px solid rgba(246,239,225,0.5);background:transparent;color:#F6EFE1;font-family:Kalam,cursive;font-weight:700;font-size:13px;padding:3px 10px;border-radius:999px;opacity:0.7}
+#sp-root .sp-demo button.on{background:#F6EFE1;color:#172038;opacity:1}
+@media (prefers-reduced-motion: reduce){#sp-hint svg{animation:none}}
+</style>
+
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#0B1022;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+@view-transition{navigation:auto}
+::view-transition-old(root),::view-transition-new(root){animation-duration:0.14s}
+#dc-frame{position:absolute;left:var(--l,0);top:var(--t,0);width:390px;height:844px;transform:scale(var(--k,1));transform-origin:0 0;background:#172038}
+#dc-stage{position:relative;overflow:hidden;width:390px;height:844px}
+</style>
+</head><body data-extra="0">
+<div id="dc-frame"><div id="dc-stage"></div></div>
+<script type="text/x-dc-template" id="dc-tpl">
+<div id="sp-root" style="width: 390px; height: 844px; position: relative; overflow: hidden; background-color: #172038; background-image: radial-gradient(rgba(255,255,255,0.06) 1.2px, transparent 1.2px); background-size: 18px 18px; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #F6EFE1">
+  <svg width="0" height="0" style="position: absolute" aria-hidden="true"><defs><filter id="tdie" x="-30%" y="-60%" width="160%" height="220%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="5" result="grow"></feMorphology><feGaussianBlur in="grow" stdDeviation="2.5" result="soft"></feGaussianBlur><feComponentTransfer in="soft" result="white-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feMorphology in="white-mask" operator="dilate" radius="3" result="key-grow"></feMorphology><feGaussianBlur in="key-grow" stdDeviation="1" result="key-soft"></feGaussianBlur><feComponentTransfer in="key-soft" result="key-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feFlood flood-color="#111111"></feFlood><feComposite in2="key-mask" operator="in" result="key"></feComposite><feFlood flood-color="#FFFFFF"></feFlood><feComposite in2="white-mask" operator="in" result="white"></feComposite><feMerge><feMergeNode in="key"></feMergeNode><feMergeNode in="white"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs></svg>
+  <h1 style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Get St*ck Done!</h1>
+  <img id="sp-sticky" data-k="sticky" alt="" style="position: absolute; left: 122px; top: 592px; width: 150px; transform: rotate(9deg); filter: drop-shadow(0 8px 8px rgba(0,0,0,0.35))">
+
+  <div id="sp-stk" role="button" tabindex="0" style="position: absolute; left: 30px; top: 118px; z-index: 5; transform: rotate(-7deg); transform-origin: 50% 50%">
+    <img id="sp-face" src="../img/0633524365721d11.png" alt="" draggable="false" style="display: block; width: 368px; height: 232px; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.4)); -webkit-user-drag: none">
+    <div id="sp-flapWrap" aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; display: none; filter: drop-shadow(-3px 5px 5px rgba(0,0,0,0.35))">
+      <img id="sp-flap" src="../img/496f53f954c6f7c7.png" alt="" draggable="false" style="position: absolute; left: 0; top: 0; width: 368px; height: 232px; transform-origin: 0 0"></div>
+  </div>
+  <div id="sp-hint" aria-hidden="true" style="position: absolute; left: 30px; top: 520px; display: flex; align-items: center; gap: 6px; opacity: 0; transition: opacity 0.25s ease; pointer-events: none; z-index: 6">
+    <svg width="34" height="34" viewBox="0 0 34 34"><path d="M6 30 Q12 12 27 7" stroke="#C6FF4D" stroke-width="3.5" fill="none" stroke-linecap="round"></path><path d="M27 7 l-9 0 M27 7 l-3 8" stroke="#C6FF4D" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    <span id="sp-hintT" class="kal" style="font-size: 18px; color: #C6FF4D">peel me from the corner</span></div>
+
+  <div id="sp-tape" style="position: absolute; left: 0; right: 0; top: 408px; margin: 0 auto; width: max-content; transform: rotate(-3deg); opacity: 0; cursor: pointer; z-index: 6">
+    <span id="sp-tapeT" class="bri title-die" role="status" style="display: block; font-size: 40px; color: #C6FF4D; text-shadow: 3px 3px 0 #111111; letter-spacing: 0.5px; white-space: nowrap"></span></div>
+  <button type="button" id="sp-tap" class="press" style="position: absolute; left: 0; right: 0; top: 488px; margin: 0 auto; width: max-content; padding: 6px 10px; border: none; background: transparent; transform: rotate(2deg)"><span class="bri title-die" style="display: block; font-size: 22px; color: #172038; letter-spacing: 0.5px">OR TAP HERE TO START</span></button>
+  <button type="button" id="sp-skip" class="press" style="display: none; position: absolute; left: 0; right: 0; top: 488px; margin: 0 auto; width: max-content; padding: 6px 10px; border: none; background: transparent; transform: rotate(2deg)"><span class="bri title-die" style="display: block; font-size: 22px; color: #172038; letter-spacing: 0.5px">TAP ANYWHERE TO GO IN</span></button>
+  <a id="sp-toToday" href="Today.html?v=1793350774" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
+  <a id="sp-toOnboard" href="Onboard.html?v=1793350774" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Set up</a>
+  <div class="sp-demo" style="position: absolute; left: 0; right: 0; bottom: 16px; display: flex; justify-content: center; align-items: center; gap: 6px"><span class="kal" style="font-size: 12px; opacity: 0.55">demo:</span><button type="button" id="sp-demoFirst">first time</button><button type="button" id="sp-demoBack">welcome back</button></div>
+</div>
+</script>
+<script type="text/x-dc-logic" id="dc-logic">
+
+class Component extends DCLogic {
+  renderVals() { return {}; }
+  componentDidMount() { if (!this.mount()) { this._tries = 0; const go = () => { if (!this.mount() && this._tries++ < 60) setTimeout(go, 50); }; setTimeout(go, 50); } }
+  componentWillUnmount() { this.dead = true; cancelAnimationFrame(this.raf); (this.tm || []).forEach(clearTimeout); }
+  mount() {
+    const $ = (id) => document.getElementById(id);
+    const root = $('sp-root'); if (!root || !$('sp-stk')) return false;
+    if (root.dataset.bound === '1') return true; root.dataset.bound = '1';
+    this.tm = []; const later = (fn, ms) => this.tm.push(setTimeout(fn, ms));
+    const IMG = {"sticky": "../img/889081a3ab3a08ff.png"}, ANG = -7, SANG = 9;
+    root.querySelectorAll('img[data-k]').forEach((im) => { im.src = IMG[im.dataset.k]; });
+    const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
+    const ls = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } };
+    const haptics = ls('gsb.haptics', '1') === '1';
+    const buzz = (p) => { if (!haptics) return; try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} };
+    const AUTO_GO = true;   // real app: true (a returning visit goes straight to Today). Design canvas: false, so the board never navigates without a tap.
+
+    const who = () => { try { const pf = JSON.parse(ls('gsb.profile', 'null')); if (pf && pf.bookName) { const m = pf.bookName.match(/^(.*?)[’']s Sticker Book$/i); return m ? m[1] : 'friend'; } } catch (e) {} return null; };
+    const stk = $('sp-stk'), faceEl = $('sp-face'), flap = $('sp-flap'), flapWrap = $('sp-flapWrap'), hint = $('sp-hint'), tapBtn = $('sp-tap'), tape = $('sp-tape'), sticky = $('sp-sticky');
+    let name = who(), mode = 'intro', gone = false, touched = false;
+
+    // ---- the title sticker's own frame: unrotated box W x H (plus the die-cut border), turned by ANG around its centre
+    const W = 368, H = 232, DIAG = Math.hypot(W, H), DETACH = 0.5 * DIAG, FULL = 2.1 * DIAG;
+    stk.style.left = Math.round((390 - W) / 2) + 'px';   // centred whatever the font's final width
+    const C = [86, 215.8];   // bottom-left of DONE!: the corner you pull (measured when the title image was rendered)
+    const REST = [C[0] + 16, C[1] - 14];
+    const outline = [[0, 0], [W, 0], [W, H], [0, H]];
+    const poly = (pts) => 'polygon(' + pts.map((p) => p[0].toFixed(1) + 'px ' + p[1].toFixed(1) + 'px').join(', ') + ')';
+    { const a = ANG * Math.PI / 180, x = C[0] - W / 2, y = C[1] - H / 2, cx = parseFloat(stk.style.left) + W / 2, cy = parseFloat(stk.style.top) + H / 2;
+      $('sp-hint').style.left = Math.max(12, cx + x * Math.cos(a) - y * Math.sin(a) - 40) + 'px'; $('sp-hint').style.top = (cy + x * Math.sin(a) + y * Math.cos(a) + 2) + 'px'; }
+
+    const paint = () => {
+      const back = !!name;
+      $('sp-tapeT').textContent = back ? 'WELCOME BACK!' : 'LET’S GET STARTED!';
+      $('sp-tapeT').style.color = back ? '#FF6FB0' : '#C6FF4D';
+      stk.setAttribute('aria-label', back ? 'Welcome back! Tap to go in.' : 'Get St*ck Done! Let’s get started: peel the title sticker from its bottom-left corner, or tap it to start.');
+      tapBtn.style.display = back ? 'none' : 'block';
+      $('sp-skip').style.display = back ? 'block' : 'none';
+      $('sp-demoFirst').classList.toggle('on', !back); $('sp-demoBack').classList.toggle('on', back);
+    };
+
+    // ---- peel: fold line = perpendicular bisector of corner->finger. Face keeps one side; the flap is the title's mirrored silhouette
+    let curP = null;
+    const setPeel = (P) => {
+      curP = P;
+      if (!P) { faceEl.style.clipPath = 'none'; flapWrap.style.display = 'none'; return; }
+      const dx = C[0] - P[0], dy = C[1] - P[1], d = Math.hypot(dx, dy);
+      if (d < 0.5) { faceEl.style.clipPath = 'none'; flapWrap.style.display = 'none'; return; }
+      const n = [dx / d, dy / d], M = [(C[0] + P[0]) / 2, (C[1] + P[1]) / 2];
+      const side = (p) => (p[0] - M[0]) * n[0] + (p[1] - M[1]) * n[1];
+      const keep = [], cut = [];
+      for (let i = 0; i < outline.length; i++) {
+        const a = outline[i], b = outline[(i + 1) % outline.length], sa = side(a), sb = side(b);
+        if (sa <= 0) keep.push(a); else cut.push(a);
+        if ((sa <= 0) !== (sb <= 0)) { const t = sa / (sa - sb), q = [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; keep.push(q); cut.push(q); }
+      }
+      faceEl.style.clipPath = keep.length > 2 ? poly(keep) : 'polygon(0 0, 0 0, 0 0)';
+      if (cut.length < 3) { flapWrap.style.display = 'none'; return; }
+      flapWrap.style.display = 'block';
+      flap.style.clipPath = poly(cut);
+      const k = 2 * (M[0] * n[0] + M[1] * n[1]);   // reflection across the fold line as a CSS matrix
+      flap.style.transform = 'matrix(' + [1 - 2 * n[0] * n[0], -2 * n[0] * n[1], -2 * n[0] * n[1], 1 - 2 * n[1] * n[1], k * n[0], k * n[1]].map((v) => v.toFixed(4)).join(',') + ')';
+      faceEl.style.opacity = d > DIAG * 1.9 ? 0 : 1;
+    };
+    const animate = (from, to, ms, ease, step, end) => { const t0 = performance.now(); const f = (t) => { if (this.dead) return; const raw = Math.min(1, (t - t0) / ms); step(from.map((v, i) => v + (to[i] - v) * ease(raw))); if (raw < 1) this.raf = requestAnimationFrame(f); else end && end(); }; this.raf = requestAnimationFrame(f); };
+    const out = (u) => 1 - Math.pow(1 - u, 3);
+    const spring = (u) => { const c = 1.70158 * 1.2; return 1 + (c + 1) * Math.pow(u - 1, 3) + c * Math.pow(u - 1, 2); };
+
+    // ---- slap: a hard drop from above the glass, a squash on impact, a settle, a tiny screen shake and one haptic thump
+    const slap = (el, ang, delay, thump) => {
+      if (reduce || !el.animate) { el.style.opacity = 1; return; }
+      el.animate([
+        { transform: 'translateY(-70px) scale(1.55) rotate(' + (ang - 16) + 'deg)', opacity: 0 },
+        { transform: 'translateY(-30px) scale(1.3) rotate(' + (ang - 9) + 'deg)', opacity: 1, offset: 0.35 },
+        { transform: 'translateY(0) scale(0.93, 0.9) rotate(' + ang + 'deg)', offset: 0.62 },
+        { transform: 'scale(1.03, 1.04) rotate(' + ang + 'deg)', offset: 0.8 },
+        { transform: 'scale(1) rotate(' + ang + 'deg)', opacity: 1 }], { duration: 380, delay, easing: 'cubic-bezier(.55,0,.9,.45)', fill: 'backwards' });
+      later(() => { buzz(thump); if (root.animate) root.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(2px,5px)' }, { transform: 'translate(-2px,-2px)' }, { transform: 'none' }], { duration: 150 }); puff(el); }, delay + 235);
+    };
+    const puff = (el) => {   // little impact ticks around the edges
+      const r = el.getBoundingClientRect(), rr = root.getBoundingClientRect(), k = rr.width / 390;
+      const cx = (r.left + r.width / 2 - rr.left) / k, cy = (r.top + r.height / 2 - rr.top) / k, w = r.width / k / 2 + 6, h = r.height / k / 2 + 2;
+      [[-1, -0.6, 205], [-1, 0.5, 160], [1, -0.5, -25], [1, 0.6, 20], [-0.4, 1, 120], [0.5, -1, -70]].forEach(([sx, sy, a]) => {
+        const s = document.createElement('span'); s.setAttribute('aria-hidden', 'true');
+        s.style.cssText = 'position:absolute;left:' + (cx + sx * w).toFixed(0) + 'px;top:' + (cy + sy * h).toFixed(0) + 'px;width:16px;height:4px;border-radius:4px;background:#F6EFE1;transform-origin:0 50%;transform:rotate(' + a + 'deg) scaleX(0.2);opacity:0.9;pointer-events:none;z-index:4;transition:transform 0.22s ease-out,opacity 0.25s ease 0.12s';
+        root.appendChild(s); requestAnimationFrame(() => { s.style.transform = 'rotate(' + a + 'deg) translateX(10px) scaleX(1)'; s.style.opacity = 0; }); later(() => s.remove(), 500); });
+    };
+
+    // ---- leaving: peeled title floats away, a little burst, then on through an ordinary link
+    const go = () => {
+      if (gone) return; gone = true; mode = 'gone';
+      root.style.transition = 'opacity 0.2s ease'; root.style.opacity = 0;
+      later(() => { const a = $(name ? 'sp-toToday' : 'sp-toOnboard'); if (a) a.click(); }, 200);
+      later(() => { if (!this.dead) { touched = false; paint(); intro(); } }, 900);   // still here (the canvas)? reset so it can be played again
+    };
+    const leaveOrWait = () => { if (!name || touched || AUTO_GO) go(); else mode = 'waiting'; };
+    const flyAway = () => {
+      hint.style.opacity = 0; buzz(10);   // stays peeled: you're holding it backing-side up as it goes
+      if (reduce) { stk.style.opacity = 0; later(leaveOrWait, 150); return; }
+      stk.style.transition = name ? 'transform 0.6s cubic-bezier(.4,0,.8,.6), opacity 0.4s ease 0.25s' : 'transform 0.45s cubic-bezier(.4,0,.8,.6), opacity 0.3s ease 0.2s';
+      stk.style.transform = 'translate(40px, -620px) rotate(' + (ANG - 22) + 'deg) scale(0.9)'; stk.style.opacity = 0;
+      burst(); later(leaveOrWait, name ? 560 : 480);
+    };
+    const finish = (P) => {
+      mode = 'releasing'; buzz([6, 30, 10]);
+      const dx = P[0] - C[0], dy = P[1] - C[1], d = Math.hypot(dx, dy) || 1;
+      animate(P, [C[0] + dx / d * FULL, C[1] + dy / d * FULL], reduce ? 1 : (name ? 380 : 230), (u) => u * u, setPeel, flyAway);
+    };
+    const autoPeel = (ms) => {
+      if (mode !== 'ready' && mode !== 'intro') return; mode = 'auto'; hint.style.opacity = 0;
+      if (reduce) { flyAway(); return; }
+      const end = [C[0] + DETACH * 0.8, C[1] - DETACH * 0.62];
+      animate(curP || REST, end, ms || 360, out, setPeel, () => finish(end));
+    };
+    const burst = () => {
+      const cols = ['#FF6FB0', '#C6FF4D', '#6EC8FF', '#FFD23F', '#A98BFF'], x = 195, y = 240;
+      for (let i = 0; i < 12; i++) { const s = document.createElement('span'), a = (i / 12) * Math.PI * 2, r = 110 + Math.random() * 50;
+        s.textContent = i % 3 === 0 ? '✦' : '●'; s.setAttribute('aria-hidden', 'true');
+        s.style.cssText = 'position:absolute;left:' + x + 'px;top:' + y + 'px;color:' + cols[i % 5] + ';font-size:' + (i % 3 === 0 ? 24 : 13) + 'px;z-index:6;pointer-events:none;transition:transform 0.55s cubic-bezier(.2,.9,.3,1), opacity 0.5s ease 0.25s';
+        root.appendChild(s); requestAnimationFrame(() => { s.style.transform = 'translate(' + (Math.cos(a) * r).toFixed(0) + 'px,' + (Math.sin(a) * r).toFixed(0) + 'px)'; s.style.opacity = 0; }); later(() => s.remove(), 900); }
+    };
+
+    // ---- intro (under a second): title slapped down, then St*cky slapped above it, then the tape and the lifted corner
+    const intro = () => {
+      gone = false; mode = 'intro'; root.style.transition = 'none'; root.style.opacity = 1;
+      stk.style.transition = 'none'; stk.style.transform = 'rotate(' + ANG + 'deg)'; stk.style.opacity = 1; hint.style.opacity = 0; setPeel(null); faceEl.style.opacity = 1;
+      tape.style.opacity = 0; tape.style.transform = 'rotate(-3deg) translateY(10px)';
+      slap(stk, ANG, 60, 22); slap(sticky, SANG, 460, 12);
+      later(() => { tape.style.transition = reduce ? 'none' : 'opacity 0.2s ease, transform 0.25s cubic-bezier(.3,1.4,.5,1)'; tape.style.opacity = 1; tape.style.transform = 'rotate(-3deg)'; }, reduce ? 0 : 780);
+      if (name) later(() => autoPeel(820), reduce ? 1100 : 1700);
+      else later(() => { mode = 'ready'; animate([C[0], C[1]], REST, reduce ? 1 : 260, spring, setPeel); hint.style.opacity = 1; }, reduce ? 0 : 900);
+    };
+
+    // ---- pointer: board coords -> the title's own (unrotated) frame
+    const toStk = (e) => {
+      const rr = root.getBoundingClientRect(), k = rr.width / 390, bx = (e.clientX - rr.left) / k, by = (e.clientY - rr.top) / k;
+      const cx = parseFloat(stk.style.left) + W / 2, cy = parseFloat(stk.style.top) + H / 2, a = -ANG * Math.PI / 180, x = bx - cx, y = by - cy;
+      return [x * Math.cos(a) - y * Math.sin(a) + W / 2, x * Math.sin(a) + y * Math.cos(a) + H / 2];
+    };
+    let down = null;
+    stk.addEventListener('pointerdown', (e) => {
+      if (name) { if (mode === 'waiting') go(); else autoPeel(260); return; }
+      if (mode !== 'ready') return;
+      e.preventDefault(); try { stk.setPointerCapture(e.pointerId); } catch (x) {}
+      const L = toStk(e); down = { t: performance.now(), L, moved: false, ticks: 0 };
+      if (Math.hypot(C[0] - L[0], C[1] - L[1]) < 80) { mode = 'peeling'; down.grab = [C[0] - L[0], C[1] - L[1]]; hint.style.opacity = 0; buzz(4); }
+    });
+    stk.addEventListener('pointermove', (e) => {
+      if (!down || mode !== 'peeling') return; const L = toStk(e);
+      if (Math.hypot(L[0] - down.L[0], L[1] - down.L[1]) > 6) down.moved = true;
+      const P = [L[0] + down.grab[0], L[1] + down.grab[1]], d = Math.hypot(C[0] - P[0], C[1] - P[1]);
+      const kk = Math.floor(d / 30); if (kk > down.ticks) { down.ticks = kk; buzz(4); }
+      if (d >= DETACH) { down = null; finish(P); } else setPeel(P);
+    });
+    const up = () => {
+      if (!down) return; const quick = !down.moved && performance.now() - down.t < 300, wasPeel = mode === 'peeling'; down = null;
+      if (quick) { mode = 'ready'; autoPeel(); return; }
+      if (wasPeel) { mode = 'ready'; animate(curP || REST, REST, reduce ? 1 : 220, spring, setPeel); buzz(5); hint.style.opacity = 1; $('sp-hintT').textContent = 'keep going, it’ll lift off'; }
+    };
+    stk.addEventListener('pointerup', up); stk.addEventListener('pointercancel', up);
+    stk.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (mode === 'waiting') go(); else autoPeel(); } });
+    tapBtn.addEventListener('click', () => autoPeel());
+    tape.addEventListener('click', () => { if (mode === 'waiting') go(); else autoPeel(name ? 260 : undefined); });   // the message sticker starts things too
+    $('sp-skip').addEventListener('click', () => go());
+    root.addEventListener('pointerdown', () => { touched = true; }, true);
+    root.addEventListener('pointerdown', (e) => { if (name && mode !== 'gone' && !e.target.closest('.sp-demo') && !stk.contains(e.target)) go(); });
+
+    // ---- demo switches (canvas only)
+    const demo = (back) => { this.tm.forEach(clearTimeout); this.tm = []; cancelAnimationFrame(this.raf);
+      if (back) { if (!who()) try { localStorage.setItem('gsb.profile', JSON.stringify({ bookName: 'Dex’s Sticker Book', demo: true })); } catch (e) {} name = who() || 'Dex'; }
+      else { try { const pf = JSON.parse(ls('gsb.profile', 'null')); if (pf && pf.demo) localStorage.removeItem('gsb.profile'); } catch (e) {} name = null; }
+      paint(); $('sp-hintT').textContent = 'peel me from the corner'; intro(); };
+    ['sp-demoFirst', 'sp-demoBack'].forEach((id, i) => { $(id).addEventListener('pointerdown', (e) => e.stopPropagation()); $(id).addEventListener('click', (e) => { e.stopPropagation(); demo(i === 1); }); });
+    paint(); intro();
+    return true;
+  }
+}
+
+</script>
+<script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
+<script src="morphdom.js?v=1793350774"></script>
+<script src="dc.js?v=1793350774"></script>
+</body></html>

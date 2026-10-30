@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Get St*ck Done!</title>
+<script>/* size the phone frame before anything paints, so nothing (e.g. the nav bar) shows in the wrong place while the page loads */
+(function () { var W = 390, H = 844 + 84, w = innerWidth, h = innerHeight, k = Math.min(w / W, h / H), r = document.documentElement.style;
+  r.setProperty('--k', k); r.setProperty('--l', Math.max(0, (w - W * k) / 2) + 'px'); r.setProperty('--t', Math.max(0, (h - H * k) / 2) + 'px'); })();</script>
+<script>/* merged duplicate recipes: move saved plans, tonight's pick and the cooked log over to the recipe we kept */
+(function () { var M = {"din-tai-fung-egg-fried-rice": "chilli-crisp-fried-rice"}; try { ['gsd.plan', 'gsd.tonight', 'gsd.progress', 'gsd.planAdd', 'gsd.useUp'].forEach(function (k) { var v = localStorage.getItem(k); if (!v) return; var n = v;
+  for (var o in M) n = n.split(o).join(M[o]); if (n !== v) localStorage.setItem(k, n); }); } catch (e) {} })();</script>
+<script type="speculationrules">{"prefetch": [{"where": {"selector_matches": "a[href]"}, "eagerness": "moderate"}]}</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&amp;family=Kalam:wght@400;700&amp;family=Atkinson+Hyperlegible:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F3FB0}a:hover{color:#142C82}
+</style>
+
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#0B1022;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+@view-transition{navigation:auto}
+::view-transition-old(root),::view-transition-new(root){animation-duration:0.14s}
+#dc-frame{position:absolute;left:var(--l,0);top:var(--t,0);width:390px;height:928px;transform:scale(var(--k,1));transform-origin:0 0;background:#172038}
+#dc-stage{position:relative;overflow:hidden;width:390px;height:844px}
+.snav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;height:58px;text-decoration:none;color:#F6EFE1;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;opacity:0.8;border-radius:14px;-webkit-tap-highlight-color:transparent}.snav-s{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#172038;box-shadow:0 0 0 2.5px #FFFFFF,0 0 0 4.5px #172038;transform:rotate(var(--r));transition:transform .18s cubic-bezier(.2,1.4,.4,1)}.snav:hover .snav-s,.snav:focus-visible .snav-s,.snav:active .snav-s{transform:rotate(var(--r)) scale(1.2)}.snav,.snav:hover,.snav:visited{color:#F6EFE1}.snav.on,.snav.on:hover{opacity:1;color:#C6FF4D}.snav.on .snav-s{box-shadow:0 0 0 2.5px #FFFFFF,0 0 0 4.5px #172038,2px 4px 0 4.5px rgba(0,0,0,0.45)}.snav:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}@media (prefers-reduced-motion: reduce){.snav-s{transition:none}}.dcbar{position:absolute;left:12px;right:12px;bottom:10px;height:64px;border-radius:22px;background:#0E1428;border:2px solid rgba(246,239,225,0.15);display:flex;align-items:center;gap:4px;padding:0 6px;box-sizing:border-box}.dcnav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;border-radius:16px;height:52px;text-decoration:none;border:none;background:transparent;cursor:pointer}.dcnav.on{background:#C6FF4D;color:#172038}.dcnav:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}.dcback{flex:1;height:48px;border-radius:16px;border:2px solid rgba(246,239,225,0.4);background:transparent;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:17px;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;cursor:pointer}.dcback.home{flex:0 0 auto;padding:0 18px;background:#C6FF4D;border-color:#C6FF4D;color:#172038}</style>
+</head><body data-extra="84">
+<div id="dc-frame"><div id="dc-stage"></div><div style="position:relative;height:84px"><div class="dcbar" role="navigation" aria-label="Back"><button type="button" class="dcback" onclick="if (history.length > 1) history.back(); else location.href = 'Today.html?v=1793350073'">‹ BACK</button><a class="dcback home" href="Today.html?v=1793350073" aria-label="Home"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M20.0 12.0 L22.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 17.6 L19.4 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 20.0 L12.0 22.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 17.6 L4.7 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M4.0 12.0 L1.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 6.4 L4.7 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 4.0 L12.0 1.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 6.4 L19.4 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg><span>HOME</span></a></div></div></div>
+<script type="text/x-dc-template" id="dc-tpl">
+<div style="width: 1440px; height: 1000px; box-sizing: border-box; padding: 52px 64px; background-color: #F6EFE1; background-image: linear-gradient(rgba(139,94,52,0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(139,94,52,0.10) 1px, transparent 1px); background-size: 24px 24px; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #1F3FB0; display: flex; flex-direction: column; gap: 28px">
+
+  <div style="display: flex; align-items: baseline; justify-content: space-between">
+    <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-size: 64px; font-weight: 800; line-height: 0.9; text-transform: uppercase; color: #172038; text-shadow: 4px 3px 0 #FF6FB0">Turning up the pink</h2>
+    <span style="font-family: 'Kalam', cursive; font-size: 22px">lime on navy, four strengths of pink outline</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px">
+    <sc-for list="{{strengths}}" as="s" hint-placeholder-count="4">
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; align-items: flex-end; gap: 18px">
+          <div aria-hidden="true" style="position: relative; width: 200px; height: 200px; border-radius: 46px; background: #172038; overflow: hidden; box-shadow: 0 6px 12px -6px rgba(40,30,20,0.4)">
+            <div style="position: absolute; left: 28px; top: 28px; width: 144px; height: 144px; transform: rotate(-10deg)">
+              <div style="position: absolute; inset: 0; border-radius: 999px; background: #FFFFFF; clip-path: polygon(0 0, 100% 0, 100% 60%, 60% 100%, 0 100%)"><div style="position: absolute; inset: 8px; border-radius: 999px; background: #C6FF4D; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-size: 74px; font-weight: 800; color: #172038; text-shadow: {{s.big}}">IT</div></div>
+              <div style="position: absolute; inset: 0; filter: drop-shadow(-3px -3px 4px rgba(0,0,0,0.4))"><div style="position: absolute; inset: 0; clip-path: polygon(60% 60%, 100% 60%, 60% 100%); background: linear-gradient(315deg, #FFFFFF 10%, #E3DCEA 90%)"></div></div>
+            </div>
+          </div>
+          <div aria-hidden="true" style="width: 64px; height: 64px; border-radius: 15px; overflow: hidden"><div style="width: 200px; height: 200px; transform: scale(0.32); transform-origin: top left">
+            <div style="position: relative; width: 200px; height: 200px; background: #172038">
+              <div style="position: absolute; left: 28px; top: 28px; width: 144px; height: 144px; transform: rotate(-10deg)">
+                <div style="position: absolute; inset: 0; border-radius: 999px; background: #FFFFFF; clip-path: polygon(0 0, 100% 0, 100% 60%, 60% 100%, 0 100%)"><div style="position: absolute; inset: 8px; border-radius: 999px; background: #C6FF4D; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-size: 74px; font-weight: 800; color: #172038; text-shadow: {{s.big}}">IT</div></div>
+                <div style="position: absolute; inset: 0; clip-path: polygon(60% 60%, 100% 60%, 60% 100%); background: linear-gradient(315deg, #FFFFFF 10%, #E3DCEA 90%)"></div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-size: 24px; font-weight: 800; text-transform: uppercase">{{s.name}}</span>
+        <span style="font-size: 14px; line-height: 1.4">{{s.note}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: relative; background: #D8BC90; border-radius: 8px; padding: 26px 28px; box-shadow: 0 6px 12px -6px rgba(90,60,30,0.45); display: flex; flex-direction: column; gap: 18px">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; color: #3E2A14">
+      <span style="font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-size: 36px; font-weight: 800">MY ICON STICKERS · 1 OF 7</span>
+      <span style="font-family: 'Kalam', cursive; font-size: 19px; font-weight: 700">your first sticker is the app itself</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 16px">
+      <sc-for list="{{collection}}" as="c" hint-placeholder-count="7">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+          <div style="position: relative; width: 120px; height: 120px">
+            <div aria-hidden="true" style="position: relative; width: 120px; height: 120px; border-radius: 28px; background: {{c.bg}}; overflow: hidden; filter: {{c.filter}}; opacity: {{c.opacity}}">
+              <div style="position: absolute; left: 17px; top: 17px; width: 86px; height: 86px; transform: rotate(-10deg)">
+                <div style="position: absolute; inset: 0; border-radius: 999px; background: #FFFFFF; clip-path: polygon(0 0, 100% 0, 100% 60%, 60% 100%, 0 100%)"><div style="position: absolute; inset: 5px; border-radius: 999px; background: {{c.sticker}}; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-size: 44px; font-weight: 800; color: {{c.ink}}; text-shadow: {{c.shadow}}">IT</div></div>
+                <div style="position: absolute; inset: 0; clip-path: polygon(60% 60%, 100% 60%, 60% 100%); background: linear-gradient(315deg, #FFFFFF 10%, #E3DCEA 90%)"></div>
+              </div>
+            </div>
+            <sc-if value="{{c.locked}}" hint-placeholder-val="{{ true }}">
+              <span aria-hidden="true" style="position: absolute; right: -6px; top: -6px; width: 34px; height: 34px; border-radius: 999px; background: #3E2A14; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F6EFE1" stroke-width="2.6" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg></span>
+            </sc-if>
+          </div>
+          <span style="font-size: 14px; font-weight: 700; color: #3E2A14">{{c.name}}</span>
+          <span style="font-family: 'Kalam', cursive; font-size: 15px; font-weight: 700; line-height: 1.15; color: #3E2A14">{{c.how}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</script>
+<script type="text/x-dc-logic" id="dc-logic">
+class Component extends DCLogic {
+  renderVals() {
+    const p = '#FF6FB0';
+    const keyline = (w, o) => [
+      w + 'px 0 0 ' + p, '-' + w + 'px 0 0 ' + p, '0 ' + w + 'px 0 ' + p, '0 -' + w + 'px 0 ' + p,
+      w + 'px ' + w + 'px 0 ' + p, '-' + w + 'px -' + w + 'px 0 ' + p, w + 'px -' + w + 'px 0 ' + p, '-' + w + 'px ' + w + 'px 0 ' + p,
+      o + 'px ' + o + 'px 0 ' + p
+    ].join(', ');
+    const small = keyline(1.5, 4);
+    const locked = { filter: 'grayscale(0.85)', opacity: 0.5, locked: true };
+    const open = { filter: 'none', opacity: 1, locked: false };
+    return {
+      strengths: [
+        { name: '1 · Current', note: 'A small offset. Lovely up close, but it disappears at icon size.', big: '3px 3px 0 ' + p },
+        { name: '2 · Bigger offset', note: 'A deeper drop shadow. More pop, still reads as a shadow rather than an outline.', big: '7px 6px 0 ' + p },
+        { name: '3 · Keyline + offset', note: 'A thin pink outline all round plus the offset. Clear at every size. My pick.', big: keyline(2.5, 7) },
+        { name: '4 · Chunky keyline', note: 'A thick outline, very sticker-like. Fun, but the letters start to crowd.', big: keyline(4, 9) }
+      ],
+      collection: [
+        Object.assign({ name: 'Lime on navy', how: 'unlocked: welcome!', bg: '#172038', sticker: '#C6FF4D', ink: '#172038', shadow: small }, open),
+        Object.assign({ name: 'Navy on lime', how: 'finish your first week', bg: '#C6FF4D', sticker: '#172038', ink: '#C6FF4D', shadow: small }, locked),
+        Object.assign({ name: 'Pink on navy', how: '10 gym sessions', bg: '#172038', sticker: '#FF6FB0', ink: '#172038', shadow: 'none' }, locked),
+        Object.assign({ name: 'Navy on paper', how: 'cook 10 meals', bg: '#F6EFE1', sticker: '#172038', ink: '#C6FF4D', shadow: small }, locked),
+        Object.assign({ name: 'Pink on lime', how: 'scratch 4 tickets', bg: '#C6FF4D', sticker: '#FF6FB0', ink: '#172038', shadow: 'none' }, locked),
+        Object.assign({ name: 'Lime on pink', how: 'come back after a break', bg: '#FF6FB0', sticker: '#C6FF4D', ink: '#172038', shadow: 'none' }, locked),
+        Object.assign({ name: 'Sticky yellow', how: 'finish 3 books', bg: '#172038', sticker: '#FFE45C', ink: '#172038', shadow: small }, locked)
+      ]
+    };
+  }
+}
+</script>
+<script type="application/json" id="dc-props">{"$preview":{"width":1440,"height":1000}}</script>
+<script src="morphdom.js?v=1793350073"></script>
+<script src="dc.js?v=1793350073"></script>
+</body></html>

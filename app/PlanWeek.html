@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<script>window.GSD_BETA = true;</script>
+<style>.sp-demo,#gp-demo,#cv-demoLater,#cv-demoReset{display:none !important}</style>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#172038"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="St*ck Done">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" type="image/png" href="icons/favicon-64.png">
+<script>if ('serviceWorker' in navigator) addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });</script>
+<title>Get St*ck Done!</title>
+<script>/* size the phone frame before anything paints, so nothing (e.g. the nav bar) shows in the wrong place while the page loads */
+(function () { var W = 390, H = 844 + 84, w = innerWidth, h = innerHeight, k = Math.min(w / W, h / H), r = document.documentElement.style;
+  r.setProperty('--k', k); r.setProperty('--l', Math.max(0, (w - W * k) / 2) + 'px'); r.setProperty('--t', Math.max(0, (h - H * k) / 2) + 'px'); })();</script>
+<script>/* merged duplicate recipes: move saved plans, tonight's pick and the cooked log over to the recipe we kept */
+(function () { var M = {"din-tai-fung-egg-fried-rice": "chilli-crisp-fried-rice"}; try { ['gsb.plan', 'gsb.tonight', 'gsb.progress', 'gsb.planAdd', 'gsb.useUp'].forEach(function (k) { var v = localStorage.getItem(k); if (!v) return; var n = v;
+  for (var o in M) n = n.split(o).join(M[o]); if (n !== v) localStorage.setItem(k, n); }); } catch (e) {} })();</script>
+<script type="speculationrules">{"prefetch": [{"where": {"selector_matches": "a[href]"}, "eagerness": "moderate"}]}</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&amp;family=Kalam:wght@400;700&amp;family=Atkinson+Hyperlegible:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none;padding:0}
+button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
+.title-die{filter:url(#tdie) drop-shadow(0 6px 6px rgba(60,40,20,0.3))}
+.bri{font-family:'Bricolage Grotesque',sans-serif;font-stretch:75%;font-weight:800;line-height:0.9}
+.kal{font-family:'Kalam',cursive;font-weight:700}
+.press{transition:transform 0.09s ease-out}
+.press:active{transform:scale(0.92)}
+.dot{width:34px;height:34px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#172038;border:3px solid #FFFFFF;box-shadow:0 0 0 2px #172038}
+.chip{padding:5px 10px;border-radius:999px;background:#C6FF4D;border:2px solid #172038;font-weight:700;font-size:13px;color:#172038;white-space:nowrap}
+.box{width:24px;height:24px;flex-shrink:0;border:2.5px solid #172038;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#172038;font-weight:900}
+.tom{position:relative;width:60px;height:54px;border-radius:48% 48% 46% 46%;border:3px solid #FFFFFF;box-shadow:0 0 0 2px #2A1A10;display:flex;align-items:center;justify-content:center}
+@keyframes ring{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.ringing{animation:ring 0.4s ease-in-out infinite}
+@keyframes peelclip{0%{clip-path:inset(-20px -20px -20px -20px)}100%{clip-path:inset(-20px 100% -20px -20px)}}
+@keyframes peelflap{0%{left:146px;opacity:0;transform:scaleX(0.4)}12%{opacity:1}85%{opacity:1}100%{left:-14px;opacity:0;transform:scaleX(1.1)}}
+.face{display:block}
+.flap{position:absolute;top:-3px;width:22px;height:56px;border-radius:14px 4px 4px 14px;background:linear-gradient(90deg,#FFFFFF,#F1ECE3 55%,#CFC6B6);border:2px solid #111;box-shadow:-5px 4px 6px rgba(0,0,0,0.28);display:none;pointer-events:none}
+.peeling .face{animation:peelclip 0.6s cubic-bezier(.4,0,.55,1) forwards}
+.peeling .flap{display:block;animation:peelflap 0.6s cubic-bezier(.4,0,.55,1) forwards}
+.peeling{pointer-events:none}
+@keyframes nextpop{0%{transform:scale(1.7) rotate(-34deg);opacity:0}65%{transform:scale(0.94) rotate(-8deg);opacity:1}100%{transform:scale(1) rotate(-12deg);opacity:1}}
+.nextpop{animation:nextpop 0.34s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes bob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.02)}}
+.nextpop svg{animation:bob 2.2s ease-in-out 0.4s infinite}
+.peeling{transform:rotate(-12deg)}
+
+@keyframes slapin{0%{transform:scale(1.7) rotate(-22deg);opacity:0}60%{transform:scale(0.92) rotate(-4deg);opacity:1}100%{transform:scale(1) rotate(-6deg);opacity:1}}
+.slap{animation:slapin 0.32s cubic-bezier(.3,1.5,.5,1) both}
+.pic svg{height:100%;max-height:100%;width:auto;max-width:100%}
+.prepmid>*{flex-shrink:0}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style data-lm>.lm{font-family:"DM Mono",ui-monospace,monospace !important;font-weight:500;text-transform:uppercase;color:#FFFFFF !important;letter-spacing:3px;background-image:linear-gradient(rgba(255,255,255,0.22),rgba(255,255,255,0) 45%,rgba(0,0,0,0.12)) !important;text-shadow:0 -1px 0 rgba(0,0,0,0.55),0 1px 0 rgba(255,255,255,0.4) !important;box-shadow:inset 0 2px 0 rgba(255,255,255,0.28),inset 0 -3px 0 rgba(0,0,0,0.22),0 3px 5px rgba(60,40,20,0.35) !important;border-radius:3px}[style*="DM Mono"][style*="background: #"]{background-image:linear-gradient(rgba(255,255,255,0.22),rgba(255,255,255,0) 45%,rgba(0,0,0,0.12));text-shadow:0 -1px 0 rgba(0,0,0,0.55),0 1px 0 rgba(255,255,255,0.4) !important;box-shadow:inset 0 2px 0 rgba(255,255,255,0.28),inset 0 -3px 0 rgba(0,0,0,0.22),0 3px 5px rgba(60,40,20,0.35) !important;border-radius:3px}</style>
+<style>
+.row{display:flex;align-items:center;gap:8px;height:68px}
+.day{width:46px;flex-shrink:0;padding:6px 0;text-align:center;border-radius:10px;background:#172038;color:#C6FF4D;font-size:17px}
+.slot{flex:1;min-width:0;height:64px;border-radius:14px;display:flex;align-items:center;gap:8px;padding:0 8px 0 4px;box-sizing:border-box}
+.mini{width:26px;height:26px;border-radius:999px;border:2px solid #172038;background:#FFFFFF;color:#172038;font-weight:900;font-size:15px;display:flex;align-items:center;justify-content:center}
+.tab{flex:1;height:40px;border-radius:12px;border:2.5px solid #172038;font-size:17px;color:#172038}
+.item{width:100%;display:flex;align-items:center;gap:10px;padding:5px 0;border:none;border-bottom:1.5px solid #E9D9C0;background:transparent;text-align:left}
+.aisle{margin:12px 0 2px;font-size:14px;letter-spacing:1px;color:#FF6FB0}
+@keyframes sheetup{from{transform:translateY(100%)}to{transform:none}}
+.sheet{animation:sheetup 0.22s cubic-bezier(.2,.9,.3,1) both}
+@keyframes toastin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.toast{animation:toastin 0.25s ease-out both}
+.cookgo{background:#172038 !important;color:#C6FF4D !important;text-decoration:none;padding:0 8px !important}
+.cooksoon{border-style:dashed !important;opacity:0.5;font-size:11px !important;white-space:nowrap}
+.pill{flex-shrink:0;height:24px;padding:0 5px;border-radius:999px;border:2px solid #172038;background:#FFFFFF;color:#172038;font-size:13px;display:flex;align-items:center;gap:3px}
+.lbadge{position:absolute;right:-12px;top:-14px;font-size:13px;line-height:1;padding:2px 3px;background:#FFFFFF;border:2px solid #172038;border-radius:8px;transform:rotate(10deg)}
+.dchip{width:44px;height:40px;border-radius:12px;border:2.5px solid #172038;font-size:15px;color:#172038;display:flex;align-items:center;justify-content:center}
+.qrow{display:flex;flex-direction:column;gap:6px}
+.qlabel{font-size:16px;font-weight:700}
+.qlabel b{font-weight:400;opacity:0.7}
+.kt-layer{position:fixed;inset:0;z-index:10000;pointer-events:none}
+.kt-spot{position:fixed;border:3px dashed #C6FF4D;box-shadow:0 0 0 4000px rgba(11,16,34,0.72);pointer-events:none;transition:left .28s cubic-bezier(.2,.9,.3,1),top .28s cubic-bezier(.2,.9,.3,1),width .28s cubic-bezier(.2,.9,.3,1),height .28s cubic-bezier(.2,.9,.3,1)}
+.kt-card{position:fixed;width:354px;transform-origin:0 0;background:#FBF4E6;padding:20px 16px 12px;box-sizing:border-box;box-shadow:0 14px 22px rgba(0,0,0,0.45);display:flex;flex-direction:column;gap:8px;pointer-events:auto;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;color:#172038}
+.kt-tape{position:absolute;left:50%;top:-12px;width:92px;height:24px;margin-left:-46px;background-color:rgba(198,255,77,0.85);background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.35) 0 5px,transparent 5px 10px);transform:rotate(-3deg)}
+.kt-title{align-self:flex-start;font-size:25px;color:#172038;text-shadow:3px 3px 0 #FF6FB0;transform:rotate(-2deg);transform-origin:left;white-space:nowrap}
+.kt-text{font-size:16px;font-weight:700;line-height:1.3}
+.kt-foot{display:flex;align-items:center;gap:10px;margin-top:2px}
+.kt-dots{display:flex;gap:5px;margin-right:auto}
+.kt-dots span{width:8px;height:8px;border-radius:8px;border:2px solid #172038}
+.kt-dots span.done{background:#172038}
+.kt-dots span.on{background:#FF6FB0;width:20px}
+.kt-skip{border:none;background:transparent;color:#172038;font-family:Kalam,cursive;font-weight:700;font-size:15px;text-decoration:underline;padding:8px 4px;cursor:pointer}
+.kt-btn{height:44px;padding:0 18px;border-radius:14px;border:3px solid #172038;background:#C6FF4D;color:#172038;font-size:18px;box-shadow:3px 3px 0 #172038;cursor:pointer}
+.kt-btn:focus-visible,.kt-skip:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}
+.kt-dis{display:flex;flex-direction:column;gap:6px;margin:2px -16px 0;padding:8px 16px 6px;background:#FFFFFF;border-top:2px dashed #E9D9C0;border-bottom:2px dashed #E9D9C0}
+.kt-disH{font-size:12px;letter-spacing:1px;color:#FF6FB0}
+.kt-disQ{font-size:16px;line-height:1.2;color:#172038;margin-bottom:2px}
+.kt-stripW{position:relative}
+.kt-sc{position:absolute;top:50%;margin-top:-20px;width:40px;height:40px;border-radius:40px;border:2.5px solid #172038;background:#FFD23F;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:26px;line-height:1;display:none;align-items:center;justify-content:center;padding:0 0 3px;cursor:pointer;box-shadow:2px 3px 0 #172038;z-index:2}
+.kt-sc.r{right:-8px;animation:ktnudge 1.4s ease-in-out infinite}.kt-sc.l{left:-8px}
+@keyframes ktnudge{0%,100%{translate:0 0}50%{translate:4px 0}}
+.kt-rows{display:none;flex-direction:column;gap:6px;margin:0 0 2px}
+.kt-row{display:flex;align-items:flex-start;gap:8px;font-size:14px;line-height:1.2}
+.kt-row b{flex-shrink:0;width:104px;padding:3px 6px;border-radius:7px;border:2px solid #172038;font-size:12px;letter-spacing:0.3px;text-align:center}
+.kt-tap{position:fixed;z-index:3;display:none;flex-direction:column;align-items:center;width:140px;transform-origin:0 0;pointer-events:none}
+.kt-tapT{font-size:22px;color:#172038;background:#FFFFFF;padding:2px 10px;border:2.5px solid #172038;border-radius:10px;transform:rotate(-4deg);box-shadow:2px 3px 0 #FF6FB0;white-space:nowrap;order:2}
+.kt-tapA{order:1;transform:rotate(200deg)}
+.kt-tap:not(.up) .kt-tapT{order:1}.kt-tap:not(.up) .kt-tapA{order:2;transform:rotate(20deg)}
+.kt-tap{animation:kttap 1.2s ease-in-out infinite}
+@keyframes kttap{0%,100%{translate:0 0}50%{translate:0 -5px}}
+.kt-strip{display:flex;gap:6px;overflow-x:auto;padding:6px 24px 4px 4px;margin:0 -4px;-webkit-mask-image:linear-gradient(90deg,#000 82%,transparent);mask-image:linear-gradient(90deg,#000 82%,transparent);touch-action:pan-x;scrollbar-width:none}
+.kt-strip::-webkit-scrollbar{display:none}
+.kt-food{position:relative;flex-shrink:0;width:62px;height:72px;border-radius:14px;border:2.5px solid #172038;background:#FBF4E6;padding:4px 2px 3px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;cursor:pointer;color:#172038}
+.kt-food img{width:42px;height:42px;object-fit:contain}
+.kt-food span{font-size:11px;font-weight:700;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:56px}
+.kt-food i{display:none;position:absolute;right:-6px;top:-6px;width:20px;height:20px;border-radius:20px;border:2px solid #172038;background:#FFFFFF;font-style:normal;font-size:13px;line-height:16px;font-weight:900}
+.kt-food.on{background:#FF6FB0;transform:rotate(-3deg);box-shadow:2px 3px 0 #172038}
+.kt-food.on img{opacity:0.55;filter:grayscale(0.5)}
+.kt-food.on i{display:block}
+.kt-add{display:flex;gap:6px;margin:0}
+.kt-in{flex:1;min-width:0;height:40px;border-radius:12px;border:2.5px solid #172038;background:#FBF4E6;padding:0 10px;font-size:16px;font-family:inherit;color:#172038;outline:none;-webkit-user-select:text;user-select:text}
+.kt-in:focus{border-color:#6EC8FF}
+.kt-addB{height:40px;padding:0 12px;border-radius:12px;border:2.5px solid #172038;background:#FFD23F;color:#172038;font-size:15px;cursor:pointer}
+.kt-typed{display:flex;flex-wrap:wrap;gap:6px}
+.kt-chip{height:28px;padding:0 10px;border-radius:999px;border:2px solid #172038;background:#FF6FB0;color:#172038;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer}
+.kt-food:focus-visible,.kt-chip:focus-visible,.kt-addB:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}
+@media (prefers-reduced-motion: reduce){.kt-spot{transition:none}.kt-tap,.kt-sc.r{animation:none}}
+</style>
+
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#0B1022;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+@view-transition{navigation:auto}
+::view-transition-old(root),::view-transition-new(root){animation-duration:0.14s}
+#dc-frame{position:absolute;left:var(--l,0);top:var(--t,0);width:390px;height:928px;transform:scale(var(--k,1));transform-origin:0 0;background:#172038}
+#dc-stage{position:relative;overflow:hidden;width:390px;height:844px}
+.snav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;height:58px;text-decoration:none;color:#F6EFE1;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;opacity:0.8;border-radius:14px;-webkit-tap-highlight-color:transparent}.snav-s{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#172038;box-shadow:0 0 0 2.5px #FFFFFF,0 0 0 4.5px #172038;transform:rotate(var(--r));transition:transform .18s cubic-bezier(.2,1.4,.4,1)}.snav:hover .snav-s,.snav:focus-visible .snav-s,.snav:active .snav-s{transform:rotate(var(--r)) scale(1.2)}.snav,.snav:hover,.snav:visited{color:#F6EFE1}.snav.on,.snav.on:hover{opacity:1;color:#C6FF4D}.snav.on .snav-s{box-shadow:0 0 0 2.5px #FFFFFF,0 0 0 4.5px #172038,2px 4px 0 4.5px rgba(0,0,0,0.45)}.snav:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}@media (prefers-reduced-motion: reduce){.snav-s{transition:none}}.dcbar{position:absolute;left:12px;right:12px;bottom:10px;height:64px;border-radius:22px;background:#0E1428;border:2px solid rgba(246,239,225,0.15);display:flex;align-items:center;gap:4px;padding:0 6px;box-sizing:border-box}.dcnav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;border-radius:16px;height:52px;text-decoration:none;border:none;background:transparent;cursor:pointer}.dcnav.on{background:#C6FF4D;color:#172038}.dcnav:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}.dcback{flex:1;height:48px;border-radius:16px;border:2px solid rgba(246,239,225,0.4);background:transparent;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:17px;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;cursor:pointer}.dcback.home{flex:0 0 auto;padding:0 18px;background:#C6FF4D;border-color:#C6FF4D;color:#172038}</style>
+</head><body data-extra="84">
+<div id="dc-frame"><div id="dc-stage"></div><div style="position:relative;height:84px"><nav class="dcbar" aria-label="Main"><a href="Today.html?v=1793350774" class="snav" aria-label="Today"><span class="snav-s" style="background:#FF6FB0;--r:-6deg"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M20.0 12.0 L22.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 17.6 L19.4 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 20.0 L12.0 22.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 17.6 L4.7 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M4.0 12.0 L1.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 6.4 L4.7 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 4.0 L12.0 1.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 6.4 L19.4 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg></span><span>TODAY</span></a><a href="GymHub.html?v=1793350774" class="snav" aria-label="Gym"><span class="snav-s" style="background:#C6FF4D;--r:5deg"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12 H21 M6 8 V16 M18 8 V16 M3 10 V14 M21 10 V14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"></path></svg></span><span>GYM</span></a><a href="PlanWeek.html?v=1793350774" class="snav on" aria-label="Kitchen" aria-current="page"><span class="snav-s" style="background:#FFD23F;--r:-4deg"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 H21 Q20 19 12 19 Q4 19 3 11 Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"></path><path d="M9 7 q-1.5 -2 0 -4 M14 7 q-1.5 -2 0 -4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></span><span>KITCHEN</span></a><a href="StickerAlbum.html?v=1793350774" class="snav" aria-label="Book"><span class="snav-s" style="background:#6EC8FF;--r:6deg"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5 Q8 4 12 6 Q16 4 20 5 V19 Q16 18 12 20 Q8 18 4 19 Z M12 6 V20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"></path></svg></span><span>BOOK</span></a><a href="Profile.html?v=1793350774" class="snav" aria-label="Me"><span class="snav-s" style="background:#A98BFF;--r:-5deg"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="4" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M4 21 Q12 12 20 21" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg></span><span>ME</span></a></nav></div></div>
+<script type="text/x-dc-template" id="dc-tpl">
+<div data-tour-root style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background-color: #FBF4E6; background-image: linear-gradient(rgba(139,94,52,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(139,94,52,0.08) 1px, transparent 1px); background-size: 20px 20px; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #172038">
+<svg aria-hidden="true" width="0" height="0" style="position: absolute; width: 0; height: 0; overflow: hidden"><defs><filter id="tdie" x="-30%" y="-60%" width="160%" height="220%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="5" result="grow"></feMorphology><feGaussianBlur in="grow" stdDeviation="2.5" result="soft"></feGaussianBlur><feComponentTransfer in="soft" result="white-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feMorphology in="white-mask" operator="dilate" radius="3" result="key-grow"></feMorphology><feGaussianBlur in="key-grow" stdDeviation="1" result="key-soft"></feGaussianBlur><feComponentTransfer in="key-soft" result="key-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feFlood flood-color="#111111"></feFlood><feComposite in2="key-mask" operator="in" result="key"></feComposite><feFlood flood-color="#FFFFFF"></feFlood><feComposite in2="white-mask" operator="in" result="white"></feComposite><feMerge><feMergeNode in="key"></feMergeNode><feMergeNode in="white"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs></svg>
+
+<sc-if value="{{isPlan}}" hint-placeholder-val="{{ true }}">
+  <div style="position: absolute; left: 16px; right: 16px; top: 18px; bottom: 16px; display: flex; flex-direction: column; gap: 6px">
+    <span class="title-die bri" style="font-size: 40px; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">PLAN MY WEEK</span>
+    <button type="button" class="press bri" onClick="{{openTour}}" aria-label="How the kitchen works" style="position: absolute; right: 0; top: 4px; width: 32px; height: 32px; border-radius: 32px; border: 2.5px solid #172038; background: #FFFFFF; color: #172038; font-size: 18px; line-height: 1; padding: 0; display: flex; align-items: center; justify-content: center">i</button>
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 2px 0 6px">
+      <span class="kal" style="font-size: 15px; line-height: 1.15">{{planSub}}</span>
+      <button type="button" class="press bri" data-tour="choose" onClick="{{openAuto}}" style="flex-shrink: 0; padding: 8px 12px; border-radius: 14px; border: 3px solid #FFFFFF; background: #FF6FB0; color: #172038; font-size: 17px; box-shadow: 0 0 0 2px #172038, 3px 4px 0 2px #C6FF4D; transform: rotate(2deg); white-space: nowrap">🎲 CHOOSE FOR ME</button>
+    </div>
+    <sc-if value="{{useOn}}" hint-placeholder-val="{{ false }}"><div style="display: flex; align-items: center; gap: 8px; margin: -2px 0 4px; padding: 6px 6px 6px 12px; border-radius: 12px; background: #FFD23F; border: 2.5px solid #172038">
+      <span class="bri" style="font-size: 13px; letter-spacing: 0.5px; flex: 1">{{useText}}</span>
+      <button type="button" class="press" onClick="{{clearUse}}" aria-label="Stop using this up" style="width: 28px; height: 28px; border-radius: 28px; border: 2px solid #172038; background: #FFFFFF; font-size: 15px; color: #172038">×</button></div></sc-if>
+    <sc-if value="{{showToast}}" hint-placeholder-val="{{ false }}"><span class="kal toast" style="position: absolute; left: 50%; margin-left: -150px; width: 300px; bottom: 74px; z-index: 4; text-align: center; padding: 6px 12px; background: #172038; color: #C6FF4D; border-radius: 999px; font-size: 15px">{{toast}}</span></sc-if>
+    <sc-for list="{{days}}" as="d" hint-placeholder-count="7">
+      <div class="row">
+        <span style="position: relative; flex-shrink: 0"><span class="day bri" style="display: block; transform: rotate({{d.rot}})">{{d.label}}</span><sc-if value="{{d.lunchFrom}}" hint-placeholder-val="{{ false }}"><span class="lbadge" role="img" aria-label="{{d.lunchAria}}">🍱</span></sc-if></span>
+        <sc-if value="{{d.filled}}" hint-placeholder-val="{{ true }}">
+          <div class="slot" data-tour="meal" style="background: #FFFFFF; box-shadow: 0 5px 8px -5px rgba(60,40,20,0.45)">
+            <button type="button" class="press" onClick="{{d.pick}}" aria-label="{{d.aria}}" style="flex-shrink: 0; border: none; background: transparent; padding: 0"><img src="{{d.img}}" alt="" width="58" height="47" style="display: block"></button>
+            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+              <button type="button" onClick="{{d.pick}}" tabindex="-1" class="bri" style="border: none; background: transparent; text-align: left; color: #172038; font-size: 16px; line-height: 0.95; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical">{{d.name}}</button>
+              <span style="display: flex; gap: 4px; align-items: center">
+                <span style="width: 9px; height: 9px; flex-shrink: 0; border-radius: 9px; background: {{d.moodCol}}; border: 1.5px solid #172038"></span><span style="font-size: 12px; font-weight: 700; white-space: nowrap">{{d.meta}}</span>
+                <button type="button" class="pill press bri" onClick="{{d.cycle}}" aria-label="{{d.servesAria}}">×{{d.serves}}</button>
+                <sc-if value="{{d.kidsShow}}" hint-placeholder-val="{{ false }}"><button type="button" class="pill press bri" onClick="{{d.kidsTap}}" aria-pressed="{{d.kidsOn}}" aria-label="{{d.kidsAria}}" style="background: {{d.kidsBg}}; border-style: {{d.kidsBs}}">🧸</button></sc-if>
+                <button type="button" class="pill press bri" onClick="{{d.lunch}}" aria-pressed="{{d.lunchOn}}" aria-label="{{d.lunchAria2}}" style="background: {{d.lunchBg}}; border-style: {{d.lunchBs}}; opacity: {{d.lunchOp}}">🍱{{d.lunchText}}</button>
+                <sc-if value="{{d.hasCook}}" hint-placeholder-val="{{ false }}"><a class="pill press bri cookgo" href="{{d.cookHref}}" aria-label="{{d.cookAria}}">COOK →</a></sc-if>
+                <sc-if value="{{d.noCook}}" hint-placeholder-val="{{ false }}"><span class="pill kal cooksoon" title="Cooking mode for this one is coming soon" aria-label="Cooking mode coming soon">soon</span></sc-if>
+              </span>
+            </span>
+            <button type="button" class="mini press" onClick="{{d.reroll}}" aria-label="Swap for another meal like this" style="flex-shrink: 0; background: #C6FF4D; font-size: 16px">↻</button>
+            <button type="button" class="press" onClick="{{d.clear}}" aria-label="Remove this meal" style="flex-shrink: 0; border: none; background: transparent; color: #172038; font-size: 18px; font-weight: 900; padding: 0 2px">×</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{d.empty}}" hint-placeholder-val="{{ false }}">
+          <button type="button" class="slot press kal" onClick="{{d.pick}}" aria-label="{{d.aria}}" style="border: 2.5px dashed #FF6FB0; background: rgba(255,255,255,0.5); color: #172038; font-size: 16px; justify-content: center">+ add a meal</button>
+        </sc-if>
+      </div>
+    </sc-for>
+    <a href="UseItUp.html?v=1793350774" class="press" data-tour="basket" aria-label="What have you got? Pick what’s in your fridge and we’ll find recipes" style="margin-top: 10px; display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 8px; border-radius: 16px; border: 2.5px solid #172038; background: #FFFFFF; box-shadow: 3px 4px 0 #FFD23F; color: #172038; text-decoration: none; transform: rotate(-1deg)">
+      <span aria-hidden="true" style="flex-shrink: 0; width: 46px; height: 46px; border-radius: 12px; background: #FFD23F; border: 2.5px solid #172038; display: flex; align-items: center; justify-content: center"><svg width="30" height="30" viewBox="0 0 32 32"><path d="M10 13 L14 5 M22 13 L18 5" stroke="#172038" stroke-width="2.6" stroke-linecap="round" fill="none"></path><path d="M3 13 H29 L26 27 Q25.6 28.5 24 28.5 H8 Q6.4 28.5 6 27 Z" fill="#FF6FB0" stroke="#172038" stroke-width="2.4" stroke-linejoin="round"></path><path d="M11 17 V24 M16 17 V24 M21 17 V24" stroke="#172038" stroke-width="2.2" stroke-linecap="round"></path></svg></span>
+      <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span class="bri" style="font-size: 18px; letter-spacing: 0.3px">WHAT HAVE YOU GOT?</span><span class="kal" style="font-size: 14px; line-height: 1.1">find recipes for what’s in your fridge</span></span>
+      <span class="bri" aria-hidden="true" style="font-size: 22px">→</span></a>
+    <button type="button" class="press bri" data-tour="shop" onClick="{{toShop}}" style="margin-top: auto; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 23px; box-shadow: 4px 4px 0 #172038">{{shopBtn}}</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{isPlan}}" hint-placeholder-val="{{ true }}"><svg class="hub-deco" width="40" height="42" viewBox="0 0 54 56" aria-hidden="true" style="position: absolute; pointer-events: none; filter: drop-shadow(0 3px 2px rgba(0,0,0,0.3)); left: 268px; top: 8px; transform: rotate(18deg)"><path d="M10 14 Q12 40 40 50 Q50 52 46 44 Q24 36 22 14 Z" fill="#E8392E" stroke="#FFFFFF" stroke-width="6" paint-order="stroke" stroke-linejoin="round"></path><path d="M10 14 Q12 40 40 50 Q50 52 46 44 Q24 36 22 14 Z" fill="none" stroke="#172038" stroke-width="2"></path><path d="M14 14 Q14 6 22 4 M16 14 H22" stroke="#2E9E44" stroke-width="4" stroke-linecap="round" fill="none"></path><path d="M15 20 Q17 32 26 38" stroke="#FFFFFF" stroke-width="2.5" fill="none" opacity="0.6" stroke-linecap="round"></path></svg><span class="hub-deco bri" aria-hidden="true" style="position: absolute; pointer-events: none; font-size: 16px; line-height: 1; color: #172038; background: #C6FF4D; border: 2.5px solid #172038; border-radius: 9px; padding: 3px 8px 2px; box-shadow: 0 0 0 3px #FFFFFF, 2px 3px 0 3px rgba(0,0,0,0.2); left: 296px; top: 624px; transform: rotate(8deg)">YUM!</span></sc-if>
+<sc-if value="{{isPick}}" hint-placeholder-val="{{ false }}">
+  <div style="position: absolute; inset: 0; background: rgba(23,32,56,0.45)"></div>
+  <div class="sheet" style="position: absolute; left: 0; right: 0; top: 120px; bottom: 0; background: #FBF4E6; border-radius: 26px 26px 0 0; border-top: 3px solid #172038; padding: 16px 16px 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px">
+    <div style="display: flex; align-items: center; justify-content: space-between">
+      <span class="bri" style="font-size: 28px">{{pickTitle}}</span>
+      <button type="button" class="mini press" onClick="{{closePick}}" aria-label="Close" style="width: 34px; height: 34px; font-size: 20px">×</button>
+    </div>
+    <div style="display: flex; gap: 8px">
+      <sc-for list="{{tabs}}" as="t" hint-placeholder-count="3"><button type="button" class="tab bri press" onClick="{{t.go}}" aria-pressed="{{t.on}}" style="background: {{t.bg}}; transform: rotate({{t.rot}})">{{t.label}}</button></sc-for>
+    </div>
+    <div style="flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 4px 2px">
+      <sc-for list="{{choices}}" as="c" hint-placeholder-count="5">
+        <button type="button" class="press" onClick="{{c.choose}}" aria-label="{{c.aria}}" style="display: flex; align-items: center; gap: 10px; padding: 6px 10px 6px 4px; border: none; border-radius: 14px; background: #FFFFFF; box-shadow: 0 5px 8px -5px rgba(60,40,20,0.45); text-align: left; color: #172038">
+          <img src="{{c.img}}" alt="" width="74" height="60" style="flex-shrink: 0">
+          <span style="display: flex; flex-direction: column; gap: 4px"><span class="bri" style="font-size: 19px; line-height: 0.95">{{c.name}}</span><span style="font-size: 13px; font-weight: 700">{{c.meta}}</span></span>
+        </button>
+      </sc-for>
+      <sc-if value="{{hasMore}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{showMore}}" style="align-self: center; margin-top: 4px; height: 44px; padding: 0 20px; border-radius: 999px; border: 2.5px dashed #172038; background: #FFFFFF; color: #172038; font-size: 15px">{{moreText}}</button></sc-if>
+      <sc-if value="{{allShown}}" hint-placeholder-val="{{ false }}"><span class="kal" style="align-self: center; font-size: 14px; opacity: 0.6; margin-top: 4px">that’s everything for now</span></sc-if>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{isAuto}}" hint-placeholder-val="{{ false }}">
+  <div style="position: absolute; inset: 0; background: rgba(23,32,56,0.45)"></div>
+  <div class="sheet" style="position: absolute; left: 0; right: 0; top: 110px; bottom: 0; background: #FBF4E6; border-radius: 26px 26px 0 0; border-top: 3px solid #172038; padding: 16px 16px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: center; justify-content: space-between">
+      <span class="title-die bri" style="font-size: 32px; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">CHOOSE FOR ME</span>
+      <button type="button" class="mini press" onClick="{{closeAuto}}" aria-label="Close" style="width: 34px; height: 34px; font-size: 20px">×</button>
+    </div>
+    <span class="kal" style="font-size: 16px; line-height: 1.2; margin-top: -6px">Tap the nights you’re cooking. Everything else is optional.</span>
+    <div data-tour="nights" style="display: flex; flex-direction: column; gap: 10px"><sc-for list="{{qrows}}" as="q" hint-placeholder-count="4">
+      <div class="qrow">
+        <span class="qlabel">{{q.label}} <b>{{q.hint}}</b></span>
+        <div style="display: flex; justify-content: space-between">
+          <sc-for list="{{q.chips}}" as="c" hint-placeholder-count="7"><button type="button" class="dchip bri press" onClick="{{c.tap}}" aria-pressed="{{c.on}}" aria-label="{{c.aria}}" style="background: {{c.bg}}; color: {{c.fg}}; opacity: {{c.op}}; border-style: {{c.bs}}">{{c.text}}</button></sc-for>
+        </div>
+      </div>
+    </sc-for></div>
+    <span class="kal" style="font-size: 14px; opacity: 0.75; margin-top: -4px">{{autoNote}}</span>
+    <button type="button" class="press bri" data-tour="pickweek" onClick="{{autoGo}}" style="margin-top: auto; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{autoBtn}}</button>
+  </div>
+</sc-if>
+
+<sc-if value="{{isShop}}" hint-placeholder-val="{{ false }}">
+  <div style="position: absolute; left: 16px; right: 16px; top: 18px; bottom: 16px; display: flex; flex-direction: column; gap: 6px">
+    <div style="display: flex; align-items: center; justify-content: space-between">
+      <span class="title-die bri" style="font-size: 34px; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">SHOPPING LIST</span>
+      <button type="button" class="press kal" onClick="{{toPlan}}" style="padding: 4px 12px; border-radius: 999px; border: 2.5px solid #172038; background: #FFFFFF; color: #172038; font-size: 15px; white-space: nowrap">← plan</button>
+    </div>
+    <span class="kal" style="font-size: 16px">{{shopSub}}</span>
+    <div style="flex: 1; min-height: 0; overflow-y: auto; background: #FFFFFF; padding: 0 14px 10px 46px; box-shadow: 0 6px 10px -6px rgba(60,40,20,0.4); background-image: linear-gradient(90deg, transparent 32px, #F4A9A0 32px, #F4A9A0 34px, transparent 34px)">
+      <sc-for list="{{groups}}" as="gr" hint-placeholder-count="5">
+        <div class="aisle bri">{{gr.label}}</div>
+        <sc-for list="{{gr.items}}" as="it" hint-placeholder-count="4">
+          <button type="button" class="item" onClick="{{it.toggle}}" role="checkbox" aria-checked="{{it.checked}}">
+            <span class="box" style="background: {{it.box}}">{{it.tick}}</span>
+            <span class="kal" style="font-size: 17px; color: #172038; text-decoration: {{it.strike}}; opacity: {{it.op}}">{{it.text}}</span>
+            <span style="margin-left: auto; font-size: 11px; font-weight: 700; opacity: 0.6; white-space: nowrap">{{it.days}}</span>
+          </button>
+        </sc-for>
+      </sc-for>
+      <sc-if value="{{hasCup}}" hint-placeholder-val="{{ true }}">
+        <div class="aisle bri">CUPBOARD CHECK</div>
+        <span class="kal" style="display: block; font-size: 15px; line-height: 1.3; padding-top: 4px; opacity: 0.85">{{cupText}}</span>
+      </sc-if>
+    </div>
+    <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+      <span class="bri slap" style="position: absolute; right: 6px; bottom: 30px; padding: 10px 16px; background: #FF6FB0; border: 3px solid #FFFFFF; box-shadow: 0 0 0 2.5px #172038, 4px 5px 0 2px #C6FF4D; border-radius: 16px; font-size: 30px; transform: rotate(-6deg)">SHOP SORTED!</span>
+    </sc-if>
+  </div>
+</sc-if>
+</div>
+</script>
+<script type="text/x-dc-logic" id="dc-logic">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.R = {"gochujang-butter-noodles": {"name": "Gochujang butter noodles", "mood": "tired", "mins": 10, "img": "../img/8f808e569b7f93b8.png", "tags": ["dairy", "vegetarian"], "kid": ["adapt", "the gochujang is in the sauce"], "ing": [[1, "", "nest dried egg noodles", "nests dried egg noodles", "Cupboard"], [15, "g", "butter", null, "Chilled & dairy"], [0.75, "tbsp", "gochujang", null, "Cupboard"], [0.5, "tbsp", "soy sauce", null, "Cupboard"], [0.5, "tsp", "honey", null, "Cupboard"], [1, "", "egg", "eggs", "Chilled & dairy"], [1, "", "spring onion", "spring onions", "Fruit & veg"], [null, "", "sesame seeds", null, "Cupboard check"]], "use": ["butter", "egg", "gochujang", "honey", "noodles", "sesame seeds", "soy sauce", "spring onion"]}, "crispy-gnocchi": {"name": "Crispy gnocchi, smashed peas & lemon", "mood": "tired", "mins": 15, "img": "../img/34a6656aee1c1b5e.png", "tags": ["dairy", "vegetarian"], "kid": ["family", "mild and soft, easy to keep theirs plain"], "ing": [[250, "g", "gnocchi", null, "Chilled & dairy"], [100, "g", "frozen peas", null, "Frozen"], [0.5, "", "lemon", "lemons", "Fruit & veg"], [20, "g", "parmesan", null, "Chilled & dairy"], [0.5, "", "garlic clove", "garlic cloves", "Fruit & veg"], [null, "", "olive oil", null, "Cupboard check"]], "use": ["garlic", "gnocchi", "lemon", "parmesan", "peas"]}, "smash-burger-tacos": {"name": "Smash burger tacos", "mood": "tired", "mins": 15, "img": "../img/30ecdde35c6e57cb.png", "tags": ["beef", "dairy"], "kid": ["family", "easy to build a plain one"], "ing": [[200, "g", "beef mince", null, "Meat & fish"], [3, "", "small tortilla", "small tortillas", "Bread & wraps"], [37.5, "g", "cheddar", null, "Chilled & dairy"], [0.5, "", "little gem lettuce", "little gem lettuces", "Fruit & veg"], [null, "", "gherkins", null, "Cupboard"], [1.5, "tbsp", "mayo", null, "Cupboard"], [0.5, "tbsp", "ketchup", null, "Cupboard"], [0.5, "tsp", "mustard", null, "Cupboard"]], "use": ["cheddar", "gherkins", "ketchup", "little gem lettuce", "mayo", "mince", "mustard", "tortilla"]}, "hot-honey-halloumi-wraps": {"name": "Hot honey halloumi wraps", "mood": "tired", "mins": 15, "img": "../img/44b5c19ba9e6c7b9.png", "tags": ["dairy", "vegetarian"], "kid": ["adapt", "halloumi is salty and the honey is hot"], "ing": [[112.5, "g", "halloumi", null, "Chilled & dairy"], [1, "", "large wrap", "large wraps", "Bread & wraps"], [0.5, "", "red onion", "red onions", "Fruit & veg"], [0.5, "", "lime", "limes", "Fruit & veg"], [1, "tbsp", "hot honey", null, "Cupboard"], [2, "tbsp", "Greek yoghurt", null, "Chilled & dairy"], [1, "", "handful of rocket", "handfuls of rocket", "Fruit & veg"]], "use": ["greek yoghurt", "halloumi", "handful of rocket", "hot honey", "lime", "onion", "tortilla"]}, "chilli-crisp-fried-rice": {"name": "Chilli-crisp fried rice", "mood": "tired", "mins": 14, "img": "../img/7230d12779ae0ff0.png", "tags": ["vegetarian"], "kid": ["family", "just take theirs out before the soy"], "ing": [[125, "g", "cooked rice (pouch)", null, "Cupboard"], [75, "g", "frozen peas", null, "Frozen"], [1, "", "egg", "eggs", "Chilled & dairy"], [1, "tbsp", "soy sauce", null, "Cupboard"], [1, "", "spring onion", "spring onions", "Fruit & veg"], [0.5, "tbsp", "chilli crisp", null, "Cupboard"], [null, "", "oil", null, "Cupboard check"]], "use": ["chilli crisp", "egg", "peas", "rice", "soy sauce", "spring onion"]}, "harissa-chicken-orzo": {"name": "Harissa chicken orzo", "mood": "normal", "mins": 30, "img": "../img/65bf67a4b3cfcdf3.png", "tags": ["dairy"], "kid": ["adapt", "the harissa goes in early"], "ing": [[2, "", "boneless chicken thigh", "boneless chicken thighs", "Meat & fish"], [1, "tbsp", "rose harissa", null, "Cupboard"], [100, "g", "orzo", null, "Cupboard"], [300, "ml", "chicken stock", null, "Cupboard"], [75, "g", "cherry tomatoes", null, "Fruit & veg"], [50, "g", "feta", null, "Chilled & dairy"], [0.5, "", "lemon", "lemons", "Fruit & veg"], [1, "", "handful of spinach", "handfuls of spinach", "Fruit & veg"]], "use": ["chicken", "feta", "lemon", "rose harissa", "spaghetti", "spinach", "tomato"]}, "japanese-beef-curry": {"name": "Japanese-style beef curry", "mood": "normal", "mins": 30, "img": "../img/63e4ebae099cd4f7.png", "tags": ["beef"], "kid": ["adapt", "curry roux is salty"], "ing": [[125, "g", "beef mince", null, "Meat & fish"], [0.5, "", "onion", "onions", "Fruit & veg"], [1, "", "carrot", "carrots", "Fruit & veg"], [0.5, "", "potato", "potatoes", "Fruit & veg"], [50, "g", "Japanese curry roux", null, "Cupboard"], [75, "g", "rice", null, "Cupboard"], [null, "", "pickles", null, "Cupboard"]], "use": ["carrot", "japanese curry roux", "mince", "onion", "pickles", "potato", "rice"]}, "gochujang-pork-bowls": {"name": "Sticky gochujang pork bowls", "mood": "normal", "mins": 25, "img": "../img/9c6c3d4f2a166bda.png", "tags": ["pork"], "kid": ["adapt", "the sauce carries the heat and salt"], "ing": [[125, "g", "pork mince", null, "Meat & fish"], [1, "tbsp", "gochujang", null, "Cupboard"], [0.5, "tbsp", "soy sauce", null, "Cupboard"], [0.5, "tbsp", "honey", null, "Cupboard"], [1, "", "garlic clove", "garlic cloves", "Fruit & veg"], [75, "g", "rice", null, "Cupboard"], [0.5, "", "cucumber", "cucumbers", "Fruit & veg"], [0.5, "tbsp", "rice vinegar", null, "Cupboard"], [1, "", "spring onion", "spring onions", "Fruit & veg"], [null, "", "sesame seeds", null, "Cupboard check"]], "use": ["cucumber", "garlic", "gochujang", "honey", "mince", "rice", "sesame seeds", "soy sauce", "spring onion"]}, "peanut-butter-chicken-curry": {"name": "Peanut butter chicken curry", "mood": "normal", "mins": 30, "img": "../img/57f5d380f2085d6f.png", "tags": ["nuts"], "kid": ["adapt", "curry paste brings heat, and crushed peanuts are a no under 5"], "ing": [[2, "", "boneless chicken thigh", "boneless chicken thighs", "Meat & fish"], [0.5, "", "onion", "onions", "Fruit & veg"], [1, "tbsp", "Thai red curry paste", null, "Cupboard"], [1.5, "tbsp", "smooth peanut butter", null, "Cupboard"], [200, "ml", "coconut milk", null, "Cupboard"], [0.5, "", "lime", "limes", "Fruit & veg"], [0.5, "", "bunch of coriander", "bunches of coriander", "Fruit & veg"], [15, "g", "salted peanuts", null, "Cupboard"], [75, "g", "rice", null, "Cupboard"]], "use": ["bunch of coriander", "chicken", "coconut milk", "lime", "onion", "rice", "salted peanuts", "smooth peanut butter", "thai red curry paste"]}, "chicken-alfredo": {"name": "Chicken Alfredo", "mood": "normal", "mins": 30, "img": "../img/7d1ff17f21d21ec7.png", "tags": ["dairy"], "kid": ["family", "creamy and mild"], "ing": [[100, "g", "fettuccine", null, "Cupboard"], [1, "", "chicken breast", "chicken breasts", "Meat & fish"], [100, "ml", "double cream", null, "Chilled & dairy"], [25, "g", "parmesan", null, "Chilled & dairy"], [15, "g", "butter", null, "Chilled & dairy"], [1, "", "garlic clove", "garlic cloves", "Fruit & veg"], [15, "g", "panko breadcrumbs", null, "Cupboard"], [0.5, "", "lemon", "lemons", "Fruit & veg"], [null, "", "parsley", null, "Fruit & veg"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["butter", "chicken", "double cream", "garlic", "lemon", "panko breadcrumbs", "parmesan", "parsley", "spaghetti"]}, "crispy-duck-pancakes": {"name": "Crispy duck pancakes", "mood": "fancy", "mins": 55, "img": "../img/02a1f44fca064d5e.png", "tags": [], "kid": ["grown", "hoisin is very salty"], "ing": [[1, "", "duck leg", "duck legs", "Meat & fish"], [0.25, "", "cucumber", "cucumbers", "Fruit & veg"], [2, "", "spring onion", "spring onions", "Fruit & veg"], [6, "", "Chinese pancake", "Chinese pancakes", "Bread & wraps"], [2, "tbsp", "hoisin sauce", null, "Cupboard"], [null, "", "Chinese five-spice", null, "Cupboard check"]], "use": ["chinese five-spice", "chinese pancake", "cucumber", "duck leg", "hoisin sauce", "spring onion"]}, "peruvian-chicken": {"name": "Peruvian-style chicken & green sauce", "mood": "fancy", "mins": 50, "img": "../img/2930ab97f722d902.png", "tags": [], "kid": ["family", "keep the green sauce for the grown-ups"], "ing": [[2, "", "bone-in chicken thigh", "bone-in chicken thighs", "Meat & fish"], [250, "g", "baby potatoes", null, "Fruit & veg"], [0.5, "", "bunch of coriander", "bunches of coriander", "Fruit & veg"], [0.5, "", "jalapeño", "jalapeños", "Fruit & veg"], [0.5, "", "lime", "limes", "Fruit & veg"], [2, "tbsp", "mayo", null, "Cupboard"], [0.5, "", "garlic clove", "garlic cloves", "Fruit & veg"], [null, "", "smoked paprika and cumin", null, "Cupboard check"]], "use": ["bunch of coriander", "chicken", "garlic", "jalapeño", "lime", "mayo", "potato", "smoked paprika and cumin"]}, "miso-salmon-crispy-rice": {"name": "Miso salmon, crispy chilli rice", "mood": "fancy", "mins": 40, "img": "../img/8cd07469834ecb92.png", "tags": ["fish"], "kid": ["adapt", "the miso glaze is salty"], "ing": [[1, "", "salmon fillet", "salmon fillets", "Meat & fish"], [0.5, "tbsp", "white miso", null, "Cupboard"], [0.5, "tbsp", "honey", null, "Cupboard"], [125, "g", "cooked rice (pouch)", null, "Cupboard"], [0.5, "tbsp", "chilli crisp", null, "Cupboard"], [1, "", "spring onion", "spring onions", "Fruit & veg"], [0.5, "", "lime", "limes", "Fruit & veg"], [null, "", "soy sauce and sesame seeds", null, "Cupboard check"]], "use": ["chilli crisp", "honey", "lime", "rice", "salmon", "soy sauce and sesame seeds", "spring onion", "white miso"]}, "lamb-kofta-flatbreads": {"name": "Lamb kofta flatbreads, whipped feta", "mood": "fancy", "mins": 45, "img": "../img/38d7989bfa10bef7.png", "tags": ["dairy"], "kid": ["family", "mild spices, easy to cut up"], "ing": [[125, "g", "lamb mince", null, "Meat & fish"], [1, "", "flatbread", "flatbreads", "Bread & wraps"], [50, "g", "feta", null, "Chilled & dairy"], [3, "tbsp", "Greek yoghurt", null, "Chilled & dairy"], [0.5, "", "red onion", "red onions", "Fruit & veg"], [0.5, "", "lemon", "lemons", "Fruit & veg"], [0.5, "", "bunch of mint", "bunches of mint", "Fruit & veg"], [0.5, "", "garlic clove", "garlic cloves", "Fruit & veg"], [null, "", "cumin and ground coriander", null, "Cupboard check"]], "use": ["bread", "bunch of mint", "cumin and ground coriander", "feta", "garlic", "greek yoghurt", "lemon", "mince", "onion"]}, "spicy-tuna-crispy-rice": {"name": "Spicy tuna crispy rice bowl", "mood": "tired", "mins": 15, "img": "../img/0c27daaa590fccca.png", "tags": ["fish"], "kid": ["family", "leave the sriracha off theirs"], "ing": [[125, "g", "cooked rice (pouch)", null, "Cupboard"], [1, "", "tin of tuna", "tins of tuna", "Cupboard"], [1.5, "tbsp", "mayo", null, "Cupboard"], [0.5, "tbsp", "sriracha", null, "Cupboard"], [0.5, "tsp", "soy sauce", null, "Cupboard"], [1, "", "spring onion", "spring onions", "Fruit & veg"], [0.25, "", "cucumber", "cucumbers", "Fruit & veg"], [null, "", "sesame seeds", null, "Cupboard check"], [null, "", "oil", null, "Cupboard check"]], "use": ["cucumber", "mayo", "rice", "sesame seeds", "soy sauce", "spring onion", "sriracha", "tuna"]}, "lemon-chilli-tuna-spaghetti": {"name": "Lemon & chilli tuna spaghetti", "mood": "tired", "mins": 15, "img": "../img/1b425e9f7e36490e.png", "tags": ["fish"], "kid": ["adapt", "take theirs out before the chilli and capers"], "ing": [[100, "g", "spaghetti", null, "Cupboard"], [1, "", "tin of tuna in oil", "tins of tuna in oil", "Cupboard"], [1, "", "garlic clove", "garlic cloves", "Fruit & veg"], [0.25, "tsp", "chilli flakes", null, "Cupboard"], [1, "tsp", "capers", null, "Cupboard"], [0.5, "", "lemon", "lemons", "Fruit & veg"], [0.5, "", "handful of parsley", null, "Fruit & veg"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["capers", "chilli flakes", "garlic", "handful of parsley", "lemon", "spaghetti", "tuna"]}, "gochujang-tuna-melt": {"name": "Gochujang tuna melt", "mood": "tired", "mins": 10, "img": "../img/dc338b485e0f0853.png", "tags": ["fish", "dairy"], "kid": ["family", "make theirs without the gochujang"], "ing": [[2, "", "slice of bread", "slices of bread", "Bread & wraps"], [0.5, "", "tin of tuna", "tins of tuna", "Cupboard"], [1, "tbsp", "mayo", null, "Cupboard"], [0.5, "tsp", "gochujang", null, "Cupboard"], [0.5, "", "spring onion", "spring onions", "Fruit & veg"], [30, "g", "cheddar", null, "Chilled & dairy"], [8, "g", "butter", null, "Chilled & dairy"], [1, "", "gherkins", null, "Cupboard"]], "use": ["bread", "butter", "cheddar", "gherkins", "gochujang", "mayo", "spring onion", "tuna"]}, "marry-me-chicken": {"name": "Marry Me chicken", "mood": "normal", "mins": 30, "img": "../img/d121e5cf958f3e21.png", "tags": ["dairy"], "kid": ["family", "leave out the chilli flakes"], "ing": [[1, "", "chicken breast", "chicken breasts", "Meat & fish"], [1, "", "garlic clove", "garlic cloves", "Fruit & veg"], [3, "", "sun-dried tomato", "sun-dried tomatoes", "Cupboard"], [75, "ml", "double cream", null, "Chilled & dairy"], [20, "g", "parmesan", null, "Chilled & dairy"], [75, "ml", "chicken stock", null, "Cupboard"], [0.5, "tsp", "chilli flakes", null, "Cupboard"], [5, "", "basil leaf", "basil leaves", "Fruit & veg"], [70, "g", "orzo", null, "Cupboard"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["basil leaf", "chicken", "chilli flakes", "double cream", "garlic", "parmesan", "spaghetti", "tomato"]}, "gigi-spicy-vodka-pasta": {"name": "Spicy vodka pasta (Gigi Hadid-style)", "mood": "tired", "mins": 20, "img": "../img/e32761372c73504a.png", "tags": ["dairy", "vegetarian"], "kid": ["adapt", "chilli goes in with the purée"], "ing": [[100, "g", "pasta", null, "Cupboard"], [1, "tbsp", "tomato purée", null, "Cupboard"], [0.5, "", "shallot", "shallots", "Fruit & veg"], [1, "", "garlic clove", "garlic cloves", "Fruit & veg"], [60, "ml", "double cream", null, "Chilled & dairy"], [20, "g", "parmesan", null, "Chilled & dairy"], [0.5, "tsp", "chilli flakes", null, "Cupboard"], [15, "g", "butter", null, "Chilled & dairy"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["butter", "chilli flakes", "double cream", "garlic", "parmesan", "shallot", "spaghetti", "tomato"]}, "baked-feta-pasta": {"name": "Baked feta pasta", "mood": "tired", "mins": 35, "img": "../img/1f1531fc0885e167.png", "tags": ["dairy", "vegetarian"], "kid": ["family", "mild and creamy"], "ing": [[100, "g", "pasta", null, "Cupboard"], [100, "g", "block of feta", null, "Chilled & dairy"], [150, "g", "cherry tomatoes", null, "Fruit & veg"], [1, "", "garlic clove", "garlic cloves", "Fruit & veg"], [4, "", "basil leaf", "basil leaves", "Fruit & veg"], [0.25, "tsp", "chilli flakes", null, "Cupboard"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["basil leaf", "chilli flakes", "feta", "garlic", "spaghetti", "tomato"]}, "spaghetti-allassassina": {"name": "Spaghetti all’assassina", "mood": "fancy", "mins": 30, "img": "../img/0027b2989999bff6.png", "tags": ["vegetarian"], "kid": ["grown", "charred and properly spicy"], "ing": [[100, "g", "spaghetti", null, "Cupboard"], [150, "ml", "passata", null, "Cupboard"], [1, "tbsp", "tomato purée", null, "Cupboard"], [1, "", "garlic clove", "garlic cloves", "Fruit & veg"], [0.5, "", "red chilli", "red chillies", "Fruit & veg"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["garlic", "red chilli", "spaghetti", "tomato"]}, "chicken-shawarma-bowls": {"name": "Chicken shawarma bowls", "mood": "normal", "mins": 35, "img": "../img/7269ff0553cf2525.png", "tags": ["dairy"], "kid": ["family", "build-your-own bowls work well"], "ing": [[2, "", "boneless chicken thigh", "boneless chicken thighs", "Meat & fish"], [1, "tsp", "shawarma spice", null, "Cupboard"], [75, "g", "rice", null, "Cupboard"], [0.25, "", "cucumber", "cucumbers", "Fruit & veg"], [40, "g", "cherry tomatoes", null, "Fruit & veg"], [0.25, "", "red onion", "red onions", "Fruit & veg"], [3, "tbsp", "greek yoghurt", null, "Chilled & dairy"], [0.5, "", "garlic clove", "garlic cloves", "Fruit & veg"], [0.5, "", "lemon", "lemons", "Fruit & veg"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["chicken", "cucumber", "garlic", "greek yoghurt", "lemon", "onion", "rice", "shawarma spice", "tomato"]}, "greek-lemon-chicken-potatoes": {"name": "Greek lemon chicken & potatoes", "mood": "normal", "mins": 50, "img": "../img/974ecf4d00be912a.png", "tags": [], "kid": ["family", "a simple roast they’ll know"], "ing": [[2, "", "bone-in chicken thigh", "bone-in chicken thighs", "Meat & fish"], [250, "g", "baby potatoes", null, "Fruit & veg"], [0.5, "", "lemon", "lemons", "Fruit & veg"], [2, "", "garlic clove", "garlic cloves", "Fruit & veg"], [1, "tsp", "dried oregano", null, "Cupboard"], [75, "ml", "chicken stock", null, "Cupboard"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["chicken", "dried oregano", "garlic", "lemon", "potato"]}, "butter-chicken": {"name": "Butter chicken", "mood": "normal", "mins": 40, "img": "../img/cda265f75aee97e0.png", "tags": ["dairy"], "kid": ["family", "mild and creamy"], "ing": [[2, "", "boneless chicken thigh", "boneless chicken thighs", "Meat & fish"], [2, "tbsp", "greek yoghurt", null, "Chilled & dairy"], [1, "tbsp", "garam masala", null, "Cupboard"], [200, "ml", "passata", null, "Cupboard"], [20, "g", "butter", null, "Chilled & dairy"], [50, "ml", "double cream", null, "Chilled & dairy"], [1, "", "garlic clove", "garlic cloves", "Fruit & veg"], [1, "tsp", "grated ginger", null, "Fruit & veg"], [75, "g", "rice", null, "Cupboard"], [1, "", "naan", "naans", "Bread & wraps"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["butter", "chicken", "double cream", "garam masala", "garlic", "grated ginger", "greek yoghurt", "naan", "rice", "tomato"]}, "hot-honey-salmon": {"name": "Hot honey salmon & smashed cucumber", "mood": "tired", "mins": 20, "img": "../img/4892b4de9529a74d.png", "tags": ["fish"], "kid": ["family", "sweet and simple"], "ing": [[1, "", "salmon fillet", "salmon fillets", "Meat & fish"], [1, "tbsp", "honey", null, "Cupboard"], [0.5, "tsp", "chilli flakes", null, "Cupboard"], [0.5, "", "cucumber", "cucumbers", "Fruit & veg"], [1, "tsp", "soy sauce", null, "Cupboard"], [1, "tsp", "rice vinegar", null, "Cupboard"], [null, "", "sesame seeds", null, "Cupboard check"], [75, "g", "rice", null, "Cupboard"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["chilli flakes", "cucumber", "honey", "rice", "salmon", "sesame seeds", "soy sauce"]}, "quick-chicken-jambalaya": {"name": "Quick chicken jambalaya", "mood": "normal", "mins": 35, "img": "../img/5f43bf191b3f096e.png", "tags": ["pork"], "kid": ["adapt", "cajun and chorizo bring heat"], "ing": [[1, "", "boneless chicken thigh", "boneless chicken thighs", "Meat & fish"], [40, "g", "chorizo", null, "Meat & fish"], [75, "g", "rice", null, "Cupboard"], [0.5, "", "red pepper", "red peppers", "Fruit & veg"], [0.5, "", "onion", "onions", "Fruit & veg"], [1, "", "garlic clove", "garlic cloves", "Fruit & veg"], [0.5, "", "tin of chopped tomatoes", "tins of chopped tomatoes", "Cupboard"], [1, "tsp", "cajun seasoning", null, "Cupboard"], [175, "ml", "chicken stock", null, "Cupboard"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["cajun seasoning", "chicken", "chorizo", "garlic", "onion", "pepper", "rice", "tomato"]}, "hainanese-chicken-rice": {"name": "Hainanese chicken rice", "mood": "fancy", "mins": 60, "img": "../img/e1d8f1cd205dac3c.png", "tags": [], "kid": ["family", "gentle poached chicken and garlicky rice"], "ing": [[1, "", "chicken breast", "chicken breasts", "Meat & fish"], [75, "g", "rice", null, "Cupboard"], [2, "", "garlic clove", "garlic cloves", "Fruit & veg"], [1, "tsp", "grated ginger", null, "Fruit & veg"], [2, "", "spring onion", "spring onions", "Fruit & veg"], [0.25, "", "cucumber", "cucumbers", "Fruit & veg"], [1, "tsp", "sriracha", null, "Cupboard"], [1, "tsp", "soy sauce", null, "Cupboard"], [250, "ml", "chicken stock", null, "Cupboard"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["chicken", "cucumber", "garlic", "grated ginger", "rice", "soy sauce", "spring onion", "sriracha"]}, "spicy-peanut-noodles-prawns": {"name": "Spicy peanut noodles with prawns", "mood": "tired", "mins": 20, "img": "../img/b30da11d190252db.png", "tags": ["fish", "nuts"], "kid": ["adapt", "chilli crisp goes in the sauce"], "ing": [[1, "", "nest dried egg noodles", "nests dried egg noodles", "Cupboard"], [100, "g", "raw king prawns", null, "Meat & fish"], [60, "g", "mangetout", null, "Fruit & veg"], [1.5, "tbsp", "peanut butter", null, "Cupboard"], [1, "tbsp", "soy sauce", null, "Cupboard"], [1, "tsp", "chilli crisp", null, "Cupboard"], [0.5, "", "lime", "limes", "Fruit & veg"], [1, "", "spring onion", "spring onions", "Fruit & veg"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["chilli crisp", "lime", "mangetout", "noodles", "peanut butter", "prawns", "soy sauce", "spring onion"]}, "tarka-dal": {"name": "Tarka dal", "mood": "tired", "mins": 30, "img": "../img/1605d2271c10aaa8.png", "tags": ["dairy", "vegetarian"], "kid": ["family", "naturally mild and soft"], "ing": [[80, "g", "red lentils", null, "Cupboard"], [0.5, "tsp", "ground turmeric", null, "Cupboard"], [1, "tsp", "cumin seeds", null, "Cupboard"], [1, "", "garlic clove", "garlic cloves", "Fruit & veg"], [0.5, "", "onion", "onions", "Fruit & veg"], [1, "", "tomato", "tomatoes", "Fruit & veg"], [0.5, "", "green chilli", "green chillies", "Fruit & veg"], [10, "g", "butter", null, "Chilled & dairy"], [75, "g", "rice", null, "Cupboard"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["butter", "cumin seeds", "garlic", "green chilli", "ground turmeric", "lentils", "onion", "rice", "tomato"]}, "chana-masala": {"name": "Chana masala", "mood": "tired", "mins": 25, "img": "../img/805906d177acc301.png", "tags": ["vegetarian"], "kid": ["adapt", "mild if you go easy on the chilli"], "ing": [[0.5, "", "tin of chickpeas", "tins of chickpeas", "Cupboard"], [0.5, "", "tin of chopped tomatoes", "tins of chopped tomatoes", "Cupboard"], [0.5, "", "onion", "onions", "Fruit & veg"], [1, "", "garlic clove", "garlic cloves", "Fruit & veg"], [1, "tsp", "grated ginger", null, "Fruit & veg"], [1, "tsp", "garam masala", null, "Cupboard"], [0.5, "tsp", "ground cumin", null, "Cupboard"], [0.5, "", "lemon", "lemons", "Fruit & veg"], [1, "", "naan", "naans", "Bread & wraps"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["chickpeas", "garam masala", "garlic", "grated ginger", "ground cumin", "lemon", "naan", "onion", "tomato"]}, "saag-paneer": {"name": "Saag paneer", "mood": "normal", "mins": 30, "img": "../img/6672279ff9f30dea.png", "tags": ["dairy", "vegetarian"], "kid": ["family", "mild, creamy and cheesy"], "ing": [[100, "g", "paneer", null, "Chilled & dairy"], [150, "g", "spinach", null, "Fruit & veg"], [0.5, "", "onion", "onions", "Fruit & veg"], [1, "", "garlic clove", "garlic cloves", "Fruit & veg"], [1, "tsp", "grated ginger", null, "Fruit & veg"], [0.5, "", "green chilli", "green chillies", "Fruit & veg"], [1, "tsp", "garam masala", null, "Cupboard"], [30, "ml", "double cream", null, "Chilled & dairy"], [1, "", "naan", "naans", "Bread & wraps"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["double cream", "garam masala", "garlic", "grated ginger", "green chilli", "naan", "onion", "paneer", "spinach"]}, "keema-matar": {"name": "Keema matar", "mood": "normal", "mins": 30, "img": "../img/4dde49eaf60e7fe3.png", "tags": [], "kid": ["family", "mince and peas: kid-friendly"], "ing": [[125, "g", "lamb mince", null, "Meat & fish"], [60, "g", "frozen peas", null, "Frozen"], [0.5, "", "onion", "onions", "Fruit & veg"], [1, "", "garlic clove", "garlic cloves", "Fruit & veg"], [1, "tsp", "grated ginger", null, "Fruit & veg"], [1, "tsp", "garam masala", null, "Cupboard"], [0.5, "tsp", "ground turmeric", null, "Cupboard"], [0.25, "", "tin of chopped tomatoes", "tins of chopped tomatoes", "Cupboard"], [1, "", "naan", "naans", "Bread & wraps"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["garam masala", "garlic", "grated ginger", "ground turmeric", "mince", "naan", "onion", "peas", "tomato"]}, "chicken-korma": {"name": "Chicken korma", "mood": "normal", "mins": 35, "img": "../img/9b1548d22b4bcb08.png", "tags": ["dairy", "nuts"], "kid": ["family", "the mildest curry there is"], "ing": [[2, "", "boneless chicken thigh", "boneless chicken thighs", "Meat & fish"], [0.5, "", "onion", "onions", "Fruit & veg"], [1, "", "garlic clove", "garlic cloves", "Fruit & veg"], [1, "tsp", "grated ginger", null, "Fruit & veg"], [25, "g", "ground almonds", null, "Cupboard"], [3, "tbsp", "greek yoghurt", null, "Chilled & dairy"], [50, "ml", "double cream", null, "Chilled & dairy"], [1, "tsp", "garam masala", null, "Cupboard"], [0.5, "tsp", "ground turmeric", null, "Cupboard"], [75, "g", "rice", null, "Cupboard"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["chicken", "double cream", "garam masala", "garlic", "grated ginger", "greek yoghurt", "ground almonds", "ground turmeric", "onion", "rice"]}, "kerala-prawn-curry": {"name": "Keralan prawn curry", "mood": "normal", "mins": 30, "img": "../img/a752477c9c833e97.png", "tags": ["fish"], "kid": ["family", "coconutty and mild"], "ing": [[125, "g", "raw king prawns", null, "Meat & fish"], [0.5, "", "tin of coconut milk", "tins of coconut milk", "Cupboard"], [0.5, "", "onion", "onions", "Fruit & veg"], [1, "", "garlic clove", "garlic cloves", "Fruit & veg"], [1, "tsp", "grated ginger", null, "Fruit & veg"], [0.5, "tsp", "ground turmeric", null, "Cupboard"], [0.5, "tsp", "mustard seeds", null, "Cupboard"], [6, "", "curry leaf", "curry leaves", "Fruit & veg"], [1, "", "tomato", "tomatoes", "Fruit & veg"], [0.5, "", "lime", "limes", "Fruit & veg"], [75, "g", "rice", null, "Cupboard"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["coconut milk", "curry leaf", "garlic", "grated ginger", "ground turmeric", "lime", "mustard seeds", "onion", "prawns", "rice", "tomato"]}, "lamb-rogan-josh": {"name": "Lamb rogan josh", "mood": "fancy", "mins": 100, "img": "../img/bf71632e5f078963.png", "tags": ["dairy"], "kid": ["adapt", "Kashmiri chilli gives colour more than heat"], "ing": [[175, "g", "diced lamb", null, "Meat & fish"], [0.5, "", "onion", "onions", "Fruit & veg"], [2, "", "garlic clove", "garlic cloves", "Fruit & veg"], [1, "tsp", "grated ginger", null, "Fruit & veg"], [1, "tsp", "kashmiri chilli powder", null, "Cupboard"], [1, "tsp", "garam masala", null, "Cupboard"], [2, "", "cardamom pod", "cardamom pods", "Cupboard"], [3, "tbsp", "greek yoghurt", null, "Chilled & dairy"], [0.25, "", "tin of chopped tomatoes", "tins of chopped tomatoes", "Cupboard"], [75, "g", "rice", null, "Cupboard"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["cardamom pod", "garam masala", "garlic", "grated ginger", "greek yoghurt", "kashmiri chilli powder", "lamb", "onion", "rice", "tomato"]}, "thai-green-chicken-curry": {"name": "Thai green chicken curry", "mood": "tired", "mins": 25, "img": "../img/2b2dbf047200dcae.png", "tags": [], "kid": ["adapt", "curry paste heat varies by brand"], "ing": [[2, "", "boneless chicken thigh", "boneless chicken thighs", "Meat & fish"], [2, "tbsp", "thai green curry paste", null, "Cupboard"], [0.5, "", "tin of coconut milk", "tins of coconut milk", "Cupboard"], [60, "g", "green beans", null, "Fruit & veg"], [1, "tsp", "fish sauce (or soy sauce)", null, "Cupboard"], [0.5, "tsp", "sugar", null, "Cupboard check"], [3, "", "kaffir lime leaf", "kaffir lime leaves", "Fruit & veg"], [6, "", "thai basil leaf", "thai basil leaves", "Fruit & veg"], [0.5, "", "lime", "limes", "Fruit & veg"], [75, "g", "rice", null, "Cupboard"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["chicken", "coconut milk", "fish sauce (or soy sauce)", "green beans", "lime", "rice", "sugar", "thai basil leaf", "thai green curry paste"]}, "panang-beef-curry": {"name": "Panang beef curry", "mood": "normal", "mins": 30, "img": "../img/45c3b7686430d235.png", "tags": ["beef"], "kid": ["adapt", "thick and rich, a little spicy"], "ing": [[150, "g", "beef sirloin steak", null, "Meat & fish"], [1.5, "tbsp", "panang curry paste", null, "Cupboard"], [0.5, "", "tin of coconut milk", "tins of coconut milk", "Cupboard"], [1, "tsp", "fish sauce (or soy sauce)", null, "Cupboard"], [1, "tsp", "palm sugar", null, "Cupboard"], [3, "", "kaffir lime leaf", "kaffir lime leaves", "Fruit & veg"], [0.5, "", "red chilli", "red chillies", "Fruit & veg"], [6, "", "thai basil leaf", "thai basil leaves", "Fruit & veg"], [75, "g", "rice", null, "Cupboard"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["beef", "coconut milk", "fish sauce (or soy sauce)", "lime", "palm sugar", "panang curry paste", "red chilli", "rice", "thai basil leaf"]}, "massaman-beef-curry": {"name": "Massaman beef curry", "mood": "fancy", "mins": 150, "img": "../img/7bb63d8314a64144.png", "tags": ["beef", "nuts"], "kid": ["family", "mild, sweet and warming"], "ing": [[175, "g", "braising steak", null, "Meat & fish"], [2, "tbsp", "massaman curry paste", null, "Cupboard"], [0.5, "", "tin of coconut milk", "tins of coconut milk", "Cupboard"], [150, "g", "baby potatoes", null, "Fruit & veg"], [0.5, "", "onion", "onions", "Fruit & veg"], [20, "g", "roasted peanuts", null, "Cupboard"], [1, "tsp", "fish sauce (or soy sauce)", null, "Cupboard"], [1, "tsp", "tamarind paste", null, "Cupboard"], [1, "tsp", "palm sugar", null, "Cupboard"], [75, "g", "rice", null, "Cupboard"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["beef", "coconut milk", "fish sauce (or soy sauce)", "massaman curry paste", "onion", "palm sugar", "potato", "rice", "roasted peanuts", "tamarind paste"]}, "khao-soi": {"name": "Khao soi", "mood": "normal", "mins": 40, "img": "../img/524df9ca13fe03e2.png", "tags": [], "kid": ["adapt", "a spicy coconut soup"], "ing": [[2, "", "boneless chicken thigh", "boneless chicken thighs", "Meat & fish"], [1.5, "tbsp", "thai red curry paste", null, "Cupboard"], [0.5, "", "tin of coconut milk", "tins of coconut milk", "Cupboard"], [200, "ml", "chicken stock", null, "Cupboard"], [1, "", "nest dried egg noodles", "nests dried egg noodles", "Cupboard"], [0.5, "tsp", "ground turmeric", null, "Cupboard"], [1, "tsp", "fish sauce (or soy sauce)", null, "Cupboard"], [0.25, "", "red onion", "red onions", "Fruit & veg"], [0.5, "", "lime", "limes", "Fruit & veg"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["chicken", "coconut milk", "fish sauce (or soy sauce)", "ground turmeric", "lime", "noodles", "onion", "thai red curry paste"]}, "thai-red-squash-curry": {"name": "Thai red curry with squash & chickpeas", "mood": "normal", "mins": 35, "img": "../img/c868e2934bd5cc95.png", "tags": ["vegetarian"], "kid": ["family", "sweet squash and mild coconut"], "ing": [[200, "g", "butternut squash", null, "Fruit & veg"], [0.5, "", "tin of chickpeas", "tins of chickpeas", "Cupboard"], [1.5, "tbsp", "thai red curry paste", null, "Cupboard"], [0.5, "", "tin of coconut milk", "tins of coconut milk", "Cupboard"], [40, "g", "spinach", null, "Fruit & veg"], [1, "tsp", "soy sauce", null, "Cupboard"], [0.5, "", "lime", "limes", "Fruit & veg"], [6, "", "thai basil leaf", "thai basil leaves", "Fruit & veg"], [75, "g", "rice", null, "Cupboard"], [null, "", "oil, salt and pepper", null, "Cupboard check"]], "use": ["butternut squash", "chickpeas", "coconut milk", "lime", "rice", "soy sauce", "spinach", "thai basil leaf", "thai red curry paste"]}};
+    this.COOK = { 'chilli-crisp-fried-rice': 'CookRice.html?v=1793350774', 'crispy-gnocchi': 'CookGnocchi.html?v=1793350774', 'smash-burger-tacos': 'CookTacos.html?v=1793350774', 'chicken-alfredo': 'CookV2.html' };   // recipes that have a cooking mode so far
+    this.LUNCH = {"gochujang-butter-noodles": ["ok", "good cold, keep the egg separate"], "crispy-gnocchi": ["no", "loses its crunch"], "smash-burger-tacos": ["no", "tortillas go soggy"], "hot-honey-halloumi-wraps": ["no", "halloumi goes rubbery"], "chilli-crisp-fried-rice": ["ok", "rice: fridge within 1 hour, eat within 24 hours"], "harissa-chicken-orzo": ["great", "even better the next day"], "japanese-beef-curry": ["great", "even better the next day"], "gochujang-pork-bowls": ["great", "pack the cucumber separately"], "peanut-butter-chicken-curry": ["great", "even better the next day"], "chicken-alfredo": ["ok", "add a splash of water when reheating"], "crispy-duck-pancakes": ["ok", "pack the duck and veg separately"], "peruvian-chicken": ["great", "great cold with the green sauce"], "miso-salmon-crispy-rice": ["ok", "rice: fridge within 1 hour, eat within 24 hours"], "lamb-kofta-flatbreads": ["great", "pack the feta and flatbread separately"]};
+    Object.assign(this.LUNCH, {"spicy-tuna-crispy-rice": ["no", "the rice is only crispy fresh, and cooked rice is best eaten straight away"], "lemon-chilli-tuna-spaghetti": ["ok", "good cold the next day with an extra squeeze of lemon; fridge within 2 hours"], "gochujang-tuna-melt": ["no", "best straight from the pan"], "marry-me-chicken": ["great", "keeps 2 days; loosen the sauce with a splash of water"], "gigi-spicy-vodka-pasta": ["ok", "fine cold or reheated with a splash of water"], "baked-feta-pasta": ["great", "lovely cold the next day as a pasta salad"], "spaghetti-allassassina": ["no", "best straight from the pan while it’s crispy"], "chicken-shawarma-bowls": ["great", "pack it as a lunch bowl, sauce on the side"], "greek-lemon-chicken-potatoes": ["great", "reheats well in the oven"], "butter-chicken": ["great", "even better the next day"], "hot-honey-salmon": ["ok", "eat the salmon cold over rice, cucumber fresh"], "quick-chicken-jambalaya": ["great", "one pot, reheats well"], "hainanese-chicken-rice": ["ok", "keep chicken and rice separate; good cold with the sauces"], "spicy-peanut-noodles-prawns": ["ok", "good cold as noodle salad"], "tarka-dal": ["great", "thickens overnight; loosen with water and reheat"], "chana-masala": ["great", "even better the next day"], "saag-paneer": ["ok", "reheat gently; the spinach darkens but tastes great"], "keema-matar": ["great", "freezes well; great stuffed in a toastie"], "chicken-korma": ["great", "reheats well; add a splash of water"], "kerala-prawn-curry": ["no", "prawns are best eaten fresh"], "lamb-rogan-josh": ["great", "better the next day; freezes well"], "thai-green-chicken-curry": ["ok", "reheat until piping hot"], "panang-beef-curry": ["ok", "keep the beef pink: reheat gently"], "massaman-beef-curry": ["great", "better the next day; freezes well"], "khao-soi": ["ok", "keep the noodles separate from the soup"], "thai-red-squash-curry": ["great", "freezes well"]});
+    this.AISLES = ["Fruit & veg", "Meat & fish", "Chilled & dairy", "Bread & wraps", "Cupboard", "Frozen", "Cupboard check"];
+    this.TODAY = window.GSD_BETA ? (new Date().getDay() + 6) % 7 : 3;   // the demo is pinned to Thursday; the real app uses today
+    this.DAYS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+    this.MOODS = [['tired', 'TIRED', '#FF6FB0'], ['normal', 'NORMAL', '#C6FF4D'], ['fancy', 'FANCY', '#A98BFF']];
+    this.s = { view: 'plan', pickDay: 0, mood: 'tired', have: {},
+      plan: [null, null, null, null, null, null, null], toast: '', lunchN: 2,
+      auto: { on: [true, true, true, true, true, false, false], busy: [false, false, false, false, false, false, false], fancy: [false, false, false, false, false, false, false], group: [false, false, false, false, false, false, false], lunch: [false, false, false, false, false, false, false], kids: [false, false, false, false, false, false, false] } };
+    // first-run profile (saved by the onboarding screens); everything falls back to sensible defaults
+    let pf = null;
+    try { pf = JSON.parse(localStorage.getItem('gsb.profile') || 'null'); } catch (e) { pf = null; }
+    const s0 = this.s;
+    s0.H = pf && pf.household ? pf.household : 2;
+    s0.lunchN = s0.H;
+    s0.avoid = pf && pf.avoid ? pf.avoid : [];
+    s0.dislikes = [];
+    try { const d = JSON.parse(localStorage.getItem('gsb.dislikes') || '[]'); if (Array.isArray(d)) s0.dislikes = d; } catch (e) {}
+    s0.book = pf && pf.bookName ? pf.bookName : '';
+    s0.little = !!(pf && pf.littleOnes);
+    if (pf && pf.lunches) s0.auto.lunch = [true, true, true, true, false, false, true].map((b, d) => b && s0.auto.on[d]);
+    // your week is remembered
+    try { const sp = JSON.parse(localStorage.getItem('gsb.plan') || 'null'); if (Array.isArray(sp) && sp.length === 7) s0.plan = sp.map((p) => p && this.R[p.r] ? p : null); } catch (e) {}
+    // something to use up (set on "What have you got?"): Choose for me puts it on the earliest night from today
+    try { s0.useUp = JSON.parse(localStorage.getItem('gsb.useUp') || 'null'); } catch (e) { s0.useUp = null; }
+    // a meal sent from "What have you got?" -> MY WEEK lands on the first free night from today
+    try { const add = JSON.parse(localStorage.getItem('gsb.planAdd') || 'null');
+      if (add && this.R[add.r]) { localStorage.removeItem('gsb.planAdd');
+        let d = -1; for (let i = this.TODAY; i < 7; i++) if (!s0.plan[i]) { d = i; break; }
+        if (d < 0) d = s0.plan.findIndex((p) => !p);
+        const FULL = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        if (d >= 0) { s0.plan[d] = { r: add.r, n: s0.H, lunch: false, kids: false }; s0.toast = this.R[add.r].name + ' added to ' + FULL[d]; try { localStorage.setItem('gsb.plan', JSON.stringify(s0.plan)); } catch (e) {} }
+        else s0.toast = 'Your week is full · tap a night to swap it in';
+        this.tt = setTimeout(() => { s0.toast = ''; this.re(); }, 3600); } } catch (e) {}
+  }
+
+  componentDidMount() {
+    let seen = false; try { seen = localStorage.getItem('gsb.seenKitchenTour') === '1'; } catch (e) {}
+    if (!seen && !this.s.plan.some(Boolean)) this._ktT = setTimeout(() => this.tourStart(), 650);
+  }
+  componentWillUnmount() { clearTimeout(this._ktT); this.tourEnd(false); }
+  tourStart() {
+    this.tourEnd(false);
+    const STEPS = [
+  { key: 'welcome', target: null, title: 'YOUR KITCHEN HUB', text: 'Plan your dinners, get one shopping list and cook step by step.', btn: 'LET’S GO →', dislikes: true },
+  { key: 'choose', target: 'choose', at: 'bottom', tap: true, title: 'STEP 1 · FILL YOUR WEEK', text: 'Tap CHOOSE FOR ME and we’ll pick a week of dinners for you. Rather choose yourself? Tap + add a meal on any night.' },
+  { key: 'nights', target: 'nights', at: 'bottom', title: 'STEP 2 · YOUR NIGHTS', text: 'Each row is a choice for the week. Tap a day in any row:', btn: 'NEXT →', rows: [
+      ['#172038', '#C6FF4D', 'COOKING ON', 'the nights you’re cooking. Weeknights are ticked to start'],
+      ['#FF6FB0', '#172038', 'BUSY NIGHT?', 'short on time? We’ll pick something quick'],
+      ['#A98BFF', '#172038', 'TIME TO COOK?', 'a free evening: we’ll pick something special'],
+      ['#C6FF4D', '#172038', 'FEEDING MORE?', 'friends or family over? That night serves more'],
+      ['#C6FF4D', '#172038', 'LITTLE ONES?', 'kids eating too? We’ll pick family-friendly meals']] },
+  { key: 'pickweek', target: 'pickweek', tap: true, title: 'STEP 2 · PICK MY WEEK', text: 'Happy with your nights? Tap PICK MY WEEK and we’ll fill them in.' },
+  { key: 'meal', target: 'meal', title: 'STEP 3 · MAKE IT YOURS', text: '↻ swaps a meal, ×2 changes how many it serves, 🍱 cooks extra for lunch, and COOK → opens cooking mode.', btn: 'NEXT →' },
+  { key: 'basket', target: 'basket', title: 'STEP 4 · USE IT UP', text: 'Tap here any time, pick what’s in your fridge or cupboards, and we’ll find recipes that use it.', btn: 'NEXT →' },
+  { key: 'shop', target: 'shop', tap: true, title: 'STEP 5 · ONE SHOPPING LIST', text: 'Tap MAKE MY SHOPPING LIST to get everything you need in one list, sorted by aisle.' },
+  { key: 'done', target: null, title: 'WEEK PLANNED!', text: 'Tick off anything you already have, and the rest is your shopping list. Check the bottom of the list for cupboard staples too. Awesome!', btn: 'GOT IT', celebrate: true }
+];
+    const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
+    const L = document.createElement('div'); L.className = 'kt-layer'; L.setAttribute('role', 'dialog'); L.setAttribute('aria-modal', 'true'); L.setAttribute('aria-label', 'Getting started in the kitchen');
+    L.innerHTML = '<div class="kt-spot"></div><div class="kt-card"><span class="kt-tape"></span><span class="kt-title title-die bri"></span><span class="kt-text"></span>'
+      + '<div class="kt-rows"></div><div class="kt-dis"><span class="kt-disQ kal">First, anything you don’t like? We’ll never suggest it.</span><span class="kt-disH bri">NOT FOR ME</span><div class="kt-stripW"><div class="kt-strip" role="group" aria-label="Foods you don’t like"></div><button type="button" class="kt-sc l" aria-label="Scroll back">‹</button><button type="button" class="kt-sc r" aria-label="More foods">›</button></div>'
+      + '<form class="kt-add"><input type="text" class="kt-in" placeholder="or type one, e.g. coriander" aria-label="Type a food you don’t like" autocomplete="off" enterkeyhint="done"><button type="submit" class="kt-addB bri">+ ADD</button></form><div class="kt-typed"></div></div>'
+      + '<div class="kt-foot"><span class="kt-dots"></span><button type="button" class="kt-skip">skip</button><button type="button" class="kt-btn bri"></button></div></div>';
+    L.insertAdjacentHTML('beforeend', '<div class="kt-tap" aria-hidden="true"><span class="kt-tapT title-die bri">TAP HERE</span><svg class="kt-tapA" width="46" height="50" viewBox="0 0 46 50"><path d="M8 4 Q8 30 34 40 M34 40 l-11 2 M34 40 l-3 -11" stroke="#172038" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8 4 Q8 30 34 40 M34 40 l-11 2 M34 40 l-3 -11" stroke="#FF6FB0" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>');
+    document.body.appendChild(L);
+    const spot = L.querySelector('.kt-spot'), card = L.querySelector('.kt-card'), btn = L.querySelector('.kt-btn');
+    const kt = this.kt = { L, step: 0, STEPS, reduce, poll: 0 };
+    // ---- "not for me": the same food stickers as the Use it up basket, plus anything typed
+    const FOODS = [{"id": "tuna", "label": "Tuna", "alias": ["tin of tuna", "tins of tuna", "tuna"], "img": "../img/a3cc77739579330a.png"}, {"id": "egg", "label": "Eggs", "alias": ["egg"], "img": "../img/fe285f50d806fc63.png"}, {"id": "rice", "label": "Rice", "alias": ["cooked rice (pouch)", "rice"], "img": "../img/139a3c3504534ffd.png"}, {"id": "spaghetti", "label": "Pasta", "alias": ["spaghetti", "fettuccine", "orzo", "pasta"], "img": "../img/58ee88833541fd12.png"}, {"id": "noodles", "label": "Noodles", "alias": ["nest dried egg noodles", "noodles"], "img": "../img/65626c9dc7b7ec71.png"}, {"id": "chicken", "label": "Chicken", "alias": ["boneless chicken thigh", "bone-in chicken thigh", "chicken breast", "chicken"], "img": "../img/9248a8fea8a12d70.png"}, {"id": "mince", "label": "Mince", "alias": ["beef mince", "lamb mince", "pork mince", "mince"], "img": "../img/526fa807a7836fb6.png"}, {"id": "salmon", "label": "Salmon", "alias": ["salmon fillet", "salmon"], "img": "../img/3ac985c3285f5e6f.png"}, {"id": "chorizo", "label": "Chorizo", "alias": ["chorizo"], "img": "../img/f809f79e9e546fa3.png"}, {"id": "cheddar", "label": "Cheddar", "alias": ["cheddar"], "img": "../img/13786d8aad5706b9.png"}, {"id": "parmesan", "label": "Parmesan", "alias": ["parmesan"], "img": "../img/76cf4c009cafb780.png"}, {"id": "bread", "label": "Bread", "alias": ["slice of bread", "slices of bread", "bread", "flatbread"], "img": "../img/b564fedfad7ffe82.png"}, {"id": "tortilla", "label": "Wraps", "alias": ["small tortilla", "large wrap", "tortilla", "wrap"], "img": "../img/f4bb2557e549bd8a.png"}, {"id": "spring onion", "label": "Spring onions", "alias": ["spring onion"], "img": "../img/2f9159756c1ef90c.png"}, {"id": "onion", "label": "Onion", "alias": ["red onion", "onion"], "img": "../img/e7c9300315bab459.png"}, {"id": "garlic", "label": "Garlic", "alias": ["garlic clove", "garlic"], "img": "../img/c5001f7bd4a42380.png"}, {"id": "cucumber", "label": "Cucumber", "alias": ["cucumber"], "img": "../img/4bf63cf19761a508.png"}, {"id": "peas", "label": "Peas", "alias": ["frozen peas", "peas"], "img": "../img/89065a128cb61562.png"}, {"id": "mushroom", "label": "Mushrooms", "alias": ["mushroom"], "img": "../img/f125189a2ea38aed.png"}, {"id": "lemon", "label": "Lemon", "alias": ["lemon"], "img": "../img/5083b7d7a233d57c.png"}, {"id": "lime", "label": "Lime", "alias": ["lime"], "img": "../img/f9eef0ddd80cc3ce.png"}, {"id": "prawns", "label": "Prawns", "alias": ["raw king prawn", "raw king prawns", "king prawn", "prawn"], "img": "../img/e256411d700db754.png"}, {"id": "feta", "label": "Feta", "alias": ["block of feta", "feta"], "img": "../img/14cdbe9841ac1665.png"}, {"id": "tomato", "label": "Tomatoes", "alias": ["cherry tomato", "cherry tomatoes", "tin of chopped tomatoes", "tins of chopped tomatoes", "passata", "tomato pur\u00e9e", "sun-dried tomato", "sun-dried tomatoes", "tomato"], "img": "../img/cbfd406194e3c424.png"}, {"id": "potato", "label": "Potatoes", "alias": ["baby potato", "baby potatoes", "potato"], "img": "../img/f594b175f2bec7ad.png"}, {"id": "pepper", "label": "Peppers", "alias": ["red pepper", "green pepper", "bell pepper"], "img": "../img/9aed74044d1a6c95.png"}, {"id": "coconut milk", "label": "Coconut milk", "alias": ["tin of coconut milk", "tins of coconut milk", "coconut milk"], "img": "../img/41b03533a3d18a92.png"}, {"id": "chickpeas", "label": "Chickpeas", "alias": ["tin of chickpeas", "tins of chickpeas", "chickpeas"], "img": "../img/0ba2dca06f7126cf.png"}, {"id": "lentils", "label": "Lentils", "alias": ["red lentils", "lentils"], "img": "../img/45fd62886aad0c55.png"}, {"id": "spinach", "label": "Spinach", "alias": ["spinach"], "img": "../img/107be229e04e3c92.png"}, {"id": "paneer", "label": "Paneer", "alias": ["paneer"], "img": "../img/1d55322666cceb35.png"}, {"id": "lamb", "label": "Lamb", "alias": ["diced lamb", "lamb"], "img": "../img/41e5c9e9288e5df5.png"}, {"id": "beef", "label": "Beef", "alias": ["beef sirloin steak", "braising steak", "steak", "beef"], "img": "../img/d0d070af52570b3d.png"}], dis = L.querySelector('.kt-dis'), strip = L.querySelector('.kt-strip'), typed = L.querySelector('.kt-typed'), inp = L.querySelector('.kt-in');
+    const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const save = () => { this.s.dislikes = this.s.dislikes.slice(); try { localStorage.setItem('gsb.dislikes', JSON.stringify(this.s.dislikes)); } catch (e) {} };
+    const has = (d) => this.s.dislikes.indexOf(d) >= 0;
+    const paintDis = () => {
+      strip.querySelectorAll('.kt-food').forEach((b) => { const on = has(b.dataset.id); b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+      const extra = this.s.dislikes.filter((d) => !FOODS.some((f) => f.id === d));
+      typed.innerHTML = extra.map((d) => '<button type="button" class="kt-chip" data-d="' + esc(d) + '" aria-label="Remove ' + esc(d) + '">' + esc(d) + ' <b>×</b></button>').join('');
+      typed.style.display = extra.length ? 'flex' : 'none';
+      const n = this.s.dislikes.length; L.querySelector('.kt-disH').textContent = n ? 'NOT FOR ME · ' + n + ' PICKED' : 'NOT FOR ME · SWIPE FOR MORE →';
+    };
+    strip.innerHTML = FOODS.map((f) => '<button type="button" class="kt-food" data-id="' + f.id + '" aria-pressed="false" aria-label="' + esc(f.label) + '"><img alt="" src="' + f.img + '"><span>' + esc(f.label) + '</span><i aria-hidden="true">×</i></button>').join('');
+    strip.addEventListener('click', (e) => { const b = e.target.closest('.kt-food'); if (!b) return; const id = b.dataset.id;
+      if (has(id)) { this.s.dislikes = this.s.dislikes.filter((x) => x !== id); this.buzz(4); } else { this.s.dislikes.push(id); this.buzz(10); }
+      save(); paintDis(); });
+    typed.addEventListener('click', (e) => { const b = e.target.closest('.kt-chip'); if (!b) return; this.s.dislikes = this.s.dislikes.filter((x) => x !== b.dataset.d); this.buzz(4); save(); paintDis(); });
+    L.querySelector('.kt-add').addEventListener('submit', (e) => { e.preventDefault(); const d = this.dislikeId(inp.value); inp.value = '';
+      if (d && !has(d)) { this.s.dislikes.push(d); this.buzz(10); save(); paintDis(); const b = strip.querySelector('[data-id="' + d + '"]'); if (b) b.scrollIntoView({ inline: 'center', block: 'nearest' }); } });
+    inp.addEventListener('keydown', (e) => e.stopPropagation());   // typing never triggers the tour's Esc
+    paintDis();
+    const scB = (dir) => { strip.scrollBy({ left: dir * 200, behavior: reduce ? 'auto' : 'smooth' }); this.buzz(4); };
+    const scL = L.querySelector('.kt-sc.l'), scR = L.querySelector('.kt-sc.r');
+    const scPaint = () => { scL.style.display = strip.scrollLeft > 4 ? 'flex' : 'none'; scR.style.display = strip.scrollLeft + strip.clientWidth < strip.scrollWidth - 4 ? 'flex' : 'none'; };
+    scL.addEventListener('click', () => scB(-1)); scR.addEventListener('click', () => scB(1)); strip.addEventListener('scroll', scPaint, { passive: true }); setTimeout(scPaint, 60);
+    const rootEl = () => document.querySelector('[data-tour-root]');
+    const tgt = (k) => k && document.querySelector('[data-tour="' + k + '"]');
+    const place = () => {
+      const st = STEPS[kt.step], root = rootEl(); if (!root) return;
+      const R = root.getBoundingClientRect(), k = R.width / 390, el = tgt(st.target);
+      L.style.display = this.s.view === 'pick' ? 'none' : 'block';   // picking a meal by hand: step aside, come back after
+      card.style.transform = 'scale(' + k + ') rotate(-1deg)'; card.style.left = (R.left + 18 * k) + 'px';
+      let r = null;
+      if (el) { const b = el.getBoundingClientRect(), pad = 6 * k; r = { l: b.left - pad, t: b.top - pad, w: b.width + pad * 2, h: b.height + pad * 2 };
+        spot.style.borderWidth = 3 * k + 'px'; }
+      else { r = { l: R.left + R.width / 2, t: R.top + R.height / 2, w: 0, h: 0 }; spot.style.borderWidth = '0'; }
+      Object.assign(spot.style, { left: r.l + 'px', top: r.t + 'px', width: r.w + 'px', height: r.h + 'px', borderRadius: 18 * k + 'px' });
+      const ch = card.offsetHeight * k, gap = 18 * k;
+      // 'bottom' keeps the card clear of the week (so any night's + add a meal stays tappable)
+      const tapUp = el && r.t + r.h / 2 < R.top + R.height / 2, room = st.tap ? 78 * k : 0;   // leave room for the TAP HERE arrow
+      let top = st.at === 'bottom' ? R.bottom - ch - 16 * k : el ? (r.t + r.h + gap + ch + (tapUp ? room : 0) < R.bottom - 8 * k ? r.t + r.h + gap + (tapUp ? room : 0) : r.t - gap - ch - (tapUp ? 0 : room)) : R.top + R.height / 2 - ch / 2;
+      card.style.top = Math.max(R.top + 8 * k, top) + 'px';
+      const tap = L.querySelector('.kt-tap');
+      if (st.tap && el) {   // "TAP HERE": below the target pointing up when it's high on the screen, above it pointing down when it's low
+        const up = r.t + r.h / 2 < R.top + R.height / 2, cx = Math.min(R.right - 80 * k, Math.max(R.left + 80 * k, r.l + r.w / 2));
+        tap.style.display = 'flex'; tap.classList.toggle('up', up); tap.style.transform = 'scale(' + k + ')';
+        tap.style.left = (cx - 70 * k) + 'px'; tap.style.top = (up ? r.t + r.h + 2 * k : r.t - 74 * k) + 'px';
+      } else tap.style.display = 'none';
+    };
+    const show = () => {
+      const st = STEPS[kt.step];
+      L.querySelector('.kt-title').textContent = st.title; L.querySelector('.kt-text').textContent = st.text;
+      btn.style.display = st.btn ? 'block' : 'none'; btn.textContent = st.btn || ''; dis.style.display = st.dislikes ? 'flex' : 'none';
+      const rowsEl = L.querySelector('.kt-rows'); rowsEl.style.display = st.rows ? 'flex' : 'none';
+      rowsEl.innerHTML = st.rows ? st.rows.map((x) => '<span class="kt-row"><b class="bri" style="background:' + x[0] + ';color:' + x[1] + '">' + x[2] + '</b><span>' + x[3] + '</span></span>').join('') : '';
+      L.querySelector('.kt-dots').innerHTML = STEPS.map((x, i) => '<span class="' + (i === kt.step ? 'on' : i < kt.step ? 'done' : '') + '"></span>').join('');
+      place(); if (st.btn) btn.focus();
+      if (st.celebrate) { this.buzz([10, 40, 16]); if (!reduce) this.tourConfetti(); }
+    };
+    const go = (key) => { const i = STEPS.findIndex((x) => x.key === key); if (i >= 0 && i !== kt.step) { kt.step = i; this.buzz(6); show(); } };
+    kt.go = go;
+    btn.addEventListener('click', () => { const st = STEPS[kt.step];
+      if (st.key === 'welcome') go(this.s.plan.some(Boolean) ? 'meal' : 'choose');
+      else if (st.key === 'meal') go('basket');
+      else if (st.key === 'basket') go('shop');
+      else if (st.key === 'nights') go('pickweek');
+      else if (st.key === 'done') this.tourEnd(true); });
+    L.querySelector('.kt-skip').addEventListener('click', () => this.tourEnd(true));
+    kt.onKey = (e) => { if (e.key === 'Escape') this.tourEnd(true); }; document.addEventListener('keydown', kt.onKey);
+    kt.onResize = () => place(); addEventListener('resize', kt.onResize);
+    // the "doing" steps move on when the user has actually done the thing
+    kt.poll = setInterval(() => {
+      const st = STEPS[kt.step], v = this.s.view, has = this.s.plan.some(Boolean);
+      if (st.key === 'choose') { if (v === 'auto') go('nights'); else if (v === 'plan' && has) go('meal'); }
+      else if (st.key === 'pickweek' || st.key === 'nights') { if (v === 'plan') go(has ? 'meal' : 'choose'); }
+      else if (st.key === 'meal' || st.key === 'basket' || st.key === 'shop') { if (v === 'shop') go('done'); else if (!has && v === 'plan') go('choose'); }
+    }, 250);
+    // the highlight follows its target every frame (sheets slide in, rows re-render)
+    const track = () => { if (this.kt !== kt) return; place(); kt.raf = requestAnimationFrame(track); }; kt.raf = requestAnimationFrame(track);
+    show();
+  }
+  dislikeId(t) {   // what someone typed -> one of our food ids if we know it ("Mushrooms" -> mushroom), else the word itself
+    let q = String(t || '').trim().toLowerCase().replace(/\s+/g, ' ').slice(0, 30); if (!q) return '';
+    const F = [{"id": "tuna", "label": "Tuna", "alias": ["tin of tuna", "tins of tuna", "tuna"], "img": "../img/a3cc77739579330a.png"}, {"id": "egg", "label": "Eggs", "alias": ["egg"], "img": "../img/fe285f50d806fc63.png"}, {"id": "rice", "label": "Rice", "alias": ["cooked rice (pouch)", "rice"], "img": "../img/139a3c3504534ffd.png"}, {"id": "spaghetti", "label": "Pasta", "alias": ["spaghetti", "fettuccine", "orzo", "pasta"], "img": "../img/58ee88833541fd12.png"}, {"id": "noodles", "label": "Noodles", "alias": ["nest dried egg noodles", "noodles"], "img": "../img/65626c9dc7b7ec71.png"}, {"id": "chicken", "label": "Chicken", "alias": ["boneless chicken thigh", "bone-in chicken thigh", "chicken breast", "chicken"], "img": "../img/9248a8fea8a12d70.png"}, {"id": "mince", "label": "Mince", "alias": ["beef mince", "lamb mince", "pork mince", "mince"], "img": "../img/526fa807a7836fb6.png"}, {"id": "salmon", "label": "Salmon", "alias": ["salmon fillet", "salmon"], "img": "../img/3ac985c3285f5e6f.png"}, {"id": "chorizo", "label": "Chorizo", "alias": ["chorizo"], "img": "../img/f809f79e9e546fa3.png"}, {"id": "cheddar", "label": "Cheddar", "alias": ["cheddar"], "img": "../img/13786d8aad5706b9.png"}, {"id": "parmesan", "label": "Parmesan", "alias": ["parmesan"], "img": "../img/76cf4c009cafb780.png"}, {"id": "bread", "label": "Bread", "alias": ["slice of bread", "slices of bread", "bread", "flatbread"], "img": "../img/b564fedfad7ffe82.png"}, {"id": "tortilla", "label": "Wraps", "alias": ["small tortilla", "large wrap", "tortilla", "wrap"], "img": "../img/f4bb2557e549bd8a.png"}, {"id": "spring onion", "label": "Spring onions", "alias": ["spring onion"], "img": "../img/2f9159756c1ef90c.png"}, {"id": "onion", "label": "Onion", "alias": ["red onion", "onion"], "img": "../img/e7c9300315bab459.png"}, {"id": "garlic", "label": "Garlic", "alias": ["garlic clove", "garlic"], "img": "../img/c5001f7bd4a42380.png"}, {"id": "cucumber", "label": "Cucumber", "alias": ["cucumber"], "img": "../img/4bf63cf19761a508.png"}, {"id": "peas", "label": "Peas", "alias": ["frozen peas", "peas"], "img": "../img/89065a128cb61562.png"}, {"id": "mushroom", "label": "Mushrooms", "alias": ["mushroom"], "img": "../img/f125189a2ea38aed.png"}, {"id": "lemon", "label": "Lemon", "alias": ["lemon"], "img": "../img/5083b7d7a233d57c.png"}, {"id": "lime", "label": "Lime", "alias": ["lime"], "img": "../img/f9eef0ddd80cc3ce.png"}, {"id": "prawns", "label": "Prawns", "alias": ["raw king prawn", "raw king prawns", "king prawn", "prawn"], "img": "../img/e256411d700db754.png"}, {"id": "feta", "label": "Feta", "alias": ["block of feta", "feta"], "img": "../img/14cdbe9841ac1665.png"}, {"id": "tomato", "label": "Tomatoes", "alias": ["cherry tomato", "cherry tomatoes", "tin of chopped tomatoes", "tins of chopped tomatoes", "passata", "tomato pur\u00e9e", "sun-dried tomato", "sun-dried tomatoes", "tomato"], "img": "../img/cbfd406194e3c424.png"}, {"id": "potato", "label": "Potatoes", "alias": ["baby potato", "baby potatoes", "potato"], "img": "../img/f594b175f2bec7ad.png"}, {"id": "pepper", "label": "Peppers", "alias": ["red pepper", "green pepper", "bell pepper"], "img": "../img/9aed74044d1a6c95.png"}, {"id": "coconut milk", "label": "Coconut milk", "alias": ["tin of coconut milk", "tins of coconut milk", "coconut milk"], "img": "../img/41b03533a3d18a92.png"}, {"id": "chickpeas", "label": "Chickpeas", "alias": ["tin of chickpeas", "tins of chickpeas", "chickpeas"], "img": "../img/0ba2dca06f7126cf.png"}, {"id": "lentils", "label": "Lentils", "alias": ["red lentils", "lentils"], "img": "../img/45fd62886aad0c55.png"}, {"id": "spinach", "label": "Spinach", "alias": ["spinach"], "img": "../img/107be229e04e3c92.png"}, {"id": "paneer", "label": "Paneer", "alias": ["paneer"], "img": "../img/1d55322666cceb35.png"}, {"id": "lamb", "label": "Lamb", "alias": ["diced lamb", "lamb"], "img": "../img/41e5c9e9288e5df5.png"}, {"id": "beef", "label": "Beef", "alias": ["beef sirloin steak", "braising steak", "steak", "beef"], "img": "../img/d0d070af52570b3d.png"}], sing = q.replace(/(ies)$/, 'y').replace(/(oes|ses|shes|ches)$/, (m) => m.slice(0, -2)).replace(/([^s])s$/, '$1');
+    const f = F.find((x) => x.label.toLowerCase() === q || x.id === q || x.id === sing || x.alias.indexOf(q) >= 0 || x.alias.indexOf(sing) >= 0);
+    return f ? f.id : sing;
+  }
+  tourEnd(remember) {
+    const kt = this.kt; if (!kt) return; this.kt = null;
+    clearInterval(kt.poll); cancelAnimationFrame(kt.raf); document.removeEventListener('keydown', kt.onKey); removeEventListener('resize', kt.onResize); kt.L.remove();
+    if (remember) try { localStorage.setItem('gsb.seenKitchenTour', '1'); } catch (e) {}
+  }
+  tourConfetti() {
+    const root = document.querySelector('[data-tour-root]'); if (!root) return; const R = root.getBoundingClientRect();
+    const cols = ['#FF6FB0', '#C6FF4D', '#6EC8FF', '#FFD23F', '#A98BFF'];
+    for (let i = 0; i < 14; i++) { const s = document.createElement('span'), a = (i / 14) * Math.PI * 2, d = (90 + Math.random() * 60) * R.width / 390;
+      s.textContent = i % 3 === 0 ? '✦' : '●'; s.setAttribute('aria-hidden', 'true');
+      s.style.cssText = 'position:fixed;z-index:10001;left:' + (R.left + R.width / 2) + 'px;top:' + (R.top + R.height * 0.42) + 'px;color:' + cols[i % 5] + ';font-size:' + (i % 3 === 0 ? 22 : 12) + 'px;pointer-events:none;transition:transform .6s cubic-bezier(.2,.9,.3,1),opacity .5s ease .3s';
+      document.body.appendChild(s); requestAnimationFrame(() => { s.style.transform = 'translate(' + Math.cos(a) * d + 'px,' + Math.sin(a) * d + 'px)'; s.style.opacity = 0; }); setTimeout(() => s.remove(), 1000); }
+  }
+  re() { try { localStorage.setItem('gsb.plan', JSON.stringify(this.s.plan)); } catch (e) {} this.setState({ n: Date.now() }); }
+  say(t) { const s = this.s; s.toast = t; clearTimeout(this.tt); this.tt = setTimeout(() => { s.toast = ''; this.re(); }, 3200); }
+  buzz(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
+  moodCol(m) { return this.MOODS.find((x) => x[0] === m)[2]; }
+  fq(g, v) {
+    let unit = g[1]; const name = g[2], plural = g[3];
+    if (unit === 'tbsp' && v < 1) { unit = 'tsp'; v = v * 3; }   // under a tablespoon reads better in teaspoons
+    if (unit === 'tbsp' && v >= 8 && g[4] === 'Chilled & dairy') { unit = 'g'; v = v * 15; }   // lots of spoonfuls of yoghurt: say how much to buy
+    if (unit === '') v = Math.ceil(v - 1e-9);
+    else if (unit === 'g' || unit === 'ml') v = v >= 20 ? Math.round(v / 5) * 5 : Math.round(v);
+    else v = Math.round(v * 2) / 2;
+    const w = Math.floor(v), half = Math.abs(v - w - 0.5) < 1e-6;
+    const n = half ? (w ? w + '½' : '½') : String(v);
+    const label = (v > 1 && plural) ? plural : name;
+    if ((unit === 'g' || unit === 'ml') && v >= 1000) return (Math.round(v / 50) / 20) + (unit === 'g' ? ' kg ' : ' litres ') + label;
+    if (unit === 'tbsp' || unit === 'tsp') return label + ' (' + n + ' ' + unit + ')';
+    return unit === '' ? n + ' ' + label : n + ' ' + unit + ' ' + label;
+  }
+  protein(k) {
+    const m = this.R[k].ing.find((g) => g[4] === 'Meat & fish');
+    if (!m) return 'veg';
+    const w = ['chicken', 'beef', 'pork', 'lamb', 'duck', 'salmon'].find((x) => m[2].indexOf(x) >= 0);
+    return w || m[2];
+  }
+  avoided(k) {
+    const av = this.s.avoid || [], t = this.R[k].tags, r = this.R[k];
+    if (av.indexOf('vegetarian') >= 0 && t.indexOf('vegetarian') < 0) return true;
+    // foods they don't like (kitchen welcome): any ingredient that is, or names, one of them
+    if ((this.s.dislikes || []).some((d) => r.use.indexOf(d) >= 0 || r.ing.some((g) => (' ' + String(g[2]).toLowerCase() + ' ').indexOf(' ' + d) >= 0))) return true;
+    return av.some((a) => a !== 'vegetarian' && t.indexOf(a) >= 0);
+  }
+  fresh(k) { return this.R[k].ing.filter((g) => g[4] === 'Fruit & veg').map((g) => g[2]); }
+  kidsOn(p) { return !!p && (this.s.little || !!p.kids); }
+  pickFor(mood, used, prevProtein, nextProtein, freshSet, lunch, kids, use) {
+    // ordinary nights can also get a quick meal (at most 2 a week, weighted a little lower) so the week stays varied
+    const quickOk = mood === 'normal' && (this.quickLeft || 0) > 0;
+    let keys = Object.keys(this.R).filter((k) => (this.R[k].mood === mood || (quickOk && this.R[k].mood === 'tired')) && !this.avoided(k));
+    if (!keys.length) keys = Object.keys(this.R).filter((k) => !this.avoided(k));
+    if (!keys.length) keys = Object.keys(this.R).filter((k) => this.R[k].mood === mood);
+    if (lunch) { const ok = keys.filter((k) => this.LUNCH[k][0] !== 'no'); if (ok.length) keys = ok; }
+    if (kids) { const ok = keys.filter((k) => this.R[k].kid[0] !== 'grown'); if (ok.length) keys = ok; }
+    let pool = keys.filter((k) => !used.has(k));
+    if (!pool.length) { // mood used up (often after food no-gos): borrow an unused recipe before repeating one
+      const order = mood === 'fancy' ? ['normal', 'tired'] : mood === 'tired' ? ['normal', 'fancy'] : ['tired', 'fancy'];
+      for (const m of order) { pool = Object.keys(this.R).filter((k) => this.R[k].mood === m && !this.avoided(k) && !used.has(k) && (!lunch || this.LUNCH[k][0] !== 'no') && (!kids || this.R[k].kid[0] !== 'grown')); if (pool.length) break; }
+    }
+    if (!pool.length) pool = keys;
+    if (use) { // using something up: any recipe that uses it beats the mood, as long as it still fits the night
+      const u = Object.keys(this.R).filter((k) => this.R[k].use.indexOf(use) >= 0 && !this.avoided(k) && !used.has(k) && (!lunch || this.LUNCH[k][0] !== 'no') && (!kids || this.R[k].kid[0] !== 'grown'));
+      if (u.length) pool = u; }
+    let best = null, bestScore = -9;
+    pool.forEach((k) => {
+      const pr = this.protein(k);
+      let score = Math.random();
+      if (pr !== 'veg' && (pr === prevProtein || pr === nextProtein)) score -= 0.7;
+      score += 0.12 * this.fresh(k).filter((f) => freshSet.has(f)).length;
+      if (kids && this.R[k].kid[0] === 'family') score += 0.35;
+      if (mood === 'normal' && this.R[k].mood === 'tired') score -= 0.25;
+      if (score > bestScore) { bestScore = score; best = k; }
+    });
+    return best;
+  }
+  autoPick() {
+    // try a handful of random weeks and keep the one with the fewest same-meat nights in a row
+    const s = this.s, a = s.auto;
+    const clash = (plan) => { let n = 0; for (let d = 1; d < 7; d++) { const x = plan[d - 1], y = plan[d]; if (x && y) { const px = this.protein(x.r); if (px !== 'veg' && px === this.protein(y.r)) n++; } } return n; };
+    let best = null, bestClash = 99, picked = 0;
+    for (let t = 0; t < 40 && bestClash > 0; t++) {
+      const plan = s.plan.slice(), used = new Set(), freshSet = new Set();
+      this.quickLeft = 2 - plan.filter((p, d) => p && !a.busy[d] && this.R[p.r].mood === 'tired').length;
+      let useLeft = s.useUp && s.useUp.id && !plan.some((p) => p && this.R[p.r].use.indexOf(s.useUp.id) >= 0) ? s.useUp.id : null;
+      plan.forEach((p) => { if (p) { used.add(p.r); this.fresh(p.r).forEach((f) => freshSet.add(f)); } });
+      let n = 0;
+      for (let d = 0; d < 7; d++) {
+        if (plan[d] || !a.on[d]) continue;
+        const mood = a.busy[d] ? 'tired' : a.fancy[d] ? 'fancy' : 'normal';
+        const prev = d > 0 && plan[d - 1] ? this.protein(plan[d - 1].r) : null;
+        const next = d < 6 && plan[d + 1] ? this.protein(plan[d + 1].r) : null;
+        const kd = s.little || (a.group[d] && a.kids[d]);
+        const u = useLeft && d >= this.TODAY ? useLeft : null;
+        const k = this.pickFor(mood, used, prev, next, freshSet, a.lunch[d], kd, u);
+        if (u && this.R[k].use.indexOf(u) >= 0) useLeft = null;
+        if (mood === 'normal' && this.R[k].mood === 'tired') this.quickLeft--;
+        plan[d] = { r: k, n: a.group[d] ? Math.max(4, s.H + 2) : s.H, lunch: !!a.lunch[d] && this.LUNCH[k][0] !== 'no', kids: !!(a.group[d] && a.kids[d]) };
+        used.add(k); this.fresh(k).forEach((f) => freshSet.add(f)); n++;
+      }
+      const c = clash(plan);
+      if (c < bestClash) { bestClash = c; best = plan; picked = n; }
+    }
+    if (best) s.plan = best;
+    return picked;
+  }
+  reroll(d) {
+    const s = this.s, p = s.plan[d]; if (!p) return;
+    const used = new Set(s.plan.filter(Boolean).map((x) => x.r));
+    const freshSet = new Set();
+    s.plan.forEach((x, n) => { if (x && n !== d) this.fresh(x.r).forEach((f) => freshSet.add(f)); });
+    const prev = d > 0 && s.plan[d - 1] ? this.protein(s.plan[d - 1].r) : null;
+    const next = d < 6 && s.plan[d + 1] ? this.protein(s.plan[d + 1].r) : null;
+    const k = this.pickFor(this.R[p.r].mood, used, prev, next, freshSet, p.lunch, this.kidsOn(p));
+    s.plan[d] = { r: k, n: p.n, lunch: !!p.lunch && this.LUNCH[k][0] !== 'no', kids: !!p.kids };
+  }
+  shopping() {
+    const s = this.s, map = {}, cup = {};
+    s.plan.forEach((p, d) => {
+      if (!p) return;
+      this.R[p.r].ing.forEach((g) => {
+        if (g[4] === 'Cupboard check') { cup[g[2].toLowerCase()] = cup[g[2].toLowerCase()] || g[2]; return; }
+        // one line per ingredient: names match whatever their capitals, and teaspoons fold into tablespoons (3 tsp = 1 tbsp)
+        const spoon = g[1] === 'tsp' || g[1] === 'tbsp', key = g[2].toLowerCase() + '|' + (spoon ? 'tbsp' : g[1]);
+        if (!map[key]) map[key] = { key, g: spoon ? [g[0], 'tbsp', g[2], g[3], g[4]] : g, total: 0, unscaled: g[0] === null, days: [] };
+        if (g[0] !== null) map[key].total += (g[1] === 'tsp' ? g[0] / 3 : g[0]) * (p.n + (p.lunch ? s.lunchN * 0.5 : 0));   // lunches are half portions
+        if (map[key].days.indexOf(this.DAYS[d]) < 0) map[key].days.push(this.DAYS[d]);
+      });
+    });
+    const items = Object.values(map);
+    const groups = this.AISLES.filter((a) => a !== 'Cupboard check').map((a) => ({ a, list: items.filter((x) => x.g[4] === a) })).filter((x) => x.list.length);
+    return { groups, cup: Object.values(cup), count: items.length };
+  }
+  autoCount() { const s = this.s; return s.auto.on.filter((on, d) => on && !s.plan[d]).length; }
+  autoNote() {
+    const kept = this.s.plan.filter(Boolean).length;
+    return (kept ? kept + (kept === 1 ? ' meal' : ' meals') + ' you’ve already picked stay put. ' : '') + 'Every other night is a normal one.';
+  }
+  autoRows() {
+    const s = this.s, a = s.auto, D = ['M', 'T', 'W', 'T', 'F', 'S', 'S'], FULL = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const row = (key, label, hint, col, fg) => ({ label, hint, chips: D.map((t, d) => {
+      const kept = !!s.plan[d];
+      if (key === 'on') {
+        const on = kept || a.on[d];
+        return { text: kept ? '✓' : t, on, bg: kept ? '#FFFFFF' : on ? '#172038' : '#FFFFFF', fg: kept ? '#172038' : on ? '#C6FF4D' : '#172038', op: 1, bs: kept ? 'dashed' : 'solid',
+          aria: FULL[d] + (kept ? ' already planned' : on ? ', cooking' : ', not cooking'), tap: () => { if (kept) return; a.on[d] = !a.on[d]; if (!a.on[d]) { a.busy[d] = a.fancy[d] = a.group[d] = a.lunch[d] = a.kids[d] = false; } this.re(); } };
+      }
+      const usable = a.on[d] && !kept && (key !== 'kids' || a.group[d]), on = usable && a[key][d];
+      return { text: t, on, bg: on ? col : '#FFFFFF', fg: on ? fg : '#172038', op: usable ? 1 : 0.3, bs: 'solid', aria: FULL[d] + ' ' + label,
+        tap: () => { if (!usable) return; a[key][d] = !a[key][d]; if (key === 'group' && !a.group[d]) a.kids[d] = false; if (key === 'busy' && a.busy[d]) a.fancy[d] = false; if (key === 'fancy' && a.fancy[d]) a.busy[d] = false; this.buzz(6); this.re(); } };
+    }) });
+    const rows = [row('on', 'Cooking on', '', '#172038', '#C6FF4D'), row('busy', 'Busy night?', '→ something quick', '#FF6FB0', '#172038'),
+      row('fancy', 'Time to cook?', '→ something special', '#A98BFF', '#172038'), row('group', 'Feeding more?', '→ serves ' + Math.max(4, s.H + 2), '#C6FF4D', '#172038')];
+    if (!s.little) rows.push(row('kids', 'Little ones coming?', '→ family-friendly picks', '#C6FF4D', '#172038'));
+    rows.push(row('lunch', 'Lunch tomorrow?', '→ cooks extra, keeps well', '#FFD23F', '#172038'));
+    return rows;
+  }
+  // dish mastery: cooked once ★, three times ★★, five times ★★★ (from the cook-along log in gsd.progress)
+  stars(k) { if (!this._cooked) { this._cooked = {}; try { const p = JSON.parse(localStorage.getItem('gsb.progress') || 'null'); ((p && p.acts && p.acts.cook) || []).forEach((c) => { this._cooked[c.id] = (this._cooked[c.id] || 0) + 1; }); } catch (e) {} }
+    const n = this._cooked[k] || 0; return n >= 5 ? '★★★ · ' : n >= 3 ? '★★ · ' : n >= 1 ? '★ · ' : ''; }
+  renderVals() {
+    const s = this.s, R = this.R;
+    const meals = s.plan.filter(Boolean).length;
+    const sh = this.shopping();
+    const left = sh.groups.reduce((n, gr) => n + gr.list.filter((x) => !s.have[x.key]).length, 0);
+    const days = s.plan.map((p, d) => {
+      const r = p ? R[p.r] : null;
+      return {
+        label: this.DAYS[d], rot: ((d * 37) % 5 - 2) + 'deg', filled: !!p, empty: !p,
+        img: r ? r.img : '', name: r ? r.name : '', moodCol: r ? this.moodCol(r.mood) : '#FFFFFF',
+        meta: r ? r.mins + ' min' : '', serves: p ? p.n : '',
+        hasCook: !!(p && this.COOK[p.r]), noCook: !!(p && !this.COOK[p.r]), cookHref: p ? (this.COOK[p.r] || '') : '', cookAria: r ? 'Cook ' + r.name : '',
+        aria: p ? this.DAYS[d] + ': ' + r.name + ', tap to change' : 'Add a meal for ' + this.DAYS[d],
+        pick: () => { s.pickDay = d; s.mood = p ? r.mood : s.mood; s.pickShow = 3; s.view = 'pick'; this.re(); },
+        servesAria: p ? 'Serves ' + p.n + ', tap to change' : '',
+        cycle: () => { const steps = [1, 2, 3, 4, 6, 8]; p.n = steps[(steps.indexOf(p.n) + 1) % steps.length] || 2; this.buzz(6); this.re(); },
+        lunchFrom: d > 0 && !!s.plan[d - 1] && !!s.plan[d - 1].lunch,
+        lunchAria: d > 0 && s.plan[d - 1] && s.plan[d - 1].lunch ? 'Lunch: leftover ' + R[s.plan[d - 1].r].name : '',
+        lunchOn: !!(p && p.lunch), lunchText: p && p.lunch ? ' +' + s.lunchN : '',
+        lunchBg: p && p.lunch ? '#C6FF4D' : '#FFFFFF', lunchBs: p && p.lunch ? 'solid' : 'dashed', lunchOp: p && this.LUNCH[p.r][0] === 'no' ? 0.35 : 1,
+        lunchAria2: p ? (p.lunch ? 'Cooking ' + s.lunchN + ' extra for lunch tomorrow, tap to stop' : 'Cook extra for lunch tomorrow') : '',
+        lunch: () => {
+          if (this.LUNCH[p.r][0] === 'no') { this.say(r.name + ': ' + this.LUNCH[p.r][1] + ' · try ↻'); this.re(); return; }
+          p.lunch = !p.lunch; this.buzz(8);
+          if (p.lunch) this.say('+' + s.lunchN + ' for lunch tomorrow · ' + this.LUNCH[p.r][1]);
+          this.re();
+        },
+        kidsShow: !!p && !s.little && p.n > s.H, kidsOn: !!(p && p.kids),
+        kidsBg: p && p.kids ? '#C6FF4D' : '#FFFFFF', kidsBs: p && p.kids ? 'solid' : 'dashed',
+        kidsAria: p ? (p.kids ? 'Little ones joining: on' : 'Little ones joining?') : '',
+        kidsTap: () => {
+          p.kids = !p.kids; this.buzz(8);
+          if (p.kids) this.say(r.kid[0] === 'grown' ? r.name + ': ' + r.kid[1] + ' for little ones · try ↻' : '🧸 ' + (r.kid[0] === 'family' ? 'Family-friendly' : 'Adapt with care') + ': ' + r.kid[1]);
+          this.re();
+        },
+        clear: () => { s.plan[d] = null; this.buzz(10); this.re(); },
+        reroll: () => { this.reroll(d); this.buzz([8, 30, 8]); this.re(); }
+      };
+    });
+    const pk = this.kidsOn(s.plan[s.pickDay]);
+    const KL = { family: '🧸 family-friendly', adapt: '🧸 adapt with care' };
+    // best first, then 3 at a time: what you're using up, then not already this week, then shares fresh food with your week, then quickest
+    const wk = new Set(s.plan.filter((x, n) => x && n !== s.pickDay).map((x) => x.r)), fr = new Set();
+    s.plan.forEach((x, n) => { if (x && n !== s.pickDay) this.fresh(x.r).forEach((f) => fr.add(f)); });
+    const useId = s.useUp && s.useUp.id;
+    const rank = (k) => (useId && R[k].use.indexOf(useId) >= 0 ? 100 : 0) + (wk.has(k) ? -50 : 0) + 3 * this.fresh(k).filter((f) => fr.has(f)).length - R[k].mins / 60;
+    const pool = Object.keys(R).filter((k) => R[k].mood === s.mood && !this.avoided(k) && !(pk && R[k].kid[0] === 'grown')).sort((a, b) => rank(b) - rank(a));
+    const showN = s.pickShow || 3, moreN = Math.min(3, pool.length - showN);
+    const choices = pool.slice(0, showN).map((k) => ({
+      img: R[k].img, name: R[k].name, meta: this.stars(k) + R[k].mins + ' min · ' + (pk ? KL[R[k].kid[0]] : useId && R[k].use.indexOf(useId) >= 0 ? 'uses your ' + (s.useUp.label || useId) : wk.has(k) ? 'already this week' : R[k].ing.length + ' ingredients'),
+      aria: 'Choose ' + R[k].name,
+      choose: () => { const old = s.plan[s.pickDay]; s.plan[s.pickDay] = { r: k, n: old ? old.n : s.H, lunch: !!(old && old.lunch) && this.LUNCH[k][0] !== 'no', kids: !!(old && old.kids) }; s.view = 'plan'; this.buzz([10, 30, 10]); this.re(); }
+    }));
+    return {
+      isPlan: s.view === 'plan' || s.view === 'pick' || s.view === 'auto', isPick: s.view === 'pick', isShop: s.view === 'shop', isAuto: s.view === 'auto',
+      openTour: () => { this.tourStart(); },
+      openAuto: () => { s.toast = ''; s.view = 'auto'; this.buzz(10); this.re(); },
+      closeAuto: () => { s.view = 'plan'; this.re(); },
+      showToast: !!s.toast && s.view === 'plan', toast: s.toast,
+      useOn: !!(s.useUp && s.useUp.id), useText: s.useUp ? 'USING UP: ' + String(s.useUp.label || s.useUp.id).toUpperCase() + (s.plan.some((p) => p && R[p.r].use.indexOf(s.useUp.id) >= 0) ? ' · PLANNED ✓' : ' · CHOOSE FOR ME WILL FIT IT IN') : '',
+      clearUse: () => { s.useUp = null; try { localStorage.removeItem('gsb.useUp'); } catch (e) {} this.buzz(6); this.re(); },
+      qrows: this.autoRows(),
+      autoNote: this.autoNote(),
+      autoBtn: this.autoCount() ? '🎲 PICK MY WEEK (' + this.autoCount() + ')' : 'NOTHING TO PICK',
+      autoGo: () => { const n = this.autoPick(); s.view = 'plan'; const l = s.plan.filter((x) => x && x.lunch).length; this.say(n ? n + (n === 1 ? ' meal' : ' meals') + ' picked' + (l ? ' · ' + l + (l === 1 ? ' lunch' : ' lunches') + ' sorted' : '') + ' · ↻ swaps' : 'Your week is already full'); this.buzz([10, 40, 10, 40, 20]); this.re(); },
+      planSub: meals ? ((l) => meals + (meals === 1 ? ' meal' : ' meals') + (l ? ' · ' + l + (l === 1 ? ' lunch' : ' lunches') : ' planned'))(s.plan.filter((x) => x && x.lunch).length) : 'nothing planned yet',
+      days,
+      shopBtn: meals ? 'MAKE MY SHOPPING LIST →' : 'PICK A MEAL FIRST',
+      toShop: () => { if (!meals) return; s.view = 'shop'; this.buzz(12); this.re(); },
+      pickTitle: 'Pick for ' + ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][s.pickDay],
+      closePick: () => { s.view = 'plan'; this.re(); },
+      tabs: this.MOODS.map((m, n) => ({ label: m[1], on: s.mood === m[0], bg: s.mood === m[0] ? m[2] : '#FFFFFF', rot: (n - 1) * 1.5 + 'deg', go: () => { s.mood = m[0]; s.pickShow = 3; this.re(); } })),
+      choices,
+      hasMore: moreN > 0, moreText: 'show me ' + moreN + ' more', showMore: () => { s.pickShow = showN + 3; this.buzz(6); this.re(); },
+      allShown: moreN <= 0 && showN > 3,
+      shopSub: (left ? left + ' to get · from ' + meals + (meals === 1 ? ' meal' : ' meals') : 'all done'),
+      toPlan: () => { s.view = 'plan'; this.re(); },
+      groups: sh.groups.map((gr) => ({ label: gr.a.toUpperCase(), items: gr.list.map((x) => ({
+        text: x.unscaled ? x.g[2] : this.fq(x.g, x.total), days: x.days.join(' · '),
+        checked: !!s.have[x.key], box: s.have[x.key] ? '#C6FF4D' : '#FFFFFF', tick: s.have[x.key] ? '✓' : '',
+        strike: s.have[x.key] ? 'line-through' : 'none', op: s.have[x.key] ? 0.5 : 1,
+        toggle: () => { s.have[x.key] = !s.have[x.key]; this.buzz(8); this.re(); }
+      })) })),
+      hasCup: sh.cup.length > 0, cupText: sh.cup.join(', '),
+      done: meals > 0 && left === 0
+    };
+  }
+}
+</script>
+<script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
+<script src="morphdom.js?v=1793350774"></script>
+<script src="dc.js?v=1793350774"></script>
+</body></html>

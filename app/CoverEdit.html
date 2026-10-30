@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<script>window.GSD_BETA = true;</script>
+<style>.sp-demo,#gp-demo,#cv-demoLater,#cv-demoReset{display:none !important}</style>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#172038"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="St*ck Done">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" type="image/png" href="icons/favicon-64.png">
+<script>if ('serviceWorker' in navigator) addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });</script>
+<title>Get St*ck Done!</title>
+<script>/* size the phone frame before anything paints, so nothing (e.g. the nav bar) shows in the wrong place while the page loads */
+(function () { var W = 390, H = 844 + 84, w = innerWidth, h = innerHeight, k = Math.min(w / W, h / H), r = document.documentElement.style;
+  r.setProperty('--k', k); r.setProperty('--l', Math.max(0, (w - W * k) / 2) + 'px'); r.setProperty('--t', Math.max(0, (h - H * k) / 2) + 'px'); })();</script>
+<script>/* merged duplicate recipes: move saved plans, tonight's pick and the cooked log over to the recipe we kept */
+(function () { var M = {"din-tai-fung-egg-fried-rice": "chilli-crisp-fried-rice"}; try { ['gsb.plan', 'gsb.tonight', 'gsb.progress', 'gsb.planAdd', 'gsb.useUp'].forEach(function (k) { var v = localStorage.getItem(k); if (!v) return; var n = v;
+  for (var o in M) n = n.split(o).join(M[o]); if (n !== v) localStorage.setItem(k, n); }); } catch (e) {} })();</script>
+<script type="speculationrules">{"prefetch": [{"where": {"selector_matches": "a[href]"}, "eagerness": "moderate"}]}</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&amp;family=Kalam:wght@400;700&amp;family=Atkinson+Hyperlegible:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none;padding:0}
+button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
+.title-die{filter:url(#tdie) drop-shadow(0 6px 6px rgba(60,40,20,0.3))}
+.bri{font-family:'Bricolage Grotesque',sans-serif;font-stretch:75%;font-weight:800;line-height:0.9}
+.kal{font-family:'Kalam',cursive;font-weight:700}
+.press{transition:transform 0.09s ease-out}
+.press:active{transform:scale(0.92)}
+.dot{width:34px;height:34px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#172038;border:3px solid #FFFFFF;box-shadow:0 0 0 2px #172038}
+.chip{padding:5px 10px;border-radius:999px;background:#C6FF4D;border:2px solid #172038;font-weight:700;font-size:13px;color:#172038;white-space:nowrap}
+.box{width:24px;height:24px;flex-shrink:0;border:2.5px solid #172038;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#172038;font-weight:900}
+.tom{position:relative;width:60px;height:54px;border-radius:48% 48% 46% 46%;border:3px solid #FFFFFF;box-shadow:0 0 0 2px #2A1A10;display:flex;align-items:center;justify-content:center}
+@keyframes ring{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.ringing{animation:ring 0.4s ease-in-out infinite}
+@keyframes peelclip{0%{clip-path:inset(-20px -20px -20px -20px)}100%{clip-path:inset(-20px 100% -20px -20px)}}
+@keyframes peelflap{0%{left:146px;opacity:0;transform:scaleX(0.4)}12%{opacity:1}85%{opacity:1}100%{left:-14px;opacity:0;transform:scaleX(1.1)}}
+.face{display:block}
+.flap{position:absolute;top:-3px;width:22px;height:56px;border-radius:14px 4px 4px 14px;background:linear-gradient(90deg,#FFFFFF,#F1ECE3 55%,#CFC6B6);border:2px solid #111;box-shadow:-5px 4px 6px rgba(0,0,0,0.28);display:none;pointer-events:none}
+.peeling .face{animation:peelclip 0.6s cubic-bezier(.4,0,.55,1) forwards}
+.peeling .flap{display:block;animation:peelflap 0.6s cubic-bezier(.4,0,.55,1) forwards}
+.peeling{pointer-events:none}
+@keyframes nextpop{0%{transform:scale(1.7) rotate(-34deg);opacity:0}65%{transform:scale(0.94) rotate(-8deg);opacity:1}100%{transform:scale(1) rotate(-12deg);opacity:1}}
+.nextpop{animation:nextpop 0.34s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes bob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.02)}}
+.nextpop svg{animation:bob 2.2s ease-in-out 0.4s infinite}
+.peeling{transform:rotate(-12deg)}
+
+@keyframes slapin{0%{transform:scale(1.7) rotate(-22deg);opacity:0}60%{transform:scale(0.92) rotate(-4deg);opacity:1}100%{transform:scale(1) rotate(-6deg);opacity:1}}
+.slap{animation:slapin 0.32s cubic-bezier(.3,1.5,.5,1) both}
+.pic svg{height:100%;max-height:100%;width:auto;max-width:100%}
+.prepmid>*{flex-shrink:0}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style data-lm>.lm{font-family:"DM Mono",ui-monospace,monospace !important;font-weight:500;text-transform:uppercase;color:#FFFFFF !important;letter-spacing:3px;background-image:linear-gradient(rgba(255,255,255,0.22),rgba(255,255,255,0) 45%,rgba(0,0,0,0.12)) !important;text-shadow:0 -1px 0 rgba(0,0,0,0.55),0 1px 0 rgba(255,255,255,0.4) !important;box-shadow:inset 0 2px 0 rgba(255,255,255,0.28),inset 0 -3px 0 rgba(0,0,0,0.22),0 3px 5px rgba(60,40,20,0.35) !important;border-radius:3px}[style*="DM Mono"][style*="background: #"]{background-image:linear-gradient(rgba(255,255,255,0.22),rgba(255,255,255,0) 45%,rgba(0,0,0,0.12));text-shadow:0 -1px 0 rgba(0,0,0,0.55),0 1px 0 rgba(255,255,255,0.4) !important;box-shadow:inset 0 2px 0 rgba(255,255,255,0.28),inset 0 -3px 0 rgba(0,0,0,0.22),0 3px 5px rgba(60,40,20,0.35) !important;border-radius:3px}</style>
+<style>
+#cv-root *{-webkit-user-select:none;user-select:none;box-sizing:border-box}
+#cv-cover{position:absolute;left:26px;top:76px;width:338px;height:580px;border-radius:4px 16px 16px 4px;overflow:hidden;background:#172038;
+ background-image:radial-gradient(rgba(255,255,255,0.07) 1.2px,transparent 1.2px);background-size:18px 18px;box-shadow:0 10px 0 -4px #2A3556,0 14px 0 -6px #222B47, inset 16px 0 18px -14px rgba(0,0,0,0.6)}
+.ring-p{position:absolute;left:-9px;width:22px;height:12px;border-radius:12px;background:#C9C2B4;border:2px solid #172038;z-index:30}
+.cv-it{touch-action:none;filter:drop-shadow(0 3px 3px rgba(0,0,0,0.35));transform-origin:50% 50%}
+.cv-editing .cv-it{cursor:grab}
+.cv-it.cv-lift{filter:drop-shadow(0 14px 14px rgba(0,0,0,0.45))}
+.cv-it .cv-rot{display:none}
+.cv-editing .cv-it.cv-sel{outline:3px dashed #C6FF4D;outline-offset:4px;border-radius:12px}
+.cv-editing .cv-it.cv-sel .cv-rot{display:block;position:absolute;left:50%;top:-34px;width:28px;height:28px;margin-left:-14px;border-radius:28px;background:#C6FF4D;border:3px solid #172038;cursor:grab;touch-action:none}
+.cv-editing .cv-it.cv-sel .cv-rot::after{content:"";position:absolute;left:50%;top:24px;width:2px;height:10px;margin-left:-1px;background:#C6FF4D}
+#cv-zone{position:absolute;display:flex;align-items:center;justify-content:center;border:3px dashed rgba(246,239,225,0.55);border-radius:14px;color:#F6EFE1;font-family:Kalam,cursive;font-weight:700;font-size:17px;transition:background 0.15s,border-color 0.15s}
+#cv-zone.hot{background:rgba(198,255,77,0.22);border-color:#C6FF4D}
+#cv-plate{position:absolute;padding:20px 14px 16px;background:#FBF4E6;border:4px solid #172038;border-radius:14px;box-shadow:6px 6px 0 #FF6FB0;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#172038}
+#cv-tray{position:absolute;left:10px;right:10px;top:670px;height:162px;border-radius:16px;background-color:#FFFFFF;background-image:repeating-linear-gradient(135deg,rgba(23,32,56,0.04) 0 2px,transparent 2px 9px);box-shadow:0 -4px 0 #FF6FB0;color:#172038}
+#cv-list{position:absolute;left:10px;right:10px;top:30px;height:100px;display:flex;gap:10px;overflow-x:auto;align-items:flex-end;padding:0 4px 6px}
+.cv-ti{flex-shrink:0;width:86px;height:86px;border-radius:16px;border:2px dashed rgba(23,32,56,0.25);background:transparent;padding:6px;touch-action:none;cursor:grab;display:flex;align-items:center;justify-content:center}
+.cv-ti img{width:100%;height:100%;object-fit:contain;pointer-events:none}
+.cv-plateT{width:140px;border:3px solid #172038;background:#FBF4E6;box-shadow:3px 3px 0 #FF6FB0;animation:cvnudge 1.4s ease-in-out infinite}
+@keyframes cvnudge{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.cv-ghost{cursor:default;background:rgba(23,32,56,0.05)}
+.cv-ti{position:relative}
+.cv-wait{cursor:default}
+.cv-bob{border:3px solid #172038;background:#FBF4E6;box-shadow:3px 3px 0 #FF6FB0;animation:cvnudge 1.4s ease-in-out infinite}
+.cv-wait img{opacity:0.35;filter:grayscale(0.6)}
+.cv-wait .nx{position:absolute;left:50%;bottom:4px;transform:translateX(-50%);font-family:Kalam,cursive;font-weight:700;font-size:12px;color:#172038;opacity:0.6}
+.cv-start{position:absolute;left:30px;top:2px;z-index:3;display:none;align-items:flex-end;gap:2px;font-family:Kalam,cursive;font-weight:700;font-size:20px;line-height:1;color:#FF6FB0;pointer-events:none;animation:cvbob 1.2s ease-in-out infinite}
+@keyframes cvbob{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+#cv-list{overflow-y:visible}
+.mini{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:14px;line-height:1;text-align:center;color:#172038}
+#cv-drag{position:absolute;left:0;top:0;width:120px;height:120px;display:none;pointer-events:none;z-index:90;filter:drop-shadow(0 14px 14px rgba(0,0,0,0.45))}
+#cv-drag img{width:100%;height:100%;object-fit:contain}
+#cv-drag.plateG{width:200px;height:90px}
+#cv-drag .big{display:flex;width:100%;height:100%;align-items:center;justify-content:center;background:#FBF4E6;border:3px solid #172038;border-radius:12px;font-size:22px;box-shadow:4px 4px 0 #FF6FB0}
+#cv-tools{position:absolute;left:10px;right:10px;top:670px;height:162px;border-radius:16px;background:#FFFFFF;box-shadow:0 -4px 0 #C6FF4D;display:none;grid-template-columns:auto 1fr;gap:10px;padding:12px;color:#172038}
+.cv-b{height:44px;min-width:44px;border-radius:12px;border:2.5px solid #172038;background:#F6EFE1;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:14px;display:flex;align-items:center;justify-content:center;gap:4px;padding:0 10px}
+.cv-sz[aria-pressed="true"]{background:#172038;color:#C6FF4D}
+.cv-step{width:10px;height:10px;border-radius:10px;border:2px solid #F6EFE1}
+.cv-step.on{width:26px;background:#FF6FB0}
+@media (prefers-reduced-motion: reduce){.cv-plateT,.cv-start,.cv-bob{animation:none}}
+</style>
+
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#0B1022;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+@view-transition{navigation:auto}
+::view-transition-old(root),::view-transition-new(root){animation-duration:0.14s}
+#dc-frame{position:absolute;left:var(--l,0);top:var(--t,0);width:390px;height:928px;transform:scale(var(--k,1));transform-origin:0 0;background:#172038}
+#dc-stage{position:relative;overflow:hidden;width:390px;height:844px}
+.snav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;height:58px;text-decoration:none;color:#F6EFE1;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;opacity:0.8;border-radius:14px;-webkit-tap-highlight-color:transparent}.snav-s{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#172038;box-shadow:0 0 0 2.5px #FFFFFF,0 0 0 4.5px #172038;transform:rotate(var(--r));transition:transform .18s cubic-bezier(.2,1.4,.4,1)}.snav:hover .snav-s,.snav:focus-visible .snav-s,.snav:active .snav-s{transform:rotate(var(--r)) scale(1.2)}.snav,.snav:hover,.snav:visited{color:#F6EFE1}.snav.on,.snav.on:hover{opacity:1;color:#C6FF4D}.snav.on .snav-s{box-shadow:0 0 0 2.5px #FFFFFF,0 0 0 4.5px #172038,2px 4px 0 4.5px rgba(0,0,0,0.45)}.snav:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}@media (prefers-reduced-motion: reduce){.snav-s{transition:none}}.dcbar{position:absolute;left:12px;right:12px;bottom:10px;height:64px;border-radius:22px;background:#0E1428;border:2px solid rgba(246,239,225,0.15);display:flex;align-items:center;gap:4px;padding:0 6px;box-sizing:border-box}.dcnav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;border-radius:16px;height:52px;text-decoration:none;border:none;background:transparent;cursor:pointer}.dcnav.on{background:#C6FF4D;color:#172038}.dcnav:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}.dcback{flex:1;height:48px;border-radius:16px;border:2px solid rgba(246,239,225,0.4);background:transparent;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:17px;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;cursor:pointer}.dcback.home{flex:0 0 auto;padding:0 18px;background:#C6FF4D;border-color:#C6FF4D;color:#172038}</style>
+</head><body data-extra="84">
+<div id="dc-frame"><div id="dc-stage"></div><div style="position:relative;height:84px"><div class="dcbar" role="navigation" aria-label="Back"><button type="button" class="dcback" onclick="if (history.length > 1) history.back(); else location.href = 'Today.html?v=1793350774'">‹ BACK</button><a class="dcback home" href="Today.html?v=1793350774" aria-label="Home"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M20.0 12.0 L22.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 17.6 L19.4 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 20.0 L12.0 22.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 17.6 L4.7 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M4.0 12.0 L1.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 6.4 L4.7 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 4.0 L12.0 1.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 6.4 L19.4 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg><span>HOME</span></a></div></div></div>
+<script type="text/x-dc-template" id="dc-tpl">
+<div id="cv-root" class="cv-editing" style="width: 390px; height: 844px; position: relative; overflow: hidden; background-color: #0E1428; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #F6EFE1">
+  <span id="cv-head" class="bri" style="position: absolute; left: 18px; top: 15px; font-size: 21px; color: #C6FF4D; text-shadow: 2px 2px 0 #FF6FB0">DECORATE YOUR COVER</span>
+  <span style="position: absolute; right: 18px; top: 22px; display: flex; gap: 5px"><span class="cv-step on"></span><span class="cv-step"></span><span class="cv-step"></span></span>
+  <span id="cv-msg" class="kal" aria-live="polite" style="position: absolute; left: 18px; right: 18px; top: 46px; font-size: 16px"></span>
+
+  <div id="cv-cover" aria-label="Your book cover">
+    <div id="cv-zone" style="left: 30px; top: 254px; width: 284px; height: 150px; transform: rotate(-3deg)">your title goes here</div>
+    <div id="cv-plate" style="left: 30px; top: 254px; width: 284px; height: 150px; transform: rotate(-3deg); display: none; z-index: 1">
+      <span class="title-die bri" style="font-size: 19px; letter-spacing: 0.5px">GET ST<span style="color: #FF6FB0">*</span>CK DONE!</span>
+      <span class="nm title-die bri" style="font-size: 33px; line-height: 0.95; text-shadow: 3px 3px 0 #C6FF4D; text-align: center"></span></div>
+    <div id="cv-under" style="position: absolute; inset: 0; z-index: 0"></div>
+    <div id="cv-items" style="position: absolute; inset: 0; z-index: 2"></div>
+    <span class="ring-p" style="top: 40px"></span><span class="ring-p" style="top: 106px"></span><span class="ring-p" style="top: 172px"></span><span class="ring-p" style="top: 238px"></span><span class="ring-p" style="top: 304px"></span><span class="ring-p" style="top: 370px"></span><span class="ring-p" style="top: 436px"></span><span class="ring-p" style="top: 502px"></span>
+  </div>
+
+  <div id="cv-tip" style="position: absolute; left: 26px; right: 26px; top: 596px; z-index: 40; display: none; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; background: #C6FF4D; color: #172038; box-shadow: 4px 4px 0 #FF6FB0">
+    <img data-k="sticky" alt="" style="width: 40px; height: 40px">
+    <span style="flex: 1; font-size: 15px; font-weight: 700; line-height: 1.2">Earn more stickers to decorate your book.</span>
+    <button type="button" id="cv-tipX" class="kal" style="border: none; background: transparent; font-size: 14px; text-decoration: underline; color: #172038">ok</button></div>
+
+  <div id="cv-tray">
+    <span id="cv-trayHead" class="bri" style="position: absolute; left: 14px; top: 9px; font-size: 12px; letter-spacing: 1px; opacity: 0.55">YOUR STICKERS · DRAG OR TAP</span>
+    <span id="cv-start" class="cv-start" aria-hidden="true"><span id="cv-startT">start here</span><svg width="26" height="22" viewBox="0 0 26 22"><path d="M3 3 Q15 4 16 17 M10 12 L16 18 L21 11" stroke="#FF6FB0" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+    <div id="cv-list"></div>
+    <button type="button" id="cv-forMe" class="press bri" style="position: absolute; right: 116px; bottom: 8px; height: 34px; padding: 0 12px; border-radius: 12px; border: 2.5px solid #172038; background: #FFFFFF; color: #172038; font-size: 14px">DO IT FOR ME</button>
+    <button type="button" id="cv-doneBtn" class="press bri" style="position: absolute; right: 12px; bottom: 8px; height: 34px; padding: 0 16px; border-radius: 12px; border: 2.5px solid #172038; background: #C6FF4D; color: #172038; font-size: 15px">DONE ✓</button>
+  </div>
+  <div id="cv-tools" aria-label="Sticker tools">
+    <div style="display: grid; grid-template-columns: repeat(3, 42px); grid-template-rows: repeat(3, 44px); gap: 3px" aria-label="Move">
+      <span></span><button type="button" id="cv-up" class="cv-b" aria-label="Move up"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5 L12 19 M6 11 L12 5 L18 11" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></button><span></span>
+      <button type="button" id="cv-west" class="cv-b" aria-label="Move left"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12 L19 12 M11 6 L5 12 L11 18" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></button><span></span><button type="button" id="cv-east" class="cv-b" aria-label="Move right"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12 L19 12 M13 6 L19 12 L13 18" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+      <span></span><button type="button" id="cv-down" class="cv-b" aria-label="Move down"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5 L12 19 M6 13 L12 19 L18 13" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></button><span></span></div>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; gap: 6px"><button type="button" id="cv-left" class="cv-b" aria-label="Turn left"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7 A8 8 0 1 1 5 14" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"></path><path d="M8 2 L8 8 L2 8" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg> turn</button><button type="button" id="cv-right" class="cv-b" aria-label="Turn right">turn <svg style="transform:scaleX(-1)" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7 A8 8 0 1 1 5 14" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"></path><path d="M8 2 L8 8 L2 8" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></div>
+      <div style="display: flex; gap: 6px" role="group" aria-label="Size"><button type="button" class="cv-b cv-sz" data-s="S" aria-label="Size S" aria-pressed="false">S</button><button type="button" class="cv-b cv-sz" data-s="M" aria-label="Size M" aria-pressed="false">M</button><button type="button" class="cv-b cv-sz" data-s="L" aria-label="Size L" aria-pressed="false">L</button></div>
+      <div style="display: flex; gap: 4px"><button type="button" id="cv-back" class="cv-b" aria-label="Send back" title="send back" style="padding:0;width:42px"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="12" height="12" rx="3" fill="#C6FF4D" stroke="currentColor" stroke-width="2.4"></rect><rect x="9" y="9" width="12" height="12" rx="3" fill="#F6EFE1" stroke="currentColor" stroke-width="2.4"></rect></svg></button><button type="button" id="cv-fwd" class="cv-b" aria-label="Bring forward" title="bring forward" style="padding:0;width:42px"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="12" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2.4"></rect><rect x="9" y="9" width="12" height="12" rx="3" fill="#C6FF4D" stroke="currentColor" stroke-width="2.4"></rect></svg></button><button type="button" id="cv-remove" class="cv-b" style="background: #FFFFFF; padding: 0 8px">remove</button><button type="button" id="cv-ok" class="cv-b" style="background: #C6FF4D; flex: 1; padding: 0">OK</button></div>
+    </div>
+  </div>
+  <button type="button" id="cv-editBtn" class="press bri" style="position: absolute; left: 26px; right: 26px; top: 690px; height: 56px; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 20px; display: none">EDIT MY COVER</button>
+  <div id="cv-drag"></div>
+  <span style="position: absolute; left: 0; right: 0; bottom: 2px; display: flex; justify-content: center; gap: 14px">
+    <button type="button" id="cv-demoLater" class="kal" style="border: none; background: transparent; color: #F6EFE1; opacity: 0.55; font-size: 11px; text-decoration: underline">(demo: a few weeks in)</button>
+    <button type="button" id="cv-demoReset" class="kal" style="border: none; background: transparent; color: #F6EFE1; opacity: 0.55; font-size: 11px; text-decoration: underline">(demo: first open again)</button></span>
+<svg aria-hidden="true" width="0" height="0" style="position: absolute; width: 0; height: 0; overflow: hidden"><defs><filter id="tdie" x="-30%" y="-60%" width="160%" height="220%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="5" result="grow"></feMorphology><feGaussianBlur in="grow" stdDeviation="2.5" result="soft"></feGaussianBlur><feComponentTransfer in="soft" result="white-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feMorphology in="white-mask" operator="dilate" radius="3" result="key-grow"></feMorphology><feGaussianBlur in="key-grow" stdDeviation="1" result="key-soft"></feGaussianBlur><feComponentTransfer in="key-soft" result="key-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feFlood flood-color="#111111"></feFlood><feComposite in2="key-mask" operator="in" result="key"></feComposite><feFlood flood-color="#FFFFFF"></feFlood><feComposite in2="white-mask" operator="in" result="white"></feComposite><feMerge><feMergeNode in="key"></feMergeNode><feMergeNode in="white"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs></svg>
+</div>
+</script>
+<script type="text/x-dc-logic" id="dc-logic">
+
+class Component extends DCLogic {
+  renderVals() {
+    if (!this._bound) { this._bound = true; this._tries = 0; const go = () => { if (!this.mount() && this._tries++ < 60) setTimeout(go, 50); }; setTimeout(go, 0); }
+    return {};
+  }
+  componentDidMount() { if (!this.mount()) { this._tries = 0; const go = () => { if (!this.mount() && this._tries++ < 60) setTimeout(go, 50); }; setTimeout(go, 50); } }
+  mount() {
+    const $ = (id) => document.getElementById(id);
+    const root = $('cv-root'); if (!root || !$('cv-cover')) return false;
+    if (root.dataset.bound === '1') return true; root.dataset.bound = '1';
+    const IMG = {"day1": "../img/00b130e00e0d2318.png", "tick0": "../img/64fcc8a6e0ab613f.png", "tick1": "../img/00947742c45a2de4.png", "tick2": "../img/4e1c134606504a79.png", "tick3": "../img/41a3cabc573d0a57.png", "curl": "../img/7a5dc7f13526a7e5.png", "squat": "../img/da6d9e48f332da36.png", "pull": "../img/bb49e6f9c280a492.png", "side": "../img/db9468db0e859652.png", "drop": "../img/09cb6ad40c81c99c.png", "wave": "../img/da883ba416ba70be.png", "skillet": "../img/1baf4ed29b8389e3.png", "heart": "../img/e3747c4508a68692.png", "holo1": "../img/d59c5988f2586156.png", "holo2": "../img/6256eff29f9ae400.png", "seal-asia": "../img/048050711f223b60.png", "seal-med": "../img/4c37018b603e4868.png", "seal-world": "../img/d18eb7066d729fbd.png", "seal-gym": "../img/b08b3347cc499ba5.png", "sticky": "../img/889081a3ab3a08ff.png", "hob-read": "../img/f49e18e1a2bc0fed.png", "hob-music": "../img/0cde8c65d1ea4f19.png", "hob-make": "../img/736031ec82ad34c3.png", "hob-out": "../img/06d3a61b4dff996d.png", "hob-play": "../img/8b479d5793b8c691.png", "hob-snap": "../img/3947bc773c7f8396.png", "seal-hob": "../img/d22dd2d29584b897.png", "lvl2": "../img/f287831bf962298e.png", "lvl3": "../img/04c88c8c7c0eb21c.png", "lvl4": "../img/95a15d58f17b1d29.png", "lvl5": "../img/ed7649d4f53a89cb.png", "seal-mile": "../img/e982db6168c261e4.png", "seal-japan": "../img/1eb1775537731484.png", "seal-pride": "../img/3da483581280b792.png", "seal-silly": "../img/3019b916142b2526.png", "c-first": "../img/c586bad4bdeeafaf.png", "c-hat": "../img/a1c61a2bbb567293.png", "c-c150": "../img/28dc44ec2f67ecc6.png", "c-mix": "../img/8c9e04863954dec8.png", "c-up": "../img/e1d6b6e0f9dc89c9.png", "c-len": "../img/6a20196854e22164.png", "c-k5": "../img/0797d67595481b4a.png", "c-back": "../img/12b130c033485ce0.png", "c-ten": "../img/c61be203dab00539.png", "c-fire": "../img/6b8817d2856b3a48.png", "c-early": "../img/bf044508f06c60e4.png", "c-capy": "../img/952672ab4d8b70db.png", "c-trex": "../img/17bd2d8080b0198e.png", "c-cat": "../img/aa44c7d9d308f220.png", "c-daruma": "../img/1346b4e2f0101e05.png", "c-pumpkin": "../img/28da19fcb2326e29.png", "c-onigiri": "../img/489f3722daf1a216.png", "c-boba": "../img/a76b59fb904e8b54.png", "c-rainbow": "../img/5b2ae44c1c4b7656.png", "c-proud": "../img/f30843f86a623172.png", "c-fly": "../img/103d5b7947e0ea94.png", "c-cauldron": "../img/192396ea174748dd.png", "c-broc": "../img/e788ff7844e549fb.png", "c-sock": "../img/2d079fb74d5092df.png", "c-frog": "../img/734e4a39fe394e75.png", "k5-foil": "../img/7a6117e9449c4aec.png", "s-pumpkin": "../img/28da19fcb2326e29.png", "s-diya": "../img/d98d8afc1c56320f.png", "s-snowman": "../img/fe4b8e6562302db8.png", "s-goat": "../img/2b0b634370a69efc.png", "f-hi5": "../img/b9567c2cc7ce5632.png", "f-hug": "../img/e8ca1106df361278.png", "f-pompom": "../img/12ea31f31ec3bf4b.png", "mystery": "../img/1643ccf4fe60a0bc.png", "mys-cat": "../img/c37c237b74eb0fdb.png", "mys-trex": "../img/8df9f2efd5642800.png", "mys-boba": "../img/8a1bb835f79ec73e.png", "m-firsts": "../img/d82070324f395ddf.png", "m-kitchen": "../img/6bebea3a9c4fdf29.png", "m-gym": "../img/47e06a8732a70ac7.png", "m-hydro": "../img/e224854f95b54bc7.png", "m-challenges": "../img/1b024a9187b58717.png", "m-wins": "../img/d7de5359d9765b06.png", "m-seasons": "../img/3c51eb7c2fde191d.png", "m-friends": "../img/48af14b90211469d.png", "m-everyday": "../img/e2030089313c5406.png", "m-hobbies": "../img/9bce64684c2467dc.png", "m-levels": "../img/c189572a48a914c8.png", "c-asia-1": "../img/14063f018a9c203d.png", "c-asia-3": "../img/efbf7ec50fc98d97.png", "c-asia-5": "../img/183eeded8630ed69.png", "c-med-1": "../img/345a936cd8353fda.png", "c-med-3": "../img/02ac43b9cfed2d78.png", "c-med-5": "../img/cdf9c7e44dd7d039.png", "c-world-1": "../img/a24bfa32f831c75a.png", "c-world-3": "../img/c8d84c9e5a1e20d1.png", "c-world-5": "../img/2fa71556b99b1ed7.png", "c-spice-1": "../img/a3d331324a6dfc96.png", "c-spice-3": "../img/76f2538d9470374e.png", "c-spice-5": "../img/a8258a2cd5d0d48d.png", "c-hydro-1": "../img/7f58ab8cb1d00618.png", "c-hydro-3": "../img/94dcb164363bac35.png", "c-hydro-5": "../img/bdef896945790724.png", "c-move-1": "../img/6bb36d3cdcb15b81.png", "c-move-3": "../img/57e8a929a0feaea4.png", "c-move-5": "../img/f2accb599ecde79d.png", "c-chores-1": "../img/4220e44e4fd4e96d.png", "c-chores-3": "../img/8ec011df68ffd9e1.png", "c-chores-5": "../img/b4464facee9f5c93.png", "c-ninja": "../img/dfb950870b7fc5dc.png", "c-plant": "../img/894379ee12820fa8.png", "c-grass": "../img/a905128da888f86a.png", "c-phone": "../img/e3613f5dba6df763.png", "c-moon": "../img/bcb54b5cb6a39960.png", "c-breath": "../img/59e4c27482f9d2da.png", "c-owl": "../img/c406fb7c6851ceb2.png", "c-speed": "../img/d17e3246e3f3a4d3.png", "c-combo": "../img/fa3947ef2a0c7186.png", "c-anniv": "../img/bca4cdec940106bd.png", "c-quest": "../img/f34af4a488209249.png", "c-homecook": "../img/e376da68fdf9b959.png", "c-speedy": "../img/c2706163237f64e1.png", "c-spice": "../img/286558ba2887da97.png", "c-tour": "../img/fe76091f81d67353.png", "c-fancy": "../img/ffc3b9efbf72fc0f.png", "c-signature": "../img/023a8efe95717e56.png", "c-firstrun": "../img/1751e1d5d049dcfd.png", "c-firstride": "../img/cce60be800e22948.png", "c-firstswim": "../img/ec3d065ac51f5208.png", "c-firststretch": "../img/6f5d4cb081283b77.png", "seal-spice": "../img/7cc8248f1541949f.png", "seal-honour": "../img/6d50efd8d7a1ca8c.png", "seal-special": "../img/51d25e1928a1ccbf.png", "seal-kitchen": "../img/2880d0b90b69017b.png", "gochunoodles": "../img/41da8aa05cdec12b.png", "chillirice": "../img/ab9b233d347a5756.png", "beefcurry": "../img/0132b3490946e1eb.png", "gochupork": "../img/d358448f78c510f7.png", "duckpancakes": "../img/7f4f07c43eb41e66.png", "misosalmon": "../img/9593865849332e2f.png", "crispygnocchi": "../img/4d71800cbddc8fe2.png", "alfredo2": "../img/60bdc2eda1a954ea.png", "harissaorzo": "../img/76d72325b60f9eb3.png", "halloumiwraps": "../img/bc59ba501ebf69fd.png", "koftaflat": "../img/36136394fb88c489.png", "smashtacos": "../img/9e58f3cef6f6d821.png", "peruchicken": "../img/d4432700ca9ce760.png", "pbcurry": "../img/43ad974cd8d05590.png", "tunabowl": "../img/f52982fd2716c684.png", "tunamelt": "../img/ca887e1045a5cfc7.png", "hainanese": "../img/058b61d1812e12c9.png", "peanutnoodles": "../img/2ae93e8a13475e68.png", "tunapasta": "../img/7541f0af70d1be97.png", "marryme": "../img/36dd457822ccaa42.png", "vodkapasta": "../img/6bd47bb76b13b752.png", "fetapasta": "../img/61af26d21f99973a.png", "assassina": "../img/e64c8e28d4db5c11.png", "greekchicken": "../img/7f2744e80f5e669f.png", "butterchicken": "../img/fff2f704c617650f.png", "hothoneysalmon": "../img/bf5c44ffa6ab99b6.png", "jambalaya": "../img/93e1e4a8218a48d8.png", "shawarma": "../img/6f8f8e4ba38a0894.png", "tarkadal": "../img/45c07aea3d9ba623.png", "chana": "../img/79f7a3bceeccf1a7.png", "saagpaneer": "../img/081d9ce8e4549e5b.png", "keema": "../img/e0dbea0b4d0ae462.png", "korma": "../img/877cdf42e89465a7.png", "keralaprawn": "../img/a1d6e737a188d1a6.png", "roganjosh": "../img/0e29882d86536947.png", "greencurry": "../img/8d055f4ee63dfc85.png", "panang": "../img/31ba2782832bb591.png", "massaman": "../img/772dc3c71569d0cc.png", "khaosoi": "../img/e7a4b90bec0443ce.png", "redsquash": "../img/f36ff2f86d572470.png"}, EARNED = ["gochunoodles", "smashtacos", "misosalmon", "chillirice", "holo1", "holo2", "seal-asia", "seal-world", "drop", "wave", "tick0", "tick1", "tick2", "lvl2", "lvl3", "curl", "squat", "heart", "day1"], ZONE = {"x": 30, "y": 254, "w": 284, "h": 150, "r": -3}, CW = 338, CH = 580, BASE = 120, SIZES = { S: 0.7, M: 1, L: 1.35 }, MAX = 14;
+    const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
+    const ls = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } };
+    const haptics = ls('gsb.haptics', '1') === '1';
+    const buzz = (p) => { if (!haptics) return; try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} };
+    const cover = $('cv-cover'), layer = $('cv-items'), under = $('cv-under'), plate = $('cv-plate'), zone = $('cv-zone'), msg = $('cv-msg'), tray = $('cv-tray'), tools = $('cv-tools');
+    const say = (t) => { msg.textContent = t; };
+    let name = 'MY STICKER BOOK'; try { const pf = JSON.parse(ls('gsb.profile', 'null')); if (pf && pf.bookName) name = pf.bookName.toUpperCase(); } catch (e) {}
+    plate.querySelector('.nm').textContent = name;
+    root.querySelectorAll('img[data-k]').forEach((im) => { im.src = IMG[im.dataset.k]; });
+
+    // ---- state: {title, items:[{k,x,y,r,s}]}; first open = nothing saved = straight into edit mode, step 1
+    let C = null; try { C = JSON.parse(ls('gsb.cover', 'null')); } catch (e) {}
+    const first = !C; if (!C) C = { title: false, items: [] };
+    let earned = ['sticky'];                 // a brand-new book: just St*cky to play with
+    if (window.GSD_BETA) try { const SL = {"f-day1": "day1", "f-cook": "skillet", "f-gym": "side", "f-water": "wave", "f-friend": "heart", "c-firstrun": "c-firstrun", "c-firstride": "c-firstride", "c-firstswim": "c-firstswim", "c-firststretch": "c-firststretch", "c-proud": "c-proud", "c-fly": "c-fly", "c-homecook": "c-homecook", "c-speedy": "c-speedy", "c-spice": "c-spice", "c-tour": "c-tour", "c-fancy": "c-fancy", "c-signature": "c-signature", "c-cauldron": "c-cauldron", "c-broc": "c-broc", "c-onigiri": "c-onigiri", "k-gochunoodles": "gochunoodles", "k-chillirice": "chillirice", "k-beefcurry": "beefcurry", "k-gochupork": "gochupork", "k-duckpancakes": "duckpancakes", "k-misosalmon": "misosalmon", "seal-k-asia": "seal-asia", "k-hainanese": "hainanese", "k-peanutnoodles": "peanutnoodles", "k-tunabowl": "tunabowl", "k-tunamelt": "tunamelt", "seal-k-asia2": "seal-asia", "k-crispygnocchi": "crispygnocchi", "k-alfredo2": "alfredo2", "k-harissaorzo": "harissaorzo", "k-halloumiwraps": "halloumiwraps", "k-koftaflat": "koftaflat", "seal-k-med": "seal-med", "k-marryme": "marryme", "k-vodkapasta": "vodkapasta", "k-fetapasta": "fetapasta", "k-assassina": "assassina", "k-greekchicken": "greekchicken", "k-tunapasta": "tunapasta", "seal-k-med2": "seal-med", "k-smashtacos": "smashtacos", "k-peruchicken": "peruchicken", "k-hothoneysalmon": "hothoneysalmon", "k-jambalaya": "jambalaya", "k-shawarma": "shawarma", "seal-k-world": "seal-world", "k-butterchicken": "butterchicken", "k-tarkadal": "tarkadal", "k-chana": "chana", "k-saagpaneer": "saagpaneer", "k-keema": "keema", "seal-k-spice": "seal-spice", "k-korma": "korma", "k-keralaprawn": "keralaprawn", "k-roganjosh": "roganjosh", "k-greencurry": "greencurry", "k-panang": "panang", "seal-k-spice2": "seal-spice", "k-massaman": "massaman", "k-khaosoi": "khaosoi", "k-redsquash": "redsquash", "k-pbcurry": "pbcurry", "seal-k-spice3": "seal-spice", "c-asia-1": "c-asia-1", "c-asia-3": "c-asia-3", "c-asia-5": "c-asia-5", "c-med-1": "c-med-1", "c-med-3": "c-med-3", "c-med-5": "c-med-5", "c-world-1": "c-world-1", "c-world-3": "c-world-3", "c-world-5": "c-world-5", "c-spice-1": "c-spice-1", "c-spice-3": "c-spice-3", "c-spice-5": "c-spice-5", "g-curl": "curl", "g-squat": "squat", "g-pull": "pull", "g-full": "side", "seal-gym": "seal-gym", "g-s0": "curl", "g-s1": "curl", "g-s2": "curl", "g-s3": "curl", "g-s4": "curl", "g-s5": "curl", "g-s6": "curl", "g-s7": "curl", "g-s8": "curl", "g-s9": "curl", "g-s10": "curl", "g-s11": "curl", "c-first": "c-first", "c-hat": "c-hat", "c-c150": "c-c150", "c-mix": "c-mix", "c-ten": "c-ten", "c-len": "c-len", "c-cat": "c-cat", "c-daruma": "c-daruma", "c-capy": "c-capy", "c-trex": "c-trex", "c-early": "c-early", "c-move-1": "c-move-1", "c-move-3": "c-move-3", "c-move-5": "c-move-5", "h-1": "drop", "h-2": "drop", "h-3": "drop", "h-4": "drop", "h-5": "drop", "h-6": "drop", "h-7": "drop", "h-8": "drop", "h-9": "drop", "h-10": "drop", "h-11": "drop", "h-12": "drop", "h-13": "drop", "h-14": "drop", "h-15": "drop", "h-16": "drop", "h-17": "drop", "h-18": "drop", "h-19": "drop", "h-20": "drop", "h-21": "drop", "h-22": "drop", "h-23": "drop", "h-24": "drop", "h-25": "drop", "h-26": "drop", "h-27": "drop", "h-28": "drop", "h-29": "drop", "h-30": "drop", "h-31": "drop", "c-hydro-1": "c-hydro-1", "c-hydro-3": "c-hydro-3", "c-hydro-5": "c-hydro-5", "c-boba": "c-boba", "w-big": "holo1", "c-fire": "holo2", "w-l2": "lvl2", "w-l3": "lvl3", "w-l4": "lvl4", "w-l5": "lvl5", "c-k5": "k5-foil", "c-back": "c-back", "c-up": "c-up", "mys-1": "mys-cat", "mys-2": "mys-trex", "mys-3": "mys-boba", "c-combo": "c-combo", "c-quest": "c-quest", "c-anniv": "c-anniv", "c-owl": "c-owl", "c-speed": "c-speed", "s-halloween": "s-pumpkin", "s-diwali": "s-diya", "s-xmas": "s-snowman", "s-lny": "s-goat", "fr-1": "f-hi5", "fr-2": "f-hug", "fr-3": "f-pompom", "fr-4": "f-hi5", "c-rainbow": "c-rainbow", "c-ninja": "c-ninja", "c-plant": "c-plant", "c-grass": "c-grass", "c-phone": "c-phone", "c-moon": "c-moon", "c-breath": "c-breath", "c-chores-1": "c-chores-1", "c-chores-3": "c-chores-3", "c-chores-5": "c-chores-5", "c-sock": "c-sock", "c-frog": "c-frog"}; earned = ['sticky'].concat([...new Set((JSON.parse(localStorage.getItem('gsb.stuck') || '[]') || []).map((id) => /^everyday-/.test(id) ? 'tick' + (id.length % 4) : /^h-/.test(id) ? 'drop' : SL[id]).filter((k) => k && IMG[k]))]); } catch (e) {}   // the real app: whatever's in your book
+    let sel = null, editing = first, step = first ? 'title' : 'free';
+    const save = () => { try { localStorage.setItem('gsb.cover', JSON.stringify(C)); } catch (e) {} };
+    const toCover = (e) => { const r = cover.getBoundingClientRect(), k = r.width / CW; return [(e.clientX - r.left) / k, (e.clientY - r.top) / k]; };
+    const toRoot = (e) => { const r = root.getBoundingClientRect(), k = r.width / 390; return [(e.clientX - r.left) / k, (e.clientY - r.top) / k]; };
+    const clampIn = (it) => { const h = BASE * SIZES[it.s] / 2; it.x = Math.max(h * 0.4, Math.min(CW - h * 0.4, it.x)); it.y = Math.max(h * 0.4, Math.min(CH - h * 0.4, it.y)); };
+    const slap = (el) => { if (reduce || !el.animate) return; el.animate([{ scale: '1.12' }, { scale: '0.94' }, { scale: '1' }], { duration: 260, easing: 'cubic-bezier(.3,1.4,.5,1)' }); };
+
+    // ---- draw the cover
+    const paintPlate = () => { plate.style.display = C.title ? 'flex' : 'none'; zone.style.display = C.title || !editing ? 'none' : 'flex'; };
+    const itemEl = (it) => {
+      const el = document.createElement('div'); el.className = 'cv-it'; const w = BASE * SIZES[it.s];
+      el.style.cssText = 'position:absolute;left:0;top:0;width:' + w + 'px;height:' + w + 'px;transform:translate(' + (it.x - w / 2).toFixed(1) + 'px,' + (it.y - w / 2).toFixed(1) + 'px) rotate(' + it.r.toFixed(1) + 'deg)';
+      el.innerHTML = '<img alt="" draggable="false" src="' + IMG[it.k] + '" style="width:100%;height:100%;object-fit:contain;pointer-events:none"><span class="cv-rot" aria-hidden="true"></span>';
+      el.setAttribute('role', 'button'); el.setAttribute('aria-label', 'Sticker on your cover. Drag to move, use the buttons below to turn or resize.');
+      it.el = el; bindItem(it); return el; };
+    const place = (it) => { const w = BASE * SIZES[it.s]; it.el.style.width = it.el.style.height = w + 'px'; it.el.style.transform = 'translate(' + (it.x - w / 2).toFixed(1) + 'px,' + (it.y - w / 2).toFixed(1) + 'px) rotate(' + it.r.toFixed(1) + 'deg)'; };
+    // ---- layers: C.items is the stacking order, bottom to top; items with b sit behind the title plate (always first in the list)
+    const restack = () => { C.items.sort((a, b) => (b.b ? 1 : 0) - (a.b ? 1 : 0)); C.items.forEach((it) => (it.b ? under : layer).appendChild(it.el)); paintLayerBtns(); };
+    const paintLayerBtns = () => { if (!sel) return; const i = C.items.indexOf(sel), top = i === C.items.length - 1 && !sel.b, bottom = i === 0 && sel.b;
+      $('cv-fwd').disabled = top; $('cv-back').disabled = bottom; $('cv-fwd').style.opacity = top ? 0.4 : 1; $('cv-back').style.opacity = bottom ? 0.4 : 1; };
+    const drawAll = () => { layer.innerHTML = ''; under.innerHTML = ''; C.items.forEach((it) => itemEl(it)); restack(); paintPlate(); select(null); };
+
+    // ---- the tray: what you can put on the cover; and the tools for whatever's selected
+    const used = (k) => C.items.some((it) => it.k === k);
+    const paintTray = () => {
+      const list = $('cv-list'); let h = '';
+      const titleFirst = editing && !C.title;
+      // first time only: point at what to do next ("start here" for the title, then "drag me" for St*cky); tapping still works
+      const stickyNext = editing && C.title && step === 'sticky' && !used('sticky');
+      $('cv-trayHead').style.display = titleFirst || stickyNext ? 'none' : 'block'; $('cv-start').style.display = titleFirst || stickyNext ? 'flex' : 'none';
+      $('cv-startT').textContent = titleFirst ? 'start here' : 'drag me'; $('cv-start').style.left = titleFirst ? '30px' : '24px';
+      if (titleFirst) h += '<button type="button" class="cv-ti cv-plateT" data-k="__title" aria-label="Your title plate. Start here: drag it onto your cover, or tap to place it."><span class="mini">' + name + '</span></button>';
+      // until the title is on, everything else waits its turn (dimmed, marked "next")
+      earned.forEach((k) => { if (!used(k)) h += '<button type="button" class="cv-ti' + (titleFirst ? ' cv-wait' : '') + (stickyNext && k === 'sticky' ? ' cv-bob' : '') + '" data-k="' + k + '" aria-label="' + (titleFirst ? 'Sticker, after your title' : 'Sticker') + '"><img alt="" draggable="false" src="' + IMG[k] + '">' + (titleFirst ? '<span class="nx">next</span>' : '') + '</button>'; });
+      if (earned.length <= 1) h += Array.from({ length: 3 }, () => '<span class="cv-ti cv-ghost" aria-hidden="true"></span>').join('');
+      list.innerHTML = h;
+      list.querySelectorAll('.cv-ti[data-k]').forEach((b) => bindTray(b));
+
+    };
+    const select = (it) => {
+      if (sel && sel.el) sel.el.classList.remove('cv-sel'); sel = it;
+      if (it) { it.el.classList.add('cv-sel'); paintLayerBtns();
+        root.querySelectorAll('.cv-sz').forEach((b) => b.setAttribute('aria-pressed', b.dataset.s === it.s ? 'true' : 'false')); }
+      tools.style.display = it && editing ? 'grid' : 'none'; tray.style.display = it || !editing ? 'none' : 'block';
+    };
+    const setStep = (s) => { step = s;
+      if (s === 'title') say('Drop your title onto your cover.');
+      else if (s === 'sticky') say('Now put St*cky anywhere you like.');
+      else if (s === 'free') say(editing ? 'Drag stickers on, move them, turn them.' : '');
+      root.querySelectorAll('.cv-step').forEach((d, i) => { d.classList.toggle('on', (s === 'title' && i === 0) || (s === 'sticky' && i === 1) || (s === 'free' && i === 2)); }); };
+    const afterChange = () => { if (step === 'title' && C.title) setStep('sticky'); else if (step === 'sticky' && used('sticky')) { setStep('free'); $('cv-tip').style.display = 'flex'; } save(); paintTray(); };
+
+    // ---- add from the tray: drag it onto the cover, or just tap it
+    const ghost = $('cv-drag');
+    function bindTray(b) {
+      let d = null;
+      b.addEventListener('pointerdown', (e) => { if (!editing) return; e.preventDefault();
+        if (b.classList.contains('cv-wait')) { nudgeTitle(); return; } try { b.setPointerCapture(e.pointerId); } catch (x) {} d = { t: performance.now(), x0: e.clientX, y0: e.clientY, moved: false }; });
+      b.addEventListener('pointermove', (e) => { if (!d) return; if (Math.hypot(e.clientX - d.x0, e.clientY - d.y0) > 6 && !d.moved) { d.moved = true; startGhost(b.dataset.k); buzz(8); }
+        if (d.moved) moveGhost(e); });
+      const up = (e) => { if (!d) return; const was = d; d = null;
+        if (!was.moved) { addAt(b.dataset.k, null); return; }   // tap: place it for you
+        const [cx, cy] = toCover(e); endGhost(); if (cx > 0 && cx < CW && cy > 0 && cy < CH) addAt(b.dataset.k, [cx, cy]); else { buzz(4); } };
+      b.addEventListener('pointerup', up); b.addEventListener('pointercancel', () => { d = null; endGhost(); });
+    }
+    const nudgeTitle = () => { say('Title first: drag it onto your cover, or tap it.'); buzz([4, 40, 4]); const t = root.querySelector('.cv-plateT');
+      if (t && t.animate && !reduce) t.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-6deg)' }, { transform: 'rotate(5deg)' }, { transform: 'rotate(-3deg)' }, { transform: 'rotate(0)' }], { duration: 420 }); };
+    const startGhost = (k) => { ghost.innerHTML = k === '__title' ? '<span class="mini big">' + name + '</span>' : '<img alt="" src="' + IMG[k] + '">'; ghost.className = k === '__title' ? 'plateG' : ''; ghost.style.display = 'block'; };
+    const moveGhost = (e) => { const [x, y] = toRoot(e); ghost.style.transform = 'translate(' + (x - 60) + 'px,' + (y - 60) + 'px) rotate(-4deg) scale(1.05)';
+      if (step === 'title') { const [cx, cy] = toCover(e); const near = cx > ZONE.x - 40 && cx < ZONE.x + ZONE.w + 40 && cy > ZONE.y - 80 && cy < ZONE.y + ZONE.h + 80; zone.classList.toggle('hot', near); } };
+    const endGhost = () => { ghost.style.display = 'none'; zone.classList.remove('hot'); };
+    const addAt = (k, pt) => {
+      if (k === '__title') {   // the title has one home: it always settles into its spot
+        C.title = true; paintPlate(); slap(plate); buzz([10, 40, 14]); afterChange(); return; }
+      if (step === 'title') { say('Title first: drop it into the dashed spot.'); buzz(4); return; }
+      if (C.items.length >= MAX) { say('Your cover is full. Take one off to add another.'); return; }
+      const it = { k, x: pt ? pt[0] : CW / 2, y: pt ? pt[1] : 150, r: Math.round(Math.random() * 16 - 8), s: 'M' }; clampIn(it);
+      C.items.push(it); layer.appendChild(itemEl(it)); slap(it.el); buzz(12); select(it); afterChange();
+    };
+
+    // ---- on the cover: drag to move, the round handle to turn
+    function bindItem(it) {
+      let d = null;
+      it.el.addEventListener('pointerdown', (e) => {
+        if (!editing) return; e.preventDefault(); e.stopPropagation(); try { it.el.setPointerCapture(e.pointerId); } catch (x) {}
+        select(it); const [cx, cy] = toCover(e);
+        d = e.target.classList.contains('cv-rot') ? { mode: 'rot' } : { mode: 'move', ox: cx - it.x, oy: cy - it.y };
+        buzz(5); it.el.classList.add('cv-lift');
+      });
+      it.el.addEventListener('pointermove', (e) => { if (!d) return; const [cx, cy] = toCover(e);
+        if (d.mode === 'move') { it.x = cx - d.ox; it.y = cy - d.oy; clampIn(it); }
+        else { let a = Math.atan2(cy - it.y, cx - it.x) * 180 / Math.PI + 90; if (a > 180) a -= 360; if (Math.abs(a) < 5) { if (Math.abs(it.r) >= 5) buzz(6); a = 0; } it.r = a; }   // a little click as it snaps straight
+        place(it); });
+      const up = () => { if (!d) return; d = null; it.el.classList.remove('cv-lift'); buzz(4); save(); };
+      it.el.addEventListener('pointerup', up); it.el.addEventListener('pointercancel', up);
+    }
+    cover.addEventListener('pointerdown', (e) => { if (e.target === cover || e.target === layer) select(null); });
+
+    // ---- tools (buttons do everything a gesture does)
+    const tool = (id, f) => $(id).addEventListener('click', () => { if (!sel) return; f(sel); clampIn(sel); place(sel); save(); buzz(5); });
+    tool('cv-left', (it) => { it.r = Math.round((it.r - 15) / 15) * 15; }); tool('cv-right', (it) => { it.r = Math.round((it.r + 15) / 15) * 15; });
+    [['cv-up', 0, -12], ['cv-down', 0, 12], ['cv-west', -12, 0], ['cv-east', 12, 0]].forEach(([id, dx, dy]) => tool(id, (it) => { it.x += dx; it.y += dy; }));
+    root.querySelectorAll('.cv-sz').forEach((b) => b.addEventListener('click', () => { if (!sel) return; sel.s = b.dataset.s; clampIn(sel); place(sel); slap(sel.el); save(); buzz(6);
+      root.querySelectorAll('.cv-sz').forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); }));
+    $('cv-remove').addEventListener('click', () => { if (!sel) return; const it = sel; select(null); it.el.remove(); C.items.splice(C.items.indexOf(it), 1); save(); paintTray(); buzz(8);
+      if (it.k === 'sticky' && step === 'free' && !used('sticky')) { /* fine: it's back in the tray */ } });
+    $('cv-ok').addEventListener('click', () => { select(null); buzz(4); });
+    // one step at a time; the title plate counts as a layer, so a sticker can tuck behind it
+    $('cv-fwd').addEventListener('click', () => { if (!sel) return; const i = C.items.indexOf(sel), nx = C.items[i + 1];
+      if (sel.b && (!nx || !nx.b)) sel.b = false; else if (nx) { C.items[i] = nx; C.items[i + 1] = sel; } else return;
+      restack(); save(); buzz(5); say(sel.b ? 'Moved forward, still behind your title.' : 'Brought forward.'); });
+    $('cv-back').addEventListener('click', () => { if (!sel) return; const i = C.items.indexOf(sel), pv = C.items[i - 1];
+      if (!sel.b && (!pv || pv.b)) sel.b = true; else if (pv) { C.items[i] = pv; C.items[i - 1] = sel; } else return;
+      restack(); save(); buzz(5); say(sel.b ? 'Tucked behind your title.' : 'Sent back.'); });
+
+    // ---- done / edit
+    const setEditing = (on) => { editing = on; root.classList.toggle('cv-editing', on); select(null); paintPlate(); paintTray();
+      $('cv-doneBtn').style.display = on ? 'block' : 'none'; $('cv-editBtn').style.display = on ? 'none' : 'block'; $('cv-head').textContent = on ? 'DECORATE YOUR COVER' : 'YOUR COVER';
+      if (!on) { say(''); $('cv-tip').style.display = 'none'; } else setStep(C.title ? (used('sticky') ? 'free' : 'sticky') : 'title'); };
+    $('cv-doneBtn').addEventListener('click', () => { if (!C.title) { say('Title first: drop it into the dashed spot.'); buzz(4); return; } save(); setEditing(false); buzz([8, 30, 12]); });
+    $('cv-editBtn').addEventListener('click', () => { setEditing(true); buzz(6); });
+    $('cv-tipX').addEventListener('click', () => { $('cv-tip').style.display = 'none'; });
+    // ---- do it for me: whatever the current step is, done for you
+    const SPOTS = [[168, 168, -6, 'L'], [66, 96, -14, 'M'], [276, 92, 12, 'M'], [58, 470, 10, 'M'], [282, 478, -12, 'M'], [170, 512, 4, 'S'], [168, 52, 6, 'S'],
+                   [292, 214, 16, 'S'], [46, 218, -10, 'S'], [110, 438, -4, 'S'], [232, 440, 8, 'S'], [292, 560, -6, 'S'], [44, 556, 14, 'S'], [222, 36, -10, 'S']];
+    const free = () => SPOTS.find((sp) => !C.items.some((it) => Math.hypot(it.x - sp[0], it.y - sp[1]) < 40)) || SPOTS[C.items.length % SPOTS.length];
+    const autoAdd = (k) => { const [x, y, r, sz] = k === 'sticky' && !used('sticky') ? SPOTS[0] : free(); const it = { k, x, y, r, s: sz }; clampIn(it); C.items.push(it); layer.appendChild(itemEl(it)); slap(it.el); };;
+    $('cv-forMe').addEventListener('click', () => {
+      if (!editing) return;
+      if (!C.title) { addAt('__title', null); return; }
+      if (!used('sticky')) { autoAdd('sticky'); buzz(12); afterChange(); return; }
+      const left = earned.filter((k) => !used(k)).slice(0, MAX - C.items.length);
+      if (!left.length) { say('Everything you’ve earned is on your cover.'); buzz(4); return; }
+      left.forEach((k, i) => setTimeout(() => { autoAdd(k); buzz(8); if (i === left.length - 1) { save(); paintTray(); say('Done. Move or turn anything you like.'); } }, reduce ? 0 : i * 140));
+    });
+    // demo helpers
+    $('cv-demoLater').addEventListener('click', () => { earned = ['sticky'].concat(EARNED); $('cv-tip').style.display = 'none'; paintTray(); say('A few weeks in: everything you’ve earned can go on.'); buzz(6); });
+    $('cv-demoReset').addEventListener('click', () => { try { localStorage.removeItem('gsb.cover'); } catch (e) {} C = { title: false, items: [] }; earned = ['sticky']; $('cv-tip').style.display = 'none'; drawAll(); setEditing(true); setStep('title'); });
+
+    drawAll(); setEditing(editing); if (!first) setEditing(false);
+    this.S = { get C() { return C; }, get step() { return step; }, get editing() { return editing; } };
+    return true;
+  }
+}
+
+</script>
+<script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
+<script src="morphdom.js?v=1793350774"></script>
+<script src="dc.js?v=1793350774"></script>
+</body></html>

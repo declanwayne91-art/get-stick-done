@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<script>window.GSD_BETA = true;</script>
+<style>.sp-demo,#gp-demo,#cv-demoLater,#cv-demoReset{display:none !important}</style>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#172038"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="St*ck Done">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" type="image/png" href="icons/favicon-64.png">
+<script>if ('serviceWorker' in navigator) addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });</script>
+<title>Get St*ck Done!</title>
+<script>/* size the phone frame before anything paints, so nothing (e.g. the nav bar) shows in the wrong place while the page loads */
+(function () { var W = 390, H = 844 + 84, w = innerWidth, h = innerHeight, k = Math.min(w / W, h / H), r = document.documentElement.style;
+  r.setProperty('--k', k); r.setProperty('--l', Math.max(0, (w - W * k) / 2) + 'px'); r.setProperty('--t', Math.max(0, (h - H * k) / 2) + 'px'); })();</script>
+<script>/* merged duplicate recipes: move saved plans, tonight's pick and the cooked log over to the recipe we kept */
+(function () { var M = {"din-tai-fung-egg-fried-rice": "chilli-crisp-fried-rice"}; try { ['gsb.plan', 'gsb.tonight', 'gsb.progress', 'gsb.planAdd', 'gsb.useUp'].forEach(function (k) { var v = localStorage.getItem(k); if (!v) return; var n = v;
+  for (var o in M) n = n.split(o).join(M[o]); if (n !== v) localStorage.setItem(k, n); }); } catch (e) {} })();</script>
+<script type="speculationrules">{"prefetch": [{"where": {"selector_matches": "a[href]"}, "eagerness": "moderate"}]}</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&amp;family=Kalam:wght@400;700&amp;family=Atkinson+Hyperlegible:wght@400;700&amp;family=DM+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+.title-die{filter:url(#tdie) drop-shadow(0 6px 6px rgba(60,40,20,0.3))}
+a{color:#1F3FB0}a:hover{color:#142C82}
+button,a{font-family:inherit;-webkit-tap-highlight-color:transparent;outline:none}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
+.die{filter:drop-shadow(4px 0 0 #fff) drop-shadow(-4px 0 0 #fff) drop-shadow(0 4px 0 #fff) drop-shadow(0 -4px 0 #fff) drop-shadow(0 6px 6px rgba(60,40,20,0.3))}
+.press{transition:transform 0.09s ease-out}
+.press:active{transform:scale(0.9)}
+.set{width:44px;height:44px;padding:0;border:3.5px solid #FFFFFF;border-radius:999px;box-shadow:0 2px 4px rgba(60,40,20,0.3);font-family:'Bricolage Grotesque',sans-serif;font-stretch:75%;font-size:18px;font-weight:800;color:#172038}
+</style>
+<style>@keyframes gymhint{0%,100%{translate:0 0}50%{translate:0 -4px}} .gym-hint{animation:gymhint 1.6s ease-in-out infinite} @media (prefers-reduced-motion: reduce){.gym-hint{animation:none}}</style>
+<style data-lm>.lm{font-family:"DM Mono",ui-monospace,monospace !important;font-weight:500;text-transform:uppercase;color:#FFFFFF !important;letter-spacing:3px;background-image:linear-gradient(rgba(255,255,255,0.22),rgba(255,255,255,0) 45%,rgba(0,0,0,0.12)) !important;text-shadow:0 -1px 0 rgba(0,0,0,0.55),0 1px 0 rgba(255,255,255,0.4) !important;box-shadow:inset 0 2px 0 rgba(255,255,255,0.28),inset 0 -3px 0 rgba(0,0,0,0.22),0 3px 5px rgba(60,40,20,0.35) !important;border-radius:3px}[style*="DM Mono"][style*="background: #"]{background-image:linear-gradient(rgba(255,255,255,0.22),rgba(255,255,255,0) 45%,rgba(0,0,0,0.12));text-shadow:0 -1px 0 rgba(0,0,0,0.55),0 1px 0 rgba(255,255,255,0.4) !important;box-shadow:inset 0 2px 0 rgba(255,255,255,0.28),inset 0 -3px 0 rgba(0,0,0,0.22),0 3px 5px rgba(60,40,20,0.35) !important;border-radius:3px}</style>
+<style data-wt>.wbtn{border:none;background:transparent;padding:4px 0;font-family:'DM Mono',monospace;font-size:14px;white-space:nowrap;color:#172038;cursor:pointer;text-align:left}
+.wbtn.w-none{padding:3px 8px;border:2px dashed #FF6FB0;border-radius:8px;color:#C2185B;font-weight:700}
+.wbtn.w-has{text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}.wbtn.w-bw{cursor:default}
+.wt-layer{position:fixed;inset:0;z-index:10000;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;color:#172038}
+.wt-scrim{position:absolute;inset:0;background:rgba(11,16,34,0.6)}
+.wt-card{position:absolute;left:50%;top:50%;width:330px;transform-origin:50% 50%;background:#FBF4E6;padding:22px 18px 12px;box-sizing:border-box;box-shadow:0 14px 22px rgba(0,0,0,0.45);display:flex;flex-direction:column;gap:10px}
+.wt-tape{position:absolute;left:50%;top:-12px;width:92px;height:24px;margin-left:-46px;background-color:rgba(198,255,77,0.85);background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.35) 0 5px,transparent 5px 10px);transform:rotate(-3deg)}
+.wt-t{align-self:flex-start;font-family:'Bricolage Grotesque',sans-serif;font-stretch:75%;font-weight:800;font-size:28px;line-height:1;text-shadow:3px 3px 0 #FF6FB0;transform:rotate(-2deg);white-space:nowrap}
+.wt-s{font-family:Kalam,cursive;font-weight:700;font-size:15px;margin-top:-4px}
+.wt-row{display:flex;align-items:center;gap:10px}
+.wt-pm{width:54px;height:54px;border-radius:54px;border:3px solid #172038;background:#FFFFFF;color:#172038;font-size:28px;font-weight:800;line-height:1;cursor:pointer;flex-shrink:0}
+.wt-box{flex:1;min-width:0;height:64px;border-radius:16px;border:3px solid #172038;background:#FFFFFF;display:flex;align-items:center;justify-content:center;gap:4px;padding:0 10px}
+.wt-in{width:100%;min-width:0;border:none;background:transparent;text-align:right;font-family:'DM Mono',monospace;font-size:32px;color:#172038;outline:none;-webkit-user-select:text;user-select:text}
+.wt-box span{font-family:'DM Mono',monospace;font-size:18px}
+.wt-box:focus-within{border-color:#6EC8FF}
+.wt-sug,.wt-tip{height:44px;border-radius:14px;border:2.5px dashed #172038;background:#FFD23F;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-stretch:80%;font-weight:800;font-size:17px;cursor:pointer}
+.wt-tip{border-style:solid;background:#C6FF4D;box-shadow:3px 3px 0 #172038}
+.wt-why{font-size:14px;line-height:1.3;font-weight:700}.wt-why:empty{display:none}
+.wt-save{height:54px;border-radius:16px;border:3px solid #172038;background:#C6FF4D;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-stretch:80%;font-weight:800;font-size:22px;box-shadow:4px 4px 0 #172038;cursor:pointer}
+.wt-x{border:none;background:transparent;color:#172038;font-family:Kalam,cursive;font-weight:700;font-size:15px;text-decoration:underline;padding:6px;cursor:pointer}
+.wt-layer button:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}</style>
+
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#0B1022;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+@view-transition{navigation:auto}
+::view-transition-old(root),::view-transition-new(root){animation-duration:0.14s}
+#dc-frame{position:absolute;left:var(--l,0);top:var(--t,0);width:390px;height:928px;transform:scale(var(--k,1));transform-origin:0 0;background:#172038}
+#dc-stage{position:relative;overflow:hidden;width:390px;height:844px}
+.snav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;height:58px;text-decoration:none;color:#F6EFE1;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;opacity:0.8;border-radius:14px;-webkit-tap-highlight-color:transparent}.snav-s{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#172038;box-shadow:0 0 0 2.5px #FFFFFF,0 0 0 4.5px #172038;transform:rotate(var(--r));transition:transform .18s cubic-bezier(.2,1.4,.4,1)}.snav:hover .snav-s,.snav:focus-visible .snav-s,.snav:active .snav-s{transform:rotate(var(--r)) scale(1.2)}.snav,.snav:hover,.snav:visited{color:#F6EFE1}.snav.on,.snav.on:hover{opacity:1;color:#C6FF4D}.snav.on .snav-s{box-shadow:0 0 0 2.5px #FFFFFF,0 0 0 4.5px #172038,2px 4px 0 4.5px rgba(0,0,0,0.45)}.snav:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}@media (prefers-reduced-motion: reduce){.snav-s{transition:none}}.dcbar{position:absolute;left:12px;right:12px;bottom:10px;height:64px;border-radius:22px;background:#0E1428;border:2px solid rgba(246,239,225,0.15);display:flex;align-items:center;gap:4px;padding:0 6px;box-sizing:border-box}.dcnav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;border-radius:16px;height:52px;text-decoration:none;border:none;background:transparent;cursor:pointer}.dcnav.on{background:#C6FF4D;color:#172038}.dcnav:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}.dcback{flex:1;height:48px;border-radius:16px;border:2px solid rgba(246,239,225,0.4);background:transparent;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:17px;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;cursor:pointer}.dcback.home{flex:0 0 auto;padding:0 18px;background:#C6FF4D;border-color:#C6FF4D;color:#172038}</style>
+</head><body data-extra="84">
+<div id="dc-frame"><div id="dc-stage"></div><div style="position:relative;height:84px"><nav class="dcbar" aria-label="Main"><a href="Today.html?v=1793350774" class="snav" aria-label="Today"><span class="snav-s" style="background:#FF6FB0;--r:-6deg"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M20.0 12.0 L22.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 17.6 L19.4 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 20.0 L12.0 22.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 17.6 L4.7 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M4.0 12.0 L1.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 6.4 L4.7 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 4.0 L12.0 1.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 6.4 L19.4 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg></span><span>TODAY</span></a><a href="GymHub.html?v=1793350774" class="snav on" aria-label="Gym" aria-current="page"><span class="snav-s" style="background:#C6FF4D;--r:5deg"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12 H21 M6 8 V16 M18 8 V16 M3 10 V14 M21 10 V14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"></path></svg></span><span>GYM</span></a><a href="PlanWeek.html?v=1793350774" class="snav" aria-label="Kitchen"><span class="snav-s" style="background:#FFD23F;--r:-4deg"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 H21 Q20 19 12 19 Q4 19 3 11 Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"></path><path d="M9 7 q-1.5 -2 0 -4 M14 7 q-1.5 -2 0 -4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"></path></svg></span><span>KITCHEN</span></a><a href="StickerAlbum.html?v=1793350774" class="snav" aria-label="Book"><span class="snav-s" style="background:#6EC8FF;--r:6deg"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5 Q8 4 12 6 Q16 4 20 5 V19 Q16 18 12 20 Q8 18 4 19 Z M12 6 V20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"></path></svg></span><span>BOOK</span></a><a href="Profile.html?v=1793350774" class="snav" aria-label="Me"><span class="snav-s" style="background:#A98BFF;--r:-5deg"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="4" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M4 21 Q12 12 20 21" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg></span><span>ME</span></a></nav></div></div>
+<script type="text/x-dc-template" id="dc-tpl">
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background-color: #F6EFE1; background-image: linear-gradient(rgba(139,94,52,0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(139,94,52,0.10) 1px, transparent 1px); background-size: 20px 20px; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #1F3FB0">
+<svg aria-hidden="true" width="0" height="0" style="position: absolute; width: 0; height: 0; overflow: hidden"><defs><filter id="tdie" x="-30%" y="-60%" width="160%" height="220%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="5" result="grow"></feMorphology><feGaussianBlur in="grow" stdDeviation="2.5" result="soft"></feGaussianBlur><feComponentTransfer in="soft" result="white-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feMorphology in="white-mask" operator="dilate" radius="3" result="key-grow"></feMorphology><feGaussianBlur in="key-grow" stdDeviation="1" result="key-soft"></feGaussianBlur><feComponentTransfer in="key-soft" result="key-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feFlood flood-color="#111111"></feFlood><feComposite in2="key-mask" operator="in" result="key"></feComposite><feFlood flood-color="#FFFFFF"></feFlood><feComposite in2="white-mask" operator="in" result="white"></feComposite><feMerge><feMergeNode in="key"></feMergeNode><feMergeNode in="white"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs></svg>
+
+
+  <div style="position: absolute; left: 16px; top: 16px; right: 16px; display: flex; align-items: center; justify-content: space-between">
+    <span style="padding: 6px 14px; background-color: rgba(122,196,170,0.7); background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.35) 0 6px, transparent 6px 12px); transform: rotate(-3deg); font-size: 13px; font-weight: 700; letter-spacing: 1px">FRI 30 OCT</span>
+    <button type="button" class="press" onClick="{{changeW}}" aria-label="Change workout" style="margin: 0 10px 0 auto; border: none; background: transparent; padding: 6px 4px; font-family: 'Kalam', cursive; font-weight: 700; font-size: 15px; color: #172038; text-decoration: underline; white-space: nowrap">{{changeText}}</button>
+    <span role="img" aria-label="Sticker book, {{count}} stickers" style="position: relative; width: 44px; height: 44px; border-radius: 10px; background: #172038; display: flex; align-items: center; justify-content: center; transform: {{bookTransform}}; transition: transform 0.18s cubic-bezier(.3,1.8,.5,1)"><svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C6FF4D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z"></path></svg><span style="position: absolute; right: -6px; top: -6px; min-width: 20px; height: 20px; padding: 0 5px; box-sizing: border-box; border-radius: 999px; background: #FF6FB0; color: #172038; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{count}}</span></span>
+  </div>
+
+  <div style="position: absolute; left: 18px; right: 18px; top: 66px; display: flex; align-items: flex-end; justify-content: space-between">
+    <div style="display: flex; flex-direction: column">
+      <h1 class="title-die" style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-size: 56px; font-weight: 800; line-height: 0.88; color: #172038; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-2deg); transform-origin: left">PULL DAY</h1>
+      <span style="font-family: 'Kalam', cursive; font-size: 17px; font-weight: 700; margin-top: 4px">{{doneSets}} of 15 sets · about 45 min</span>
+    </div>
+    <a href="#" class="press die" style="display: block; padding: 8px 10px; background: #FFE45C; color: #172038; text-decoration: none; transform: rotate(5deg); font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-size: 16px; font-weight: 800; line-height: 0.95; text-align: center">TIRED?<br>10-MIN<br>VERSION</a>
+  </div>
+
+  <div style="position: absolute; left: 14px; right: 14px; top: 160px; display: flex; flex-direction: column; gap: 8px">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+      <div style="position: relative; background: {{r.bg}}; padding: 10px 12px 10px 14px; box-shadow: 0 4px 6px -3px rgba(60,40,20,0.3); transform: rotate({{r.rot}}); display: flex; flex-direction: column; gap: 6px">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-size: 24px; font-weight: 800; line-height: 1; color: #172038"><span style="background: {{r.hl}}; padding: 0 4px">{{r.name}}</span></span>
+          <a href="{{r.guide}}" class="press" aria-label="How to do {{r.name}}" style="flex-shrink: 0; height: 32px; padding: 0 12px; border: 2.5px solid #1F3FB0; border-radius: 999px; background: #FFFFFF; color: #1F3FB0; text-decoration: none; display: flex; align-items: center; gap: 4px; font-family: 'Kalam', cursive; font-size: 15px; font-weight: 700">how to ↗</a>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <button type="button" class="press wbtn {{r.wCls}}" onClick="{{r.editW}}" aria-label="{{r.wAria}}">{{r.meta}}</button>
+          <div style="display: flex; gap: 6px">
+            <sc-for list="{{r.sets}}" as="s" hint-placeholder-count="3">
+              <button type="button" class="set press" onClick="{{s.toggle}}" aria-pressed="{{s.pressed}}" aria-label="{{s.aria}}" style="background: {{s.fill}}; transform: rotate({{s.rot}})">{{s.mark}}</button>
+            </sc-for>
+          </div>
+        </div>
+        <sc-if value="{{r.current}}" hint-placeholder-val="{{ false }}">
+          <span aria-hidden="true" style="position: absolute; left: -10px; top: -10px; padding: 2px 8px; background: #FF6FB0; color: #172038; transform: rotate(-8deg); font-family: 'Kalam', cursive; font-size: 13px; font-weight: 700; box-shadow: 0 2px 3px rgba(60,40,20,0.3)">you're here</span>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{showRest}}" hint-placeholder-val="{{ false }}">
+    <div role="status" style="position: absolute; left: 14px; right: 14px; bottom: 18px; height: 96px; border-radius: 999px; background-color: #172038; background-image: linear-gradient(rgba(242,239,230,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(242,239,230,0.07) 1px, transparent 1px); background-size: 14px 14px; box-shadow: 0 10px 18px -6px rgba(40,30,20,0.5); display: flex; align-items: center; gap: 12px; padding: 0 12px; box-sizing: border-box; color: #F2EFE6">
+      <div aria-hidden="true" style="width: 72px; height: 72px; flex-shrink: 0; border-radius: 999px; background: conic-gradient({{restRing}} 0 {{restPct}}%, rgba(198,255,77,0.18) {{restPct}}% 100%); display: flex; align-items: center; justify-content: center"><span style="width: 58px; height: 58px; border-radius: 999px; background: #172038; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-size: 24px; font-weight: 800; color: #C6FF4D">{{restTime}}</span></div>
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0">
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-size: 22px; font-weight: 800; line-height: 1; color: #C6FF4D; text-shadow: 2px 2px 0 #FF6FB0">{{restTitle}}</span>
+        <span style="font-size: 13px; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{restNext}}</span>
+      </div>
+      <button type="button" class="press" onClick="{{addRest}}" aria-label="Add 30 seconds" style="width: 48px; height: 48px; flex-shrink: 0; padding: 0; border: 3px solid #F2EFE6; border-radius: 999px; background: transparent; color: #F2EFE6; font-size: 14px; font-weight: 700">+30</button>
+      <button type="button" class="press" onClick="{{skipRest}}" aria-label="{{skipAria}}" style="width: 56px; height: 56px; flex-shrink: 0; padding: 0; border: 4px solid #FFFFFF; border-radius: 999px; background: #C6FF4D; color: #172038; font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-size: 16px; font-weight: 800">{{skipLabel}}</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{showFinish}}" hint-placeholder-val="{{ false }}">
+    <button type="button" class="press" onClick="{{finish}}" style="position: absolute; left: 18px; right: 18px; bottom: 26px; height: 60px; border: none; border-radius: 14px; background: #1F3FB0; color: #F6EFE1; font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-size: 24px; font-weight: 800; letter-spacing: 1px; box-shadow: 4px 4px 0 #FF6FB0">WORKOUT COMPLETE ✓</button>
+  </sc-if>
+
+  <sc-if value="{{showIdleHint}}" hint-placeholder-val="{{ true }}">
+  </sc-if>
+
+  <sc-if value="{{showSlap}}" hint-placeholder-val="{{ false }}">
+    <button type="button" class="die" onClick="{{collect}}" aria-label="Collect your daily Pull day sticker" style="position: absolute; left: 75px; top: 290px; width: 240px; padding: 0; border: none; background: transparent; transform: {{slapTransform}}; opacity: {{slapOpacity}}; transition: {{slapTransition}}">
+      <svg width="240" height="190" viewBox="0 0 240 190"><defs><linearGradient id="gl3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.8"></stop><stop offset="0.5" stop-color="#FFFFFF" stop-opacity="0"></stop></linearGradient></defs><rect x="10" y="20" width="220" height="150" rx="26" fill="#C6FF4D" stroke="#172038" stroke-width="5" transform="rotate(-4 120 95)"></rect><text x="120" y="92" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="54" fill="#172038" stroke="#FF6FB0" stroke-width="7" paint-order="stroke" stroke-linejoin="round" textLength="150" lengthAdjust="spacingAndGlyphs" transform="rotate(-4 120 95)">PULLED</text><text x="120" y="144" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="54" fill="#172038" stroke="#FF6FB0" stroke-width="7" paint-order="stroke" stroke-linejoin="round" textLength="130" lengthAdjust="spacingAndGlyphs" transform="rotate(-4 120 95)">IT OFF!</text><text x="120" y="92" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="54" fill="url(#gl3)" textLength="150" lengthAdjust="spacingAndGlyphs" transform="rotate(-4 120 95)">PULLED</text></svg>
+      <span style="display: block; width: max-content; margin: 2px auto 0; padding: 6px 16px; background: #FFFFFF; border: 2.5px solid #172038; border-radius: 999px; box-shadow: 0 3px 4px rgba(60,40,20,0.3); transform: rotate(-3deg); font-family: 'Kalam', cursive; font-size: 17px; font-weight: 700; color: #172038">tap to keep</span>
+    </button>
+  </sc-if>
+<sc-if value="{{wHint}}" hint-placeholder-val="{{ false }}"><div class="gym-hint" aria-hidden="true" style="position: absolute; left: 22px; top: 300px; z-index: 30; pointer-events: none; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; transform: rotate(-3deg)"><svg class="gym-arrow" width="52" height="58" viewBox="0 0 52 58" aria-hidden="true" style="position: absolute; left: 40px; top: -52px"><path d="M22 54 Q18 30 26 8 M26 8 l-9 8 M26 8 l7 10" stroke="#172038" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path><path d="M22 54 Q18 30 26 8 M26 8 l-9 8 M26 8 l7 10" stroke="#FF6FB0" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="title-die" style="font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-weight: 800; font-size: 24px; line-height: 1; color: #172038; letter-spacing: 0.5px; white-space: nowrap">ADD YOUR WEIGHTS FIRST</span><span style="margin-left: 6px; padding: 3px 10px; background-color: rgba(198,255,77,0.95); font-family: 'Kalam', cursive; font-weight: 700; font-size: 15px; color: #172038; white-space: nowrap">tap + kg on each move · we can suggest one</span></div></sc-if>
+<sc-if value="{{setHint}}" hint-placeholder-val="{{ false }}"><div class="gym-hint" aria-hidden="true" style="position: absolute; left: 22px; top: 300px; z-index: 30; pointer-events: none; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; transform: rotate(-3deg)"><svg class="gym-arrow" width="52" height="58" viewBox="0 0 52 58" aria-hidden="true" style="position: absolute; left: 194px; top: -48px"><path d="M22 54 Q18 30 26 8 M26 8 l-9 8 M26 8 l7 10" stroke="#172038" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path><path d="M22 54 Q18 30 26 8 M26 8 l-9 8 M26 8 l7 10" stroke="#FF6FB0" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="title-die" style="font-family: 'Bricolage Grotesque', sans-serif; font-stretch: 75%; font-weight: 800; font-size: 24px; line-height: 1; color: #172038; letter-spacing: 0.5px; white-space: nowrap">TAP A SET WHEN IT’S DONE</span><span style="margin-left: 6px; padding: 3px 10px; background-color: rgba(198,255,77,0.95); font-family: 'Kalam', cursive; font-weight: 700; font-size: 15px; color: #172038; white-space: nowrap">your rest timer starts itself</span></div></sc-if>
+<a id="gym-toHub" href="GymHub.html?v=1793350774" hidden tabindex="-1"></a>
+</div>
+</script>
+<script type="text/x-dc-logic" id="dc-logic">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.timers = [];
+  }
+  later(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
+  componentWillUnmount() { clearInterval(this.loop); this.timers.forEach((t) => clearTimeout(t)); }
+  tap(n) { try { if (navigator && navigator.vibrate) navigator.vibrate(n || 12); } catch (e) {} }
+  stopRest() { clearInterval(this.loop); }
+  startRest(secs) {
+    this.stopRest();
+    this.setState({ rest: secs, restTotal: secs, restOver: false });
+    this.loop = setInterval(() => {
+      const cur = this.state || {};
+      const left = (cur.rest || 0) - 1;
+      if (left <= 0) {
+        this.stopRest();
+        this.tap([40, 60, 40]);
+        this.setState({ rest: 0, restOver: true });
+      } else {
+        this.setState({ rest: left });
+      }
+    }, 100);
+  }
+
+  openW(e, x) {
+    if (x.bw || this._wL) return;
+    const SUG = {"GOBLET SQUAT": [8, 12, 16, 2, "one dumbbell, held at your chest"], "ROMANIAN DEADLIFT": [20, 30, 40, 2.5, "the whole bar, plates included"], "WALKING LUNGE": [4, 6, 10, 1, "in each hand"], "LEG PRESS": [30, 50, 80, 5, "on the machine"], "LAT PULLDOWN": [20, 30, 40, 2.5, "on the stack"], "SEATED ROW": [20, 30, 40, 2.5, "on the stack"], "DUMBBELL ROW": [8, 12, 18, 2, "one dumbbell"], "FACE PULL": [7.5, 10, 15, 2.5, "on the cable"], "HAMMER CURL": [4, 6, 10, 1, "in each hand"], "BENCH PRESS": [20, 30, 45, 2.5, "the whole bar: an empty Olympic bar is 20 kg"], "OVERHEAD PRESS": [15, 20, 30, 2.5, "the whole bar"], "BARBELL CURL": [10, 15, 20, 2.5, "the whole bar"], "LATERAL RAISE": [2, 4, 6, 1, "in each hand"]}, PLAN = 'pull', sug = SUG[x.name];
+    const ls = (k) => { try { return localStorage.getItem(k); } catch (er) { return null; } };
+    let WT = {}; try { WT = JSON.parse(ls('gsb.weights') || '{}'); } catch (er) {}
+    let P = null; try { P = JSON.parse(ls('gsb.progress') || 'null'); } catch (er) {}
+    const tip = !!(x.first && P && P.gym && P.gym[PLAN] && P.gym[PLAN].tip && WT[x.name] != null);
+    const lv = ls('gsb.fitLevel') || 'new', LVN = { new: 'just starting', back: 'getting back into it', regular: 'pretty regular' };
+    const step = sug ? sug[3] : 2.5;
+    const L = document.createElement('div'); L.className = 'wt-layer'; L.setAttribute('role', 'dialog'); L.setAttribute('aria-modal', 'true'); L.setAttribute('aria-label', 'Your weight for ' + x.name.toLowerCase());
+    L.innerHTML = '<div class="wt-scrim"></div><div class="wt-card"><span class="wt-tape"></span><span class="wt-t title-die">' + x.name + '</span><span class="wt-s">your working weight · ' + x.reps + '</span>'
+      + (tip ? '<button type="button" class="wt-tip">⬆ READY FOR MORE: +2.5 KG</button>' : '')
+      + '<div class="wt-row"><button type="button" class="wt-pm" data-d="-1" aria-label="Less">−</button><label class="wt-box"><input class="wt-in" type="text" inputmode="decimal" aria-label="Weight in kilograms" placeholder="?"><span>kg</span></label><button type="button" class="wt-pm" data-d="1" aria-label="More">+</button></div>'
+      + (sug ? '<button type="button" class="wt-sug">SUGGEST A WEIGHT</button><span class="wt-why" aria-live="polite"></span>' : '')
+      + '<button type="button" class="wt-save">SAVE</button><button type="button" class="wt-x">cancel</button></div>';
+    document.body.appendChild(L); this._wL = L;
+    const card = L.querySelector('.wt-card'), inp = L.querySelector('.wt-in');
+    const stage = document.getElementById('dc-stage') || document.querySelector('[data-dc-root]') || document.body, R = stage.getBoundingClientRect(), k = Math.min(1.4, (R.width || innerWidth) / 390);
+    card.style.transform = 'translate(-50%, -50%) scale(' + k + ') rotate(-1deg)';
+    const cur = () => { const v = parseFloat(String(inp.value).replace(',', '.')); return isFinite(v) && v >= 0 ? v : null; };
+    const set = (v) => { inp.value = v == null ? '' : String(Math.round(v * 10) / 10); };
+    set(WT[x.name]);
+    const buzz = (p) => { try { if (ls('gsb.haptics') !== '0' && navigator.vibrate) navigator.vibrate(p); } catch (er) {} };
+    L.querySelectorAll('.wt-pm').forEach((b) => b.addEventListener('click', () => { const v = cur(); set(Math.max(0, (v == null ? (sug ? sug[{ new: 0, back: 1, regular: 2 }[lv] || 0] : 0) : v + step * +b.dataset.d))); buzz(6); }));
+    const sb = L.querySelector('.wt-sug'); if (sb) sb.addEventListener('click', () => {
+      const v = sug[{ new: 0, back: 1, regular: 2 }[lv] || 0]; set(v); buzz(10);
+      L.querySelector('.wt-why').textContent = 'For someone ' + (LVN[lv] || 'just starting') + ': start around ' + v + ' kg (' + sug[4] + '). Do one test set. If the last 2 reps feel easy, go up ' + step + ' kg. If your form slips, go down. Everyone’s different, so trust how it feels.';
+    });
+    const tb = L.querySelector('.wt-tip'); if (tb) tb.addEventListener('click', () => { set((cur() || 0) + 2.5); buzz([10, 40, 16]); tb.textContent = 'NICE. SAVE TO KEEP IT'; tb.disabled = true; this._wTip = true; });
+    const close = () => { if (!this._wL) return; this._wL.remove(); this._wL = null; document.removeEventListener('keydown', onKey); };
+    const onKey = (ev) => { if (ev.key === 'Escape') close(); if (ev.key === 'Enter') save(); };
+    const save = () => {
+      const v = cur(); if (v == null) delete WT[x.name]; else WT[x.name] = v;
+      try { localStorage.setItem('gsb.weights', JSON.stringify(WT)); localStorage.setItem('gsb.seenWeightHint', '1');
+        if (this._wTip && P && P.gym && P.gym[PLAN]) { P.gym[PLAN].tip = false; localStorage.setItem('gsb.progress', JSON.stringify(P)); } } catch (er) {}
+      this._wTip = false; buzz(10); close(); this.setState({ wv: Date.now() });
+    };
+    document.addEventListener('keydown', onKey);
+    L.querySelector('.wt-save').addEventListener('click', save); L.querySelector('.wt-x').addEventListener('click', close); L.querySelector('.wt-scrim').addEventListener('click', close);
+    setTimeout(() => inp.focus(), 50);
+  }
+  renderVals() {
+    if (!this._wk) { this._wk = 1; try { if (!localStorage.getItem('gsb.workout')) localStorage.setItem('gsb.workout', JSON.stringify({ type: 'gym', plan: 'PullDay', title: 'PULL DAY', page: 'PullDay' })); } catch (e) {} }
+    const st = this.state || {};
+    const ex = [
+      { name: 'LAT PULLDOWN', meta: '45 kg · 3 × 10', bg: '#FFFFFF', rot: '-0.6deg', guide: 'GuidePulldown.html?v=1793350774' },
+      { name: 'SEATED ROW', meta: '40 kg · 3 × 10', bg: '#FFFDF6', rot: '0.5deg' },
+      { name: 'DUMBBELL ROW', meta: '18 kg · 3 × 10', bg: '#FFFFFF', rot: '-0.4deg' },
+      { name: 'FACE PULL', meta: '15 kg · 3 × 15', bg: '#FFFDF6', rot: '0.6deg' },
+      { name: 'HAMMER CURL', meta: '12 kg · 3 × 10', bg: '#FFFFFF', rot: '-0.5deg' }
+    ];
+    const WT = (() => { try { return JSON.parse(localStorage.getItem('gsb.weights') || '{}'); } catch (e) { return {}; } })();
+    let PRG = null; try { PRG = JSON.parse(localStorage.getItem('gsb.progress') || 'null'); } catch (e) {}
+    const wTip = !!(PRG && PRG.gym && PRG.gym['pull'] && PRG.gym['pull'].tip);
+    let firstW = true;
+    ex.forEach((x) => { const m = x.meta.split(' · '); x.reps = m[1]; x.bw = m[0] === 'bodyweight'; const v = WT[x.name];
+      x.hasW = v != null; x.first = !x.bw && firstW; if (!x.bw) firstW = false;
+      x.meta = x.bw ? x.meta : (x.hasW ? v + ' kg' + (x.first && wTip ? ' ⬆' : '') + ' · ' + x.reps : '+ kg · ' + x.reps); });
+    const done = st.done || ex.map(() => [false, false, false]);
+    const total = ex.length * 3;
+    const doneSets = done.reduce((n, r) => n + r.filter(Boolean).length, 0);
+    const allDone = doneSets === total;
+    const stage = st.stage || 'none';
+    const count = st.count == null ? 7 : st.count;
+    const current = done.findIndex((r) => !r.every(Boolean));
+    const nextLabel = () => {
+      const d = st.done || done;
+      for (let e = 0; e < ex.length; e++) for (let k = 0; k < 3; k++) if (!d[e][k]) return ex[e].name.toLowerCase() + ', set ' + (k + 1);
+      return 'all done!';
+    };
+    const toggle = (e, k) => {
+      const cur = this.state || {};
+      const nd = (cur.done || done).map((r) => r.slice());
+      nd[e][k] = !nd[e][k]; try { localStorage.setItem('gsb.seenSetHint', '1'); localStorage.setItem('gsb.seenWeightHint', '1'); } catch (e) {}
+      this.setState({ done: nd });
+      if (nd[e][k]) {
+        this.tap(12);
+        const left = nd.reduce((n, r) => n + r.filter((x) => !x).length, 0);
+        if (left > 0) this.startRest(90);
+        else { this.stopRest(); this.setState({ rest: null }); }
+      }
+    };
+    const collect = () => {
+      const cur = this.state || {};
+      if (cur.stage !== 'landed') return;
+      this.tap(12);
+      this.setState({ stage: 'fly' });
+      this.later(() => this.setState({ stage: 'stored', count: ((this.state && this.state.count) == null ? 7 : this.state.count) + 1, bump: true }), 420);
+      this.later(() => this.setState({ bump: false }), 620);
+      this.later(() => { try { localStorage.setItem('gsb.pendingLog', JSON.stringify({ type: 'gym', plan: 'pull', title: 'PULL DAY', mins: 45, at: Date.now() })); localStorage.setItem('gsb.lastWorkout', JSON.stringify({ type: 'gym', title: 'PULL DAY', at: Date.now() })); localStorage.removeItem('gsb.workout'); localStorage.setItem('gsb.newStickers', String((+localStorage.getItem('gsb.newStickers') || 0) + 1)); } catch (e) {} const a = document.getElementById('gym-toHub'); if (a) a.click(); }, 1400);
+    };
+    const finish = () => {
+      if ((this.state || {}).stage && (this.state || {}).stage !== 'none') return;
+      this.tap(12);
+      this.setState({ stage: 'drop' });
+      this.later(() => this.setState({ stage: 'landed' }), 40);
+    };
+    const restOn = st.rest != null && !allDone;
+    const fmt = (t) => Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0');
+    const pct = restOn && st.restTotal ? (st.rest / st.restTotal) * 100 : 0;
+    const transforms = { drop: 'scale(1.6) rotate(-22deg)', landed: 'scale(1) rotate(-6deg)', fly: 'translate(157px, -367px) scale(0.12) rotate(30deg)' };
+    const transitions = { drop: 'none', landed: 'transform 0.3s cubic-bezier(.3,1.6,.5,1), opacity 0.15s ease', fly: 'transform 0.42s cubic-bezier(.55,0,.75,.35), opacity 0.42s ease-in' };
+    const seenHint = (() => { try { return localStorage.getItem('gsb.seenSetHint') === '1'; } catch (e) { return false; } })();
+    return {
+      wHint: doneSets === 0 && !ex.some((x) => x.hasW) && (() => { try { return localStorage.getItem('gsb.seenWeightHint') !== '1'; } catch (e) { return false; } })(),
+      setHint: !seenHint && doneSets === 0 && !(doneSets === 0 && !ex.some((x) => x.hasW) && (() => { try { return localStorage.getItem('gsb.seenWeightHint') !== '1'; } catch (e) { return false; } })()),
+      count,
+      bookTransform: st.bump ? 'scale(1.25)' : 'scale(1)',
+      doneSets,
+      rows: ex.map((x, e) => ({
+        guide: x.guide || '#',
+        name: x.name, meta: x.meta, bg: x.bg, rot: x.rot,
+        editW: () => this.openW(e, x), wCls: x.bw ? 'w-bw' : x.hasW ? 'w-has' : 'w-none',
+        wAria: x.bw ? x.name.toLowerCase() + ': bodyweight' : x.hasW ? x.name.toLowerCase() + ': ' + x.meta + '. Tap to change the weight' : x.name.toLowerCase() + ': add your weight',
+        hl: e === current ? '#C6FF4D' : 'transparent',
+        current: e === current,
+        sets: [0, 1, 2].map((k) => ({
+          toggle: () => toggle(e, k),
+          pressed: done[e][k] ? 'true' : 'false',
+          aria: x.name.toLowerCase() + ' set ' + (k + 1) + (done[e][k] ? ', done' : ''),
+          fill: done[e][k] ? '#C6FF4D' : '#FFFFFF',
+          rot: (k === 1 ? 6 : -5) + 'deg',
+          mark: done[e][k] ? '✓' : String(k + 1)
+        }))
+      })),
+      showRest: restOn,
+      restTime: restOn ? (st.restOver ? 'GO!' : fmt(st.rest)) : '',
+      restRing: st.restOver ? '#FF6FB0' : '#C6FF4D',
+      restPct: pct.toFixed(1),
+      restTitle: st.restOver ? 'BACK TO IT' : 'REST',
+      restNext: 'next: ' + nextLabel() + ' · on your watch too',
+      addRest: () => { const cur = this.state || {}; if (cur.restOver) return; this.setState({ rest: (cur.rest || 0) + 30, restTotal: (cur.restTotal || 90) + 30 }); },
+      skipRest: () => { this.stopRest(); this.setState({ rest: null, restOver: false }); },
+      skipLabel: st.restOver ? 'OK' : 'SKIP',
+      skipAria: st.restOver ? 'Dismiss rest timer' : 'Skip rest',
+      showFinish: stage === 'none' && !restOn,
+      showIdleHint: !restOn && !allDone,
+      finish,
+      showSlap: stage === 'drop' || stage === 'landed' || stage === 'fly',
+      slapTransform: transforms[stage] || 'none',
+      slapOpacity: stage === 'drop' ? 0 : stage === 'fly' ? 0.2 : 1,
+      slapTransition: transitions[stage] || 'none',
+      collect,
+      changeText: st.chArm && Date.now() - st.chArm < 3000 ? 'tap again to pick another' : '‹ change workout',
+      changeW: () => { const cur = this.state || {};
+        if (!cur.chArm || Date.now() - cur.chArm >= 3000) { this.tap(6); this.setState({ chArm: Date.now() }); this.later(() => this.setState({ chArm: 0 }), 3000); return; }
+        try { localStorage.removeItem('gsb.workout'); } catch (e) {} const a = document.getElementById('gym-toHub'); if (a) a.click(); }
+    };
+  }
+}
+</script>
+<script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
+<script src="morphdom.js?v=1793350774"></script>
+<script src="dc.js?v=1793350774"></script>
+</body></html>
