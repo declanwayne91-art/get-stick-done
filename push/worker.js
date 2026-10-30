@@ -12,6 +12,7 @@
 //   POST /unsubscribe  { endpoint }                      forget it
 //   POST /drank        { endpoint, day, count, goal }    today's glasses (quiet once count >= goal)
 //   POST /test         { endpoint }                      one nudge now, to check it works
+//   POST /snooze       { endpoint, minutes }             IN 30 MIN on the nudge: one more nudge after that (if the goal isn't hit)
 //   GET  /health       -> ok
 // Cron: every 15 minutes. Slots are start + every, start + 2*every ... up to end (8am-9pm every 2 h = 10, 12 ... 8pm).
 
@@ -58,6 +59,7 @@ export function local(tz, now = new Date()) {
 export function dueSlot(rec, now = new Date()) {
   const t = local(rec.tz, now), every = Math.max(60, Math.round((+rec.every || 2) * 60));
   if (rec.day === t.day && rec.goal && rec.count >= rec.goal) return null;   // goal hit today: quiet
+  if (rec.snooze && now.getTime() >= rec.snooze) return 'snooze@' + rec.snooze;   // IN 30 MIN came round
   for (let s = rec.start * 60 + every; s <= rec.end * 60; s += every) {
     if (t.min >= s && t.min < s + WINDOW_MIN) { const key = t.day + '@' + s; return rec.last === key ? null : key; }
   }
@@ -73,7 +75,8 @@ async function run(env) {
       const slot = dueSlot(rec, now); if (!slot) continue;
       const st = await push(env, rec.sub).catch(() => 0);
       if (st === 404 || st === 410) { await env.SUBS.delete(k.name); continue; }
-      rec.last = slot; rec.sent = (rec.sent || 0) + 1; await env.SUBS.put(k.name, JSON.stringify(rec));
+      if (slot.startsWith('snooze@')) delete rec.snooze; else rec.last = slot;
+      rec.sent = (rec.sent || 0) + 1; await env.SUBS.put(k.name, JSON.stringify(rec));
     }
   } while (cursor);
 }
@@ -102,6 +105,7 @@ export default {
       if (path === '/unsubscribe') { await env.SUBS.delete(id); return out({ ok: true }); }
       const rec = await env.SUBS.get(id, 'json'); if (!rec) return out({ error: 'not subscribed' }, 404);
       if (path === '/drank') { rec.day = String(b.day || '').slice(0, 10); rec.count = clamp(b.count, 0, 50, 0); if (b.goal) rec.goal = clamp(b.goal, 1, 20, 6); await env.SUBS.put(id, JSON.stringify(rec)); return out({ ok: true }); }
+      if (path === '/snooze') { rec.snooze = Date.now() + clamp(b.minutes, 10, 180, 30) * 60000; await env.SUBS.put(id, JSON.stringify(rec)); return out({ ok: true }); }
       if (path === '/test') { const st = await push(env, rec.sub, 'test'); return out({ ok: st >= 200 && st < 300, status: st }); }
       return out({ error: 'not found' }, 404);
     } catch (e) { return out({ error: 'server' }, 500); }

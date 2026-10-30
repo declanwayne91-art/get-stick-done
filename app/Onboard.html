@@ -49,8 +49,9 @@ window.GSN = (function () {
   }
   // a glass on Today: the nudge shows the real count, and the worker goes quiet at the goal
   function glass(count, goal) { store({ day: day(), count: count, goal: goal }); if (!canPush()) return; sub().then(function (s) { if (s) post('/drank', { endpoint: s.endpoint, day: day(), count: count, goal: goal }).catch(function () {}); }).catch(function () {}); }
+  function readGlasses() { return new Promise(function (ok) { try { var r = indexedDB.open('gsd', 1); r.onupgradeneeded = function () { r.result.createObjectStore('kv'); }; r.onsuccess = function () { var q = r.result.transaction('kv').objectStore('kv').get('glasses'); q.onsuccess = function () { ok(q.result && q.result.day === day() ? q.result : null); }; q.onerror = function () { ok(null); }; }; r.onerror = function () { ok(null); }; } catch (e) { ok(null); } }); }
   function testNudge() { if (!canPush()) return Promise.resolve(false); return sub().then(function (s) { return s ? post('/test', { endpoint: s.endpoint }).then(function (j) { return !!(j && j.ok); }) : false; }).catch(function () { return false; }); }
-  return { on: on, tap: tap, keepAwake: keepAwake, canPush: canPush, nudges: nudges, glass: glass, testNudge: testNudge };
+  return { on: on, tap: tap, keepAwake: keepAwake, canPush: canPush, nudges: nudges, glass: glass, testNudge: testNudge, readGlasses: readGlasses };
 })();</script>
 <title>Get St*ck Done!</title>
 <script>/* size the phone frame before anything paints, so nothing (e.g. the nav bar) shows in the wrong place while the page loads */
@@ -235,7 +236,7 @@ input:focus{outline:none;box-shadow:0 0 0 3px #FF6FB0}
   <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; gap: 10px">
     <sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}"><button type="button" class="press bri" onClick="{{back}}" aria-label="Back" style="width: 62px; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #FFFFFF; color: #172038; font-size: 26px">←</button></sc-if>
     <sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{next}}" style="flex: 1; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{nextText}}</button></sc-if>
-    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="StickerBook.html?v=1793364603" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">OPEN MY STICKER BOOK →</a></sc-if>
+    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="StickerBook.html?v=1793365666" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">OPEN MY STICKER BOOK →</a></sc-if>
   </div>
 </div>
 </script>
@@ -345,6 +346,6 @@ class Component extends DCLogic {
 }
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793364603"></script>
-<script src="dc.js?v=1793364603"></script>
+<script src="morphdom.js?v=1793365666"></script>
+<script src="dc.js?v=1793365666"></script>
 </body></html>
