@@ -5,6 +5,9 @@
 // focus and scroll stay put, and big screens stay quick. Events are delegated from the stage.
 // Boards that drive their own DOM (no templating) are rendered once and left alone.
 (function () {
+  // haptics only after you've touched the page: browsers block (and log an error for) vibrate() before the first tap
+  try { const vib = navigator.vibrate && navigator.vibrate.bind(navigator);
+    if (vib) navigator.vibrate = (p) => { try { if (navigator.userActivation && !navigator.userActivation.hasBeenActive) return false; return vib(p); } catch (e) { return false; } }; } catch (e) {}
   const $ = (id) => document.getElementById(id);
   const TPL = $('dc-tpl').textContent, CODE = $('dc-logic').textContent;
   const PROPS = (() => { try { return JSON.parse($('dc-props').textContent || '{}'); } catch (e) { return {}; } })();
@@ -80,6 +83,7 @@
     }
     if (!mounted) { mounted = true; if (inst.componentDidMount) setTimeout(() => inst.componentDidMount(), 0); }
   }
-  const start = () => render();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(start, start); else start();
+  // wait for the fonts (so text measures right), but never more than a moment: after the first page they're cached anyway
+  let started = false; const start = () => { if (started) return; started = true; render(); };
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(start, start); setTimeout(start, 500); } else start();
 })();
