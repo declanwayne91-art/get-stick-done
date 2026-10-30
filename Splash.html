@@ -5,8 +5,8 @@
 (function () { var W = 390, H = 844 + 0, w = innerWidth, h = innerHeight, k = Math.min(w / W, h / H), r = document.documentElement.style;
   r.setProperty('--k', k); r.setProperty('--l', Math.max(0, (w - W * k) / 2) + 'px'); r.setProperty('--t', Math.max(0, (h - H * k) / 2) + 'px'); })();</script>
 <script>/* merged duplicate recipes: move saved plans, tonight's pick and the cooked log over to the recipe we kept */
-(function () { var M = {"din-tai-fung-egg-fried-rice": "chilli-crisp-fried-rice"}; try { ['gsd.plan', 'gsd.tonight', 'gsd.progress', 'gsd.planAdd', 'gsd.useUp'].forEach(function (k) { var v = localStorage.getItem(k); if (!v) return; var n = v;
-  for (var o in M) n = n.split(o).join(M[o]); if (n !== v) localStorage.setItem(k, n); }); } catch (e) {} })();</script>
+(function () { var M = {"din-tai-fung-egg-fried-rice": "chilli-crisp-fried-rice"}; try { ['gsd.plan', 'gsd.tonight', 'gsd.progress', 'gsd.planAdd', 'gsd.useUp', 'gsd.workout', 'gsd.lastWorkout'].forEach(function (k) { var v = localStorage.getItem(k); if (!v) return; var n = v;
+  for (var o in M) n = n.split(o).join(M[o]); n = n.split('Couch to 5K week').join('Stick With It · week'); if (n !== v) localStorage.setItem(k, n); }); } catch (e) {} })();</script>
 <script type="speculationrules">{"prefetch": [{"where": {"selector_matches": "a[href]"}, "eagerness": "moderate"}]}</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -89,8 +89,8 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
     <span id="sp-tapeT" class="bri title-die" role="status" style="display: block; font-size: 40px; color: #C6FF4D; text-shadow: 3px 3px 0 #111111; letter-spacing: 0.5px; white-space: nowrap"></span></div>
   <button type="button" id="sp-tap" class="press" style="position: absolute; left: 0; right: 0; top: 488px; margin: 0 auto; width: max-content; padding: 6px 10px; border: none; background: transparent; transform: rotate(2deg)"><span class="bri title-die" style="display: block; font-size: 22px; color: #172038; letter-spacing: 0.5px">OR TAP HERE TO START</span></button>
   <button type="button" id="sp-skip" class="press" style="display: none; position: absolute; left: 0; right: 0; top: 488px; margin: 0 auto; width: max-content; padding: 6px 10px; border: none; background: transparent; transform: rotate(2deg)"><span class="bri title-die" style="display: block; font-size: 22px; color: #172038; letter-spacing: 0.5px">TAP ANYWHERE TO GO IN</span></button>
-  <a id="sp-toToday" href="Today.html?v=1793357339" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
-  <a id="sp-toOnboard" href="Onboard.html?v=1793357339" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Set up</a>
+  <a id="sp-toToday" href="Today.html?v=1793358513" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
+  <a id="sp-toOnboard" href="Onboard.html?v=1793358513" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Set up</a>
   <div class="sp-demo" style="position: absolute; left: 0; right: 0; bottom: 16px; display: flex; justify-content: center; align-items: center; gap: 6px"><span class="kal" style="font-size: 12px; opacity: 0.55">demo:</span><button type="button" id="sp-demoFirst">first time</button><button type="button" id="sp-demoBack">welcome back</button></div>
 </div>
 </script>
@@ -276,6 +276,6 @@ class Component extends DCLogic {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793357339"></script>
-<script src="dc.js?v=1793357339"></script>
+<script src="morphdom.js?v=1793358513"></script>
+<script src="dc.js?v=1793358513"></script>
 </body></html>

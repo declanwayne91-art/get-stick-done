@@ -11,8 +11,8 @@
 (function () { var W = 390, H = 844 + 0, w = innerWidth, h = innerHeight, k = Math.min(w / W, h / H), r = document.documentElement.style;
   r.setProperty('--k', k); r.setProperty('--l', Math.max(0, (w - W * k) / 2) + 'px'); r.setProperty('--t', Math.max(0, (h - H * k) / 2) + 'px'); })();</script>
 <script>/* merged duplicate recipes: move saved plans, tonight's pick and the cooked log over to the recipe we kept */
-(function () { var M = {"din-tai-fung-egg-fried-rice": "chilli-crisp-fried-rice"}; try { ['gsb.plan', 'gsb.tonight', 'gsb.progress', 'gsb.planAdd', 'gsb.useUp'].forEach(function (k) { var v = localStorage.getItem(k); if (!v) return; var n = v;
-  for (var o in M) n = n.split(o).join(M[o]); if (n !== v) localStorage.setItem(k, n); }); } catch (e) {} })();</script>
+(function () { var M = {"din-tai-fung-egg-fried-rice": "chilli-crisp-fried-rice"}; try { ['gsb.plan', 'gsb.tonight', 'gsb.progress', 'gsb.planAdd', 'gsb.useUp', 'gsb.workout', 'gsb.lastWorkout'].forEach(function (k) { var v = localStorage.getItem(k); if (!v) return; var n = v;
+  for (var o in M) n = n.split(o).join(M[o]); n = n.split('Couch to 5K week').join('Stick With It · week'); if (n !== v) localStorage.setItem(k, n); }); } catch (e) {} })();</script>
 <script type="speculationrules">{"prefetch": [{"where": {"selector_matches": "a[href]"}, "eagerness": "moderate"}]}</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -180,7 +180,7 @@ input:focus{outline:none;box-shadow:0 0 0 3px #FF6FB0}
   <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; gap: 10px">
     <sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}"><button type="button" class="press bri" onClick="{{back}}" aria-label="Back" style="width: 62px; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #FFFFFF; color: #172038; font-size: 26px">←</button></sc-if>
     <sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{next}}" style="flex: 1; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{nextText}}</button></sc-if>
-    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="StickerBook.html?v=1793357339" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">OPEN MY STICKER BOOK →</a></sc-if>
+    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="StickerBook.html?v=1793358513" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">OPEN MY STICKER BOOK →</a></sc-if>
   </div>
 </div>
 </script>
@@ -283,6 +283,6 @@ class Component extends DCLogic {
 }
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793357339"></script>
-<script src="dc.js?v=1793357339"></script>
+<script src="morphdom.js?v=1793358513"></script>
+<script src="dc.js?v=1793358513"></script>
 </body></html>
