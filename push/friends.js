@@ -28,7 +28,7 @@ const init = (env) => ready || (ready = env.DB.batch(SCHEMA.map((q) => env.DB.pr
   .catch((e) => { ready = null; throw e; }));
 
 const ABC = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';   // no 0/O, 1/I/L
-const PLATES = ['cream', 'lime', 'pink', 'sky', 'holo'];
+const PLATES = ['cream', 'lime', 'pink', 'sky', 'holo', 'sunset', 'gold', 'aurora', 'galaxy'];   // makeprofile.py PLATES (+ levelart.py)
 const MAX_FRIENDS = 100, CHEERS_A_DAY = 60, CHEER_GAP = 30e3;
 const rand = (n, abc = ABC) => { const b = crypto.getRandomValues(new Uint8Array(n)); return Array.from(b, (x) => abc[x % abc.length]).join(''); };
 const hex = (buf) => Array.from(new Uint8Array(buf), (x) => x.toString(16).padStart(2, '0')).join('');
