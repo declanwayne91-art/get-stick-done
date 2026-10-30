@@ -23,7 +23,7 @@ jobs:
         run: node push/setup.mjs
       - name: Deploy
         working-directory: push
-        run: npx --yes wrangler@4 deploy --config wrangler.gen.toml
+        run: npx --yes wrangler@4 deploy --config wrangler.gen.toml 2>&1 | tee deploy.log; test ${PIPESTATUS[0]} -eq 0 || (echo "::error::wrangler: $(grep -i -m3 -E 'error|✘' deploy.log | tr '\n' ' ')"; exit 1)
       - name: Check it's up
         run: |
           sleep 10
