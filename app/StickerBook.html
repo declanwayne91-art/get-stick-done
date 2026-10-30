@@ -22,7 +22,35 @@ window.GSN = (function () {
     var get = function () { if (document.visibilityState === 'visible' && !lock) navigator.wakeLock.request('screen').then(function (l) { lock = l; l.addEventListener('release', function () { lock = null; }); }).catch(function () {}); };
     get(); if (!hooked) { hooked = true; document.addEventListener('visibilitychange', get); }
   }
-  return { on: on, tap: tap, keepAwake: keepAwake };
+  /* Hydro Homie nudges by push (they arrive with the app closed): the nudge worker (push/worker.js on Cloudflare) sends at
+     the hours in profile.hydro; it goes quiet once today's glasses reach the goal (glass() tells it). */
+  var PUSH = 'https://gsd-push.declanwayne91.workers.dev';
+  function day() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function post(path, body) { return fetch(PUSH + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then(function (r) { return r.json(); }); }
+  function key(s) { s = s.replace(/-/g, '+').replace(/_/g, '/'); var raw = atob(s + '==='.slice((s.length + 3) % 4)), out = new Uint8Array(raw.length); for (var i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i); return out; }
+  function store(v) { try { var r = indexedDB.open('gsd', 1); r.onupgradeneeded = function () { r.result.createObjectStore('kv'); }; r.onsuccess = function () { r.result.transaction('kv', 'readwrite').objectStore('kv').put(v, 'glasses'); }; } catch (e) {} }
+  function prof() { try { return JSON.parse(localStorage.getItem('gsb.profile') || 'null') || {}; } catch (e) { return {}; } }
+  function canPush() { return !!PUSH && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window; }
+  function sub() { return navigator.serviceWorker.ready.then(function (reg) { return reg.pushManager.getSubscription(); }); }
+  // nudges(true | false) -> Promise of 'on' | 'off' | 'denied' | 'unsupported' | 'error'. Call it from a tap (it may ask permission).
+  function nudges(on) {
+    if (!canPush()) return Promise.resolve('unsupported');
+    return navigator.serviceWorker.ready.then(function (reg) {
+      return reg.pushManager.getSubscription().then(function (s) {
+        if (!on) return (s ? post('/unsubscribe', { endpoint: s.endpoint }).catch(function () {}).then(function () { return s.unsubscribe(); }) : Promise.resolve()).then(function () { return 'off'; });
+        return (Notification.permission === 'granted' ? Promise.resolve('granted') : Notification.requestPermission()).then(function (p) {
+          if (p !== 'granted') return 'denied';
+          return (s ? Promise.resolve(s) : fetch(PUSH + '/key').then(function (r) { return r.json(); }).then(function (k) { return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: key(k.key) }); }))
+            .then(function (s2) { var h = prof().hydro || {}; return post('/subscribe', { sub: s2.toJSON(), every: h.every || 2, start: h.dayStart != null ? h.dayStart : 8, end: h.dayEnd != null ? h.dayEnd : 21, tz: Intl.DateTimeFormat().resolvedOptions().timeZone, goal: h.goal || 6 }); })
+            .then(function (j) { return j && j.ok ? 'on' : 'error'; });
+        });
+      });
+    }).catch(function () { return 'error'; });
+  }
+  // a glass on Today: the nudge shows the real count, and the worker goes quiet at the goal
+  function glass(count, goal) { store({ day: day(), count: count, goal: goal }); if (!canPush()) return; sub().then(function (s) { if (s) post('/drank', { endpoint: s.endpoint, day: day(), count: count, goal: goal }).catch(function () {}); }).catch(function () {}); }
+  function testNudge() { if (!canPush()) return Promise.resolve(false); return sub().then(function (s) { return s ? post('/test', { endpoint: s.endpoint }).then(function (j) { return !!(j && j.ok); }) : false; }).catch(function () { return false; }); }
+  return { on: on, tap: tap, keepAwake: keepAwake, canPush: canPush, nudges: nudges, glass: glass, testNudge: testNudge };
 })();</script>
 <title>Get St*ck Done!</title>
 <script>/* size the phone frame before anything paints, so nothing (e.g. the nav bar) shows in the wrong place while the page loads */
@@ -142,7 +170,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
     <span class="title-die bri" style="font-size: 40px; color: #172038; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-3deg)">STUCK!</span>
     <span class="bri" style="padding: 7px 14px 5px; background-color: rgba(198,255,77,0.92); background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.3) 0 6px, transparent 6px 12px); color: #172038; font-size: 19px; letter-spacing: 0.5px; transform: rotate(2deg); box-shadow: 0 4px 8px -4px rgba(0,0,0,0.4)">PEEL IT. STICK IT. DONE!</span>
     <span class="kal" style="font-size: 15px; opacity: 0.8">long-press a sticker to move it</span>
-    <a id="sbk-toToday" href="Today.html?v=1793362282" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
+    <a id="sbk-toToday" href="Today.html?v=1793364603" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
     <button type="button" id="sbk-whatNext" class="press bri" style="margin-top: 4px; width: 100%; height: 56px; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 23px">HOW DO I GET MORE? →</button>
     <button type="button" id="sbk-againBtn" class="kal" style="border: none; background: transparent; color: #F6EFE1; font-size: 13px; text-decoration: underline">(demo: peel it again)</button>
   </div>
@@ -380,6 +408,6 @@ class Component extends DCLogic {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793362282"></script>
-<script src="dc.js?v=1793362282"></script>
+<script src="morphdom.js?v=1793364603"></script>
+<script src="dc.js?v=1793364603"></script>
 </body></html>

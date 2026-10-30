@@ -22,7 +22,35 @@ window.GSN = (function () {
     var get = function () { if (document.visibilityState === 'visible' && !lock) navigator.wakeLock.request('screen').then(function (l) { lock = l; l.addEventListener('release', function () { lock = null; }); }).catch(function () {}); };
     get(); if (!hooked) { hooked = true; document.addEventListener('visibilitychange', get); }
   }
-  return { on: on, tap: tap, keepAwake: keepAwake };
+  /* Hydro Homie nudges by push (they arrive with the app closed): the nudge worker (push/worker.js on Cloudflare) sends at
+     the hours in profile.hydro; it goes quiet once today's glasses reach the goal (glass() tells it). */
+  var PUSH = 'https://gsd-push.declanwayne91.workers.dev';
+  function day() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function post(path, body) { return fetch(PUSH + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then(function (r) { return r.json(); }); }
+  function key(s) { s = s.replace(/-/g, '+').replace(/_/g, '/'); var raw = atob(s + '==='.slice((s.length + 3) % 4)), out = new Uint8Array(raw.length); for (var i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i); return out; }
+  function store(v) { try { var r = indexedDB.open('gsd', 1); r.onupgradeneeded = function () { r.result.createObjectStore('kv'); }; r.onsuccess = function () { r.result.transaction('kv', 'readwrite').objectStore('kv').put(v, 'glasses'); }; } catch (e) {} }
+  function prof() { try { return JSON.parse(localStorage.getItem('gsb.profile') || 'null') || {}; } catch (e) { return {}; } }
+  function canPush() { return !!PUSH && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window; }
+  function sub() { return navigator.serviceWorker.ready.then(function (reg) { return reg.pushManager.getSubscription(); }); }
+  // nudges(true | false) -> Promise of 'on' | 'off' | 'denied' | 'unsupported' | 'error'. Call it from a tap (it may ask permission).
+  function nudges(on) {
+    if (!canPush()) return Promise.resolve('unsupported');
+    return navigator.serviceWorker.ready.then(function (reg) {
+      return reg.pushManager.getSubscription().then(function (s) {
+        if (!on) return (s ? post('/unsubscribe', { endpoint: s.endpoint }).catch(function () {}).then(function () { return s.unsubscribe(); }) : Promise.resolve()).then(function () { return 'off'; });
+        return (Notification.permission === 'granted' ? Promise.resolve('granted') : Notification.requestPermission()).then(function (p) {
+          if (p !== 'granted') return 'denied';
+          return (s ? Promise.resolve(s) : fetch(PUSH + '/key').then(function (r) { return r.json(); }).then(function (k) { return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: key(k.key) }); }))
+            .then(function (s2) { var h = prof().hydro || {}; return post('/subscribe', { sub: s2.toJSON(), every: h.every || 2, start: h.dayStart != null ? h.dayStart : 8, end: h.dayEnd != null ? h.dayEnd : 21, tz: Intl.DateTimeFormat().resolvedOptions().timeZone, goal: h.goal || 6 }); })
+            .then(function (j) { return j && j.ok ? 'on' : 'error'; });
+        });
+      });
+    }).catch(function () { return 'error'; });
+  }
+  // a glass on Today: the nudge shows the real count, and the worker goes quiet at the goal
+  function glass(count, goal) { store({ day: day(), count: count, goal: goal }); if (!canPush()) return; sub().then(function (s) { if (s) post('/drank', { endpoint: s.endpoint, day: day(), count: count, goal: goal }).catch(function () {}); }).catch(function () {}); }
+  function testNudge() { if (!canPush()) return Promise.resolve(false); return sub().then(function (s) { return s ? post('/test', { endpoint: s.endpoint }).then(function (j) { return !!(j && j.ok); }) : false; }).catch(function () { return false; }); }
+  return { on: on, tap: tap, keepAwake: keepAwake, canPush: canPush, nudges: nudges, glass: glass, testNudge: testNudge };
 })();</script>
 <title>Get St*ck Done!</title>
 <script>/* size the phone frame before anything paints, so nothing (e.g. the nav bar) shows in the wrong place while the page loads */
@@ -113,8 +141,8 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
     <span id="sp-tapeT" class="bri title-die" role="status" style="display: block; font-size: 40px; color: #C6FF4D; text-shadow: 3px 3px 0 #111111; letter-spacing: 0.5px; white-space: nowrap"></span></div>
   <button type="button" id="sp-tap" class="press" style="position: absolute; left: 0; right: 0; top: 488px; margin: 0 auto; width: max-content; padding: 6px 10px; border: none; background: transparent; transform: rotate(2deg)"><span class="bri title-die" style="display: block; font-size: 22px; color: #172038; letter-spacing: 0.5px">OR TAP HERE TO START</span></button>
   <button type="button" id="sp-skip" class="press" style="display: none; position: absolute; left: 0; right: 0; top: 488px; margin: 0 auto; width: max-content; padding: 6px 10px; border: none; background: transparent; transform: rotate(2deg)"><span class="bri title-die" style="display: block; font-size: 22px; color: #172038; letter-spacing: 0.5px">TAP ANYWHERE TO GO IN</span></button>
-  <a id="sp-toToday" href="Today.html?v=1793362282" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
-  <a id="sp-toOnboard" href="Onboard.html?v=1793362282" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Set up</a>
+  <a id="sp-toToday" href="Today.html?v=1793364603" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
+  <a id="sp-toOnboard" href="Onboard.html?v=1793364603" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Set up</a>
   <div class="sp-demo" style="position: absolute; left: 0; right: 0; bottom: 16px; display: flex; justify-content: center; align-items: center; gap: 6px"><span class="kal" style="font-size: 12px; opacity: 0.55">demo:</span><button type="button" id="sp-demoFirst">first time</button><button type="button" id="sp-demoBack">welcome back</button></div>
 </div>
 </script>
@@ -300,6 +328,6 @@ class Component extends DCLogic {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793362282"></script>
-<script src="dc.js?v=1793362282"></script>
+<script src="morphdom.js?v=1793364603"></script>
+<script src="dc.js?v=1793364603"></script>
 </body></html>
