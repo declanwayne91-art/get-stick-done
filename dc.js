@@ -14,7 +14,8 @@
   const W = (PROPS.$preview && PROPS.$preview.width) || 390, H = (PROPS.$preview && PROPS.$preview.height) || 844;
   const EXTRA = +(document.body.dataset.extra || 0);   // room the demo adds under a board (the pinned nav bar)
   const stage = $('dc-stage'), frame = $('dc-frame') || stage;   // frame = the board plus any demo bar under it
-  stage.style.width = W + 'px'; stage.style.height = H + 'px'; frame.style.width = W + 'px'; frame.style.height = (H + EXTRA) + 'px';
+  const bar = $('dc-bar');   // the nav / back bar: drawn at Today's size, outside the board's scaling
+  stage.style.width = W + 'px'; stage.style.height = H + 'px'; frame.style.width = W + 'px'; frame.style.height = H + 'px';
 
   // ---- fit the board to the window. A phone keyboard shrinks the window's height: ignore that, so the screen doesn't jump or shrink
   let lastW = 0, lastH = 0;
@@ -22,9 +23,10 @@
     const w = innerWidth, h = innerHeight;
     if (w === lastW && h < lastH) return;           // keyboard opened: keep the size we had
     lastW = w; lastH = h;
-    const k = Math.min(w / W, h / (H + EXTRA));
+    const kT = Math.min(w / W, h / H), t = Math.max(0, (h - H * kT) / 2), k = EXTRA ? Math.min(w / W, (H - EXTRA) * kT / H) : kT;
     frame.style.transform = 'scale(' + k + ')';
-    frame.style.left = Math.max(0, (w - W * k) / 2) + 'px'; frame.style.top = Math.max(0, (h - (H + EXTRA) * k) / 2) + 'px';
+    frame.style.left = Math.max(0, (w - W * k) / 2) + 'px'; frame.style.top = t + 'px';
+    if (bar) { bar.style.transform = 'scale(' + kT + ')'; bar.style.left = Math.max(0, (w - W * kT) / 2) + 'px'; bar.style.top = (t + (H - EXTRA) * kT) + 'px'; }
   };
   addEventListener('resize', fit); fit();
 
