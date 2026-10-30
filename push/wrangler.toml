@@ -10,3 +10,8 @@ crons = ["*/15 * * * *"]
 [[kv_namespaces]]
 binding = "SUBS"
 id = "__KV_ID__"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "gsd-friends"
+database_id = "__D1_ID__"

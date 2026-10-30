@@ -18,6 +18,9 @@ if (!sub) { console.log('::error::Could not set up a workers.dev subdomain'); pr
 const TITLE = 'gsd-push-subs';
 let ns = ((await api('GET', '/storage/kv/namespaces?per_page=100')).result || []).find((n) => n.title === TITLE);
 if (!ns) { const j = await api('POST', '/storage/kv/namespaces', { title: TITLE }); if (!j.success) { console.log('::error::KV create failed ' + JSON.stringify(j.errors)); process.exit(1); } ns = j.result; }
-fs.writeFileSync('push/wrangler.gen.toml', fs.readFileSync('push/wrangler.toml', 'utf8').replace('__KV_ID__', ns.id));
+const DBNAME = 'gsd-friends';   // friends: D1 database (the worker makes its own tables)
+let db = ((await api('GET', '/d1/database?per_page=100')).result || []).find((d) => d.name === DBNAME);
+if (!db) { const j = await api('POST', '/d1/database', { name: DBNAME }); if (!j.success) { console.log('::error::D1 create failed ' + JSON.stringify(j.errors)); process.exit(1); } db = j.result; }
+fs.writeFileSync('push/wrangler.gen.toml', fs.readFileSync('push/wrangler.toml', 'utf8').replace('__KV_ID__', ns.id).replace('__D1_ID__', db.uuid || db.id));
 fs.writeFileSync('push/url.txt', 'https://gsd-push.' + sub + '.workers.dev\n');
 console.log('::notice::Nudge worker address: https://gsd-push.' + sub + '.workers.dev');

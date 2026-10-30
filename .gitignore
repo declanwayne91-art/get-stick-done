@@ -1,1 +1,3 @@
 push/wrangler.gen.toml
+push/wrangler.local.toml
+push/.wrangler/

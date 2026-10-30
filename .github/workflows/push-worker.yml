@@ -1,5 +1,5 @@
 # Deploys the nudge worker (push/) to Cloudflare whenever it changes. Needs the repository secrets
-# CLOUDFLARE_API_TOKEN (the "Edit Cloudflare Workers" token) and CLOUDFLARE_ACCOUNT_ID.
+# CLOUDFLARE_API_TOKEN (the "Edit Cloudflare Workers" token, plus D1 Edit for friends) and CLOUDFLARE_ACCOUNT_ID.
 name: Deploy nudge worker
 on:
   push:
@@ -32,6 +32,9 @@ jobs:
           U=$(cat push/url.txt)
           curl -fsS --retry 6 --retry-delay 5 --retry-all-errors "$U/health"
           curl -fsS "$U/key" | grep -q '"key"'
+          # friends routes and the D1 tables: an unknown phone must be refused (401), not an error
+          code=$(curl -s -o f.json -w '%{http_code}' -X POST -H 'Content-Type: application/json' -d '{"secret":"deploy-check-0000000000000000000000000000000000"}' "$U/f/list")
+          if [ "$code" = "401" ]; then echo "::notice::Friends routes OK"; else echo "::error::Friends check got HTTP $code: $(cat f.json)"; exit 1; fi
       - name: Save the address for the app
         run: |
           git config user.name "github-actions[bot]"; git config user.email "41898699+github-actions[bot]@users.noreply.github.com"

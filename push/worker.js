@@ -14,7 +14,10 @@
 //   POST /test         { endpoint }                      one nudge now, to check it works
 //   POST /snooze       { endpoint, minutes }             IN 30 MIN on the nudge: one more nudge after that (if the goal isn't hit)
 //   GET  /health       -> ok
+//   POST /f/...        friends: see friends.js (D1, binding DB)
 // Cron: every 15 minutes. Slots are start + every, start + 2*every ... up to end (8am-9pm every 2 h = 10, 12 ... 8pm).
+
+import { friends, tidy } from './friends.js';
 
 const ORIGINS = ['https://declanwayne91-art.github.io', 'http://127.0.0.1:8765', 'http://localhost:8765'];
 const CONTACT = 'https://declanwayne91-art.github.io/get-stick-done/';
@@ -94,6 +97,7 @@ export default {
       if (req.method === 'GET' && path === '/key') return out({ key: (await vapid(env)).pub });
       if (req.method !== 'POST') return out({ error: 'not found' }, 404);
       const b = await req.json().catch(() => ({}));
+      if (path.startsWith('/f/')) return await friends(path, b, env, out);
       const endpoint = (b.sub && b.sub.endpoint) || b.endpoint || '';
       if (!/^https:\/\//.test(endpoint) || endpoint.length > 1000) return out({ error: 'bad endpoint' }, 400);
       const id = await idOf(endpoint);
@@ -110,5 +114,5 @@ export default {
       return out({ error: 'not found' }, 404);
     } catch (e) { return out({ error: 'server' }, 500); }
   },
-  async scheduled(evt, env, ctx) { ctx.waitUntil(run(env)); },
+  async scheduled(evt, env, ctx) { ctx.waitUntil(run(env)); if (new Date().getUTCHours() === 4 && new Date().getUTCMinutes() < 15) ctx.waitUntil(tidy(env).catch(() => {})); },
 };
