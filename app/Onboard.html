@@ -76,9 +76,10 @@ window.GSN = (function () {
 })();</script>
 <title>Get St*ck Done!</title>
 <script>/* size the phone frame before anything paints, so nothing (e.g. the nav bar) shows in the wrong place while the page loads */
-(function () { var W = 390, H = 844, E = 0, w = innerWidth, h = innerHeight, r = document.documentElement.style;
+(function () { var W = 390, H = 844, B = 844, E = 0, w = innerWidth, h = innerHeight, r = document.documentElement.style;
   /* the nav bar is drawn at exactly Today's size and place (Today's board is 844 with the bar inside); the board above it fits the rest */
-  var kT = Math.min(w / W, h / H), t = Math.max(0, (h - H * kT) / 2), k = E ? Math.min(w / W, (H - E) * kT / H) : kT;
+  /* a shorter board (B < 844, e.g. the sticker book) grows to fill the width instead */
+  var kT = Math.min(w / W, h / H), t = Math.max(0, (h - H * kT) / 2), k = E ? Math.min(w / W, (H - E) * kT / B) : Math.min(w / W, h / B);
   r.setProperty('--k', k); r.setProperty('--l', Math.max(0, (w - W * k) / 2) + 'px'); r.setProperty('--t', t + 'px');
   r.setProperty('--bk', kT); r.setProperty('--bl', Math.max(0, (w - W * kT) / 2) + 'px'); r.setProperty('--bt', (t + (H - E) * kT) + 'px'); })();</script>
 <script>/* merged duplicate recipes: move saved plans, tonight's pick and the cooked log over to the recipe we kept */
@@ -266,7 +267,7 @@ input:focus{outline:none;box-shadow:0 0 0 3px #FF6FB0}
   <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; gap: 10px">
     <sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}"><button type="button" class="press bri" onClick="{{back}}" aria-label="Back" style="width: 62px; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #FFFFFF; color: #172038; font-size: 26px">←</button></sc-if>
     <sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{next}}" style="flex: 1; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{nextText}}</button></sc-if>
-    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793398350" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
+    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793399610" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
   </div>
 </div>
 </script>
@@ -379,6 +380,6 @@ class Component extends DCLogic {
 }
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793398350"></script>
-<script src="dc.js?v=1793398350"></script>
+<script src="morphdom.js?v=1793399610"></script>
+<script src="dc.js?v=1793399610"></script>
 </body></html>

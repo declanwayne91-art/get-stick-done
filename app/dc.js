@@ -23,10 +23,11 @@
     const w = innerWidth, h = innerHeight;
     if (w === lastW && h < lastH) return;           // keyboard opened: keep the size we had
     lastW = w; lastH = h;
-    const kT = Math.min(w / W, h / H), t = Math.max(0, (h - H * kT) / 2), k = EXTRA ? Math.min(w / W, (H - EXTRA) * kT / H) : kT;
+    // the nav bar is sized from Today's 844-tall board; a shorter board (H < 844) grows to fill the width above it
+    const HT = EXTRA ? 844 : H, kT = Math.min(w / W, h / HT), t = Math.max(0, (h - HT * kT) / 2), k = EXTRA ? Math.min(w / W, (HT - EXTRA) * kT / H) : kT;
     frame.style.transform = 'scale(' + k + ')';
     frame.style.left = Math.max(0, (w - W * k) / 2) + 'px'; frame.style.top = t + 'px';
-    if (bar) { bar.style.transform = 'scale(' + kT + ')'; bar.style.left = Math.max(0, (w - W * kT) / 2) + 'px'; bar.style.top = (t + (H - EXTRA) * kT) + 'px'; }
+    if (bar) { bar.style.transform = 'scale(' + kT + ')'; bar.style.left = Math.max(0, (w - W * kT) / 2) + 'px'; bar.style.top = (t + (HT - EXTRA) * kT) + 'px'; }
   };
   addEventListener('resize', fit); fit();
 

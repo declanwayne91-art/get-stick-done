@@ -2,9 +2,10 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Get St*ck Done!</title>
 <script>/* size the phone frame before anything paints, so nothing (e.g. the nav bar) shows in the wrong place while the page loads */
-(function () { var W = 390, H = 844, E = 0, w = innerWidth, h = innerHeight, r = document.documentElement.style;
+(function () { var W = 390, H = 844, B = 844, E = 0, w = innerWidth, h = innerHeight, r = document.documentElement.style;
   /* the nav bar is drawn at exactly Today's size and place (Today's board is 844 with the bar inside); the board above it fits the rest */
-  var kT = Math.min(w / W, h / H), t = Math.max(0, (h - H * kT) / 2), k = E ? Math.min(w / W, (H - E) * kT / H) : kT;
+  /* a shorter board (B < 844, e.g. the sticker book) grows to fill the width instead */
+  var kT = Math.min(w / W, h / H), t = Math.max(0, (h - H * kT) / 2), k = E ? Math.min(w / W, (H - E) * kT / B) : Math.min(w / W, h / B);
   r.setProperty('--k', k); r.setProperty('--l', Math.max(0, (w - W * k) / 2) + 'px'); r.setProperty('--t', t + 'px');
   r.setProperty('--bk', kT); r.setProperty('--bl', Math.max(0, (w - W * kT) / 2) + 'px'); r.setProperty('--bt', (t + (H - E) * kT) + 'px'); })();</script>
 <script>/* merged duplicate recipes: move saved plans, tonight's pick and the cooked log over to the recipe we kept */
@@ -122,7 +123,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
     <span class="title-die bri" style="font-size: 40px; color: #172038; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-3deg)">STUCK!</span>
     <span class="bri" style="padding: 7px 14px 5px; background-color: rgba(198,255,77,0.92); background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.3) 0 6px, transparent 6px 12px); color: #172038; font-size: 19px; letter-spacing: 0.5px; transform: rotate(2deg); box-shadow: 0 4px 8px -4px rgba(0,0,0,0.4)">PEEL IT. STICK IT. DONE!</span>
     <span class="kal" style="font-size: 15px; opacity: 0.8">long-press a sticker to move it</span>
-    <a id="sbk-toToday" href="Today.html?v=1793398350" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
+    <a id="sbk-toToday" href="Today.html?v=1793399610" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
     <button type="button" id="sbk-whatNext" class="press bri" style="margin-top: 4px; width: 100%; height: 56px; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 23px">HOW DO I GET MORE? →</button>
     <button type="button" id="sbk-againBtn" class="kal" style="border: none; background: transparent; color: #F6EFE1; font-size: 13px; text-decoration: underline">(demo: peel it again)</button>
   </div>
@@ -341,7 +342,7 @@ class Component extends DCLogic {
       tnext.textContent = i === cards.length - 1 ? (S.doneShown ? 'LET’S GO →' : 'GOT IT') : 'NEXT →';
     };
     const openTips = () => { ti = 0; tips.style.display = 'block'; requestAnimationFrame(() => { tips.style.opacity = 1; }); showCard(0, 1); buzz(6); };
-    const closeTips = () => { tips.style.opacity = 0; setTimeout(() => { tips.style.display = 'none'; }, 220); tipsSeen = true; buzz(6);
+    const closeTips = () => { tips.style.opacity = 0; setTimeout(() => { tips.style.display = 'none'; }, 220); tipsSeen = true; try { localStorage.setItem('gsd.bookTips', '1'); } catch (e) {} buzz(6);
       if (S.doneShown) $('sbk-whatNext').textContent = 'LET’S GO →'; };
     const goToday = () => { const a = $('sbk-toToday'); if (a) a.click(); };   // first run: on to the home screen
     tnext.addEventListener('click', () => { if (ti < cards.length - 1) { ti++; showCard(ti, 1); sfx.tick(); } else { closeTips(); if (S.doneShown) goToday(); } });
@@ -360,6 +361,6 @@ class Component extends DCLogic {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793398350"></script>
-<script src="dc.js?v=1793398350"></script>
+<script src="morphdom.js?v=1793399610"></script>
+<script src="dc.js?v=1793399610"></script>
 </body></html>
