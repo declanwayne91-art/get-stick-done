@@ -1,0 +1,110 @@
+// Get St*ck Done! nudges: a tiny Cloudflare Worker that sends Hydro Homie's water nudges as Web Push, so they arrive
+// even when the app is closed (and Android passes them on to a paired watch).
+//
+// What it keeps (KV, binding SUBS), per phone: the phone's anonymous push address, the nudge hours and time zone,
+// today's glass count and goal (so it goes quiet once the goal is hit), and the last slot it sent. Nothing else.
+// The push itself carries no data: the app's service worker writes the words ("Time for a glass", "3 of 6 today").
+// Signing keys (VAPID) are made by the worker the first time it runs and kept in KV; GET /key hands out the public half.
+//
+// Routes (CORS: the app's origin only)
+//   GET  /key          -> { key }                        the VAPID public key the app subscribes with
+//   POST /subscribe    { sub, every, start, end, tz, goal }   save or update a phone
+//   POST /unsubscribe  { endpoint }                      forget it
+//   POST /drank        { endpoint, day, count, goal }    today's glasses (quiet once count >= goal)
+//   POST /test         { endpoint }                      one nudge now, to check it works
+//   GET  /health       -> ok
+// Cron: every 15 minutes. Slots are start + every, start + 2*every ... up to end (8am-9pm every 2 h = 10, 12 ... 8pm).
+
+const ORIGINS = ['https://declanwayne91-art.github.io', 'http://127.0.0.1:8765', 'http://localhost:8765'];
+const CONTACT = 'https://declanwayne91-art.github.io/get-stick-done/';
+const WINDOW_MIN = 30;   // a slot can still be sent up to 30 min late (cron runs every 15)
+
+const b64u = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const utf8 = (s) => new TextEncoder().encode(s);
+async function idOf(endpoint) { return 'sub:' + b64u(await crypto.subtle.digest('SHA-256', utf8(endpoint))).slice(0, 32); }
+
+async function vapid(env) {
+  let v = await env.SUBS.get('vapid', 'json');
+  if (!v) {
+    const k = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, true, ['sign', 'verify']);
+    v = { pub: b64u(await crypto.subtle.exportKey('raw', k.publicKey)), jwk: await crypto.subtle.exportKey('jwk', k.privateKey) };
+    await env.SUBS.put('vapid', JSON.stringify(v));
+  }
+  return v;
+}
+
+async function jwt(v, aud) {
+  const head = b64u(utf8(JSON.stringify({ typ: 'JWT', alg: 'ES256' })));
+  const body = b64u(utf8(JSON.stringify({ aud, exp: Math.floor(Date.now() / 1000) + 12 * 3600, sub: CONTACT })));
+  const key = await crypto.subtle.importKey('jwk', v.jwk, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign']);
+  const sig = await crypto.subtle.sign({ name: 'ECDSA', hash: 'SHA-256' }, key, utf8(head + '.' + body));   // raw r||s, as JWT wants
+  return head + '.' + body + '.' + b64u(sig);
+}
+
+// one push, no payload; returns the push service's status (404 / 410 = that phone has gone, forget it)
+export async function push(env, sub, topic = 'water') {
+  const v = await vapid(env), url = new URL(sub.endpoint);
+  const res = await fetch(sub.endpoint, { method: 'POST', headers: { Authorization: 'vapid t=' + await jwt(v, url.origin) + ', k=' + v.pub, TTL: '1800', Urgency: 'normal', Topic: topic, 'Content-Length': '0' } });
+  return res.status;
+}
+
+// local time in the phone's zone: { day: '2026-10-30', min: minutes since midnight }
+export function local(tz, now = new Date()) {
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: tz || 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(now).map((x) => [x.type, x.value]));
+  return { day: `${p.year}-${p.month}-${p.day}`, min: (+p.hour) * 60 + (+p.minute) };
+}
+
+// which slot (if any) is due right now for this phone
+export function dueSlot(rec, now = new Date()) {
+  const t = local(rec.tz, now), every = Math.max(60, Math.round((+rec.every || 2) * 60));
+  if (rec.day === t.day && rec.goal && rec.count >= rec.goal) return null;   // goal hit today: quiet
+  for (let s = rec.start * 60 + every; s <= rec.end * 60; s += every) {
+    if (t.min >= s && t.min < s + WINDOW_MIN) { const key = t.day + '@' + s; return rec.last === key ? null : key; }
+  }
+  return null;
+}
+
+async function run(env) {
+  let cursor; const now = new Date();
+  do {
+    const page = await env.SUBS.list({ prefix: 'sub:', cursor }); cursor = page.list_complete ? null : page.cursor;
+    for (const k of page.keys) {
+      const rec = await env.SUBS.get(k.name, 'json'); if (!rec) continue;
+      const slot = dueSlot(rec, now); if (!slot) continue;
+      const st = await push(env, rec.sub).catch(() => 0);
+      if (st === 404 || st === 410) { await env.SUBS.delete(k.name); continue; }
+      rec.last = slot; rec.sent = (rec.sent || 0) + 1; await env.SUBS.put(k.name, JSON.stringify(rec));
+    }
+  } while (cursor);
+}
+
+const clamp = (x, lo, hi, d) => (Number.isFinite(+x) ? Math.min(hi, Math.max(lo, +x)) : d);
+
+export default {
+  async fetch(req, env) {
+    const origin = req.headers.get('Origin') || '', cors = { 'Access-Control-Allow-Origin': ORIGINS.includes(origin) ? origin : ORIGINS[0], 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type', Vary: 'Origin' };
+    const out = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', ...cors } });
+    if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
+    const path = new URL(req.url).pathname;
+    try {
+      if (req.method === 'GET' && path === '/health') return out({ ok: true });
+      if (req.method === 'GET' && path === '/key') return out({ key: (await vapid(env)).pub });
+      if (req.method !== 'POST') return out({ error: 'not found' }, 404);
+      const b = await req.json().catch(() => ({}));
+      const endpoint = (b.sub && b.sub.endpoint) || b.endpoint || '';
+      if (!/^https:\/\//.test(endpoint) || endpoint.length > 1000) return out({ error: 'bad endpoint' }, 400);
+      const id = await idOf(endpoint);
+      if (path === '/subscribe') {
+        const old = (await env.SUBS.get(id, 'json')) || {};
+        const rec = { ...old, sub: { endpoint, keys: (b.sub && b.sub.keys) || {} }, every: clamp(b.every, 1, 6, 2), start: clamp(b.start, 0, 23, 8), end: clamp(b.end, 1, 24, 21), tz: String(b.tz || 'Europe/London').slice(0, 64), goal: clamp(b.goal, 1, 20, 6), at: old.at || Date.now() };
+        await env.SUBS.put(id, JSON.stringify(rec)); return out({ ok: true });
+      }
+      if (path === '/unsubscribe') { await env.SUBS.delete(id); return out({ ok: true }); }
+      const rec = await env.SUBS.get(id, 'json'); if (!rec) return out({ error: 'not subscribed' }, 404);
+      if (path === '/drank') { rec.day = String(b.day || '').slice(0, 10); rec.count = clamp(b.count, 0, 50, 0); if (b.goal) rec.goal = clamp(b.goal, 1, 20, 6); await env.SUBS.put(id, JSON.stringify(rec)); return out({ ok: true }); }
+      if (path === '/test') { const st = await push(env, rec.sub, 'test'); return out({ ok: st >= 200 && st < 300, status: st }); }
+      return out({ error: 'not found' }, 404);
+    } catch (e) { return out({ error: 'server' }, 500); }
+  },
+  async scheduled(evt, env, ctx) { ctx.waitUntil(run(env)); },
+};

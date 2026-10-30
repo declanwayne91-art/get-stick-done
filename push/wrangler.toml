@@ -1,0 +1,12 @@
+# Get St*ck Done! nudge worker. Deployed by .github/workflows/push-worker.yml (setup.mjs fills in the KV id).
+name = "gsd-push"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+[triggers]
+crons = ["*/15 * * * *"]
+
+[[kv_namespaces]]
+binding = "SUBS"
+id = "__KV_ID__"

@@ -1,0 +1,37 @@
+# Deploys the nudge worker (push/) to Cloudflare whenever it changes. Needs the repository secrets
+# CLOUDFLARE_API_TOKEN (the "Edit Cloudflare Workers" token) and CLOUDFLARE_ACCOUNT_ID.
+name: Deploy nudge worker
+on:
+  push:
+    branches: [main]
+    paths: ['push/**', '.github/workflows/push-worker.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Address and storage
+        run: node push/setup.mjs
+      - name: Deploy
+        working-directory: push
+        run: npx --yes wrangler@4 deploy --config wrangler.gen.toml
+      - name: Check it's up
+        run: |
+          sleep 10
+          U=$(cat push/url.txt)
+          curl -fsS --retry 6 --retry-delay 5 --retry-all-errors "$U/health"
+          curl -fsS "$U/key" | grep -q '"key"'
+      - name: Save the address for the app
+        run: |
+          git config user.name "github-actions[bot]"; git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
+          git add push/url.txt
+          git diff --cached --quiet || (git commit -m "Nudge worker address" && git push)
