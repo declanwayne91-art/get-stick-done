@@ -24,7 +24,7 @@
   probe.style.cssText = 'position:fixed;left:0;top:0;width:1px;visibility:hidden;pointer-events:none;height:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)';
   document.body.appendChild(probe);
   const fit = () => {
-    const it = probe.offsetHeight || 0, ib = parseFloat(getComputedStyle(probe).paddingBottom) || 0;
+    const it = probe.offsetHeight || 0, ib = Math.max(0, (parseFloat(getComputedStyle(probe).paddingBottom) || 0) - 20);   // the nav bar's own bottom margin can sit over the home line
     const w = innerWidth, h = innerHeight - it - ib;
     if (w === lastW && h < lastH) return;           // keyboard opened: keep the size we had
     lastW = w; lastH = h;
