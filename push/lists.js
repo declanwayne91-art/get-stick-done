@@ -9,6 +9,7 @@
 //   /l/add    { list, t, size, for }               /l/edit { list, item, t?, size?, for? }   /l/del { list, item }
 //   /l/tick   { list, item, done }                 the others get "Sam ticked off “Clean the bathroom”"
 //   /l/call   { list, item, on }                   CALLED IT! (dibs), or let it go
+//   /l/clear  { list }                             take the done ones off the list
 //   /l/leave  { list }                             the last one out deletes it
 import { init, hash, alert } from './friends.js';
 
@@ -94,6 +95,7 @@ export async function lists(path, b, env, out) {
     if (!left) await DB.batch([DB.prepare('DELETE FROM items WHERE list = ?').bind(L.id), DB.prepare('DELETE FROM lists WHERE id = ?').bind(L.id)]);
     return out({ ok: true });
   }
+  if (path === '/l/clear') { await DB.prepare('DELETE FROM items WHERE list = ? AND done_by IS NOT NULL').bind(L.id).run(); return out({ ok: true, list: await view(L) }); }
   const it = await item(L, b.item); if (!it) return out({ error: 'no such item' }, 404);
   if (path === '/l/edit') {
     const t = b.t != null ? cleanText(b.t) || it.t : it.t, size = b.size != null ? (SIZES.includes(b.size) ? b.size : '') : it.size, f = b.for !== undefined ? await forId(L, b.for) : it.for_id;
