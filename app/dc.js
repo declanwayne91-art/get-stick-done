@@ -19,15 +19,20 @@
 
   // ---- fit the board to the window. A phone keyboard shrinks the window's height: ignore that, so the screen doesn't jump or shrink
   let lastW = 0, lastH = 0;
+  // iPhone home-screen app: edge to edge, so measure the clock bar (top) and home-bar strip (bottom) and keep the screen between them
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position:fixed;left:0;top:0;width:1px;visibility:hidden;pointer-events:none;height:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)';
+  document.body.appendChild(probe);
   const fit = () => {
-    const w = innerWidth, h = innerHeight;
+    const it = probe.offsetHeight || 0, ib = parseFloat(getComputedStyle(probe).paddingBottom) || 0;
+    const w = innerWidth, h = innerHeight - it - ib;
     if (w === lastW && h < lastH) return;           // keyboard opened: keep the size we had
     lastW = w; lastH = h;
     // the nav bar is sized from Today's 844-tall board; a shorter board (H < 844) grows to fill the width above it
     const HT = EXTRA ? 844 : H, kT = Math.min(w / W, h / HT), t = Math.max(0, (h - HT * kT) / 2), k = EXTRA ? Math.min(w / W, (HT - EXTRA) * kT / H) : kT;
     frame.style.transform = 'scale(' + k + ')';
-    frame.style.left = Math.max(0, (w - W * k) / 2) + 'px'; frame.style.top = t + 'px';
-    if (bar) { bar.style.transform = 'scale(' + kT + ')'; bar.style.left = Math.max(0, (w - W * kT) / 2) + 'px'; bar.style.top = (t + (HT - EXTRA) * kT) + 'px'; }
+    frame.style.left = Math.max(0, (w - W * k) / 2) + 'px'; frame.style.top = (it + t) + 'px';
+    if (bar) { bar.style.transform = 'scale(' + kT + ')'; bar.style.left = Math.max(0, (w - W * kT) / 2) + 'px'; bar.style.top = (it + t + (HT - EXTRA) * kT) + 'px'; }
   };
   addEventListener('resize', fit); fit();
 

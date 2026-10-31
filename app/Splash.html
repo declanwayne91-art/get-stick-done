@@ -24,6 +24,15 @@
 })();
 </script>
 <style>.sp-demo,#gp-demo,#cv-demoLater,#cv-demoReset{display:none !important}</style>
+<script>/* beta testers: if something breaks, say so on screen (with the browser's own words), so a screenshot tells us what went wrong.
+   Only ever shows when there's an error; tap it to hide. */
+(function () { var shown = 0;
+  function say(m) { if (shown++ > 2 || !document.body) return; var d = document.createElement('div');
+    d.setAttribute('role', 'alert'); d.style.cssText = 'position:fixed;left:12px;right:12px;top:calc(env(safe-area-inset-top,0px) + 10px);z-index:9999;padding:10px 14px;border-radius:14px;background:#172038;color:#F6EFE1;border:2px solid #FF6FB0;font:14px/1.3 system-ui,sans-serif;box-shadow:0 6px 18px rgba(0,0,0,0.4)';
+    d.textContent = 'Something went wrong on this screen: ' + String(m).slice(0, 160) + ' (tap to hide)'; d.addEventListener('click', function () { d.remove(); }); document.body.appendChild(d); }
+  addEventListener('error', function (e) { if (e && e.message && !/ResizeObserver|^Script error/i.test(e.message)) say(e.message + (e.lineno ? ' [' + (e.filename || '').split('/').pop().split('?')[0] + ':' + e.lineno + ']' : '')); });
+  addEventListener('unhandledrejection', function (e) { var r = e && e.reason; if (r && r.message && !/fetch|network|load/i.test(r.message)) say(r.message); });
+})();</script>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#172038"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Get St*ck Done!">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" type="image/png" href="icons/favicon-64.png">
@@ -98,12 +107,16 @@ window.GSN = (function () {
 })();</script>
 <title>Get St*ck Done!</title>
 <script>/* size the phone frame before anything paints, so nothing (e.g. the nav bar) shows in the wrong place while the page loads */
-(function () { var W = 390, H = 844, B = 844, E = 0, w = innerWidth, h = innerHeight, r = document.documentElement.style;
+(function () { var W = 390, H = 844, B = 844, E = 0, r = document.documentElement.style;
+  /* iPhone: installed on the home screen the app runs edge to edge, so keep clear of the clock / battery bar and the home-bar strip at the bottom */
+  var pr = document.createElement('div'); pr.style.cssText = 'position:fixed;left:0;top:0;width:1px;visibility:hidden;pointer-events:none;height:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)';
+  document.documentElement.appendChild(pr); var it = pr.offsetHeight || 0, ib = parseFloat(getComputedStyle(pr).paddingBottom) || 0; pr.remove();
+  var w = innerWidth, h = innerHeight - it - ib;
   /* the nav bar is drawn at exactly Today's size and place (Today's board is 844 with the bar inside); the board above it fits the rest */
   /* a shorter board (B < 844, e.g. the sticker book) grows to fill the width instead */
   var kT = Math.min(w / W, h / H), t = Math.max(0, (h - H * kT) / 2), k = E ? Math.min(w / W, (H - E) * kT / B) : Math.min(w / W, h / B);
-  r.setProperty('--k', k); r.setProperty('--l', Math.max(0, (w - W * k) / 2) + 'px'); r.setProperty('--t', t + 'px');
-  r.setProperty('--bk', kT); r.setProperty('--bl', Math.max(0, (w - W * kT) / 2) + 'px'); r.setProperty('--bt', (t + (H - E) * kT) + 'px'); })();</script>
+  r.setProperty('--k', k); r.setProperty('--l', Math.max(0, (w - W * k) / 2) + 'px'); r.setProperty('--t', (it + t) + 'px');
+  r.setProperty('--bk', kT); r.setProperty('--bl', Math.max(0, (w - W * kT) / 2) + 'px'); r.setProperty('--bt', (it + t + (H - E) * kT) + 'px'); })();</script>
 <script>/* merged duplicate recipes: move saved plans, tonight's pick and the cooked log over to the recipe we kept */
 (function () { var M = {"din-tai-fung-egg-fried-rice": "chilli-crisp-fried-rice"}; try { ['gsb.plan', 'gsb.tonight', 'gsb.progress', 'gsb.planAdd', 'gsb.useUp', 'gsb.workout', 'gsb.lastWorkout'].forEach(function (k) { var v = localStorage.getItem(k); if (!v) return; var n = v;
   for (var o in M) n = n.split(o).join(M[o]); n = n.split('Couch to 5K week').join('Stick With It · week'); if (n !== v) localStorage.setItem(k, n); }); } catch (e) {} })();</script>
@@ -197,8 +210,8 @@ a[aria-label="All recipes"]::after,[aria-label="Show the ingredients list"]::aft
     <span id="sp-tapeT" class="bri title-die" role="status" style="display: block; font-size: 40px; color: #C6FF4D; text-shadow: 3px 3px 0 #111111; letter-spacing: 0.5px; white-space: nowrap"></span></div>
   <button type="button" id="sp-tap" class="press" style="position: absolute; left: 0; right: 0; top: 488px; margin: 0 auto; width: max-content; padding: 6px 10px; border: none; background: transparent; transform: rotate(2deg)"><span class="bri title-die" style="display: block; font-size: 22px; color: #172038; letter-spacing: 0.5px">OR TAP HERE TO START</span></button>
   <button type="button" id="sp-skip" class="press" style="display: none; position: absolute; left: 0; right: 0; top: 488px; margin: 0 auto; width: max-content; padding: 6px 10px; border: none; background: transparent; transform: rotate(2deg)"><span class="bri title-die" style="display: block; font-size: 22px; color: #172038; letter-spacing: 0.5px">TAP ANYWHERE TO GO IN</span></button>
-  <a id="sp-toToday" href="Today.html?v=1793470447" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
-  <a id="sp-toOnboard" href="Onboard.html?v=1793470447" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Set up</a>
+  <a id="sp-toToday" href="Today.html?v=1793471888" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
+  <a id="sp-toOnboard" href="Onboard.html?v=1793471888" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Set up</a>
   <div class="sp-demo" style="position: absolute; left: 0; right: 0; bottom: 16px; display: flex; justify-content: center; align-items: center; gap: 6px"><span class="kal" style="font-size: 12px; opacity: 0.55">demo:</span><button type="button" id="sp-demoFirst">first time</button><button type="button" id="sp-demoBack">welcome back</button></div>
 </div>
 </script>
@@ -384,6 +397,6 @@ class Component extends DCLogic {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793470447"></script>
-<script src="dc.js?v=1793470447"></script>
+<script src="morphdom.js?v=1793471888"></script>
+<script src="dc.js?v=1793471888"></script>
 </body></html>

@@ -2,12 +2,16 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Get St*ck Done!</title>
 <script>/* size the phone frame before anything paints, so nothing (e.g. the nav bar) shows in the wrong place while the page loads */
-(function () { var W = 390, H = 844, B = 844, E = 0, w = innerWidth, h = innerHeight, r = document.documentElement.style;
+(function () { var W = 390, H = 844, B = 844, E = 0, r = document.documentElement.style;
+  /* iPhone: installed on the home screen the app runs edge to edge, so keep clear of the clock / battery bar and the home-bar strip at the bottom */
+  var pr = document.createElement('div'); pr.style.cssText = 'position:fixed;left:0;top:0;width:1px;visibility:hidden;pointer-events:none;height:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)';
+  document.documentElement.appendChild(pr); var it = pr.offsetHeight || 0, ib = parseFloat(getComputedStyle(pr).paddingBottom) || 0; pr.remove();
+  var w = innerWidth, h = innerHeight - it - ib;
   /* the nav bar is drawn at exactly Today's size and place (Today's board is 844 with the bar inside); the board above it fits the rest */
   /* a shorter board (B < 844, e.g. the sticker book) grows to fill the width instead */
   var kT = Math.min(w / W, h / H), t = Math.max(0, (h - H * kT) / 2), k = E ? Math.min(w / W, (H - E) * kT / B) : Math.min(w / W, h / B);
-  r.setProperty('--k', k); r.setProperty('--l', Math.max(0, (w - W * k) / 2) + 'px'); r.setProperty('--t', t + 'px');
-  r.setProperty('--bk', kT); r.setProperty('--bl', Math.max(0, (w - W * kT) / 2) + 'px'); r.setProperty('--bt', (t + (H - E) * kT) + 'px'); })();</script>
+  r.setProperty('--k', k); r.setProperty('--l', Math.max(0, (w - W * k) / 2) + 'px'); r.setProperty('--t', (it + t) + 'px');
+  r.setProperty('--bk', kT); r.setProperty('--bl', Math.max(0, (w - W * kT) / 2) + 'px'); r.setProperty('--bt', (it + t + (H - E) * kT) + 'px'); })();</script>
 <script>/* merged duplicate recipes: move saved plans, tonight's pick and the cooked log over to the recipe we kept */
 (function () { var M = {"din-tai-fung-egg-fried-rice": "chilli-crisp-fried-rice"}; try { ['gsd.plan', 'gsd.tonight', 'gsd.progress', 'gsd.planAdd', 'gsd.useUp', 'gsd.workout', 'gsd.lastWorkout'].forEach(function (k) { var v = localStorage.getItem(k); if (!v) return; var n = v;
   for (var o in M) n = n.split(o).join(M[o]); n = n.split('Couch to 5K week').join('Stick With It · week'); if (n !== v) localStorage.setItem(k, n); }); } catch (e) {} })();</script>
@@ -132,7 +136,7 @@ a[aria-label="All recipes"]::after,[aria-label="Show the ingredients list"]::aft
     <span class="title-die bri" style="font-size: 40px; color: #172038; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-3deg)">STUCK!</span>
     <span class="bri" style="padding: 7px 14px 5px; background-color: rgba(198,255,77,0.92); background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.3) 0 6px, transparent 6px 12px); color: #172038; font-size: 19px; letter-spacing: 0.5px; transform: rotate(2deg); box-shadow: 0 4px 8px -4px rgba(0,0,0,0.4)">PEEL IT. STICK IT. DONE!</span>
     <span class="kal" style="font-size: 15px; opacity: 0.8">long-press a sticker to move it</span>
-    <a id="sbk-toToday" href="Today.html?v=1793470447" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
+    <a id="sbk-toToday" href="Today.html?v=1793471888" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
     <button type="button" id="sbk-whatNext" class="press bri" style="margin-top: 4px; width: 100%; height: 56px; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 23px">HOW DO I GET MORE? →</button>
     <button type="button" id="sbk-againBtn" class="kal" style="border: none; background: transparent; color: #F6EFE1; font-size: 13px; text-decoration: underline">(demo: peel it again)</button>
   </div>
@@ -370,6 +374,6 @@ class Component extends DCLogic {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793470447"></script>
-<script src="dc.js?v=1793470447"></script>
+<script src="morphdom.js?v=1793471888"></script>
+<script src="dc.js?v=1793471888"></script>
 </body></html>
