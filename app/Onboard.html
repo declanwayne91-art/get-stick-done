@@ -5,9 +5,16 @@
    the field lets go so the keyboard closes. Tapping anywhere outside a field closes it too (number pads have no Done key). */
 (function () {
   function isText(el) { return !!el && el.tagName === 'INPUT' && !/^(checkbox|radio|range|file|button|submit|color)$/i.test(el.type || ''); }
+  // phones set up the keyboard as the field is tapped, so the Done label has to be there before that: mark every field as it appears
+  function mark(root) { try { (root.querySelectorAll ? root.querySelectorAll('input') : []).forEach(function (el) { if (isText(el) && !el.getAttribute('enterkeyhint')) el.setAttribute('enterkeyhint', 'done'); }); } catch (e) {} }
+  new MutationObserver(function (ms) { ms.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.nodeType === 1) { if (isText(n) && !n.getAttribute('enterkeyhint')) n.setAttribute('enterkeyhint', 'done'); mark(n); } }); }); }).observe(document.documentElement, { childList: true, subtree: true });
+  document.addEventListener('DOMContentLoaded', function () { mark(document); });
   document.addEventListener('focusin', function (e) { var el = e.target; if (isText(el) && !el.getAttribute('enterkeyhint')) el.setAttribute('enterkeyhint', 'done'); });
-  document.addEventListener('keydown', function (e) { var el = e.target; if (e.key !== 'Enter' || e.isComposing || !isText(el)) return;
-    setTimeout(function () { if (document.activeElement === el) el.blur(); }, 0); });
+  // Enter: on Android it often arrives mid-word (predictive text still composing, sometimes as keyCode 229), so check keyup too
+  function done(e) { var el = e.target; if (!isText(el) || !(e.key === 'Enter' || e.keyCode === 13)) return;
+    setTimeout(function () { if (document.activeElement === el) el.blur(); }, 0); }
+  document.addEventListener('keydown', done); document.addEventListener('keyup', done);
+  document.addEventListener('beforeinput', function (e) { if (isText(e.target) && e.inputType === 'insertLineBreak') { var el = e.target; setTimeout(function () { if (document.activeElement === el) el.blur(); }, 0); } });
   document.addEventListener('pointerdown', function (e) { var a = document.activeElement; if (!isText(a) && !(a && a.tagName === 'TEXTAREA')) return;
     var t = e.target; if (t === a || (t.closest && t.closest('input, textarea, select, label'))) return; a.blur(); }, true);
 })();
@@ -181,7 +188,7 @@ input:focus{outline:none;box-shadow:0 0 0 3px #FF6FB0}
     <sc-if value="{{s0}}" hint-placeholder-val="{{ true }}">
       <span class="title-die bri" style="font-size: 36px; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">YOUR NAME?</span>
       <span class="q">It goes on the front of your sticker book.</span>
-      <input type="text" value="{{name}}" onInput="{{setName}}" maxlength="14" placeholder="your name" aria-label="Your name" style="height: 54px; border-radius: 14px; border: 3px solid #172038; padding: 0 16px; font-family: 'Kalam', cursive; font-weight: 700; font-size: 24px; color: #172038; background: #FFFFFF">
+      <input type="text" value="{{name}}" onInput="{{setName}}" maxlength="14" enterkeyhint="done" autocomplete="given-name" placeholder="your name" aria-label="Your name" style="height: 54px; border-radius: 14px; border: 3px solid #172038; padding: 0 16px; font-family: 'Kalam', cursive; font-weight: 700; font-size: 24px; color: #172038; background: #FFFFFF">
     </sc-if>
 
     <sc-if value="{{sI}}" hint-placeholder-val="{{ false }}">
@@ -291,8 +298,8 @@ input:focus{outline:none;box-shadow:0 0 0 3px #FF6FB0}
   <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; gap: 10px">
     <sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}"><button type="button" class="press bri" onClick="{{back}}" aria-label="Back" style="width: 62px; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #FFFFFF; color: #172038; font-size: 26px">←</button></sc-if>
     <sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{next}}" style="flex: 1; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{nextText}}</button></sc-if>
-    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793442441" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
-    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793442441" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
+    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793442814" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
+    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793442814" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
   </div>
 </div>
 </script>
@@ -427,6 +434,6 @@ class Component extends DCLogic {
 }
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793442441"></script>
-<script src="dc.js?v=1793442441"></script>
+<script src="morphdom.js?v=1793442814"></script>
+<script src="dc.js?v=1793442814"></script>
 </body></html>
