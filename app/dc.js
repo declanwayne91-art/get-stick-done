@@ -35,6 +35,11 @@
     if (bar) { bar.style.transform = 'scale(' + kT + ')'; bar.style.left = Math.max(0, (w - W * kT) / 2) + 'px'; bar.style.top = (it + t + (HT - EXTRA) * kT) + 'px'; }
   };
   addEventListener('resize', fit); fit();
+  // iPhone home-screen app: the window size can be wrong for a moment as a page opens. Check again once things settle,
+  // and when the page comes back from the background, without the keyboard rule getting in the way
+  const refit = () => { lastW = 0; lastH = 0; fit(); };
+  setTimeout(refit, 250); setTimeout(refit, 1000); addEventListener('pageshow', refit); addEventListener('orientationchange', () => setTimeout(refit, 300));
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refit(); });
 
   // ---- the logic class
   let queued = false, inst = null;
