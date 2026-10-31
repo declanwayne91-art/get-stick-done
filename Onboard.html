@@ -206,8 +206,8 @@ input:focus{outline:none;box-shadow:0 0 0 3px #FF6FB0}
   <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; gap: 10px">
     <sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}"><button type="button" class="press bri" onClick="{{back}}" aria-label="Back" style="width: 62px; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #FFFFFF; color: #172038; font-size: 26px">←</button></sc-if>
     <sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{next}}" style="flex: 1; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{nextText}}</button></sc-if>
-    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793436781" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
-    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="StickerBook.html?v=1793436781" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">OPEN MY STICKER BOOK →</a></sc-if>
+    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793438386" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
+    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="StickerBook.html?v=1793438386" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">OPEN MY STICKER BOOK →</a></sc-if>
   </div>
 </div>
 </script>
@@ -219,9 +219,9 @@ class Component extends DCLogic {
     this.FULL = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     this.MOVE = [['gym', 'GYM', 'gym'], ['walk', 'WALKING', 'walking'], ['run', 'RUNNING', 'running'], ['cycle', 'CYCLING', 'cycling'], ['swim', 'SWIMMING', 'swimming'], ['stretch', 'STRETCHING', 'stretching'], ['other', 'SPORT & CLASSES', 'sport']];
     this.LAD = {"run": 11, "walk": 6, "cycle": 6, "swim": 6, "stretch": 3};
-    this.AV = [['vegetarian', 'VEGETARIAN'], ['pork', 'NO PORK'], ['beef', 'NO BEEF'], ['fish', 'NO FISH']];
+    this.AV = [['vegetarian', 'VEGETARIAN'], ['vegan', 'VEGAN'], ['pork', 'NO PORK'], ['beef', 'NO BEEF'], ['fish', 'NO FISH']];
     this.AL = [["gluten", "GLUTEN", "gluten"], ["milk", "DAIRY", "dairy"], ["eggs", "EGGS", "eggs"], ["peanuts", "PEANUTS", "peanuts"], ["treenuts", "TREE NUTS", "tree nuts"], ["sesame", "SESAME", "sesame"], ["soya", "SOYA", "soya"], ["crustaceans", "SHELLFISH", "shellfish"], ["molluscs", "MOLLUSCS", "molluscs"], ["mustard", "MUSTARD", "mustard"], ["celery", "CELERY", "celery"], ["sulphites", "SULPHITES", "sulphites"], ["lupin", "LUPIN", "lupin"]];   // the UK's 14 allergens (allergens.py); fish is NO FISH above
-    this.AVNAME = Object.assign({ vegetarian: 'meat or fish' }, Object.fromEntries(this.AL.map((a) => [a[0], a[2]])));
+    this.AVNAME = Object.assign({ vegetarian: 'meat or fish', vegan: 'meat, fish, dairy, eggs or honey' }, Object.fromEntries(this.AL.map((a) => [a[0], a[2]])));
     this.s = { step: 0, name: '', household: null, lunches: null, avoid: {}, kids: null, hydro: null, watch: null, notif: '', every: 2, dayStart: 8, dayEnd: 21, learn: false, landed: false, fit: null, likes: {}, grow: null,
       here: { gym: true, kitchen: true, water: true, list: true }, only: null };
     this.HERE = [['gym', 'GYM', '#C6FF4D', 'GET MOVING', 'Workouts made for you. Track your progress and keep every session simple.'], ['kitchen', 'EAT', '#FFD23F', 'MAKE PLANNING MEALS EASIER', 'Help planning and cooking your meals. We can make the decisions for you.'],
@@ -342,6 +342,6 @@ class Component extends DCLogic {
 }
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793436781"></script>
-<script src="dc.js?v=1793436781"></script>
+<script src="morphdom.js?v=1793438386"></script>
+<script src="dc.js?v=1793438386"></script>
 </body></html>
