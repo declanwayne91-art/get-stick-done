@@ -6,7 +6,7 @@
 //   /l/mine   {}                                   -> { me, lists: [{ id, name, rep, owner, members, items }] }
 //   /l/new    { name, rep, members: [ids], items: [{ t, size }] } -> { list }   they get "Dex shared a list with you: House"
 //   /l/invite { list, members: [ids] }             add more friends to a list
-//   /l/add    { list, t, size, for }               /l/edit { list, item, t?, size?, for? }   /l/del { list, item }
+//   /l/add    { list, t, size, for }               /l/edit { list, item, t?, size?, for? } (for: a member id, or '*' for EVERYONE)   /l/del { list, item }
 //   /l/tick   { list, item, done }                 the others get "Sam ticked off “Clean the bathroom”"
 //   /l/call   { list, item, on }                   CALLED IT! (dibs), or let it go
 //   /l/clear  { list }                             take the done ones off the list
@@ -52,7 +52,8 @@ export async function lists(path, b, env, out) {
     return { id: L.id, name: L.name, rep: L.rep, owner: L.owner, period: L.period, members: mem.map((u) => ({ id: u.id, name: u.name, plate: u.plate })), items }; };
   const tell = async (L, msg, skip) => { for (const u of await people(L.id)) if (u.id !== me.id && u.id !== skip) await alert(env, u, Object.assign({ url: 'MyList.html' }, msg)); };
   const item = async (L, iid) => DB.prepare('SELECT * FROM items WHERE id = ? AND list = ?').bind(String(iid || '').slice(0, 40), L.id).first();
-  const forId = async (L, v) => { if (!v) return null; return (await DB.prepare('SELECT 1 FROM members WHERE list = ? AND user = ?').bind(L.id, String(v).slice(0, 40)).first()) ? String(v).slice(0, 40) : null; };
+  const forId = async (L, v) => { if (!v) return null; if (v === '*') return '*';   // EVERYONE: a job you all share
+    return (await DB.prepare('SELECT 1 FROM members WHERE list = ? AND user = ?').bind(L.id, String(v).slice(0, 40)).first()) ? String(v).slice(0, 40) : null; };
 
   if (path === '/l/mine') {
     const ls = (await DB.prepare('SELECT l.* FROM lists l JOIN members m ON m.list = l.id WHERE m.user = ? ORDER BY m.at').bind(me.id).all()).results;
@@ -99,11 +100,11 @@ export async function lists(path, b, env, out) {
   const it = await item(L, b.item); if (!it) return out({ error: 'no such item' }, 404);
   if (path === '/l/edit') {
     const t = b.t != null ? cleanText(b.t) || it.t : it.t, size = b.size != null ? (SIZES.includes(b.size) ? b.size : '') : it.size, f = b.for !== undefined ? await forId(L, b.for) : it.for_id;
-    await DB.prepare('UPDATE items SET t = ?, size = ?, for_id = ? WHERE id = ?').bind(t, size, f, it.id).run();
+    await DB.prepare('UPDATE items SET t = ?, size = ?, for_id = ?' + (f === '*' ? ', dibs = NULL' : '') + ' WHERE id = ?').bind(t, size, f, it.id).run();   // EVERYONE: nothing left to call
     return out({ ok: true, list: await view(L) });
   }
   if (path === '/l/del') { await DB.prepare('DELETE FROM items WHERE id = ?').bind(it.id).run(); return out({ ok: true, list: await view(L) }); }
-  if (path === '/l/call') { await DB.prepare('UPDATE items SET dibs = ? WHERE id = ?').bind(b.on ? me.id : null, it.id).run(); return out({ ok: true, list: await view(L) }); }
+  if (path === '/l/call') { if (it.for_id === '*') return out({ ok: true, list: await view(L) }); await DB.prepare('UPDATE items SET dibs = ? WHERE id = ?').bind(b.on ? me.id : null, it.id).run(); return out({ ok: true, list: await view(L) }); }
   if (path === '/l/tick') {
     if (b.done) { if (it.done_by) return out({ ok: true, already: true, list: await view(L) });
       await DB.prepare('UPDATE items SET done_by = ?, done_at = ? WHERE id = ?').bind(me.id, now, it.id).run();
