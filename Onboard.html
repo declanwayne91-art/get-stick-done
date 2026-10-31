@@ -206,8 +206,8 @@ input:focus{outline:none;box-shadow:0 0 0 3px #FF6FB0}
   <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; gap: 10px">
     <sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}"><button type="button" class="press bri" onClick="{{back}}" aria-label="Back" style="width: 62px; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #FFFFFF; color: #172038; font-size: 26px">←</button></sc-if>
     <sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{next}}" style="flex: 1; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{nextText}}</button></sc-if>
-    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793434446" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
-    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="StickerBook.html?v=1793434446" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">OPEN MY STICKER BOOK →</a></sc-if>
+    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793435771" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
+    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="StickerBook.html?v=1793435771" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">OPEN MY STICKER BOOK →</a></sc-if>
   </div>
 </div>
 </script>
@@ -224,7 +224,7 @@ class Component extends DCLogic {
     this.AVNAME = Object.assign({ vegetarian: 'meat or fish' }, Object.fromEntries(this.AL.map((a) => [a[0], a[2]])));
     this.s = { step: 0, name: '', household: null, lunches: null, avoid: {}, kids: null, hydro: null, watch: null, notif: '', every: 2, dayStart: 8, dayEnd: 21, learn: false, landed: false, fit: null, likes: {}, grow: null,
       here: { gym: true, kitchen: true, water: true, list: true }, only: null };
-    this.HERE = [['gym', 'GYM', '#C6FF4D', 'GET MOVING', 'workouts made for you, and what’s next'], ['kitchen', 'EAT', '#FFD23F', 'COOK MORE', 'plan the week, and what’s for dinner tonight'],
+    this.HERE = [['gym', 'GYM', '#C6FF4D', 'GET MOVING', 'workouts made for you, and what’s next'], ['kitchen', 'EAT', '#FFD23F', 'MAKE PLANNING YOUR MEALS EASIER', 'plan the week, and what’s for dinner tonight'],
       ['water', 'H₂O', '#6EC8FF', 'DRINK MORE WATER', 'a glass counter and gentle nudges'], ['list', 'LIST', '#FF6FB0', 'GET THINGS DONE', 'your list, with the top 3 up front']];
     try { const m = location.hash.match(/only=(kitchen|gym|water)/); if (m) { this.s.only = m[1]; this.s.step = this.steps()[0]; } } catch (e) {}
   }
@@ -342,6 +342,6 @@ class Component extends DCLogic {
 }
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793434446"></script>
-<script src="dc.js?v=1793434446"></script>
+<script src="morphdom.js?v=1793435771"></script>
+<script src="dc.js?v=1793435771"></script>
 </body></html>
