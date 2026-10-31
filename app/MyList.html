@@ -153,6 +153,11 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 .ml-group{background:#FFFFFF;border-radius:14px;box-shadow:0 3px 0 #CDB894;overflow:hidden;margin-bottom:10px}
 .ml-group .ml-row+.ml-row{border-top:1.5px solid #EFE6D3}
 .ml-tk{flex-shrink:0;width:40px;height:44px;border:none;background:transparent;padding:0;display:flex;align-items:center;justify-content:center}
+.ml-mid{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.ml-sub2{display:flex;align-items:center;gap:6px;padding:0 2px 7px;min-width:0}
+.ml-sub2 .ml-bd,.ml-sub2 .ml-go{height:26px;font-size:10.5px}
+.ml-mid .ml-nm{flex:none}
+.ml-nm.two{height:34px;padding-top:4px}
 .ml-nm{flex:1;min-width:0;display:flex;align-items:center;gap:6px;height:48px;border:none;background:transparent;padding:0 2px;text-align:left;color:#172038}
 .ml-nm .t{font-size:17px;font-weight:700;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ml-isdone .ml-nm .t{text-decoration:line-through;opacity:0.5}
@@ -210,7 +215,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 #dc-stage{position:relative;overflow:hidden;width:390px;height:844px}
 .snav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;height:58px;text-decoration:none;color:#F6EFE1;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;opacity:0.8;border-radius:14px;-webkit-tap-highlight-color:transparent}.snav-s{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#172038;box-shadow:0 0 0 2.5px #FFFFFF,0 0 0 4.5px #172038;transform:rotate(var(--r));transition:transform .18s cubic-bezier(.2,1.4,.4,1)}.snav:hover .snav-s,.snav:focus-visible .snav-s,.snav:active .snav-s{transform:rotate(var(--r)) scale(1.2)}.snav,.snav:hover,.snav:visited{color:#F6EFE1}.snav.on,.snav.on:hover{opacity:1;color:#C6FF4D}.snav.on .snav-s{box-shadow:0 0 0 2.5px #FFFFFF,0 0 0 4.5px #172038,2px 4px 0 4.5px rgba(0,0,0,0.45)}.snav:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}@media (prefers-reduced-motion: reduce){.snav-s{transition:none}}.dcbar{position:absolute;left:12px;right:12px;bottom:14px;height:68px;border-radius:22px;background:#0E1428;border:2px solid rgba(246,239,225,0.15);display:flex;align-items:center;gap:4px;padding:0 6px;box-sizing:border-box}.dcnav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;border-radius:16px;height:52px;text-decoration:none;border:none;background:transparent;cursor:pointer}.dcnav.on{background:#C6FF4D;color:#172038}.dcnav:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}.dcback{flex:1;height:48px;border-radius:16px;border:2px solid rgba(246,239,225,0.4);background:transparent;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:17px;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;cursor:pointer}.dcback.home{flex:0 0 auto;padding:0 18px;background:#C6FF4D;border-color:#C6FF4D;color:#172038}</style>
 </head><body data-extra="84">
-<div id="dc-frame"><div id="dc-stage"></div></div><div id="dc-bar"><div class="dcbar" role="navigation" aria-label="Back"><button type="button" class="dcback" onclick="if (history.length > 1) history.back(); else location.href = 'Today.html?v=1793452228'">‹ BACK</button><a class="dcback home" href="Today.html?v=1793452228" aria-label="Home"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M20.0 12.0 L22.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 17.6 L19.4 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 20.0 L12.0 22.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 17.6 L4.7 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M4.0 12.0 L1.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 6.4 L4.7 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 4.0 L12.0 1.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 6.4 L19.4 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg><span>HOME</span></a></div></div>
+<div id="dc-frame"><div id="dc-stage"></div></div><div id="dc-bar"><div class="dcbar" role="navigation" aria-label="Back"><button type="button" class="dcback" onclick="if (history.length > 1) history.back(); else location.href = 'Today.html?v=1793453411'">‹ BACK</button><a class="dcback home" href="Today.html?v=1793453411" aria-label="Home"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M20.0 12.0 L22.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 17.6 L19.4 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 20.0 L12.0 22.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 17.6 L4.7 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M4.0 12.0 L1.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 6.4 L4.7 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 4.0 L12.0 1.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 6.4 L19.4 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg><span>HOME</span></a></div></div>
 <script type="text/x-dc-template" id="dc-tpl">
 <div id="ml-root" style="width: 390px; height: 844px; position: relative; overflow: hidden; background-color: #FBF4E6; background-image: linear-gradient(rgba(139,94,52,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(139,94,52,0.08) 1px, transparent 1px); background-size: 20px 20px; color: #172038; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif">
   <span class="title-die bri" style="position: absolute; left: 18px; top: 16px; font-size: 38px; color: #172038; text-shadow: 3px 3px 0 #C6FF4D; transform: rotate(-2deg); transform-origin: left">MY LIST</span>
@@ -333,7 +338,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
       </div>
       <span class="bri" style="font-size: 15px; letter-spacing: 0.5px">WHO’S IN?</span>
       <div id="ml-sqWho" class="ml-group" style="padding: 0 12px"></div>
-      <div id="ml-sqNone" style="display: none; flex-direction: column; gap: 8px"><span style="font-size: 17px; line-height: 1.3">Add a friend first: shared lists are friends only.</span><a href="Friends.html?v=1793452228" class="ml-big bri press" style="text-decoration: none">FRIENDS →</a></div>
+      <div id="ml-sqNone" style="display: none; flex-direction: column; gap: 8px"><span style="font-size: 17px; line-height: 1.3">Add a friend first: shared lists are friends only.</span><a href="Friends.html?v=1793453411" class="ml-big bri press" style="text-decoration: none">FRIENDS →</a></div>
       <button type="button" id="ml-sqGo" class="bri press" style="flex-shrink: 0; height: 60px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 22px; box-shadow: 4px 4px 0 #172038"></button>
     </div>
   </div>
@@ -348,7 +353,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
       <div id="ml-wWho" style="align-self: stretch; display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 16px; background: rgba(246,239,225,0.08); text-align: left"></div>
       <span style="flex: 1"></span>
       <button type="button" id="ml-wCheer" class="bri press" style="align-self: stretch; height: 58px; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 22px"></button>
-      <a id="ml-wStick" href="StickerAlbum.html?v=1793452228#new" class="bri press" style="align-self: stretch; height: 50px; border-radius: 16px; border: 2px solid rgba(246,239,225,0.5); color: #F6EFE1; font-size: 18px; display: flex; align-items: center; justify-content: center; text-decoration: none">STICK IT IN MY BOOK →</a>
+      <a id="ml-wStick" href="StickerAlbum.html?v=1793453411#new" class="bri press" style="align-self: stretch; height: 50px; border-radius: 16px; border: 2px solid rgba(246,239,225,0.5); color: #F6EFE1; font-size: 18px; display: flex; align-items: center; justify-content: center; text-decoration: none">STICK IT IN MY BOOK →</a>
       <button type="button" id="ml-wX" class="ml-link kal" style="color: #F6EFE1">back to my list</button>
     </div>
   </div>
@@ -406,8 +411,12 @@ window.GST = (() => {
   const putList = (L) => { const S = shared(); const i = S.lists.findIndex((x) => x.id === L.id); if (i >= 0) S.lists[i] = L; else S.lists.push(L); return saveShared(S); };
   const dropList = (id) => { const S = shared(); S.lists = S.lists.filter((x) => x.id !== id); return saveShared(S); };
   // shared tasks that still need doing, shaped like your own (id 's:<item>'). mine = set for you, or you called it.
-  const sharedOpen = (S) => { S = S || shared(); const out = []; S.lists.forEach((L) => L.items.forEach((x) => { if (!x.done) out.push({ id: 's:' + x.id, t: x.t, size: x.size || '', done: false,
-    shared: { list: L.id, item: x.id, name: L.name, for: x.for, dibs: x.dibs }, mine: !!S.me && (x.for === S.me || x.for === '*' || x.dibs === S.me) }); })); return out; };
+  // pinned shared ones (gsd.sharedPins, item ids): a shared job you've called can be pinned to Today like your own
+  const sPins = () => { try { const a = JSON.parse(localStorage.getItem('gsb.sharedPins') || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } };
+  const pinShared = (id, on) => { const a = sPins().filter((x) => x !== id); if (on) a.push(id); try { localStorage.setItem('gsb.sharedPins', JSON.stringify(a)); } catch (e) {} };
+  const sharedOpen = (S) => { S = S || shared(); const out = [], P = sPins(); S.lists.forEach((L) => L.items.forEach((x) => { if (!x.done) { const mine = !!S.me && (x.for === S.me || x.for === '*' || x.dibs === S.me);
+    out.push({ id: 's:' + x.id, t: x.t, size: x.size || '', done: false, pin: mine && P.indexOf(x.id) >= 0,
+    shared: { list: L.id, item: x.id, name: L.name, for: x.for, dibs: x.dibs }, mine }); } })); return out; };
   // tick (or untick) a shared one: straight away on this phone, then on the server. carry = someone else had it.
   const tickShared = (w, done) => { const S = shared(), L = S.lists.find((x) => x.id === w.shared.list), it = L && L.items.find((x) => x.id === w.shared.item);
     const carry = !!(it && S.me && ((it.dibs && it.dibs !== S.me) || (it.for && it.for !== '*' && it.for !== S.me)));
@@ -425,13 +434,13 @@ window.GST = (() => {
     return { id: L.id + ':' + (L.period || '-'), list: L, by, mvps, mvp: mvps.indexOf(me) >= 0, n: L.members.length, even: L.items.length >= 6 && L.members.length >= 2 && counts.every((c) => c === counts[0]), speed: L.items.length >= 5 && days.size === 1 }; });
   // today's top n: your pinned ones first, then shared ones set for you (or that you called), your own in your order, then
   // everything else on your shared lists. Returns { list, warm (id of the warm-up), wait (big ones on a low day) }
-  const top = (L, n, en, S) => { n = n || 3; en = en == null ? energy() : en; const o = open(L), pin = o.filter((t) => t.pin), sh = sharedOpen(S);
-    let r = sh.filter((t) => t.mine).concat(o.filter((t) => !t.pin), sh.filter((t) => !t.mine)), warm = null, wait = [];
+  const top = (L, n, en, S) => { n = n || 3; en = en == null ? energy() : en; const o = open(L), sh = sharedOpen(S), pin = o.filter((t) => t.pin).concat(sh.filter((t) => t.pin));
+    let r = sh.filter((t) => t.mine && !t.pin).concat(o.filter((t) => !t.pin), sh.filter((t) => !t.mine)), warm = null, wait = [];
     if (en === 'low') { wait = r.filter((t) => t.size === 'b'); r = r.filter((t) => t.size !== 'b').map((t, i) => [t, i]).sort((a, b) => sz(a[0]) - sz(b[0]) || a[1] - b[1]).map((x) => x[0]); if (r[0] && r[0].size === 'q' && pin.length < n) warm = r[0].id; }
     else if (en === 'high') r = r.map((t, i) => [t, i]).sort((a, b) => (b[0].size === 'b') - (a[0].size === 'b') || a[1] - b[1]).map((x) => x[0]);
     else { const w = r.findIndex((t) => t.size === 'q'); if (w > 0 && !pin.length) { r.unshift(r.splice(w, 1)[0]); warm = r[0].id; } }
     return { list: pin.concat(r).slice(0, n), warm, wait }; };
-  const pins = (L) => L.filter((t) => t.pin && !t.done && !t.shelf).length;
+  const pins = (L) => L.filter((t) => t.pin && !t.done && !t.shelf).length + sharedOpen().filter((t) => t.pin).length;   // 3 at most, shared ones included
   const touch = (t) => { t.touch = Date.now(); };
   const match = (text) => { const s = ' ' + String(text).toLowerCase().replace(/[^a-z ]/g, ' ') + ' ';
     for (const k in LIB) if (LIB[k].w.some((w) => s.indexOf(' ' + w + ' ') >= 0 || s.indexOf(' ' + w + 's ') >= 0)) return k; return null; };
@@ -440,7 +449,7 @@ window.GST = (() => {
   const libLen = (k, long) => LIB[k] ? LIB[k][long ? 'long' : 'short'].length : 0;
   // what a tick tells the stickers: pinned (Mission control), which ready-made list (Inbox zero), and whether it cleared a list of 3+ (Over the moon)
   const tickInfo = (L, t) => ({ pin: !!t.pin, lib: match(t.t), clear: !t.shared && open(L).length === 0 && L.filter((x) => x.done).length >= 3 });
-  return { load, save, make, open, top, pins, touch, energy, setEnergy, match, tickInfo, stepsFor, useLib, libLen, dkey, LIB, api, canShare, shared, saveShared, sync, putList, dropList, sharedOpen, tickShared, finished };
+  return { load, save, make, open, top, pins, pinShared, touch, energy, setEnergy, match, tickInfo, stepsFor, useLib, libLen, dkey, LIB, api, canShare, shared, saveShared, sync, putList, dropList, sharedOpen, tickShared, finished };
 })();
 
 
@@ -622,11 +631,12 @@ window.GST = (() => {
     const canBreak = (t) => !t.done && !t.care && !t.link && !(t.steps && t.steps.length) && !!GST.match(t.t);
     const rowEl = (t, kind) => { const r = document.createElement('div'); r.className = 'ml-row' + (kind === 'today' ? ' ml-card' : '') + (t.done ? ' ml-isdone' : ''); r.dataset.id = t.id;
       r.innerHTML = '<button type="button" class="ml-tk" aria-pressed="' + (t.done ? 'true' : 'false') + '">' + tickSvg(t.done) + '</button>'
-        + '<button type="button" class="ml-nm"><span class="t"></span>' + (t.care ? '<span class="ml-hon" aria-hidden="true">★</span>' : '') + chip(t) + '</button>'
-        + (canBreak(t) ? '<button type="button" class="ml-bd bri">BREAK IT DOWN</button>' : '')
-        + (t.link === 'shop' && !t.done ? '<a class="ml-go bri" href="PlanWeek.html?v=1793452228#shop" aria-label="Open your shopping list">OPEN LIST</a>' : '')
-        + (t.shared ? '<span class="ml-chip bri" style="background:#FFB3D1">' + String(t.shared.name).toUpperCase().replace(/[<>&"]/g, '') + '</span>' : '')
-        + (kind === 'done' || t.shared ? '' : '<button type="button" class="ml-pin" aria-pressed="' + (t.pin ? 'true' : 'false') + '">' + pinSvg(t.pin) + '</button>')
+        // the name gets the whole width; BREAK IT DOWN, OPEN LIST and which shared list it's from sit on a small line underneath
+        + ((sub) => '<div class="ml-mid"><button type="button" class="ml-nm' + (sub ? ' two' : '') + '"><span class="t"></span>' + (t.care ? '<span class="ml-hon" aria-hidden="true">★</span>' : '') + chip(t) + '</button>' + (sub ? '<div class="ml-sub2">' + sub + '</div>' : '') + '</div>')(
+          (canBreak(t) ? '<button type="button" class="ml-bd bri">BREAK IT DOWN</button>' : '')
+          + (t.link === 'shop' && !t.done ? '<a class="ml-go bri" href="PlanWeek.html?v=1793453411#shop" aria-label="Open your shopping list">OPEN LIST</a>' : '')
+          + (t.shared ? '<span class="ml-chip bri" style="background:#FFB3D1">' + String(t.shared.name).toUpperCase().replace(/[<>&"]/g, '') + '</span>' : ''))
+        + (kind === 'done' || t.shared && !t.mine ? '' : '<button type="button" class="ml-pin" aria-pressed="' + (t.pin ? 'true' : 'false') + '">' + pinSvg(t.pin) + '</button>')
         + (t.shared ? '' : '<button type="button" class="ml-del">' + MINUS + '</button>')
         + (kind === 'next' ? '<span class="ml-grip" role="button" tabindex="0">' + GRIP + '</span>' : '');
       r.querySelector('.t').textContent = t.t;
@@ -656,17 +666,21 @@ window.GST = (() => {
       undoBar(x.t, () => { back = true; const S2 = GST.shared().lists.find((z) => z.id === SL.id) || SL; if (!S2.items.some((y) => y.id === x.id)) S2.items.splice(Math.min(i, S2.items.length), 0, x); GST.putList(S2); paint(); },
         () => { if (!back) send('/l/del', { item: x.id }, SL).catch(() => {}); }); };
     const togglePin = (t) => { if (!t.pin && GST.pins(L) >= 3) { toast('3 PINNED ALREADY', 'Unpin one to make room.'); buzz([6, 30, 6]); return false; }
+      if (t.shared) { GST.pinShared(t.shared.item, !t.pin); buzz(8); paint(); return true; }   // a shared job you've called: pinned on this phone
       t.pin = !t.pin; GST.touch(t); save(); buzz(8); paint(); return true; };
     const head = (txt, sub, pin) => '<div class="ml-head">' + (pin ? pinSvg(true).replace('width="22" height="22"', 'width="18" height="18"') : '') + '<span class="bri">' + txt + '</span>' + (sub ? '<span class="kal">' + sub + '</span>' : '') + '</div>';
     const paint = () => { paintTabs(); if (tab !== 'mine') { const SL = GST.shared().lists.find((x) => x.id === tab); if (SL) return paintShared(SL); tab = 'mine'; paintTabs(); }
       $('ml-addIn').placeholder = 'add something…';
       const box = $('ml-list'), T = GST.top(L), onIds = T.list.map((t) => t.id), next = GST.open(L).filter((t) => onIds.indexOf(t.id) < 0), done = L.filter((t) => t.done), shelf = L.filter((t) => t.shelf && !t.done);
-      $('ml-sub').textContent = (L.length - shelf.length) + (L.length - shelf.length === 1 ? ' thing' : ' things') + (done.length ? ' · ' + done.length + ' done today' : '');
+      const nMine = L.length - shelf.length + GST.sharedOpen().filter((t) => t.mine).length;   // your shared jobs count too
+      $('ml-sub').textContent = nMine + (nMine === 1 ? ' thing' : ' things') + (done.length ? ' · ' + done.length + ' done today' : '');
       box.innerHTML = '';
-      if (!L.length) { box.innerHTML = '<span class="kal ml-empty">what do you want to get done?</span>'; return; }
+      const shMine = GST.sharedOpen().filter((t) => t.mine && onIds.indexOf(t.id) < 0);   // every shared job you've called (or that's set for you), not just the top 3
+      if (!L.length && !T.list.length && !shMine.length) { box.innerHTML = '<span class="kal ml-empty">what do you want to get done?</span>'; return; }
       const add = (h) => { const d = document.createElement('div'); d.innerHTML = h; while (d.firstChild) box.appendChild(d.firstChild); };
       if (T.list.length) { add(head('ON TODAY', 'your top 3, shown on Today', true)); T.list.forEach((t) => box.appendChild(rowEl(t, 'today'))); }
       if (next.length) { add(head('UP NEXT', next.length > 1 ? 'drag to change the order' : '')); const g = document.createElement('div'); g.className = 'ml-group'; g.id = 'ml-next'; next.forEach((t) => g.appendChild(rowEl(t, 'next'))); box.appendChild(g); }
+      if (shMine.length) { add(head('FROM SHARED LISTS', 'yours to do')); const g = document.createElement('div'); g.className = 'ml-group'; shMine.forEach((t) => g.appendChild(rowEl(t, 'shared'))); box.appendChild(g); }
       if (shelf.length) { const b = document.createElement('button'); b.type = 'button'; b.className = 'ml-fold bri press'; b.innerHTML = '<span>MAYBE ONE DAY · ' + shelf.length + '</span><span aria-hidden="true">›</span>'; b.addEventListener('click', openTidy); box.appendChild(b); }
       if (done.length) { const b = document.createElement('button'); b.type = 'button'; b.className = 'ml-fold bri press'; b.setAttribute('aria-expanded', openDone ? 'true' : 'false');
         b.innerHTML = '<span>✓ ' + done.length + ' DONE TODAY</span><span aria-hidden="true">' + (openDone ? '▴' : '▾') + '</span>'; b.addEventListener('click', () => { openDone = !openDone; paint(); }); box.appendChild(b);
@@ -806,13 +820,17 @@ window.GST = (() => {
 
     // ---- add one, or lots
     $('ml-addForm').addEventListener('submit', (e) => { e.preventDefault(); const v = $('ml-addIn').value.trim(); if (!v) { $('ml-addIn').focus(); return; }
-      if (tab !== 'mine') { const SL = GST.shared().lists.find((x) => x.id === tab); $('ml-addIn').value = ''; buzz(8); if (SL) send('/l/add', { t: v }, SL).catch(() => {}); return; }
-      const t = GST.make(v); L.push(t); save(); $('ml-addIn').value = ''; buzz(8); paint(); const r = root.querySelector('[data-id="' + t.id + '"]'); if (r) { r.scrollIntoView({ block: 'nearest' }); pop(r); } });
+      if (tab !== 'mine') { const SL = GST.shared().lists.find((x) => x.id === tab); $('ml-addIn').value = ''; lotsLabel(); buzz(8); if (SL) send('/l/add', { t: v }, SL).catch(() => {}); return; }
+      const t = GST.make(v); L.push(t); save(); $('ml-addIn').value = ''; lotsLabel(); buzz(8); paint(); const r = root.querySelector('[data-id="' + t.id + '"]'); if (r) { r.scrollIntoView({ block: 'nearest' }); pop(r); } });
     const lines = () => $('ml-dumpIn').value.split(/\n/).map((x) => x.replace(/^\s*[-*•·\d.)\]]*\s*(\[[ x]\])?\s*/i, '').trim()).filter(Boolean);
     const dumpCount = () => { const n = lines().length; $('ml-dumpN').textContent = n + (n === 1 ? ' thing' : ' things'); $('ml-dumpGo').textContent = n ? 'ADD ' + n + (n === 1 ? ' THING →' : ' THINGS →') : 'ADD THEM →'; $('ml-dumpGo').disabled = !n; };
     const sheetOpen = (id) => { const el = $(id); el.style.display = 'block'; if (el.animate && !reduce) el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 180 }); const s = el.querySelector('.ml-sheet'); if (s && s.animate && !reduce) s.animate([{ transform: 'translateY(60px)' }, { transform: 'none' }], { duration: 260, easing: 'cubic-bezier(.2,.9,.3,1)' }); };
     const sheetClose = (id) => { $(id).style.display = 'none'; };
-    $('ml-lots').addEventListener('click', () => { $('ml-dumpIn').value = ''; dumpCount(); sheetOpen('ml-dump'); setTimeout(() => $('ml-dumpIn').focus(), 60); buzz(6); });
+    // something typed in the box: the button becomes + ADD and adds it; an empty box: + ADD A LIST opens the many-at-once sheet
+    const lotsLabel = () => { $('ml-lots').textContent = $('ml-addIn').value.trim() ? '+ ADD' : '+ ADD A LIST'; };
+    $('ml-addIn').addEventListener('input', lotsLabel);
+    $('ml-lots').addEventListener('click', () => { if ($('ml-addIn').value.trim()) { $('ml-addForm').requestSubmit(); lotsLabel(); return; }
+      $('ml-dumpIn').value = ''; dumpCount(); sheetOpen('ml-dump'); setTimeout(() => $('ml-dumpIn').focus(), 60); buzz(6); });
     $('ml-dumpIn').addEventListener('input', dumpCount);
     $('ml-dumpX').addEventListener('click', () => sheetClose('ml-dump'));
     $('ml-dumpGo').addEventListener('click', () => { const xs = lines(); if (!xs.length) return; won(GSP.act('dump', xs.length));
@@ -932,6 +950,6 @@ window.GST = (() => {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793452228"></script>
-<script src="dc.js?v=1793452228"></script>
+<script src="morphdom.js?v=1793453411"></script>
+<script src="dc.js?v=1793453411"></script>
 </body></html>
