@@ -99,6 +99,19 @@ input:focus{outline:none;box-shadow:0 0 0 3px #FF6FB0}
       <input type="text" value="{{name}}" onInput="{{setName}}" maxlength="14" placeholder="your name" aria-label="Your name" style="height: 54px; border-radius: 14px; border: 3px solid #172038; padding: 0 16px; font-family: 'Kalam', cursive; font-weight: 700; font-size: 24px; color: #172038; background: #FFFFFF">
     </sc-if>
 
+    <sc-if value="{{sI}}" hint-placeholder-val="{{ false }}">
+      <span class="title-die bri" style="font-size: 26px; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">WHAT ARE YOU HERE FOR?</span>
+      <span class="q">Pick as many as you like. We’ll build your Today screen around them.</span>
+      <sc-for list="{{hereOpts}}" as="o" hint-placeholder-count="4">
+        <button type="button" class="press" onClick="{{o.tap}}" aria-pressed="{{o.pressed}}" style="display: flex; align-items: center; gap: 12px; min-height: 70px; padding: 8px 12px 8px 8px; border-radius: 18px; border: 3px solid #172038; background: {{o.bg}}; color: #172038; text-align: left; font-family: inherit; transform: rotate({{o.rot}})">
+          <span class="bri" style="width: 50px; height: 50px; flex-shrink: 0; border-radius: 14px; background: {{o.col}}; border: 2.5px solid #172038; display: flex; align-items: center; justify-content: center; font-size: 15px">{{o.tag}}</span>
+          <span style="flex: 1; display: flex; flex-direction: column; gap: 3px"><span class="bri" style="font-size: 21px; line-height: 1">{{o.name}}</span><span style="font-size: 14px; line-height: 1.25">{{o.desc}}</span></span>
+          <span class="bri" aria-hidden="true" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 30px; border: 2.5px solid #172038; background: {{o.tickBg}}; display: flex; align-items: center; justify-content: center; font-size: 17px">{{o.tick}}</span>
+        </button>
+      </sc-for>
+      <span class="hint">You can add or remove these any time by editing your Today screen. Your sticker book and friends are always there.</span>
+    </sc-if>
+
     <sc-if value="{{s1}}" hint-placeholder-val="{{ false }}">
       <span class="title-die bri" style="font-size: 36px; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">WHO’S EATING?</span>
       <span class="q">How many do you usually cook for?</span>
@@ -193,7 +206,8 @@ input:focus{outline:none;box-shadow:0 0 0 3px #FF6FB0}
   <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; gap: 10px">
     <sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}"><button type="button" class="press bri" onClick="{{back}}" aria-label="Back" style="width: 62px; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #FFFFFF; color: #172038; font-size: 26px">←</button></sc-if>
     <sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{next}}" style="flex: 1; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{nextText}}</button></sc-if>
-    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="StickerBook.html?v=1793407209" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">OPEN MY STICKER BOOK →</a></sc-if>
+    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793434446" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
+    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="StickerBook.html?v=1793434446" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">OPEN MY STICKER BOOK →</a></sc-if>
   </div>
 </div>
 </script>
@@ -208,9 +222,18 @@ class Component extends DCLogic {
     this.AV = [['vegetarian', 'VEGETARIAN'], ['pork', 'NO PORK'], ['beef', 'NO BEEF'], ['fish', 'NO FISH']];
     this.AL = [["gluten", "GLUTEN", "gluten"], ["milk", "DAIRY", "dairy"], ["eggs", "EGGS", "eggs"], ["peanuts", "PEANUTS", "peanuts"], ["treenuts", "TREE NUTS", "tree nuts"], ["sesame", "SESAME", "sesame"], ["soya", "SOYA", "soya"], ["crustaceans", "SHELLFISH", "shellfish"], ["molluscs", "MOLLUSCS", "molluscs"], ["mustard", "MUSTARD", "mustard"], ["celery", "CELERY", "celery"], ["sulphites", "SULPHITES", "sulphites"], ["lupin", "LUPIN", "lupin"]];   // the UK's 14 allergens (allergens.py); fish is NO FISH above
     this.AVNAME = Object.assign({ vegetarian: 'meat or fish' }, Object.fromEntries(this.AL.map((a) => [a[0], a[2]])));
-    this.s = { step: 0, name: '', household: null, lunches: null, avoid: {}, kids: null, hydro: null, watch: null, notif: '', every: 2, dayStart: 8, dayEnd: 21, learn: false, landed: false, fit: null, likes: {}, grow: null };
+    this.s = { step: 0, name: '', household: null, lunches: null, avoid: {}, kids: null, hydro: null, watch: null, notif: '', every: 2, dayStart: 8, dayEnd: 21, learn: false, landed: false, fit: null, likes: {}, grow: null,
+      here: { gym: true, kitchen: true, water: true, list: true }, only: null };
+    this.HERE = [['gym', 'GYM', '#C6FF4D', 'GET MOVING', 'workouts made for you, and what’s next'], ['kitchen', 'EAT', '#FFD23F', 'COOK MORE', 'plan the week, and what’s for dinner tonight'],
+      ['water', 'H₂O', '#6EC8FF', 'DRINK MORE WATER', 'a glass counter and gentle nudges'], ['list', 'LIST', '#FF6FB0', 'GET THINGS DONE', 'your list, with the top 3 up front']];
+    try { const m = location.hash.match(/only=(kitchen|gym|water)/); if (m) { this.s.only = m[1]; this.s.step = this.steps()[0]; } } catch (e) {}
   }
   re() { this.setState({ n: Date.now() }); }
+  steps() {   // 10 = WHAT ARE YOU HERE FOR?; an area you didn't pick skips its questions (Me can ask them later: #only=<area>)
+    const s = this.s, h = s.here;
+    if (s.only) return { kitchen: [1, 2], gym: [3], water: [4] }[s.only];
+    return [0, 10].concat(h.kitchen ? [1, 2] : [], h.gym ? [3] : [], h.water ? [4] : [], [5, 6]);
+  }
   buzz(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
   hr(h) { const hh = ((h % 24) + 24) % 24; return (hh % 12 === 0 ? 12 : hh % 12) + (hh < 12 ? 'am' : 'pm'); }
   bookName() {
@@ -226,7 +249,17 @@ class Component extends DCLogic {
   save() {
     const s = this.s;
     try {
-      localStorage.setItem('gsd.profile', JSON.stringify(this.profile()));
+      if (s.only) {   // one area's questions from Me: keep everything else as it was
+        const old = JSON.parse(localStorage.getItem('gsd.profile') || '{}') || {}, p = this.profile();
+        const keys = { kitchen: ['household', 'lunches', 'littleOnes', 'avoid'], water: ['hydro', 'hydroPush'], gym: [] }[s.only];
+        keys.forEach((k) => { old[k] = p[k]; }); localStorage.setItem('gsd.profile', JSON.stringify(old));
+        const I = JSON.parse(localStorage.getItem('gsd.interests') || '{}') || {}; I[s.only] = true; I.asked = (I.asked || []).filter((a) => a !== s.only).concat([s.only]); localStorage.setItem('gsd.interests', JSON.stringify(I));
+      } else {
+        localStorage.setItem('gsd.profile', JSON.stringify(this.profile()));
+        const h = s.here, hid = [['gym', 'next'], ['kitchen', 'tonight'], ['water', 'hydro'], ['list', 'list']].filter((x) => !h[x[0]]).map((x) => x[1]);
+        localStorage.setItem('gsd.interests', JSON.stringify(Object.assign({ asked: ['gym', 'kitchen', 'water'].filter((a) => h[a]) }, h)));
+        localStorage.setItem('gsd.today', JSON.stringify({ order: ['next', 'tonight', 'hydro', 'week', 'list', 'goal'].filter((k) => !hid.includes(k)), hidden: hid }));
+      }
       // get moving: level (where plans and ladders start), what they enjoy (first in the gym), GROW for those
       if (s.fit) localStorage.setItem('gsd.fitLevel', s.fit);
       const likes = this.MOVE.map((m) => m[0]).filter((k) => s.likes[k]);
@@ -256,16 +289,19 @@ class Component extends DCLogic {
     return out;
   }
   renderVals() {
-    const s = this.s, st = s.step, N = 7;
-    const go = (n) => { s.step = n; if (n === 6) { this.save(); this.buzz([10, 50, 20]); } this.re(); };
+    const s = this.s, st = s.step, S = this.steps(), at = Math.max(0, S.indexOf(st)), last = st === 6, onlyLast = !!s.only && at === S.length - 1;
+    const go = (n) => { if (n === undefined) return; s.step = n; if (n === 6) { this.save(); this.buzz([10, 50, 20]); } this.re(); };
+    const anyHere = Object.values(s.here).some(Boolean);
     const nm = this.bookName();
     return {
-      dots: Array.from({ length: N }, (_, n) => ({ w: n === st ? '26px' : '10px', bg: n <= st ? '#FF6FB0' : '#FFFFFF' })),
-      canSkip: st < 6, skip: () => go(st + 1),
-      canBack: st > 0 && st < 6, back: () => go(st - 1),
-      nextText: st === 0 ? (s.name.trim() ? 'THAT’S ME →' : 'NEXT →') : st === 6 ? 'OPEN MY STICKER BOOK →' : 'NEXT →',
-      next: () => { if (st < 6) go(st + 1); else { s.landed = true; this.save(); this.re(); } },
-      notLast: st < 6, saveNow: () => { this.save(); },
+      dots: S.map((n, i) => ({ w: n === st ? '26px' : '10px', bg: i <= at ? '#FF6FB0' : '#FFFFFF' })),
+      canSkip: !last && !onlyLast, skip: () => go(S[at + 1]),
+      canBack: at > 0 && !last, back: () => go(S[at - 1]),
+      nextText: st === 0 ? (s.name.trim() ? 'THAT’S ME →' : 'NEXT →') : st === 10 ? (anyHere ? 'THAT’S ME →' : 'JUST THE STICKERS →') : last ? 'OPEN MY STICKER BOOK →' : 'NEXT →',
+      next: () => { if (!last) go(S[at + 1]); else { s.landed = true; this.save(); this.re(); } },
+      notLast: !last && !onlyLast, onlyLast, saveNow: () => { this.save(); },
+      sI: st === 10, hereOpts: this.HERE.map((o, i) => { const on = !!s.here[o[0]]; return { tag: o[1], col: o[2], name: o[3], desc: o[4], pressed: on ? 'true' : 'false',
+        bg: on ? '#FFFFFF' : 'transparent', tickBg: on ? '#C6FF4D' : '#FFFFFF', tick: on ? '✓' : '', rot: ((i % 2) ? 0.8 : -0.8) + 'deg', tap: () => { s.here[o[0]] = !on; this.buzz(8); this.re(); } }; }),
       s0: st === 0, s1: st === 1, s2: st === 2, s3: st === 3, s4: st === 4, sW: st === 5, s5: st === 6,
       showCover: st === 0 || st === 6, coverCls: st === 6 ? 'coverin' : '',
       coverName: nm, nameSize: nm.length > 10 ? '34px' : nm.length > 7 ? '44px' : '56px',
@@ -306,6 +342,6 @@ class Component extends DCLogic {
 }
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793407209"></script>
-<script src="dc.js?v=1793407209"></script>
+<script src="morphdom.js?v=1793434446"></script>
+<script src="dc.js?v=1793434446"></script>
 </body></html>
