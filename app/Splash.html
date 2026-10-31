@@ -17,6 +17,10 @@
   document.addEventListener('beforeinput', function (e) { if (isText(e.target) && e.inputType === 'insertLineBreak') { var el = e.target; setTimeout(function () { if (document.activeElement === el) el.blur(); }, 0); } });
   document.addEventListener('pointerdown', function (e) { var a = document.activeElement; if (!isText(a) && !(a && a.tagName === 'TEXTAREA')) return;
     var t = e.target; if (t === a || (t.closest && t.closest('input, textarea, select, label'))) return; a.blur(); }, true);
+  // a search box is taller than the text field inside it: a tap anywhere on the box (the magnifier, the padding) starts typing
+  document.addEventListener('click', function (e) { var t = e.target; if (!t || !t.closest || t.closest('input, textarea, select, button, a, label')) return;
+    for (var b = t, i = 0; b && i < 4; b = b.parentElement, i++) { var f = b.querySelector && b.querySelector(':scope > input[type=search]');
+      if (f) { if (b.getBoundingClientRect().height < 80) f.focus(); return; } } });
 })();
 </script>
 <style>.sp-demo,#gp-demo,#cv-demoLater,#cv-demoReset{display:none !important}</style>
@@ -164,6 +168,13 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 #dc-frame{position:absolute;left:var(--l,0);top:var(--t,0);width:390px;height:844px;transform:scale(var(--k,1));transform-origin:0 0;background:#172038}
 #dc-bar{position:absolute;left:var(--bl,0);top:var(--bt,760px);width:390px;height:84px;transform:scale(var(--bk,1));transform-origin:0 0;z-index:5;background:#172038}
 #dc-stage{position:relative;overflow:hidden;width:390px;height:844px}
+/* bigger tap areas on small links and buttons (phone sweep, 31 Oct 2026): an invisible ring around each, so they look the same but are easier to hit */
+a.kal,button.kal:not(.slot),[aria-label="Fewer servings"],[aria-label="More servings"],[aria-label^="Go to step"],#pf-lvBtn,#pf-watch,[aria-label^="How "],a[aria-label="All recipes"],[aria-label="Show the ingredients list"],[aria-label$="add your weight"],[aria-label$="change the weight"],[aria-label$=": bodyweight"]{position:relative}
+a.kal::after,button.kal:not(.slot)::after{content:'';position:absolute;inset:-10px -5px}
+[aria-label="Fewer servings"]::after,[aria-label="More servings"]::after{content:'';position:absolute;inset:-10px}
+[aria-label^="Go to step"]::after{content:'';position:absolute;inset:-3px}
+#pf-lvBtn::after,#pf-watch::after,[aria-label^="How "]::after{content:'';position:absolute;inset:-7px}
+a[aria-label="All recipes"]::after,[aria-label="Show the ingredients list"]::after,[aria-label$="add your weight"]::after,[aria-label$="change the weight"]::after,[aria-label$=": bodyweight"]::after{content:'';position:absolute;inset:-8px -3px}
 </style>
 </head><body data-extra="0">
 <div id="dc-frame"><div id="dc-stage"></div></div>
@@ -186,8 +197,8 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
     <span id="sp-tapeT" class="bri title-die" role="status" style="display: block; font-size: 40px; color: #C6FF4D; text-shadow: 3px 3px 0 #111111; letter-spacing: 0.5px; white-space: nowrap"></span></div>
   <button type="button" id="sp-tap" class="press" style="position: absolute; left: 0; right: 0; top: 488px; margin: 0 auto; width: max-content; padding: 6px 10px; border: none; background: transparent; transform: rotate(2deg)"><span class="bri title-die" style="display: block; font-size: 22px; color: #172038; letter-spacing: 0.5px">OR TAP HERE TO START</span></button>
   <button type="button" id="sp-skip" class="press" style="display: none; position: absolute; left: 0; right: 0; top: 488px; margin: 0 auto; width: max-content; padding: 6px 10px; border: none; background: transparent; transform: rotate(2deg)"><span class="bri title-die" style="display: block; font-size: 22px; color: #172038; letter-spacing: 0.5px">TAP ANYWHERE TO GO IN</span></button>
-  <a id="sp-toToday" href="Today.html?v=1793464021" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
-  <a id="sp-toOnboard" href="Onboard.html?v=1793464021" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Set up</a>
+  <a id="sp-toToday" href="Today.html?v=1793470447" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
+  <a id="sp-toOnboard" href="Onboard.html?v=1793470447" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Set up</a>
   <div class="sp-demo" style="position: absolute; left: 0; right: 0; bottom: 16px; display: flex; justify-content: center; align-items: center; gap: 6px"><span class="kal" style="font-size: 12px; opacity: 0.55">demo:</span><button type="button" id="sp-demoFirst">first time</button><button type="button" id="sp-demoBack">welcome back</button></div>
 </div>
 </script>
@@ -373,6 +384,6 @@ class Component extends DCLogic {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793464021"></script>
-<script src="dc.js?v=1793464021"></script>
+<script src="morphdom.js?v=1793470447"></script>
+<script src="dc.js?v=1793470447"></script>
 </body></html>
