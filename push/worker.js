@@ -15,9 +15,11 @@
 //   POST /snooze       { endpoint, minutes }             IN 30 MIN on the nudge: one more nudge after that (if the goal isn't hit)
 //   GET  /health       -> ok
 //   POST /f/...        friends: see friends.js (D1, binding DB)
+//   POST /l/...        shared lists: see lists.js (same D1)
 // Cron: every 15 minutes. Slots are start + every, start + 2*every ... up to end (8am-9pm every 2 h = 10, 12 ... 8pm).
 
 import { friends, tidy } from './friends.js';
+import { lists } from './lists.js';
 
 const ORIGINS = ['https://declanwayne91-art.github.io', 'http://127.0.0.1:8765', 'http://localhost:8765'];
 const WINDOW_MIN = 30;   // a slot can still be sent up to 30 min late (cron runs every 15)
@@ -72,6 +74,7 @@ export default {
       if (req.method !== 'POST') return out({ error: 'not found' }, 404);
       const b = await req.json().catch(() => ({}));
       if (path.startsWith('/f/')) return await friends(path, b, env, out);
+      if (path.startsWith('/l/')) return await lists(path, b, env, out);
       const endpoint = (b.sub && b.sub.endpoint) || b.endpoint || '';
       if (!/^https:\/\//.test(endpoint) || endpoint.length > 1000) return out({ error: 'bad endpoint' }, 400);
       const id = await idOf(endpoint);

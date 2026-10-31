@@ -1,6 +1,7 @@
 // Friends, on the same worker as the nudges. D1 (binding DB) keeps: who's who (an anonymous id, a hash of the phone's secret,
 // the friend code and the name plate: name, plate colour, level, favourite sticker and pin), who's friends with whom, blocks,
-// and cheers waiting to be seen. Nothing else: no tasks, meals, weights or water ever leave the phone.
+// and cheers waiting to be seen. Shared lists (lists.js) keep the tasks you put on a shared list, and nothing else:
+// your own list, meals, weights and water never leave the phone.
 // Every route is POST JSON with { secret } (made on the phone, never stored here, only its SHA-256).
 //   /f/me     { secret, plate }  -> { code }           register or update your name plate
 //   /f/peek   { secret, code }   -> { friend }         whose code is this? (for the "add Dex?" card)
@@ -23,7 +24,7 @@ const SCHEMA = [
   'CREATE INDEX IF NOT EXISTS events_src ON events (src, at)',
 ];
 let ready = null;
-const init = (env) => ready || (ready = env.DB.batch(SCHEMA.map((q) => env.DB.prepare(q)))
+export const init = (env) => ready || (ready = env.DB.batch(SCHEMA.map((q) => env.DB.prepare(q)))
   .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN push TEXT').run().catch(() => {}))   // friend alerts: the phone's push address (added later; already there = fine)
   .catch((e) => { ready = null; throw e; }));
 
@@ -32,7 +33,7 @@ const PLATES = ['cream', 'lime', 'pink', 'sky', 'holo', 'sunset', 'gold', 'auror
 const MAX_FRIENDS = 100, CHEERS_A_DAY = 60, CHEER_GAP = 30e3;
 const rand = (n, abc = ABC) => { const b = crypto.getRandomValues(new Uint8Array(n)); return Array.from(b, (x) => abc[x % abc.length]).join(''); };
 const hex = (buf) => Array.from(new Uint8Array(buf), (x) => x.toString(16).padStart(2, '0')).join('');
-const hash = async (s) => hex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)));
+export const hash = async (s) => hex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)));
 export const cleanCode = (s) => { s = String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, '').replace(/^STCK/, ''); return s.length === 5 && [...s].every((ch) => ABC.includes(ch)) ? s : null; };
 const showCode = (c) => 'STCK-' + c;
 export function cleanPlate(p) {
@@ -43,7 +44,7 @@ export function cleanPlate(p) {
 }
 // what a friend alert says (cheers in the Friends screen's order)
 const CHEERS = ['NICE ONE!', 'GAINS!', '✱ HIGH FIVE', 'PROUD!', 'YUM!', 'STICK WITH IT!'];
-async function alert(env, them, msg) {
+export async function alert(env, them, msg) {
   if (!them || !them.push) return;
   let sub = null; try { sub = JSON.parse(them.push); } catch (e) { return; }
   const st = await push(env, sub, 'friend', Object.assign({ t: 'friend', url: 'Friends.html' }, msg)).catch(() => 0);
@@ -55,7 +56,7 @@ export function cleanSub(x, env) {   // env.TEST_PUSH_HTTP (local tests only) al
   const k = x.keys || {}; if (typeof k.p256dh !== 'string' || typeof k.auth !== 'string' || k.p256dh.length > 120 || k.auth.length > 40) return null;
   return JSON.stringify({ endpoint: x.endpoint, keys: { p256dh: k.p256dh, auth: k.auth } });
 }
-const pub = (u) => u && { id: u.id, name: u.name, plate: u.plate, lv: u.lv, st: u.st, pin: u.pin };
+export const pub = (u) => u && { id: u.id, name: u.name, plate: u.plate, lv: u.lv, st: u.st, pin: u.pin };
 
 export async function friends(path, b, env, out) {
   if (!env.DB) return out({ error: 'friends not set up' }, 503);
