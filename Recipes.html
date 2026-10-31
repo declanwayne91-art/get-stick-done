@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Get St*ck Done!</title>
+<script>/* size the phone frame before anything paints, so nothing (e.g. the nav bar) shows in the wrong place while the page loads */
+(function () { var W = 390, H = 844, B = 844, E = 84, w = innerWidth, h = innerHeight, r = document.documentElement.style;
+  /* the nav bar is drawn at exactly Today's size and place (Today's board is 844 with the bar inside); the board above it fits the rest */
+  /* a shorter board (B < 844, e.g. the sticker book) grows to fill the width instead */
+  var kT = Math.min(w / W, h / H), t = Math.max(0, (h - H * kT) / 2), k = E ? Math.min(w / W, (H - E) * kT / B) : Math.min(w / W, h / B);
+  r.setProperty('--k', k); r.setProperty('--l', Math.max(0, (w - W * k) / 2) + 'px'); r.setProperty('--t', t + 'px');
+  r.setProperty('--bk', kT); r.setProperty('--bl', Math.max(0, (w - W * kT) / 2) + 'px'); r.setProperty('--bt', (t + (H - E) * kT) + 'px'); })();</script>
+<script>/* merged duplicate recipes: move saved plans, tonight's pick and the cooked log over to the recipe we kept */
+(function () { var M = {"din-tai-fung-egg-fried-rice": "chilli-crisp-fried-rice"}; try { ['gsd.plan', 'gsd.tonight', 'gsd.progress', 'gsd.planAdd', 'gsd.useUp', 'gsd.workout', 'gsd.lastWorkout'].forEach(function (k) { var v = localStorage.getItem(k); if (!v) return; var n = v;
+  for (var o in M) n = n.split(o).join(M[o]); n = n.split('Couch to 5K week').join('Stick With It · week'); if (n !== v) localStorage.setItem(k, n); }); } catch (e) {} })();</script>
+<script type="speculationrules">{"prefetch": [{"where": {"selector_matches": "a[href]"}, "eagerness": "moderate"}]}</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&amp;family=Kalam:wght@400;700&amp;family=Atkinson+Hyperlegible:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none;padding:0}
+button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
+.title-die{filter:url(#tdie) drop-shadow(0 6px 6px rgba(60,40,20,0.3))}
+.bri{font-family:'Bricolage Grotesque',sans-serif;font-stretch:75%;font-weight:800;line-height:0.9}
+.kal{font-family:'Kalam',cursive;font-weight:700}
+.press{transition:transform 0.09s ease-out}
+.press:active{transform:scale(0.92)}
+.dot{width:34px;height:34px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#172038;border:3px solid #FFFFFF;box-shadow:0 0 0 2px #172038}
+.chip{padding:5px 10px;border-radius:999px;background:#C6FF4D;border:2px solid #172038;font-weight:700;font-size:13px;color:#172038;white-space:nowrap}
+.box{width:24px;height:24px;flex-shrink:0;border:2.5px solid #172038;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#172038;font-weight:900}
+.tom{position:relative;width:60px;height:54px;border-radius:48% 48% 46% 46%;border:3px solid #FFFFFF;box-shadow:0 0 0 2px #2A1A10;display:flex;align-items:center;justify-content:center}
+@keyframes ring{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.ringing{animation:ring 0.4s ease-in-out infinite}
+@keyframes peelclip{0%{clip-path:inset(-20px -20px -20px -20px)}100%{clip-path:inset(-20px 100% -20px -20px)}}
+@keyframes peelflap{0%{left:146px;opacity:0;transform:scaleX(0.4)}12%{opacity:1}85%{opacity:1}100%{left:-14px;opacity:0;transform:scaleX(1.1)}}
+.face{display:block}
+.flap{position:absolute;top:-3px;width:22px;height:56px;border-radius:14px 4px 4px 14px;background:linear-gradient(90deg,#FFFFFF,#F1ECE3 55%,#CFC6B6);border:2px solid #111;box-shadow:-5px 4px 6px rgba(0,0,0,0.28);display:none;pointer-events:none}
+.peeling .face{animation:peelclip 0.6s cubic-bezier(.4,0,.55,1) forwards}
+.peeling .flap{display:block;animation:peelflap 0.6s cubic-bezier(.4,0,.55,1) forwards}
+.peeling{pointer-events:none}
+@keyframes nextpop{0%{transform:scale(1.7) rotate(-34deg);opacity:0}65%{transform:scale(0.94) rotate(-8deg);opacity:1}100%{transform:scale(1) rotate(-12deg);opacity:1}}
+.nextpop{animation:nextpop 0.34s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes bob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.02)}}
+.nextpop svg{animation:bob 2.2s ease-in-out 0.4s infinite}
+.peeling{transform:rotate(-12deg)}
+
+@keyframes slapin{0%{transform:scale(1.7) rotate(-22deg);opacity:0}60%{transform:scale(0.92) rotate(-4deg);opacity:1}100%{transform:scale(1) rotate(-6deg);opacity:1}}
+.slap{animation:slapin 0.32s cubic-bezier(.3,1.5,.5,1) both}
+.pic svg{height:100%;max-height:100%;width:auto;max-width:100%}
+.prepmid>*{flex-shrink:0}
+.pic > svg{height:calc(100% - 12px) !important;width:auto !important;max-width:100%}
+.ovw-card{display:flex;gap:10px;align-items:flex-start;background:#FFFFFF;border-radius:12px;padding:10px 12px;box-shadow:0 3px 0 #CDB894,0 8px 12px -8px rgba(90,60,30,0.4)}.ovw-n{flex:none;width:30px;height:30px;border-radius:30px;background:#172038;color:#C6FF4D;display:flex;align-items:center;justify-content:center;font-size:17px}.ovw-t{align-self:flex-start;margin-top:2px;padding:2px 9px;border-radius:999px;background:#FF6FB0;border:2px solid #172038;font-size:13px;white-space:nowrap}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style data-lm>.lm{font-family:"DM Mono",ui-monospace,monospace !important;font-weight:500;text-transform:uppercase;color:#FFFFFF !important;letter-spacing:3px;background-image:linear-gradient(rgba(255,255,255,0.22),rgba(255,255,255,0) 45%,rgba(0,0,0,0.12)) !important;text-shadow:0 -1px 0 rgba(0,0,0,0.55),0 1px 0 rgba(255,255,255,0.4) !important;box-shadow:inset 0 2px 0 rgba(255,255,255,0.28),inset 0 -3px 0 rgba(0,0,0,0.22),0 3px 5px rgba(60,40,20,0.35) !important;border-radius:3px}[style*="DM Mono"][style*="background: #"]{background-image:linear-gradient(rgba(255,255,255,0.22),rgba(255,255,255,0) 45%,rgba(0,0,0,0.12));text-shadow:0 -1px 0 rgba(0,0,0,0.55),0 1px 0 rgba(255,255,255,0.4) !important;box-shadow:inset 0 2px 0 rgba(255,255,255,0.28),inset 0 -3px 0 rgba(0,0,0,0.22),0 3px 5px rgba(60,40,20,0.35) !important;border-radius:3px}</style>
+<style>
+#uu-root *{-webkit-user-select:none;user-select:none;box-sizing:border-box}
+#uu-root input{-webkit-user-select:text;user-select:text}
+.uu-ing{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:transparent;padding:6px 2px;border-radius:16px;cursor:pointer;color:#F6EFE1;position:relative}
+.uu-ing img{width:66px;height:66px;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(0,0,0,0.3))}
+.uu-ing span{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px}
+.uu-ing.on{background:rgba(198,255,77,0.18);box-shadow:inset 0 0 0 3px #C6FF4D}
+.uu-ing.on::after{content:"";position:absolute;right:8px;top:6px;width:20px;height:20px;border-radius:20px;background:#C6FF4D url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5 L6.5 12 L13 4.5' stroke='%23172038' stroke-width='2.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;border:2px solid #172038}
+#uu-basket{display:flex;gap:8px;align-items:center;overflow-x:auto;height:64px;padding:0 2px}
+.uu-chip{position:relative;flex-shrink:0;display:flex}
+.uu-chip .st{width:56px;height:56px;border-radius:16px;border:2.5px solid #172038;background:#FBF4E6;padding:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.uu-chip .st img{width:100%;height:100%;object-fit:contain}
+.uu-chip.today .st{background:#FFD23F;box-shadow:3px 3px 0 #FF6FB0}
+.uu-chip .tg{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;letter-spacing:0.5px;background:#172038;color:#FFD23F;padding:1px 5px;border-radius:6px}
+.uu-chip .x{position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:22px;border:2px solid #172038;background:#FFFFFF;color:#172038;font-size:14px;line-height:1;padding:0;cursor:pointer}
+#uu-res{position:absolute;left:0;right:0;top:56px;bottom:0;background:#FBF4E6;border-radius:24px 24px 0 0;border-top:4px solid #172038;display:none;transform:translateY(102%);transition:transform 0.28s cubic-bezier(.2,.9,.3,1);z-index:30;color:#172038}
+#uu-list{position:absolute;left:0;right:0;top:44px;bottom:0;overflow-y:auto;padding:4px 14px 30px}
+.uu-card{display:flex;gap:10px;background:#FFFFFF;border:3px solid #172038;border-radius:18px;padding:10px;margin:10px 0;box-shadow:4px 4px 0 #C6FF4D}
+.uu-card.sw{box-shadow:4px 4px 0 #FF6FB0;border-style:dashed}
+.uu-card .dish{width:76px;height:76px;object-fit:contain;flex-shrink:0}
+.uu-card .bd{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.uu-card .top{display:flex;align-items:flex-start;gap:6px;justify-content:space-between}
+.uu-card .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:17px;line-height:1.05}
+.uu-card .swb{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:11px;letter-spacing:0.5px;background:#FF6FB0;padding:2px 6px;border-radius:6px;border:2px solid #172038;flex-shrink:0}
+.uu-card .meta{font-family:Kalam,cursive;font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px}
+.uu-card .md{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;padding:1px 6px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .bar{height:8px;border-radius:8px;border:2px solid #172038;overflow:hidden;background:#F6EFE1}
+.uu-card .bar span{display:block;height:100%;background:#C6FF4D}
+.uu-card .note{font-size:13px;font-weight:700;line-height:1.25;background:rgba(255,111,176,0.14);padding:5px 7px;border-radius:8px}
+.uu-card .row{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:12px}
+.uu-card .row b{font-family:Kalam,cursive;font-size:12px;margin-right:2px;opacity:0.75}
+.uu-card .row.cb{font-family:Kalam,cursive;font-weight:700;opacity:0.65}
+.uu-card .hv,.uu-card .nd{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:12px;padding:2px 7px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .hv{background:#C6FF4D}.uu-card .nd{background:#FFFFFF;border-style:dashed}
+.uu-card .act{display:flex;gap:6px;margin-top:2px}
+.uu-card .act button{height:36px;padding:0 12px;border-radius:12px;border:2.5px solid #172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px;cursor:pointer}
+.uu-card .tn{background:#172038;color:#FFD23F}.uu-card .wk{background:#FFFFFF;color:#172038}
+#uu-list .sec{display:block;font-family:Kalam,cursive;font-weight:700;font-size:15px;margin:16px 4px 0;opacity:0.75}
+#uu-list .empty{display:block;font-size:15px;margin:10px 4px}
+.uu-more{display:flex;justify-content:center;margin:14px 0 8px}
+.uu-more button{height:44px;padding:0 20px;border-radius:999px;border:2.5px dashed #172038;background:#FFFFFF;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:15px;cursor:pointer}
+.uu-more .kal{font-size:14px;opacity:0.6}
+</style>
+<style>
+#uu-root *{-webkit-user-select:none;user-select:none;box-sizing:border-box}
+#uu-root input{-webkit-user-select:text;user-select:text}
+.uu-ing{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:transparent;padding:6px 2px;border-radius:16px;cursor:pointer;color:#F6EFE1;position:relative}
+.uu-ing img{width:66px;height:66px;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(0,0,0,0.3))}
+.uu-ing span{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px}
+.uu-ing.on{background:rgba(198,255,77,0.18);box-shadow:inset 0 0 0 3px #C6FF4D}
+.uu-ing.on::after{content:"";position:absolute;right:8px;top:6px;width:20px;height:20px;border-radius:20px;background:#C6FF4D url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5 L6.5 12 L13 4.5' stroke='%23172038' stroke-width='2.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;border:2px solid #172038}
+#uu-basket{display:flex;gap:8px;align-items:center;overflow-x:auto;height:64px;padding:0 2px}
+.uu-chip{position:relative;flex-shrink:0;display:flex}
+.uu-chip .st{width:56px;height:56px;border-radius:16px;border:2.5px solid #172038;background:#FBF4E6;padding:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.uu-chip .st img{width:100%;height:100%;object-fit:contain}
+.uu-chip.today .st{background:#FFD23F;box-shadow:3px 3px 0 #FF6FB0}
+.uu-chip .tg{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;letter-spacing:0.5px;background:#172038;color:#FFD23F;padding:1px 5px;border-radius:6px}
+.uu-chip .x{position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:22px;border:2px solid #172038;background:#FFFFFF;color:#172038;font-size:14px;line-height:1;padding:0;cursor:pointer}
+#uu-res{position:absolute;left:0;right:0;top:56px;bottom:0;background:#FBF4E6;border-radius:24px 24px 0 0;border-top:4px solid #172038;display:none;transform:translateY(102%);transition:transform 0.28s cubic-bezier(.2,.9,.3,1);z-index:30;color:#172038}
+#uu-list{position:absolute;left:0;right:0;top:44px;bottom:0;overflow-y:auto;padding:4px 14px 30px}
+.uu-card{display:flex;gap:10px;background:#FFFFFF;border:3px solid #172038;border-radius:18px;padding:10px;margin:10px 0;box-shadow:4px 4px 0 #C6FF4D}
+.uu-card.sw{box-shadow:4px 4px 0 #FF6FB0;border-style:dashed}
+.uu-card .dish{width:76px;height:76px;object-fit:contain;flex-shrink:0}
+.uu-card .bd{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.uu-card .top{display:flex;align-items:flex-start;gap:6px;justify-content:space-between}
+.uu-card .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:17px;line-height:1.05}
+.uu-card .swb{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:11px;letter-spacing:0.5px;background:#FF6FB0;padding:2px 6px;border-radius:6px;border:2px solid #172038;flex-shrink:0}
+.uu-card .meta{font-family:Kalam,cursive;font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px}
+.uu-card .md{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;padding:1px 6px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .bar{height:8px;border-radius:8px;border:2px solid #172038;overflow:hidden;background:#F6EFE1}
+.uu-card .bar span{display:block;height:100%;background:#C6FF4D}
+.uu-card .note{font-size:13px;font-weight:700;line-height:1.25;background:rgba(255,111,176,0.14);padding:5px 7px;border-radius:8px}
+.uu-card .row{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:12px}
+.uu-card .row b{font-family:Kalam,cursive;font-size:12px;margin-right:2px;opacity:0.75}
+.uu-card .row.cb{font-family:Kalam,cursive;font-weight:700;opacity:0.65}
+.uu-card .hv,.uu-card .nd{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:12px;padding:2px 7px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .hv{background:#C6FF4D}.uu-card .nd{background:#FFFFFF;border-style:dashed}
+.uu-card .act{display:flex;gap:6px;margin-top:2px}
+.uu-card .act button{height:36px;padding:0 12px;border-radius:12px;border:2.5px solid #172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px;cursor:pointer}
+.uu-card .tn{background:#172038;color:#FFD23F}.uu-card .wk{background:#FFFFFF;color:#172038}
+#uu-list .sec{display:block;font-family:Kalam,cursive;font-weight:700;font-size:15px;margin:16px 4px 0;opacity:0.75}
+#uu-list .empty{display:block;font-size:15px;margin:10px 4px}
+.uu-more{display:flex;justify-content:center;margin:14px 0 8px}
+.uu-more button{height:44px;padding:0 20px;border-radius:999px;border:2.5px dashed #172038;background:#FFFFFF;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:15px;cursor:pointer}
+.uu-more .kal{font-size:14px;opacity:0.6}
+</style>
+<style>
+#uu-root *{-webkit-user-select:none;user-select:none;box-sizing:border-box}
+#uu-root input{-webkit-user-select:text;user-select:text}
+.uu-ing{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:transparent;padding:6px 2px;border-radius:16px;cursor:pointer;color:#F6EFE1;position:relative}
+.uu-ing img{width:66px;height:66px;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(0,0,0,0.3))}
+.uu-ing span{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px}
+.uu-ing.on{background:rgba(198,255,77,0.18);box-shadow:inset 0 0 0 3px #C6FF4D}
+.uu-ing.on::after{content:"";position:absolute;right:8px;top:6px;width:20px;height:20px;border-radius:20px;background:#C6FF4D url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5 L6.5 12 L13 4.5' stroke='%23172038' stroke-width='2.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;border:2px solid #172038}
+#uu-basket{display:flex;gap:8px;align-items:center;overflow-x:auto;height:64px;padding:0 2px}
+.uu-chip{position:relative;flex-shrink:0;display:flex}
+.uu-chip .st{width:56px;height:56px;border-radius:16px;border:2.5px solid #172038;background:#FBF4E6;padding:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.uu-chip .st img{width:100%;height:100%;object-fit:contain}
+.uu-chip.today .st{background:#FFD23F;box-shadow:3px 3px 0 #FF6FB0}
+.uu-chip .tg{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;letter-spacing:0.5px;background:#172038;color:#FFD23F;padding:1px 5px;border-radius:6px}
+.uu-chip .x{position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:22px;border:2px solid #172038;background:#FFFFFF;color:#172038;font-size:14px;line-height:1;padding:0;cursor:pointer}
+#uu-res{position:absolute;left:0;right:0;top:56px;bottom:0;background:#FBF4E6;border-radius:24px 24px 0 0;border-top:4px solid #172038;display:none;transform:translateY(102%);transition:transform 0.28s cubic-bezier(.2,.9,.3,1);z-index:30;color:#172038}
+#uu-list{position:absolute;left:0;right:0;top:44px;bottom:0;overflow-y:auto;padding:4px 14px 30px}
+.uu-card{display:flex;gap:10px;background:#FFFFFF;border:3px solid #172038;border-radius:18px;padding:10px;margin:10px 0;box-shadow:4px 4px 0 #C6FF4D}
+.uu-card.sw{box-shadow:4px 4px 0 #FF6FB0;border-style:dashed}
+.uu-card .dish{width:76px;height:76px;object-fit:contain;flex-shrink:0}
+.uu-card .bd{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.uu-card .top{display:flex;align-items:flex-start;gap:6px;justify-content:space-between}
+.uu-card .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:17px;line-height:1.05}
+.uu-card .swb{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:11px;letter-spacing:0.5px;background:#FF6FB0;padding:2px 6px;border-radius:6px;border:2px solid #172038;flex-shrink:0}
+.uu-card .meta{font-family:Kalam,cursive;font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px}
+.uu-card .md{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;padding:1px 6px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .bar{height:8px;border-radius:8px;border:2px solid #172038;overflow:hidden;background:#F6EFE1}
+.uu-card .bar span{display:block;height:100%;background:#C6FF4D}
+.uu-card .note{font-size:13px;font-weight:700;line-height:1.25;background:rgba(255,111,176,0.14);padding:5px 7px;border-radius:8px}
+.uu-card .row{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:12px}
+.uu-card .row b{font-family:Kalam,cursive;font-size:12px;margin-right:2px;opacity:0.75}
+.uu-card .row.cb{font-family:Kalam,cursive;font-weight:700;opacity:0.65}
+.uu-card .hv,.uu-card .nd{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:12px;padding:2px 7px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .hv{background:#C6FF4D}.uu-card .nd{background:#FFFFFF;border-style:dashed}
+.uu-card .act{display:flex;gap:6px;margin-top:2px}
+.uu-card .act button{height:36px;padding:0 12px;border-radius:12px;border:2.5px solid #172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px;cursor:pointer}
+.uu-card .tn{background:#172038;color:#FFD23F}.uu-card .wk{background:#FFFFFF;color:#172038}
+#uu-list .sec{display:block;font-family:Kalam,cursive;font-weight:700;font-size:15px;margin:16px 4px 0;opacity:0.75}
+#uu-list .empty{display:block;font-size:15px;margin:10px 4px}
+.uu-more{display:flex;justify-content:center;margin:14px 0 8px}
+.uu-more button{height:44px;padding:0 20px;border-radius:999px;border:2.5px dashed #172038;background:#FFFFFF;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:15px;cursor:pointer}
+.uu-more .kal{font-size:14px;opacity:0.6}
+</style>
+<style>
+#uu-root *{-webkit-user-select:none;user-select:none;box-sizing:border-box}
+#uu-root input{-webkit-user-select:text;user-select:text}
+.uu-ing{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:transparent;padding:6px 2px;border-radius:16px;cursor:pointer;color:#F6EFE1;position:relative}
+.uu-ing img{width:66px;height:66px;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(0,0,0,0.3))}
+.uu-ing span{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px}
+.uu-ing.on{background:rgba(198,255,77,0.18);box-shadow:inset 0 0 0 3px #C6FF4D}
+.uu-ing.on::after{content:"";position:absolute;right:8px;top:6px;width:20px;height:20px;border-radius:20px;background:#C6FF4D url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5 L6.5 12 L13 4.5' stroke='%23172038' stroke-width='2.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;border:2px solid #172038}
+#uu-basket{display:flex;gap:8px;align-items:center;overflow-x:auto;height:64px;padding:0 2px}
+.uu-chip{position:relative;flex-shrink:0;display:flex}
+.uu-chip .st{width:56px;height:56px;border-radius:16px;border:2.5px solid #172038;background:#FBF4E6;padding:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.uu-chip .st img{width:100%;height:100%;object-fit:contain}
+.uu-chip.today .st{background:#FFD23F;box-shadow:3px 3px 0 #FF6FB0}
+.uu-chip .tg{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;letter-spacing:0.5px;background:#172038;color:#FFD23F;padding:1px 5px;border-radius:6px}
+.uu-chip .x{position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:22px;border:2px solid #172038;background:#FFFFFF;color:#172038;font-size:14px;line-height:1;padding:0;cursor:pointer}
+#uu-res{position:absolute;left:0;right:0;top:56px;bottom:0;background:#FBF4E6;border-radius:24px 24px 0 0;border-top:4px solid #172038;display:none;transform:translateY(102%);transition:transform 0.28s cubic-bezier(.2,.9,.3,1);z-index:30;color:#172038}
+#uu-list{position:absolute;left:0;right:0;top:44px;bottom:0;overflow-y:auto;padding:4px 14px 30px}
+.uu-card{display:flex;gap:10px;background:#FFFFFF;border:3px solid #172038;border-radius:18px;padding:10px;margin:10px 0;box-shadow:4px 4px 0 #C6FF4D}
+.uu-card.sw{box-shadow:4px 4px 0 #FF6FB0;border-style:dashed}
+.uu-card .dish{width:76px;height:76px;object-fit:contain;flex-shrink:0}
+.uu-card .bd{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.uu-card .top{display:flex;align-items:flex-start;gap:6px;justify-content:space-between}
+.uu-card .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:17px;line-height:1.05}
+.uu-card .swb{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:11px;letter-spacing:0.5px;background:#FF6FB0;padding:2px 6px;border-radius:6px;border:2px solid #172038;flex-shrink:0}
+.uu-card .meta{font-family:Kalam,cursive;font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px}
+.uu-card .md{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;padding:1px 6px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .bar{height:8px;border-radius:8px;border:2px solid #172038;overflow:hidden;background:#F6EFE1}
+.uu-card .bar span{display:block;height:100%;background:#C6FF4D}
+.uu-card .note{font-size:13px;font-weight:700;line-height:1.25;background:rgba(255,111,176,0.14);padding:5px 7px;border-radius:8px}
+.uu-card .row{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:12px}
+.uu-card .row b{font-family:Kalam,cursive;font-size:12px;margin-right:2px;opacity:0.75}
+.uu-card .row.cb{font-family:Kalam,cursive;font-weight:700;opacity:0.65}
+.uu-card .hv,.uu-card .nd{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:12px;padding:2px 7px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .hv{background:#C6FF4D}.uu-card .nd{background:#FFFFFF;border-style:dashed}
+.uu-card .act{display:flex;gap:6px;margin-top:2px}
+.uu-card .act button{height:36px;padding:0 12px;border-radius:12px;border:2.5px solid #172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px;cursor:pointer}
+.uu-card .tn{background:#172038;color:#FFD23F}.uu-card .wk{background:#FFFFFF;color:#172038}
+#uu-list .sec{display:block;font-family:Kalam,cursive;font-weight:700;font-size:15px;margin:16px 4px 0;opacity:0.75}
+#uu-list .empty{display:block;font-size:15px;margin:10px 4px}
+.uu-more{display:flex;justify-content:center;margin:14px 0 8px}
+.uu-more button{height:44px;padding:0 20px;border-radius:999px;border:2.5px dashed #172038;background:#FFFFFF;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:15px;cursor:pointer}
+.uu-more .kal{font-size:14px;opacity:0.6}
+</style>
+<style>
+#uu-root *{-webkit-user-select:none;user-select:none;box-sizing:border-box}
+#uu-root input{-webkit-user-select:text;user-select:text}
+.uu-ing{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:transparent;padding:6px 2px;border-radius:16px;cursor:pointer;color:#F6EFE1;position:relative}
+.uu-ing img{width:66px;height:66px;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(0,0,0,0.3))}
+.uu-ing span{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px}
+.uu-ing.on{background:rgba(198,255,77,0.18);box-shadow:inset 0 0 0 3px #C6FF4D}
+.uu-ing.on::after{content:"";position:absolute;right:8px;top:6px;width:20px;height:20px;border-radius:20px;background:#C6FF4D url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5 L6.5 12 L13 4.5' stroke='%23172038' stroke-width='2.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;border:2px solid #172038}
+#uu-basket{display:flex;gap:8px;align-items:center;overflow-x:auto;height:64px;padding:0 2px}
+.uu-chip{position:relative;flex-shrink:0;display:flex}
+.uu-chip .st{width:56px;height:56px;border-radius:16px;border:2.5px solid #172038;background:#FBF4E6;padding:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.uu-chip .st img{width:100%;height:100%;object-fit:contain}
+.uu-chip.today .st{background:#FFD23F;box-shadow:3px 3px 0 #FF6FB0}
+.uu-chip .tg{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;letter-spacing:0.5px;background:#172038;color:#FFD23F;padding:1px 5px;border-radius:6px}
+.uu-chip .x{position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:22px;border:2px solid #172038;background:#FFFFFF;color:#172038;font-size:14px;line-height:1;padding:0;cursor:pointer}
+#uu-res{position:absolute;left:0;right:0;top:56px;bottom:0;background:#FBF4E6;border-radius:24px 24px 0 0;border-top:4px solid #172038;display:none;transform:translateY(102%);transition:transform 0.28s cubic-bezier(.2,.9,.3,1);z-index:30;color:#172038}
+#uu-list{position:absolute;left:0;right:0;top:44px;bottom:0;overflow-y:auto;padding:4px 14px 30px}
+.uu-card{display:flex;gap:10px;background:#FFFFFF;border:3px solid #172038;border-radius:18px;padding:10px;margin:10px 0;box-shadow:4px 4px 0 #C6FF4D}
+.uu-card.sw{box-shadow:4px 4px 0 #FF6FB0;border-style:dashed}
+.uu-card .dish{width:76px;height:76px;object-fit:contain;flex-shrink:0}
+.uu-card .bd{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.uu-card .top{display:flex;align-items:flex-start;gap:6px;justify-content:space-between}
+.uu-card .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:17px;line-height:1.05}
+.uu-card .swb{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:11px;letter-spacing:0.5px;background:#FF6FB0;padding:2px 6px;border-radius:6px;border:2px solid #172038;flex-shrink:0}
+.uu-card .meta{font-family:Kalam,cursive;font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px}
+.uu-card .md{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;padding:1px 6px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .bar{height:8px;border-radius:8px;border:2px solid #172038;overflow:hidden;background:#F6EFE1}
+.uu-card .bar span{display:block;height:100%;background:#C6FF4D}
+.uu-card .note{font-size:13px;font-weight:700;line-height:1.25;background:rgba(255,111,176,0.14);padding:5px 7px;border-radius:8px}
+.uu-card .row{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:12px}
+.uu-card .row b{font-family:Kalam,cursive;font-size:12px;margin-right:2px;opacity:0.75}
+.uu-card .row.cb{font-family:Kalam,cursive;font-weight:700;opacity:0.65}
+.uu-card .hv,.uu-card .nd{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:12px;padding:2px 7px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .hv{background:#C6FF4D}.uu-card .nd{background:#FFFFFF;border-style:dashed}
+.uu-card .act{display:flex;gap:6px;margin-top:2px}
+.uu-card .act button{height:36px;padding:0 12px;border-radius:12px;border:2.5px solid #172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px;cursor:pointer}
+.uu-card .tn{background:#172038;color:#FFD23F}.uu-card .wk{background:#FFFFFF;color:#172038}
+#uu-list .sec{display:block;font-family:Kalam,cursive;font-weight:700;font-size:15px;margin:16px 4px 0;opacity:0.75}
+#uu-list .empty{display:block;font-size:15px;margin:10px 4px}
+.uu-more{display:flex;justify-content:center;margin:14px 0 8px}
+.uu-more button{height:44px;padding:0 20px;border-radius:999px;border:2.5px dashed #172038;background:#FFFFFF;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:15px;cursor:pointer}
+.uu-more .kal{font-size:14px;opacity:0.6}
+</style>
+<style>
+#uu-root *{-webkit-user-select:none;user-select:none;box-sizing:border-box}
+#uu-root input{-webkit-user-select:text;user-select:text}
+.uu-ing{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:transparent;padding:6px 2px;border-radius:16px;cursor:pointer;color:#F6EFE1;position:relative}
+.uu-ing img{width:66px;height:66px;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(0,0,0,0.3))}
+.uu-ing span{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px}
+.uu-ing.on{background:rgba(198,255,77,0.18);box-shadow:inset 0 0 0 3px #C6FF4D}
+.uu-ing.on::after{content:"";position:absolute;right:8px;top:6px;width:20px;height:20px;border-radius:20px;background:#C6FF4D url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5 L6.5 12 L13 4.5' stroke='%23172038' stroke-width='2.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;border:2px solid #172038}
+#uu-basket{display:flex;gap:8px;align-items:center;overflow-x:auto;height:64px;padding:0 2px}
+.uu-chip{position:relative;flex-shrink:0;display:flex}
+.uu-chip .st{width:56px;height:56px;border-radius:16px;border:2.5px solid #172038;background:#FBF4E6;padding:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.uu-chip .st img{width:100%;height:100%;object-fit:contain}
+.uu-chip.today .st{background:#FFD23F;box-shadow:3px 3px 0 #FF6FB0}
+.uu-chip .tg{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;letter-spacing:0.5px;background:#172038;color:#FFD23F;padding:1px 5px;border-radius:6px}
+.uu-chip .x{position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:22px;border:2px solid #172038;background:#FFFFFF;color:#172038;font-size:14px;line-height:1;padding:0;cursor:pointer}
+#uu-res{position:absolute;left:0;right:0;top:56px;bottom:0;background:#FBF4E6;border-radius:24px 24px 0 0;border-top:4px solid #172038;display:none;transform:translateY(102%);transition:transform 0.28s cubic-bezier(.2,.9,.3,1);z-index:30;color:#172038}
+#uu-list{position:absolute;left:0;right:0;top:44px;bottom:0;overflow-y:auto;padding:4px 14px 30px}
+.uu-card{display:flex;gap:10px;background:#FFFFFF;border:3px solid #172038;border-radius:18px;padding:10px;margin:10px 0;box-shadow:4px 4px 0 #C6FF4D}
+.uu-card.sw{box-shadow:4px 4px 0 #FF6FB0;border-style:dashed}
+.uu-card .dish{width:76px;height:76px;object-fit:contain;flex-shrink:0}
+.uu-card .bd{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.uu-card .top{display:flex;align-items:flex-start;gap:6px;justify-content:space-between}
+.uu-card .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:17px;line-height:1.05}
+.uu-card .swb{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:11px;letter-spacing:0.5px;background:#FF6FB0;padding:2px 6px;border-radius:6px;border:2px solid #172038;flex-shrink:0}
+.uu-card .meta{font-family:Kalam,cursive;font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px}
+.uu-card .md{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;padding:1px 6px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .bar{height:8px;border-radius:8px;border:2px solid #172038;overflow:hidden;background:#F6EFE1}
+.uu-card .bar span{display:block;height:100%;background:#C6FF4D}
+.uu-card .note{font-size:13px;font-weight:700;line-height:1.25;background:rgba(255,111,176,0.14);padding:5px 7px;border-radius:8px}
+.uu-card .row{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:12px}
+.uu-card .row b{font-family:Kalam,cursive;font-size:12px;margin-right:2px;opacity:0.75}
+.uu-card .row.cb{font-family:Kalam,cursive;font-weight:700;opacity:0.65}
+.uu-card .hv,.uu-card .nd{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:12px;padding:2px 7px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .hv{background:#C6FF4D}.uu-card .nd{background:#FFFFFF;border-style:dashed}
+.uu-card .act{display:flex;gap:6px;margin-top:2px}
+.uu-card .act button{height:36px;padding:0 12px;border-radius:12px;border:2.5px solid #172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px;cursor:pointer}
+.uu-card .tn{background:#172038;color:#FFD23F}.uu-card .wk{background:#FFFFFF;color:#172038}
+#uu-list .sec{display:block;font-family:Kalam,cursive;font-weight:700;font-size:15px;margin:16px 4px 0;opacity:0.75}
+#uu-list .empty{display:block;font-size:15px;margin:10px 4px}
+.uu-more{display:flex;justify-content:center;margin:14px 0 8px}
+.uu-more button{height:44px;padding:0 20px;border-radius:999px;border:2.5px dashed #172038;background:#FFFFFF;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:15px;cursor:pointer}
+.uu-more .kal{font-size:14px;opacity:0.6}
+</style>
+<style>
+#uu-root *{-webkit-user-select:none;user-select:none;box-sizing:border-box}
+#uu-root input{-webkit-user-select:text;user-select:text}
+.uu-ing{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:transparent;padding:6px 2px;border-radius:16px;cursor:pointer;color:#F6EFE1;position:relative}
+.uu-ing img{width:66px;height:66px;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(0,0,0,0.3))}
+.uu-ing span{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px}
+.uu-ing.on{background:rgba(198,255,77,0.18);box-shadow:inset 0 0 0 3px #C6FF4D}
+.uu-ing.on::after{content:"";position:absolute;right:8px;top:6px;width:20px;height:20px;border-radius:20px;background:#C6FF4D url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5 L6.5 12 L13 4.5' stroke='%23172038' stroke-width='2.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;border:2px solid #172038}
+#uu-basket{display:flex;gap:8px;align-items:center;overflow-x:auto;height:64px;padding:0 2px}
+.uu-chip{position:relative;flex-shrink:0;display:flex}
+.uu-chip .st{width:56px;height:56px;border-radius:16px;border:2.5px solid #172038;background:#FBF4E6;padding:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.uu-chip .st img{width:100%;height:100%;object-fit:contain}
+.uu-chip.today .st{background:#FFD23F;box-shadow:3px 3px 0 #FF6FB0}
+.uu-chip .tg{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;letter-spacing:0.5px;background:#172038;color:#FFD23F;padding:1px 5px;border-radius:6px}
+.uu-chip .x{position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:22px;border:2px solid #172038;background:#FFFFFF;color:#172038;font-size:14px;line-height:1;padding:0;cursor:pointer}
+#uu-res{position:absolute;left:0;right:0;top:56px;bottom:0;background:#FBF4E6;border-radius:24px 24px 0 0;border-top:4px solid #172038;display:none;transform:translateY(102%);transition:transform 0.28s cubic-bezier(.2,.9,.3,1);z-index:30;color:#172038}
+#uu-list{position:absolute;left:0;right:0;top:44px;bottom:0;overflow-y:auto;padding:4px 14px 30px}
+.uu-card{display:flex;gap:10px;background:#FFFFFF;border:3px solid #172038;border-radius:18px;padding:10px;margin:10px 0;box-shadow:4px 4px 0 #C6FF4D}
+.uu-card.sw{box-shadow:4px 4px 0 #FF6FB0;border-style:dashed}
+.uu-card .dish{width:76px;height:76px;object-fit:contain;flex-shrink:0}
+.uu-card .bd{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.uu-card .top{display:flex;align-items:flex-start;gap:6px;justify-content:space-between}
+.uu-card .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:17px;line-height:1.05}
+.uu-card .swb{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:11px;letter-spacing:0.5px;background:#FF6FB0;padding:2px 6px;border-radius:6px;border:2px solid #172038;flex-shrink:0}
+.uu-card .meta{font-family:Kalam,cursive;font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px}
+.uu-card .md{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;padding:1px 6px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .bar{height:8px;border-radius:8px;border:2px solid #172038;overflow:hidden;background:#F6EFE1}
+.uu-card .bar span{display:block;height:100%;background:#C6FF4D}
+.uu-card .note{font-size:13px;font-weight:700;line-height:1.25;background:rgba(255,111,176,0.14);padding:5px 7px;border-radius:8px}
+.uu-card .row{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:12px}
+.uu-card .row b{font-family:Kalam,cursive;font-size:12px;margin-right:2px;opacity:0.75}
+.uu-card .row.cb{font-family:Kalam,cursive;font-weight:700;opacity:0.65}
+.uu-card .hv,.uu-card .nd{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:12px;padding:2px 7px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .hv{background:#C6FF4D}.uu-card .nd{background:#FFFFFF;border-style:dashed}
+.uu-card .act{display:flex;gap:6px;margin-top:2px}
+.uu-card .act button{height:36px;padding:0 12px;border-radius:12px;border:2.5px solid #172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px;cursor:pointer}
+.uu-card .tn{background:#172038;color:#FFD23F}.uu-card .wk{background:#FFFFFF;color:#172038}
+#uu-list .sec{display:block;font-family:Kalam,cursive;font-weight:700;font-size:15px;margin:16px 4px 0;opacity:0.75}
+#uu-list .empty{display:block;font-size:15px;margin:10px 4px}
+.uu-more{display:flex;justify-content:center;margin:14px 0 8px}
+.uu-more button{height:44px;padding:0 20px;border-radius:999px;border:2.5px dashed #172038;background:#FFFFFF;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:15px;cursor:pointer}
+.uu-more .kal{font-size:14px;opacity:0.6}
+</style>
+<style>
+#uu-root *{-webkit-user-select:none;user-select:none;box-sizing:border-box}
+#uu-root input{-webkit-user-select:text;user-select:text}
+.uu-ing{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:transparent;padding:6px 2px;border-radius:16px;cursor:pointer;color:#F6EFE1;position:relative}
+.uu-ing img{width:66px;height:66px;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(0,0,0,0.3))}
+.uu-ing span{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px}
+.uu-ing.on{background:rgba(198,255,77,0.18);box-shadow:inset 0 0 0 3px #C6FF4D}
+.uu-ing.on::after{content:"";position:absolute;right:8px;top:6px;width:20px;height:20px;border-radius:20px;background:#C6FF4D url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5 L6.5 12 L13 4.5' stroke='%23172038' stroke-width='2.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;border:2px solid #172038}
+#uu-basket{display:flex;gap:8px;align-items:center;overflow-x:auto;height:64px;padding:0 2px}
+.uu-chip{position:relative;flex-shrink:0;display:flex}
+.uu-chip .st{width:56px;height:56px;border-radius:16px;border:2.5px solid #172038;background:#FBF4E6;padding:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.uu-chip .st img{width:100%;height:100%;object-fit:contain}
+.uu-chip.today .st{background:#FFD23F;box-shadow:3px 3px 0 #FF6FB0}
+.uu-chip .tg{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;letter-spacing:0.5px;background:#172038;color:#FFD23F;padding:1px 5px;border-radius:6px}
+.uu-chip .x{position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:22px;border:2px solid #172038;background:#FFFFFF;color:#172038;font-size:14px;line-height:1;padding:0;cursor:pointer}
+#uu-res{position:absolute;left:0;right:0;top:56px;bottom:0;background:#FBF4E6;border-radius:24px 24px 0 0;border-top:4px solid #172038;display:none;transform:translateY(102%);transition:transform 0.28s cubic-bezier(.2,.9,.3,1);z-index:30;color:#172038}
+#uu-list{position:absolute;left:0;right:0;top:44px;bottom:0;overflow-y:auto;padding:4px 14px 30px}
+.uu-card{display:flex;gap:10px;background:#FFFFFF;border:3px solid #172038;border-radius:18px;padding:10px;margin:10px 0;box-shadow:4px 4px 0 #C6FF4D}
+.uu-card.sw{box-shadow:4px 4px 0 #FF6FB0;border-style:dashed}
+.uu-card .dish{width:76px;height:76px;object-fit:contain;flex-shrink:0}
+.uu-card .bd{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.uu-card .top{display:flex;align-items:flex-start;gap:6px;justify-content:space-between}
+.uu-card .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:17px;line-height:1.05}
+.uu-card .swb{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:11px;letter-spacing:0.5px;background:#FF6FB0;padding:2px 6px;border-radius:6px;border:2px solid #172038;flex-shrink:0}
+.uu-card .meta{font-family:Kalam,cursive;font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px}
+.uu-card .md{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;padding:1px 6px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .bar{height:8px;border-radius:8px;border:2px solid #172038;overflow:hidden;background:#F6EFE1}
+.uu-card .bar span{display:block;height:100%;background:#C6FF4D}
+.uu-card .note{font-size:13px;font-weight:700;line-height:1.25;background:rgba(255,111,176,0.14);padding:5px 7px;border-radius:8px}
+.uu-card .row{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:12px}
+.uu-card .row b{font-family:Kalam,cursive;font-size:12px;margin-right:2px;opacity:0.75}
+.uu-card .row.cb{font-family:Kalam,cursive;font-weight:700;opacity:0.65}
+.uu-card .hv,.uu-card .nd{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:12px;padding:2px 7px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .hv{background:#C6FF4D}.uu-card .nd{background:#FFFFFF;border-style:dashed}
+.uu-card .act{display:flex;gap:6px;margin-top:2px}
+.uu-card .act button{height:36px;padding:0 12px;border-radius:12px;border:2.5px solid #172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px;cursor:pointer}
+.uu-card .tn{background:#172038;color:#FFD23F}.uu-card .wk{background:#FFFFFF;color:#172038}
+#uu-list .sec{display:block;font-family:Kalam,cursive;font-weight:700;font-size:15px;margin:16px 4px 0;opacity:0.75}
+#uu-list .empty{display:block;font-size:15px;margin:10px 4px}
+.uu-more{display:flex;justify-content:center;margin:14px 0 8px}
+.uu-more button{height:44px;padding:0 20px;border-radius:999px;border:2.5px dashed #172038;background:#FFFFFF;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:15px;cursor:pointer}
+.uu-more .kal{font-size:14px;opacity:0.6}
+</style>
+<style>
+#uu-root *{-webkit-user-select:none;user-select:none;box-sizing:border-box}
+#uu-root input{-webkit-user-select:text;user-select:text}
+.uu-ing{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:transparent;padding:6px 2px;border-radius:16px;cursor:pointer;color:#F6EFE1;position:relative}
+.uu-ing img{width:66px;height:66px;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(0,0,0,0.3))}
+.uu-ing span{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px}
+.uu-ing.on{background:rgba(198,255,77,0.18);box-shadow:inset 0 0 0 3px #C6FF4D}
+.uu-ing.on::after{content:"";position:absolute;right:8px;top:6px;width:20px;height:20px;border-radius:20px;background:#C6FF4D url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5 L6.5 12 L13 4.5' stroke='%23172038' stroke-width='2.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;border:2px solid #172038}
+#uu-basket{display:flex;gap:8px;align-items:center;overflow-x:auto;height:64px;padding:0 2px}
+.uu-chip{position:relative;flex-shrink:0;display:flex}
+.uu-chip .st{width:56px;height:56px;border-radius:16px;border:2.5px solid #172038;background:#FBF4E6;padding:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.uu-chip .st img{width:100%;height:100%;object-fit:contain}
+.uu-chip.today .st{background:#FFD23F;box-shadow:3px 3px 0 #FF6FB0}
+.uu-chip .tg{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;letter-spacing:0.5px;background:#172038;color:#FFD23F;padding:1px 5px;border-radius:6px}
+.uu-chip .x{position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:22px;border:2px solid #172038;background:#FFFFFF;color:#172038;font-size:14px;line-height:1;padding:0;cursor:pointer}
+#uu-res{position:absolute;left:0;right:0;top:56px;bottom:0;background:#FBF4E6;border-radius:24px 24px 0 0;border-top:4px solid #172038;display:none;transform:translateY(102%);transition:transform 0.28s cubic-bezier(.2,.9,.3,1);z-index:30;color:#172038}
+#uu-list{position:absolute;left:0;right:0;top:44px;bottom:0;overflow-y:auto;padding:4px 14px 30px}
+.uu-card{display:flex;gap:10px;background:#FFFFFF;border:3px solid #172038;border-radius:18px;padding:10px;margin:10px 0;box-shadow:4px 4px 0 #C6FF4D}
+.uu-card.sw{box-shadow:4px 4px 0 #FF6FB0;border-style:dashed}
+.uu-card .dish{width:76px;height:76px;object-fit:contain;flex-shrink:0}
+.uu-card .bd{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.uu-card .top{display:flex;align-items:flex-start;gap:6px;justify-content:space-between}
+.uu-card .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:17px;line-height:1.05}
+.uu-card .swb{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:11px;letter-spacing:0.5px;background:#FF6FB0;padding:2px 6px;border-radius:6px;border:2px solid #172038;flex-shrink:0}
+.uu-card .meta{font-family:Kalam,cursive;font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px}
+.uu-card .md{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;padding:1px 6px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .bar{height:8px;border-radius:8px;border:2px solid #172038;overflow:hidden;background:#F6EFE1}
+.uu-card .bar span{display:block;height:100%;background:#C6FF4D}
+.uu-card .note{font-size:13px;font-weight:700;line-height:1.25;background:rgba(255,111,176,0.14);padding:5px 7px;border-radius:8px}
+.uu-card .row{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:12px}
+.uu-card .row b{font-family:Kalam,cursive;font-size:12px;margin-right:2px;opacity:0.75}
+.uu-card .row.cb{font-family:Kalam,cursive;font-weight:700;opacity:0.65}
+.uu-card .hv,.uu-card .nd{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:12px;padding:2px 7px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .hv{background:#C6FF4D}.uu-card .nd{background:#FFFFFF;border-style:dashed}
+.uu-card .act{display:flex;gap:6px;margin-top:2px}
+.uu-card .act button{height:36px;padding:0 12px;border-radius:12px;border:2.5px solid #172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px;cursor:pointer}
+.uu-card .tn{background:#172038;color:#FFD23F}.uu-card .wk{background:#FFFFFF;color:#172038}
+#uu-list .sec{display:block;font-family:Kalam,cursive;font-weight:700;font-size:15px;margin:16px 4px 0;opacity:0.75}
+#uu-list .empty{display:block;font-size:15px;margin:10px 4px}
+.uu-more{display:flex;justify-content:center;margin:14px 0 8px}
+.uu-more button{height:44px;padding:0 20px;border-radius:999px;border:2.5px dashed #172038;background:#FFFFFF;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:15px;cursor:pointer}
+.uu-more .kal{font-size:14px;opacity:0.6}
+</style>
+<style>
+#uu-root *{-webkit-user-select:none;user-select:none;box-sizing:border-box}
+#uu-root input{-webkit-user-select:text;user-select:text}
+.uu-ing{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:transparent;padding:6px 2px;border-radius:16px;cursor:pointer;color:#F6EFE1;position:relative}
+.uu-ing img{width:66px;height:66px;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(0,0,0,0.3))}
+.uu-ing span{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px}
+.uu-ing.on{background:rgba(198,255,77,0.18);box-shadow:inset 0 0 0 3px #C6FF4D}
+.uu-ing.on::after{content:"";position:absolute;right:8px;top:6px;width:20px;height:20px;border-radius:20px;background:#C6FF4D url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5 L6.5 12 L13 4.5' stroke='%23172038' stroke-width='2.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat;border:2px solid #172038}
+#uu-basket{display:flex;gap:8px;align-items:center;overflow-x:auto;height:64px;padding:0 2px}
+.uu-chip{position:relative;flex-shrink:0;display:flex}
+.uu-chip .st{width:56px;height:56px;border-radius:16px;border:2.5px solid #172038;background:#FBF4E6;padding:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.uu-chip .st img{width:100%;height:100%;object-fit:contain}
+.uu-chip.today .st{background:#FFD23F;box-shadow:3px 3px 0 #FF6FB0}
+.uu-chip .tg{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;letter-spacing:0.5px;background:#172038;color:#FFD23F;padding:1px 5px;border-radius:6px}
+.uu-chip .x{position:absolute;right:-6px;top:-6px;width:22px;height:22px;border-radius:22px;border:2px solid #172038;background:#FFFFFF;color:#172038;font-size:14px;line-height:1;padding:0;cursor:pointer}
+#uu-res{position:absolute;left:0;right:0;top:56px;bottom:0;background:#FBF4E6;border-radius:24px 24px 0 0;border-top:4px solid #172038;display:none;transform:translateY(102%);transition:transform 0.28s cubic-bezier(.2,.9,.3,1);z-index:30;color:#172038}
+#uu-list{position:absolute;left:0;right:0;top:44px;bottom:0;overflow-y:auto;padding:4px 14px 30px}
+.uu-card{display:flex;gap:10px;background:#FFFFFF;border:3px solid #172038;border-radius:18px;padding:10px;margin:10px 0;box-shadow:4px 4px 0 #C6FF4D}
+.uu-card.sw{box-shadow:4px 4px 0 #FF6FB0;border-style:dashed}
+.uu-card .dish{width:76px;height:76px;object-fit:contain;flex-shrink:0}
+.uu-card .bd{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.uu-card .top{display:flex;align-items:flex-start;gap:6px;justify-content:space-between}
+.uu-card .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:17px;line-height:1.05}
+.uu-card .swb{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:11px;letter-spacing:0.5px;background:#FF6FB0;padding:2px 6px;border-radius:6px;border:2px solid #172038;flex-shrink:0}
+.uu-card .meta{font-family:Kalam,cursive;font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px}
+.uu-card .md{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;padding:1px 6px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .bar{height:8px;border-radius:8px;border:2px solid #172038;overflow:hidden;background:#F6EFE1}
+.uu-card .bar span{display:block;height:100%;background:#C6FF4D}
+.uu-card .note{font-size:13px;font-weight:700;line-height:1.25;background:rgba(255,111,176,0.14);padding:5px 7px;border-radius:8px}
+.uu-card .row{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:12px}
+.uu-card .row b{font-family:Kalam,cursive;font-size:12px;margin-right:2px;opacity:0.75}
+.uu-card .row.cb{font-family:Kalam,cursive;font-weight:700;opacity:0.65}
+.uu-card .hv,.uu-card .nd{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:12px;padding:2px 7px;border-radius:999px;border:1.5px solid #172038}
+.uu-card .hv{background:#C6FF4D}.uu-card .nd{background:#FFFFFF;border-style:dashed}
+.uu-card .act{display:flex;gap:6px;margin-top:2px}
+.uu-card .act button{height:36px;padding:0 12px;border-radius:12px;border:2.5px solid #172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px;cursor:pointer}
+.uu-card .tn{background:#172038;color:#FFD23F}.uu-card .wk{background:#FFFFFF;color:#172038}
+#uu-list .sec{display:block;font-family:Kalam,cursive;font-weight:700;font-size:15px;margin:16px 4px 0;opacity:0.75}
+#uu-list .empty{display:block;font-size:15px;margin:10px 4px}
+.uu-more{display:flex;justify-content:center;margin:14px 0 8px}
+.uu-more button{height:44px;padding:0 20px;border-radius:999px;border:2.5px dashed #172038;background:#FFFFFF;color:#172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:15px;cursor:pointer}
+.uu-more .kal{font-size:14px;opacity:0.6}
+</style>
+<style>
+#rc-root *{box-sizing:border-box}
+.rc-chip{flex-shrink:0;height:34px;padding:0 12px;border-radius:999px;border:2.5px solid #F6EFE1;background:transparent;color:#F6EFE1;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:13px;letter-spacing:0.3px;cursor:pointer;white-space:nowrap}
+.rc-chip.on{background:#C6FF4D;border-color:#C6FF4D;color:#172038}
+.rc-card{position:relative;background:#FBF4E6;border:3px solid #172038;border-radius:18px;margin:0 0 10px;box-shadow:3px 4px 0 rgba(0,0,0,0.35);color:#172038}
+.rc-card.no{opacity:0.6}
+.rc-main{display:flex;align-items:center;gap:10px;width:100%;min-height:84px;padding:8px 54px 8px 8px;border:none;background:transparent;text-align:left;color:#172038;cursor:pointer}
+.rc-main img{width:68px;height:68px;object-fit:contain;flex-shrink:0}
+.rc-main .bd{display:flex;flex-direction:column;gap:4px;min-width:0}
+.rc-main .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:18px;line-height:1.05}
+.rc-main .nw{display:inline-block;font-size:10px;letter-spacing:0.5px;padding:1px 6px;border-radius:999px;background:#FF6FB0;border:1.5px solid #172038;vertical-align:2px}
+.rc-main .meta{display:flex;align-items:center;gap:6px;font-family:Kalam,cursive;font-weight:700;font-size:14px}
+.rc-main .md{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:75%;font-size:10px;padding:1px 7px;border-radius:999px;border:1.5px solid #172038}
+.rc-main .nf{font-family:Kalam,cursive;font-size:13px;opacity:0.75}
+.rc-fav{position:absolute;right:6px;top:18px;width:44px;height:44px;border:none;background:transparent;font-size:28px;line-height:1;color:#FF4F7B;cursor:pointer;padding:0}
+.rc-act{display:flex;gap:8px;padding:0 10px 10px 86px}
+.rc-act .ck,.rc-act .wk{height:40px;padding:0 14px;border-radius:12px;border:2.5px solid #172038;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:14px;display:flex;align-items:center;text-decoration:none;cursor:pointer}
+.rc-act .ck{background:#172038;color:#FFD23F}.rc-act .wk{background:#FFFFFF;color:#172038}
+.rc-empty{display:block;color:#F6EFE1;font-size:16px;text-align:center;margin:30px 10px}
+</style>
+
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#0B1022;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+@view-transition{navigation:auto}
+::view-transition-old(root),::view-transition-new(root){animation-duration:0.14s}
+#dc-frame{position:absolute;left:var(--l,0);top:var(--t,0);width:390px;height:844px;transform:scale(var(--k,1));transform-origin:0 0;background:#172038}
+#dc-bar{position:absolute;left:var(--bl,0);top:var(--bt,760px);width:390px;height:84px;transform:scale(var(--bk,1));transform-origin:0 0;z-index:5;background:#172038}
+#dc-stage{position:relative;overflow:hidden;width:390px;height:844px}
+.snav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;height:58px;text-decoration:none;color:#F6EFE1;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;opacity:0.8;border-radius:14px;-webkit-tap-highlight-color:transparent}.snav-s{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#172038;box-shadow:0 0 0 2.5px #FFFFFF,0 0 0 4.5px #172038;transform:rotate(var(--r));transition:transform .18s cubic-bezier(.2,1.4,.4,1)}.snav:hover .snav-s,.snav:focus-visible .snav-s,.snav:active .snav-s{transform:rotate(var(--r)) scale(1.2)}.snav,.snav:hover,.snav:visited{color:#F6EFE1}.snav.on,.snav.on:hover{opacity:1;color:#C6FF4D}.snav.on .snav-s{box-shadow:0 0 0 2.5px #FFFFFF,0 0 0 4.5px #172038,2px 4px 0 4.5px rgba(0,0,0,0.45)}.snav:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}@media (prefers-reduced-motion: reduce){.snav-s{transition:none}}.dcbar{position:absolute;left:12px;right:12px;bottom:14px;height:68px;border-radius:22px;background:#0E1428;border:2px solid rgba(246,239,225,0.15);display:flex;align-items:center;gap:4px;padding:0 6px;box-sizing:border-box}.dcnav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;border-radius:16px;height:52px;text-decoration:none;border:none;background:transparent;cursor:pointer}.dcnav.on{background:#C6FF4D;color:#172038}.dcnav:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}.dcback{flex:1;height:48px;border-radius:16px;border:2px solid rgba(246,239,225,0.4);background:transparent;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:17px;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;cursor:pointer}.dcback.home{flex:0 0 auto;padding:0 18px;background:#C6FF4D;border-color:#C6FF4D;color:#172038}</style>
+</head><body data-extra="84">
+<div id="dc-frame"><div id="dc-stage"></div></div><div id="dc-bar"><div class="dcbar" role="navigation" aria-label="Back"><button type="button" class="dcback" onclick="if (history.length > 1) history.back(); else location.href = 'Today.html?v=1793458133'">‹ BACK</button><a class="dcback home" href="Today.html?v=1793458133" aria-label="Home"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M20.0 12.0 L22.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 17.6 L19.4 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 20.0 L12.0 22.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 17.6 L4.7 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M4.0 12.0 L1.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 6.4 L4.7 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 4.0 L12.0 1.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 6.4 L19.4 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg><span>HOME</span></a></div></div>
+<script type="text/x-dc-template" id="dc-tpl">
+<div id="rc-root" style="width: 390px; height: 844px; position: relative; overflow: hidden; background-color: #172038; background-image: radial-gradient(rgba(255,255,255,0.05) 1.2px, transparent 1.2px); background-size: 18px 18px; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #F6EFE1">
+  <a href="PlanWeek.html?v=1793458133" class="kal" style="position: absolute; left: 16px; top: 18px; color: #F6EFE1; font-size: 15px; text-decoration: underline">‹ kitchen</a>
+  <span class="bri" style="position: absolute; left: 16px; top: 42px; font-size: 34px; line-height: 1; color: #C6FF4D; text-shadow: 3px 3px 0 #FF6FB0">RECIPES</span>
+  <label style="position: absolute; left: 16px; right: 16px; top: 90px; height: 46px; border-radius: 14px; background: #FBF4E6; border: 3px solid #172038; display: flex; align-items: center; gap: 8px; padding: 0 12px; color: #172038">
+    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5" fill="none" stroke="#172038" stroke-width="2.6"></circle><path d="M15 15 L21 21" stroke="#172038" stroke-width="2.8" stroke-linecap="round"></path></svg>
+    <input id="rc-search" type="search" placeholder="search, e.g. curry or tofu" aria-label="Search recipes" style="flex: 1; border: none; background: transparent; font-size: 16px; font-family: inherit; color: #172038; outline: none"></label>
+  <div id="rc-chips" role="group" aria-label="Show" style="position: absolute; left: 0; right: 0; top: 146px; height: 44px; display: flex; gap: 8px; overflow-x: auto; padding: 4px 16px; scrollbar-width: none"></div>
+  <span id="rc-n" class="kal" style="position: absolute; left: 18px; right: 16px; top: 194px; font-size: 14px; opacity: 0.8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"></span>
+  <div id="rc-list" style="position: absolute; left: 0; right: 0; top: 220px; bottom: 0; overflow-y: auto; padding: 4px 16px 120px"></div>
+  <span id="rc-toast" class="kal" aria-live="polite" style="position: absolute; left: 50%; bottom: 104px; transform: translateX(-50%); padding: 7px 16px; border-radius: 999px; background: #FBF4E6; color: #172038; border: 2.5px solid #172038; font-size: 15px; white-space: nowrap; opacity: 0; transition: opacity 0.2s; pointer-events: none"></span>
+<svg aria-hidden="true" width="0" height="0" style="position: absolute; width: 0; height: 0; overflow: hidden"><defs><filter id="tdie" x="-30%" y="-60%" width="160%" height="220%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="5" result="grow"></feMorphology><feGaussianBlur in="grow" stdDeviation="2.5" result="soft"></feGaussianBlur><feComponentTransfer in="soft" result="white-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feMorphology in="white-mask" operator="dilate" radius="3" result="key-grow"></feMorphology><feGaussianBlur in="key-grow" stdDeviation="1" result="key-soft"></feGaussianBlur><feComponentTransfer in="key-soft" result="key-mask"><feFuncA type="linear" slope="10" intercept="-4"></feFuncA></feComponentTransfer><feFlood flood-color="#111111"></feFlood><feComposite in2="key-mask" operator="in" result="key"></feComposite><feFlood flood-color="#FFFFFF"></feFlood><feComposite in2="white-mask" operator="in" result="white"></feComposite><feMerge><feMergeNode in="key"></feMergeNode><feMergeNode in="white"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs></svg>
+</div>
+</script>
+<script type="text/x-dc-logic" id="dc-logic">
+
+class Component extends DCLogic {
+  renderVals() {
+    if (!this._bound) { this._bound = true; this._tries = 0; const go = () => { if (!this.mount() && this._tries++ < 60) setTimeout(go, 50); }; setTimeout(go, 0); }
+    return {};
+  }
+  componentDidMount() { if (!this.mount()) { this._tries = 0; const go = () => { if (!this.mount() && this._tries++ < 60) setTimeout(go, 50); }; setTimeout(go, 50); } }
+  mount() {
+    const $ = (id) => document.getElementById(id);
+    const root = $('rc-root'); if (!root || !$('rc-list')) return false;
+    if (root.dataset.bound === '1') return true; root.dataset.bound = '1';
+    const IMG = {"gochunoodles": "img/41da8aa05cdec12b.png", "crispygnocchi": "img/4d71800cbddc8fe2.png", "smashtacos": "img/9e58f3cef6f6d821.png", "halloumiwraps": "img/bc59ba501ebf69fd.png", "chillirice": "img/ab9b233d347a5756.png", "harissaorzo": "img/76d72325b60f9eb3.png", "beefcurry": "img/0132b3490946e1eb.png", "gochupork": "img/d358448f78c510f7.png", "pbcurry": "img/43ad974cd8d05590.png", "alfredo2": "img/60bdc2eda1a954ea.png", "duckpancakes": "img/7f4f07c43eb41e66.png", "peruchicken": "img/d4432700ca9ce760.png", "misosalmon": "img/9593865849332e2f.png", "koftaflat": "img/36136394fb88c489.png", "tunabowl": "img/f52982fd2716c684.png", "tunapasta": "img/7541f0af70d1be97.png", "tunamelt": "img/ca887e1045a5cfc7.png", "marryme": "img/36dd457822ccaa42.png", "vodkapasta": "img/6bd47bb76b13b752.png", "fetapasta": "img/61af26d21f99973a.png", "assassina": "img/e64c8e28d4db5c11.png", "shawarma": "img/6f8f8e4ba38a0894.png", "greekchicken": "img/7f2744e80f5e669f.png", "butterchicken": "img/fff2f704c617650f.png", "hothoneysalmon": "img/bf5c44ffa6ab99b6.png", "jambalaya": "img/93e1e4a8218a48d8.png", "hainanese": "img/058b61d1812e12c9.png", "peanutnoodles": "img/2ae93e8a13475e68.png", "tarkadal": "img/45c07aea3d9ba623.png", "chana": "img/79f7a3bceeccf1a7.png", "saagpaneer": "img/081d9ce8e4549e5b.png", "keema": "img/e0dbea0b4d0ae462.png", "korma": "img/877cdf42e89465a7.png", "keralaprawn": "img/a1d6e737a188d1a6.png", "roganjosh": "img/0e29882d86536947.png", "greencurry": "img/8d055f4ee63dfc85.png", "panang": "img/31ba2782832bb591.png", "massaman": "img/772dc3c71569d0cc.png", "khaosoi": "img/e7a4b90bec0443ce.png", "redsquash": "img/f36ff2f86d572470.png", "tonkatsu": "img/d424ea47032bc948.png", "mapotofu": "img/cc0b6ab56dc49507.png", "aubkatsu": "img/ff1d31b5bb268fc8.png", "pavbhaji": "img/ab18dd15c73ff411.png", "beantacos": "img/b24ce9addd426bc5.png", "mejadra": "img/9b8f7eab95a90e46.png"}, RECIPES = [{"id": "gochujang-butter-noodles", "name": "Gochujang butter noodles", "min": 10, "mood": "tired", "dish": "gochunoodles", "region": "asia", "board": "CookGochunoodles.html?v=1793458133", "added": "", "tags": ["dairy", "eggs", "gluten", "milk", "sesame", "soya", "vegetarian"], "ing": "nest dried egg noodles butter gochujang soy sauce honey egg spring onion sesame seeds"}, {"id": "crispy-gnocchi", "name": "Crispy gnocchi, smashed peas & lemon", "min": 15, "mood": "tired", "dish": "crispygnocchi", "region": "med", "board": "CookGnocchi.html?v=1793458133", "added": "", "tags": ["dairy", "gluten", "milk", "vegetarian"], "ing": "gnocchi frozen peas lemon parmesan garlic clove olive oil", "vtags": ["gluten", "vegetarian"], "vswap": true, "ving": "gnocchi frozen peas lemon vegan hard cheese garlic clove olive oil"}, {"id": "smash-burger-tacos", "name": "Smash burger tacos", "min": 15, "mood": "tired", "dish": "smashtacos", "region": "world", "board": "CookTacos.html?v=1793458133", "added": "", "tags": ["beef", "dairy", "eggs", "gluten", "milk", "mustard", "sulphites"], "ing": "beef mince small tortilla cheddar little gem lettuce gherkins mayo ketchup mustard"}, {"id": "hot-honey-halloumi-wraps", "name": "Hot honey halloumi wraps", "min": 15, "mood": "tired", "dish": "halloumiwraps", "region": "med", "board": "CookHalloumiwraps.html?v=1793458133", "added": "", "tags": ["dairy", "gluten", "milk", "vegetarian"], "ing": "halloumi large wrap red onion lime hot honey greek yoghurt handful of rocket"}, {"id": "chilli-crisp-fried-rice", "name": "Chilli-crisp fried rice", "min": 14, "mood": "tired", "dish": "chillirice", "region": "asia", "board": "CookRice.html?v=1793458133", "added": "", "tags": ["eggs", "gluten", "soya", "vegetarian"], "ing": "cooked rice (pouch) frozen peas egg soy sauce spring onion chilli crisp oil"}, {"id": "harissa-chicken-orzo", "name": "Harissa chicken orzo", "min": 30, "mood": "normal", "dish": "harissaorzo", "region": "med", "board": "CookHarissaorzo.html?v=1793458133", "added": "", "tags": ["celery", "dairy", "gluten", "milk"], "ing": "boneless chicken thigh rose harissa orzo chicken stock cherry tomatoes feta lemon handful of spinach"}, {"id": "japanese-beef-curry", "name": "Japanese-style beef curry", "min": 30, "mood": "normal", "dish": "beefcurry", "region": "asia", "board": "CookBeefcurry.html?v=1793458133", "added": "", "tags": ["beef", "gluten", "milk", "soya", "sulphites"], "ing": "beef mince onion carrot potato japanese curry roux rice pickles"}, {"id": "gochujang-pork-bowls", "name": "Sticky gochujang pork bowls", "min": 25, "mood": "normal", "dish": "gochupork", "region": "asia", "board": "CookGochupork.html?v=1793458133", "added": "", "tags": ["gluten", "pork", "sesame", "soya"], "ing": "pork mince gochujang soy sauce honey garlic clove rice cucumber rice vinegar spring onion sesame seeds"}, {"id": "peanut-butter-chicken-curry", "name": "Peanut butter chicken curry", "min": 30, "mood": "normal", "dish": "pbcurry", "region": "spice", "board": "CookPbcurry.html?v=1793458133", "added": "", "tags": ["crustaceans", "nuts", "peanuts"], "ing": "boneless chicken thigh onion thai red curry paste smooth peanut butter tin of coconut milk lime bunch of coriander salted peanuts rice"}, {"id": "chicken-alfredo", "name": "Chicken Alfredo", "min": 30, "mood": "normal", "dish": "alfredo2", "region": "med", "board": "CookV2.html", "added": "", "tags": ["dairy", "eggs", "gluten", "milk"], "ing": "fettuccine chicken breast double cream parmesan butter garlic clove panko breadcrumbs lemon parsley oil, salt and pepper"}, {"id": "crispy-duck-pancakes", "name": "Crispy duck pancakes", "min": 70, "mood": "fancy", "dish": "duckpancakes", "region": "asia", "board": "CookDuckpancakes.html?v=1793458133", "added": "", "tags": ["gluten", "sesame", "soya"], "ing": "duck leg cucumber spring onion chinese pancake hoisin sauce chinese five-spice"}, {"id": "peruvian-chicken", "name": "Peruvian-style chicken & green sauce", "min": 50, "mood": "fancy", "dish": "peruchicken", "region": "world", "board": "CookPeruchicken.html?v=1793458133", "added": "", "tags": ["eggs", "mustard", "sulphites"], "ing": "bone-in chicken thigh baby potatoes bunch of coriander jalapeño lime mayo garlic clove smoked paprika and cumin"}, {"id": "miso-salmon-crispy-rice", "name": "Miso salmon, crispy chilli rice", "min": 40, "mood": "fancy", "dish": "misosalmon", "region": "asia", "board": "CookMisosalmon.html?v=1793458133", "added": "", "tags": ["fish", "gluten", "sesame", "soya"], "ing": "salmon fillet white miso honey cooked rice (pouch) chilli crisp spring onion lime soy sauce and sesame seeds"}, {"id": "lamb-kofta-flatbreads", "name": "Lamb kofta flatbreads, whipped feta", "min": 45, "mood": "fancy", "dish": "koftaflat", "region": "med", "board": "CookKoftaflat.html?v=1793458133", "added": "", "tags": ["dairy", "gluten", "milk"], "ing": "lamb mince flatbread feta greek yoghurt red onion lemon bunch of mint garlic clove cumin and ground coriander"}, {"id": "spicy-tuna-crispy-rice", "name": "Spicy tuna crispy rice bowl", "min": 15, "mood": "tired", "dish": "tunabowl", "region": "asia", "board": "CookTunabowl.html?v=1793458133", "added": "", "tags": ["eggs", "fish", "gluten", "mustard", "sesame", "soya"], "ing": "cooked rice (pouch) tin of tuna mayo sriracha soy sauce spring onion cucumber sesame seeds oil"}, {"id": "lemon-chilli-tuna-spaghetti", "name": "Lemon & chilli tuna spaghetti", "min": 15, "mood": "tired", "dish": "tunapasta", "region": "med", "board": "CookTunapasta.html?v=1793458133", "added": "", "tags": ["fish", "gluten"], "ing": "spaghetti tin of tuna in oil garlic clove chilli flakes capers lemon handful of parsley oil, salt and pepper"}, {"id": "gochujang-tuna-melt", "name": "Gochujang tuna melt", "min": 10, "mood": "tired", "dish": "tunamelt", "region": "asia", "board": "CookTunamelt.html?v=1793458133", "added": "", "tags": ["dairy", "eggs", "fish", "gluten", "milk", "mustard", "soya", "sulphites"], "ing": "slice of bread tin of tuna mayo gochujang spring onion cheddar butter gherkins"}, {"id": "marry-me-chicken", "name": "Marry Me chicken", "min": 30, "mood": "normal", "dish": "marryme", "region": "med", "board": "CookMarryme.html?v=1793458133", "added": "", "tags": ["celery", "dairy", "gluten", "milk", "sulphites"], "ing": "chicken breast garlic clove sun-dried tomato double cream parmesan chicken stock chilli flakes basil leaf orzo oil, salt and pepper"}, {"id": "gigi-spicy-vodka-pasta", "name": "Spicy vodka pasta (Gigi Hadid-style)", "min": 20, "mood": "tired", "dish": "vodkapasta", "region": "med", "board": "CookVodkapasta.html?v=1793458133", "added": "", "tags": ["dairy", "gluten", "milk", "vegetarian"], "ing": "pasta tomato purée shallot garlic clove double cream parmesan chilli flakes butter oil, salt and pepper", "vtags": ["gluten", "vegetarian"], "vswap": true, "ving": "pasta tomato purée shallot garlic clove oat cream vegan hard cheese chilli flakes vegan butter oil, salt and pepper"}, {"id": "baked-feta-pasta", "name": "Baked feta pasta", "min": 35, "mood": "tired", "dish": "fetapasta", "region": "med", "board": "CookFetapasta.html?v=1793458133", "added": "", "tags": ["dairy", "gluten", "milk", "vegetarian"], "ing": "pasta block of feta cherry tomatoes garlic clove basil leaf chilli flakes oil, salt and pepper", "vtags": ["gluten", "vegetarian"], "vswap": true, "ving": "pasta block of vegan feta cherry tomatoes garlic clove basil leaf chilli flakes oil, salt and pepper"}, {"id": "spaghetti-allassassina", "name": "Spaghetti all’assassina", "min": 30, "mood": "fancy", "dish": "assassina", "region": "med", "board": "CookAssassina.html?v=1793458133", "added": "", "tags": ["gluten", "vegetarian"], "ing": "spaghetti passata tomato purée garlic clove red chilli oil, salt and pepper", "vtags": ["gluten", "vegetarian"], "vswap": false, "ving": "spaghetti passata tomato purée garlic clove red chilli oil, salt and pepper"}, {"id": "chicken-shawarma-bowls", "name": "Chicken shawarma bowls", "min": 35, "mood": "normal", "dish": "shawarma", "region": "world", "board": "CookShawarma.html?v=1793458133", "added": "", "tags": ["dairy", "milk"], "ing": "boneless chicken thigh shawarma spice rice cucumber cherry tomatoes red onion greek yoghurt garlic clove lemon oil, salt and pepper"}, {"id": "greek-lemon-chicken-potatoes", "name": "Greek lemon chicken & potatoes", "min": 50, "mood": "normal", "dish": "greekchicken", "region": "med", "board": "CookGreekchicken.html?v=1793458133", "added": "", "tags": ["celery"], "ing": "bone-in chicken thigh baby potatoes lemon garlic clove dried oregano chicken stock oil, salt and pepper"}, {"id": "butter-chicken", "name": "Butter chicken", "min": 40, "mood": "normal", "dish": "butterchicken", "region": "spice", "board": "CookButterchicken.html?v=1793458133", "added": "", "tags": ["dairy", "gluten", "milk"], "ing": "boneless chicken thigh greek yoghurt garam masala passata butter double cream garlic clove grated ginger rice naan oil, salt and pepper"}, {"id": "hot-honey-salmon", "name": "Hot honey salmon & smashed cucumber", "min": 20, "mood": "tired", "dish": "hothoneysalmon", "region": "world", "board": "CookHothoneysalmon.html?v=1793458133", "added": "", "tags": ["fish", "gluten", "sesame", "soya"], "ing": "salmon fillet honey chilli flakes cucumber soy sauce rice vinegar sesame seeds rice oil, salt and pepper"}, {"id": "quick-chicken-jambalaya", "name": "Quick chicken jambalaya", "min": 35, "mood": "normal", "dish": "jambalaya", "region": "world", "board": "CookJambalaya.html?v=1793458133", "added": "", "tags": ["celery", "pork", "sulphites"], "ing": "boneless chicken thigh chorizo rice red pepper onion garlic clove tin of chopped tomatoes cajun seasoning chicken stock oil, salt and pepper"}, {"id": "hainanese-chicken-rice", "name": "Hainanese chicken rice", "min": 60, "mood": "fancy", "dish": "hainanese", "region": "asia", "board": "CookHainanese.html?v=1793458133", "added": "", "tags": ["celery", "gluten", "soya"], "ing": "chicken breast rice garlic clove grated ginger spring onion cucumber sriracha soy sauce chicken stock oil, salt and pepper"}, {"id": "spicy-peanut-noodles-prawns", "name": "Spicy peanut noodles with prawns", "min": 20, "mood": "tired", "dish": "peanutnoodles", "region": "asia", "board": "CookPeanutnoodles.html?v=1793458133", "added": "", "tags": ["crustaceans", "eggs", "fish", "gluten", "nuts", "peanuts", "soya"], "ing": "nest dried egg noodles raw king prawns mangetout peanut butter soy sauce chilli crisp lime spring onion oil, salt and pepper"}, {"id": "tarka-dal", "name": "Tarka dal", "min": 30, "mood": "tired", "dish": "tarkadal", "region": "spice", "board": "CookTarkadal.html?v=1793458133", "added": "", "tags": ["dairy", "milk", "vegetarian"], "ing": "red lentils ground turmeric cumin seeds garlic clove onion tomato green chilli butter rice oil, salt and pepper", "vtags": ["vegetarian"], "vswap": true, "ving": "red lentils ground turmeric cumin seeds garlic clove onion tomato green chilli vegan butter rice oil, salt and pepper"}, {"id": "chana-masala", "name": "Chana masala", "min": 25, "mood": "tired", "dish": "chana", "region": "spice", "board": "CookChana.html?v=1793458133", "added": "", "tags": ["gluten", "milk", "vegetarian"], "ing": "tin of chickpeas tin of chopped tomatoes onion garlic clove grated ginger garam masala ground cumin lemon naan oil, salt and pepper", "vtags": ["gluten", "vegetarian"], "vswap": true, "ving": "tin of chickpeas tin of chopped tomatoes onion garlic clove grated ginger garam masala ground cumin lemon vegan naan oil, salt and pepper"}, {"id": "saag-paneer", "name": "Saag paneer", "min": 30, "mood": "normal", "dish": "saagpaneer", "region": "spice", "board": "CookSaagpaneer.html?v=1793458133", "added": "", "tags": ["dairy", "gluten", "milk", "vegetarian"], "ing": "paneer spinach onion garlic clove grated ginger green chilli garam masala double cream naan oil, salt and pepper", "vtags": ["gluten", "soya", "vegetarian"], "vswap": true, "ving": "extra-firm tofu spinach onion garlic clove grated ginger green chilli garam masala coconut cream vegan naan oil, salt and pepper"}, {"id": "keema-matar", "name": "Keema matar", "min": 30, "mood": "normal", "dish": "keema", "region": "spice", "board": "CookKeema.html?v=1793458133", "added": "", "tags": ["gluten", "milk"], "ing": "lamb mince frozen peas onion garlic clove grated ginger garam masala ground turmeric tin of chopped tomatoes naan oil, salt and pepper"}, {"id": "chicken-korma", "name": "Chicken korma", "min": 35, "mood": "normal", "dish": "korma", "region": "spice", "board": "CookKorma.html?v=1793458133", "added": "", "tags": ["dairy", "milk", "nuts", "treenuts"], "ing": "boneless chicken thigh onion garlic clove grated ginger ground almonds greek yoghurt double cream garam masala ground turmeric rice oil, salt and pepper"}, {"id": "kerala-prawn-curry", "name": "Keralan prawn curry", "min": 30, "mood": "normal", "dish": "keralaprawn", "region": "spice", "board": "CookKeralaprawn.html?v=1793458133", "added": "", "tags": ["crustaceans", "fish", "mustard"], "ing": "raw king prawns tin of coconut milk onion garlic clove grated ginger ground turmeric mustard seeds curry leaf tomato lime rice oil, salt and pepper"}, {"id": "lamb-rogan-josh", "name": "Lamb rogan josh", "min": 100, "mood": "fancy", "dish": "roganjosh", "region": "spice", "board": "CookRoganjosh.html?v=1793458133", "added": "", "tags": ["dairy", "milk"], "ing": "diced lamb onion garlic clove grated ginger kashmiri chilli powder garam masala cardamom pod greek yoghurt tin of chopped tomatoes rice oil, salt and pepper"}, {"id": "thai-green-chicken-curry", "name": "Thai green chicken curry", "min": 25, "mood": "tired", "dish": "greencurry", "region": "spice", "board": "CookGreencurry.html?v=1793458133", "added": "", "tags": ["crustaceans"], "ing": "boneless chicken thigh thai green curry paste tin of coconut milk green beans fish sauce (or soy sauce) sugar kaffir lime leaf thai basil leaf lime rice oil, salt and pepper"}, {"id": "panang-beef-curry", "name": "Panang beef curry", "min": 30, "mood": "normal", "dish": "panang", "region": "spice", "board": "CookPanang.html?v=1793458133", "added": "", "tags": ["beef", "crustaceans"], "ing": "beef sirloin steak panang curry paste tin of coconut milk fish sauce (or soy sauce) palm sugar kaffir lime leaf red chilli thai basil leaf rice oil, salt and pepper"}, {"id": "massaman-beef-curry", "name": "Massaman beef curry", "min": 150, "mood": "fancy", "dish": "massaman", "region": "spice", "board": "CookMassaman.html?v=1793458133", "added": "", "tags": ["beef", "crustaceans", "nuts", "peanuts"], "ing": "braising steak massaman curry paste tin of coconut milk baby potatoes onion roasted peanuts fish sauce (or soy sauce) tamarind paste palm sugar rice oil, salt and pepper"}, {"id": "khao-soi", "name": "Khao soi", "min": 40, "mood": "normal", "dish": "khaosoi", "region": "spice", "board": "CookKhaosoi.html?v=1793458133", "added": "", "tags": ["celery", "crustaceans", "eggs", "gluten"], "ing": "boneless chicken thigh thai red curry paste tin of coconut milk chicken stock nest dried egg noodles ground turmeric fish sauce (or soy sauce) red onion lime oil, salt and pepper"}, {"id": "thai-red-squash-curry", "name": "Thai red curry with squash & chickpeas", "min": 35, "mood": "normal", "dish": "redsquash", "region": "spice", "board": "CookRedsquash.html?v=1793458133", "added": "", "tags": ["gluten", "soya", "vegetarian"], "ing": "butternut squash tin of chickpeas vegetarian thai red curry paste tin of coconut milk spinach soy sauce lime thai basil leaf rice oil, salt and pepper", "vtags": ["gluten", "soya", "vegetarian"], "vswap": false, "ving": "butternut squash tin of chickpeas vegetarian thai red curry paste tin of coconut milk spinach soy sauce lime thai basil leaf rice oil, salt and pepper"}, {"id": "pork-tonkatsu", "name": "Pork tonkatsu", "min": 40, "mood": "fancy", "dish": "tonkatsu", "region": "asia", "board": "CookTonkatsu.html?v=1793458133", "added": "2026-10-31", "tags": ["eggs", "gluten", "pork", "soya"], "ing": "pork loin steak plain flour egg panko breadcrumbs rice white cabbage tonkatsu sauce lemon oil for frying salt and pepper"}, {"id": "mapo-tofu", "name": "Mapo tofu", "min": 25, "mood": "normal", "dish": "mapotofu", "region": "asia", "board": "CookMapotofu.html?v=1793458133", "added": "2026-10-31", "tags": ["gluten", "soya", "vegetarian"], "ing": "silken tofu shiitake mushrooms chilli bean sauce sichuan peppercorns garlic clove grated ginger chilli oil cornflour spring onion rice oil, salt and pepper", "vtags": ["gluten", "soya", "vegetarian"], "vswap": false, "ving": "silken tofu shiitake mushrooms chilli bean sauce sichuan peppercorns garlic clove grated ginger chilli oil cornflour spring onion rice oil, salt and pepper"}, {"id": "aubergine-katsu-curry", "name": "Aubergine katsu curry", "min": 45, "mood": "fancy", "dish": "aubkatsu", "region": "asia", "board": "CookAubkatsu.html?v=1793458133", "added": "2026-10-31", "tags": ["gluten", "mustard", "vegetarian"], "ing": "aubergine plain flour panko breadcrumbs onion garlic clove mild curry powder honey tin of coconut milk cucumber rice oil, salt and pepper", "vtags": ["gluten", "mustard", "vegetarian"], "vswap": true, "ving": "aubergine plain flour panko breadcrumbs onion garlic clove mild curry powder maple syrup tin of coconut milk cucumber rice oil, salt and pepper"}, {"id": "pav-bhaji", "name": "Pav bhaji", "min": 40, "mood": "normal", "dish": "pavbhaji", "region": "spice", "board": "CookPavbhaji.html?v=1793458133", "added": "2026-10-31", "tags": ["dairy", "gluten", "milk", "vegetarian"], "ing": "potatoes cauliflower frozen peas carrot onion red pepper tomato garlic clove grated ginger green chilli pav bhaji masala kashmiri chilli powder butter soft white bread roll lemon oil, salt and pepper", "vtags": ["gluten", "vegetarian"], "vswap": true, "ving": "potatoes cauliflower frozen peas carrot onion red pepper tomato garlic clove grated ginger green chilli pav bhaji masala kashmiri chilli powder vegan butter vegan soft white roll lemon oil, salt and pepper"}, {"id": "crispy-black-bean-tacos", "name": "Crispy black bean tacos", "min": 15, "mood": "tired", "dish": "beantacos", "region": "world", "board": "CookBeantacos.html?v=1793458133", "added": "2026-10-31", "tags": ["dairy", "gluten", "milk", "vegetarian"], "ing": "tin of black beans ground cumin small tortilla white cabbage spring onion bunch of coriander lime feta chipotle hot sauce oil, salt and pepper", "vtags": ["gluten", "vegetarian"], "vswap": true, "ving": "tin of black beans ground cumin small tortilla white cabbage spring onion bunch of coriander lime vegan feta chipotle hot sauce oil, salt and pepper"}, {"id": "mejadra", "name": "Mejadra", "min": 35, "mood": "normal", "dish": "mejadra", "region": "med", "board": "CookMejadra.html?v=1793458133", "added": "2026-10-31", "tags": ["vegetarian"], "ing": "onion oil for frying rice tin of green lentils cumin seeds ground coriander ground cinnamon ground turmeric oil, salt and pepper", "vtags": ["vegetarian"], "vswap": false, "ving": "onion oil for frying rice tin of green lentils cumin seeds ground coriander ground cinnamon ground turmeric oil, salt and pepper"}], MOODS = {"tired": ["TIRED", "#FF6FB0"], "normal": ["NORMAL", "#C6FF4D"], "fancy": ["FANCY", "#A98BFF"]}, REGIONS = [["asia", "EAST ASIA"], ["med", "ITALY & THE MED"], ["world", "AMERICAS & BEYOND"], ["spice", "INDIA & SE ASIA"]];
+    const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } })();
+    const ls = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } };
+    const lj = (k, d) => { try { return JSON.parse(ls(k, 'null')) || d; } catch (e) { return d; } };
+    const haptics = ls('gsd.haptics', '1') === '1';
+    const buzz = (p) => { if (!haptics) return; try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} };
+    const pop = (el) => { if (reduce || !el || !el.animate) return; el.animate([{ transform: 'scale(1.3)' }, { transform: 'scale(0.9)' }, { transform: 'scale(1)' }], { duration: 300, easing: 'ease-out' }); };
+    const toast = $('rc-toast'); let tt = 0; const say = (t) => { toast.textContent = t; toast.style.opacity = 1; clearTimeout(tt); tt = setTimeout(() => { toast.style.opacity = 0; }, 2200); };
+    const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+    // ---- what you can have: the planner's rules (food no-gos, foods you don't like; a vegan gets the vegan versions)
+    const pf = lj('gsd.profile', {}), dis = lj('gsd.dislikes', []);
+    let av = (pf && pf.avoid) || []; const vegan = av.indexOf('vegan') >= 0; if (vegan) av = av.concat(['vegetarian', 'milk', 'eggs']);
+    const X = { dairy: ['dairy', 'milk'], milk: ['dairy', 'milk'], nuts: ['nuts', 'peanuts', 'treenuts'] };
+    const canHave = (r) => { if (vegan && !r.vtags) return false; const t = vegan ? r.vtags : r.tags, ing = vegan ? r.ving : r.ing;
+      return !(av.indexOf('vegetarian') >= 0 && t.indexOf('vegetarian') < 0) && !av.some((a) => a !== 'vegetarian' && (X[a] || [a]).some((x) => t.indexOf(x) >= 0))
+        && !(Array.isArray(dis) ? dis : []).some((d) => (' ' + ing + ' ').indexOf(' ' + d) >= 0); };
+    const OK = RECIPES.filter(canHave), hidden = RECIPES.length - OK.length;
+    // cooked counts (the cook log) and your ♥ / reviews
+    const cooked = {}; ((lj('gsd.progress', {}).acts || {}).cook || []).forEach((c) => { cooked[c.id] = (cooked[c.id] || 0) + 1; });
+    let favs = lj('gsd.favs', []); if (!Array.isArray(favs)) favs = [];
+    const rate = lj('gsd.recipeRate', {});
+    const saveFavs = () => { try { localStorage.setItem('gsd.favs', JSON.stringify(favs)); localStorage.setItem('gsd.recipeRate', JSON.stringify(rate)); } catch (e) {} };
+    const isNew = (r) => r.added && Date.now() - new Date(r.added).getTime() < 14 * 864e5;
+
+    // ---- filters
+    let f = 'all', q = '', open = null;
+    const chips = [['all', 'ALL']].concat([['fav', '♥ FAVOURITES']], Object.keys(MOODS).map((m) => [m, MOODS[m][0]]), REGIONS);
+    $('rc-chips').innerHTML = chips.map(([id, lab]) => '<button type="button" class="rc-chip" data-f="' + id + '" aria-pressed="false">' + esc(lab) + '</button>').join('');
+    $('rc-chips').addEventListener('click', (e) => { const b = e.target.closest('.rc-chip'); if (!b) return; f = b.dataset.f; open = null; buzz(5); paint(); });
+    $('rc-search').addEventListener('input', (e) => { q = e.target.value.trim().toLowerCase(); open = null; paint(); });
+
+    const card = (r) => { const m = MOODS[r.mood], fav = favs.indexOf(r.id) >= 0, no = rate[r.id] === 'no', n = cooked[r.id] || 0, op = open === r.id;
+      return '<div class="rc-card' + (no ? ' no' : '') + (op ? ' open' : '') + '" data-id="' + r.id + '">'
+        + '<button type="button" class="rc-main" aria-expanded="' + (op ? 'true' : 'false') + '" aria-label="' + esc(r.name) + ', ' + r.min + ' minutes' + (n ? ', cooked ' + n + (n === 1 ? ' time' : ' times') : '') + '">'
+        + '<img alt="" src="' + IMG[r.dish] + '"><span class="bd"><span class="nm">' + esc(r.name) + (isNew(r) ? ' <span class="nw">NEW</span>' : '') + '</span>'
+        + '<span class="meta"><span class="md" style="background:' + m[1] + '">' + m[0] + '</span>' + r.min + ' min' + (n ? ' · cooked ' + n + '×' : '') + '</span>'
+        + (no ? '<span class="nf">not for us · ♥ to bring it back</span>' : vegan && r.vswap ? '<span class="nf">with vegan swaps</span>' : '') + '</span></button>'
+        + '<button type="button" class="rc-fav" aria-pressed="' + (fav ? 'true' : 'false') + '" aria-label="' + (fav ? 'Remove ' + esc(r.name) + ' from favourites' : 'Add ' + esc(r.name) + ' to favourites') + '">' + (fav ? '♥' : '♡') + '</button>'
+        + (op ? '<span class="rc-act">' + (r.board ? '<a class="ck" href="' + r.board + '">COOK IT →</a>' : '') + '<button type="button" class="wk">+ MY WEEK</button></span>' : '')
+        + '</div>'; };
+    const paint = () => {
+      $('rc-chips').querySelectorAll('.rc-chip').forEach((b) => { const on = b.dataset.f === f; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+      let list = OK.filter((r) => f === 'all' || (f === 'fav' ? favs.indexOf(r.id) >= 0 : MOODS[f] ? r.mood === f : r.region === f));
+      if (q) list = list.filter((r) => (r.name + ' ' + (vegan ? r.ving : r.ing)).toLowerCase().indexOf(q) >= 0);
+      // new ones first, then A to Z; NOT FOR US at the bottom
+      list.sort((a, b) => (rate[a.id] === 'no') - (rate[b.id] === 'no') || isNew(b) - isNew(a) || a.name.localeCompare(b.name));
+      $('rc-n').textContent = list.length + (list.length === 1 ? ' recipe' : ' recipes') + (f === 'all' && !q && hidden ? ' · ' + hidden + ' hidden by your food no-gos' : '');
+      $('rc-list').innerHTML = list.length ? list.map(card).join('') : '<span class="kal rc-empty">' + (f === 'fav' && !q ? 'Tap ♡ on any recipe to keep it here.' : 'Nothing matches that.') + '</span>';
+    };
+    $('rc-list').addEventListener('click', (e) => {
+      const c = e.target.closest('.rc-card'); if (!c) return; const id = c.dataset.id, r = RECIPES.find((x) => x.id === id);
+      if (e.target.closest('.rc-fav')) { const i = favs.indexOf(id); if (i >= 0) favs.splice(i, 1); else { favs.push(id); if (rate[id] === 'no') delete rate[id]; }
+        saveFavs(); buzz(i >= 0 ? 6 : [8, 30, 12]); paint(); pop($('rc-list').querySelector('[data-id="' + id + '"] .rc-fav')); if (i < 0) say('Saved to your favourites'); return; }
+      if (e.target.closest('.wk')) { try { localStorage.setItem('gsd.planAdd', JSON.stringify({ r: id })); } catch (err) {} buzz(8); say('Added to your week');
+        const a = document.createElement('a'); a.href = 'PlanWeek.html?v=1793458133'; a.className = 'wk'; a.textContent = 'OPEN MY WEEK →'; e.target.closest('.wk').replaceWith(a); return; }
+      if (e.target.closest('.rc-main')) { open = open === id ? null : id; buzz(4); paint(); }
+    });
+    paint();
+    return true;
+  }
+}
+
+</script>
+<script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
+<script src="morphdom.js?v=1793458133"></script>
+<script src="dc.js?v=1793458133"></script>
+</body></html>
