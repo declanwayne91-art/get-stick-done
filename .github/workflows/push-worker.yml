@@ -35,6 +35,12 @@ jobs:
           # friends routes and the D1 tables: an unknown phone must be refused (401), not an error
           code=$(curl -s -o f.json -w '%{http_code}' -X POST -H 'Content-Type: application/json' -d '{"secret":"deploy-check-0000000000000000000000000000000000"}' "$U/f/list")
           if [ "$code" = "401" ]; then echo "::notice::Friends routes OK"; else echo "::error::Friends check got HTTP $code: $(cat f.json)"; exit 1; fi
+      - name: Dashboard key (set once; refused harmlessly after that)
+        env:
+          STATS_KEY: ${{ secrets.STATS_KEY }}
+        run: |
+          U=$(cat push/url.txt)
+          if [ -n "$STATS_KEY" ]; then code=$(curl -s -o claim.json -w '%{http_code}' -X POST -H 'Content-Type: application/json' -d "{\"key\":\"$STATS_KEY\"}" "$U/a/claim"); echo "::notice::Dashboard key: HTTP $code $(cat claim.json)"; fi
       - name: Save the address for the app
         run: |
           git config user.name "github-actions[bot]"; git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
