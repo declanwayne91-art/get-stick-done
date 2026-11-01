@@ -25,7 +25,9 @@ const SCHEMA = [
 ];
 let ready = null;
 export const init = (env) => ready || (ready = env.DB.batch(SCHEMA.map((q) => env.DB.prepare(q)))
-  .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN push TEXT').run().catch(() => {}))   // friend alerts: the phone's push address (added later; already there = fine)
+  .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN push TEXT').run().catch(() => {}))
+  .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN n INTEGER').run().catch(() => {}))   // stickers stuck in total (shown on your friend card)
+  .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN p INTEGER').run().catch(() => {}))   // pins earned   // friend alerts: the phone's push address (added later; already there = fine)
   .catch((e) => { ready = null; throw e; }));
 
 const ABC = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';   // no 0/O, 1/I/L
@@ -56,7 +58,7 @@ export function cleanSub(x, env) {   // env.TEST_PUSH_HTTP (local tests only) al
   const k = x.keys || {}; if (typeof k.p256dh !== 'string' || typeof k.auth !== 'string' || k.p256dh.length > 120 || k.auth.length > 40) return null;
   return JSON.stringify({ endpoint: x.endpoint, keys: { p256dh: k.p256dh, auth: k.auth } });
 }
-export const pub = (u) => u && { id: u.id, name: u.name, plate: u.plate, lv: u.lv, st: u.st, pin: u.pin };
+export const pub = (u) => u && { id: u.id, name: u.name, plate: u.plate, lv: u.lv, st: u.st, pin: u.pin, n: u.n == null ? null : u.n, p: u.p == null ? null : u.p };
 
 export async function friends(path, b, env, out) {
   if (!env.DB) return out({ error: 'friends not set up' }, 503);
@@ -77,6 +79,9 @@ export async function friends(path, b, env, out) {
     return out({ ok: true, code: showCode(me.code) });
   }
   if (!me) return out({ error: 'not registered' }, 401);
+  if (path === '/f/n') {   // your sticker count (from the book) and pins (from your profile); either can be left out
+    const c = (v) => v == null ? null : Math.max(0, Math.min(1000000, Math.floor(+v) || 0));
+    await env.DB.prepare('UPDATE users SET n = COALESCE(?, n), p = COALESCE(?, p), seen = ? WHERE id = ?').bind(c(b.n), c(b.p), now, me.id).run(); return out({ ok: true }); }
   const linked = async (id) => !!(await env.DB.prepare('SELECT 1 FROM links WHERE a = ? AND b = ?').bind(me.id, id).first());
   const byCode = async () => { const c = cleanCode(b.code); return c ? env.DB.prepare('SELECT * FROM users WHERE code = ?').bind(c).first() : null; };
   const blockedEither = async (id) => !!(await env.DB.prepare('SELECT 1 FROM blocks WHERE (a = ? AND b = ?) OR (a = ? AND b = ?)').bind(me.id, id, id, me.id).first());
@@ -101,7 +106,7 @@ export async function friends(path, b, env, out) {
   }
   if (path === '/f/list') {
     await env.DB.prepare('UPDATE users SET seen = ? WHERE id = ?').bind(now, me.id).run();
-    const fr = (await env.DB.prepare('SELECT u.id, u.name, u.plate, u.lv, u.st, u.pin, l.at AS since FROM links l JOIN users u ON u.id = l.b WHERE l.a = ? ORDER BY l.at DESC LIMIT ?').bind(me.id, MAX_FRIENDS).all()).results;
+    const fr = (await env.DB.prepare('SELECT u.id, u.name, u.plate, u.lv, u.st, u.pin, u.n, u.p, l.at AS since FROM links l JOIN users u ON u.id = l.b WHERE l.a = ? ORDER BY l.at DESC LIMIT ?').bind(me.id, MAX_FRIENDS).all()).results;
     const inbox = (await env.DB.prepare('SELECT e.id, e.src, e.kind, e.c, e.at FROM events e JOIN links l ON l.a = e.dest AND l.b = e.src WHERE e.dest = ? AND e.seen = 0 ORDER BY e.at LIMIT 20').bind(me.id).all()).results;
     return out({ ok: true, code: showCode(me.code), friends: fr, inbox });
   }
