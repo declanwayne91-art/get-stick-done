@@ -106,7 +106,41 @@ window.GSN = (function () {
     return sub().then(function (s) { return Promise.all([s ? post('/unsubscribe', { endpoint: s.endpoint }).catch(function () {}) : null, fk ? post('/f/push', { secret: fk, sub: null }).catch(function () {}) : null])
       .then(function () { return s ? s.unsubscribe() : null; }); }).catch(function () {});
   }
-  return { on: on, tap: tap, keepAwake: keepAwake, canPush: canPush, nudges: nudges, glass: glass, testNudge: testNudge, readGlasses: readGlasses, friendSub: friendSub, allOff: allOff };
+  function counted(kind, fn) { return function (x) { return fn(x).then(function (r) { try { if (window.GSA && (kind === 'water' || x)) GSA.track('notif_choice', kind + '-' + (r === null ? (typeof Notification !== 'undefined' && Notification.permission === 'denied' ? 'denied' : 'none') : (typeof r === 'string' ? r : 'on'))); } catch (e) {} return r; }); }; }   // usage counts: allowed / refused / off
+  return { on: on, tap: tap, keepAwake: keepAwake, canPush: canPush, nudges: counted('water', nudges), glass: glass, testNudge: testNudge, readGlasses: readGlasses, friendSub: counted('friends', friendSub), allOff: allOff };
+})();</script>
+<script>/* usage counts (analytics): anonymous counts of what gets used, so the app can get better. Nothing typed is ever sent.
+   A random install id + { day, event, detail } -> count, queued here and sent in one go when the app is put away.
+   Switched off in Me > settings (gsd.analyticsOff), which also deletes what this phone sent. See push_analytics.js. */
+(function () {
+  var API = window.GSD_API_TEST || window.GSD_API, Q = 'gsb.aq', VER = '20261101';
+  function off() { try { return localStorage.getItem('gsb.analyticsOff') === '1'; } catch (e) { return true; } }
+  function day() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function id() { var k = null; try { k = localStorage.getItem('gsb.aid'); if (!k) { k = Array.from(crypto.getRandomValues(new Uint8Array(12)), function (x) { return x.toString(16).padStart(2, '0'); }).join(''); localStorage.setItem('gsb.aid', k); } } catch (e) {} return k; }
+  function idb(v) { try { var r = indexedDB.open('gsd', 1); r.onupgradeneeded = function () { r.result.createObjectStore('kv'); }; r.onsuccess = function () { r.result.transaction('kv', 'readwrite').objectStore('kv').put(v, 'analytics'); }; } catch (e) {} }
+  function track(ev, d, n) { if (off()) return; try { var q = JSON.parse(localStorage.getItem(Q) || '{}') || {}, k = day() + '|' + ev + '|' + (d == null ? '' : String(d).slice(0, 40));
+    q[k] = (q[k] || 0) + (n || 1); localStorage.setItem(Q, JSON.stringify(q)); } catch (e) {} }
+  function flush() { if (off() || !API) return; var q; try { q = JSON.parse(localStorage.getItem(Q) || '{}') || {}; } catch (e) { return; } var ks = Object.keys(q).slice(0, 300); if (!ks.length) return;
+    var body = JSON.stringify({ id: id(), v: VER, ev: ks.map(function (k) { var p = k.split('|'); return [p[0], p[1], p[2], q[k]]; }) }), ok = false;
+    try { ok = navigator.sendBeacon(API + '/a/e', new Blob([body], { type: 'text/plain' })); } catch (e) {}
+    if (ok) { ks.forEach(function (k) { delete q[k]; }); try { localStorage.setItem(Q, JSON.stringify(q)); } catch (e) {} } }
+  function setOff(b) { try { if (b) { localStorage.setItem('gsb.analyticsOff', '1'); localStorage.removeItem(Q);
+      var k = localStorage.getItem('gsb.aid'); if (k && API) fetch(API + '/a/forget', { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ id: k }), keepalive: true }).catch(function () {});
+      localStorage.removeItem('gsb.aid'); } else localStorage.removeItem('gsb.analyticsOff'); } catch (e) {} idb({ off: !!b, id: b ? null : id(), api: API }); }
+  window.GSA = { track: track, flush: flush, off: off, setOff: setOff };
+  if (off()) return;
+  var page = (location.pathname.split('/').pop() || 'index').replace(/\.html$/, '') || 'index';
+  var standalone = false; try { standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) {}
+  track('screen', page);
+  try { if (sessionStorage.getItem('gsb.aOpen') !== day()) { sessionStorage.setItem('gsb.aOpen', day()); track('app_open', standalone ? 'app' : 'web'); } } catch (e) {}
+  idb({ off: false, id: id(), api: API });   // the service worker counts taps on notifications with these
+  addEventListener('error', function (e) { var m = String((e && e.message) || 'x'), h = 0; for (var i = 0; i < m.length; i++) h = (h * 31 + m.charCodeAt(i)) | 0; track('error', page + ':' + (h >>> 0).toString(36)); });
+  // calls to the app's own server that are worth counting (friends, cheers, shared lists)
+  var MAP = { '/f/add': 'friend_added', '/f/cheer': 'cheer_sent', '/l/new': 'list_shared', '/l/add': ['task_add', 'shared'] };
+  if (API && window.fetch) { var f0 = window.fetch; window.fetch = function (u, o) { try { var s = String((u && u.url) || u); if (s.indexOf(API) === 0 || (window.GSD_API_TEST && s.indexOf(window.GSD_API_TEST) === 0)) { var p = s.replace(/^https?:\/\/[^/]+/, ''), m = MAP[p]; if (m) track(m.join ? m[0] : m, m.join ? m[1] : null); } } catch (e) {} return f0.apply(this, arguments); }; }
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flush(); });
+  addEventListener('pagehide', flush);
+  setTimeout(flush, 4000);   // anything left from last time
 })();</script>
 <title>Get St*ck Done!</title>
 <script>/* size the phone frame before anything paints, so nothing (e.g. the nav bar) shows in the wrong place while the page loads */
@@ -214,8 +248,8 @@ a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"
     <span id="sp-tapeT" class="bri title-die" role="status" style="display: block; font-size: 40px; color: #C6FF4D; text-shadow: 3px 3px 0 #111111; letter-spacing: 0.5px; white-space: nowrap"></span></div>
   <button type="button" id="sp-tap" class="press" style="position: absolute; left: 0; right: 0; top: 488px; margin: 0 auto; width: max-content; padding: 6px 10px; border: none; background: transparent; transform: rotate(2deg)"><span class="bri title-die" style="display: block; font-size: 22px; color: #172038; letter-spacing: 0.5px">OR TAP HERE TO START</span></button>
   <button type="button" id="sp-skip" class="press" style="display: none; position: absolute; left: 0; right: 0; top: 488px; margin: 0 auto; width: max-content; padding: 6px 10px; border: none; background: transparent; transform: rotate(2deg)"><span class="bri title-die" style="display: block; font-size: 22px; color: #172038; letter-spacing: 0.5px">TAP ANYWHERE TO GO IN</span></button>
-  <a id="sp-toToday" href="Today.html?v=1793575465" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
-  <a id="sp-toOnboard" href="Onboard.html?v=1793575465" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Set up</a>
+  <a id="sp-toToday" href="Today.html?v=1793577382" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
+  <a id="sp-toOnboard" href="Onboard.html?v=1793577382" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Set up</a>
   <div class="sp-demo" style="position: absolute; left: 0; right: 0; bottom: 16px; display: flex; justify-content: center; align-items: center; gap: 6px"><span class="kal" style="font-size: 12px; opacity: 0.55">demo:</span><button type="button" id="sp-demoFirst">first time</button><button type="button" id="sp-demoBack">welcome back</button></div>
 </div>
 </script>
@@ -401,6 +435,6 @@ class Component extends DCLogic {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793575465"></script>
-<script src="dc.js?v=1793575465"></script>
+<script src="morphdom.js?v=1793577382"></script>
+<script src="dc.js?v=1793577382"></script>
 </body></html>

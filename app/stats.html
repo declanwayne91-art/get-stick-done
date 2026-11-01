@@ -1,0 +1,103 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex"><title>St*ck Stats</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Kalam:wght@400;700&display=swap">
+<style>
+:root{--ink:#172038;--paper:#FBF4E6;--lime:#C6FF4D;--pink:#FF6FB0;--sky:#6EC8FF;--sun:#FFD23F;--line:rgba(23,32,56,0.12)}
+*{box-sizing:border-box}body{margin:0;background:#172038;color:var(--ink);font-family:'Bricolage Grotesque',system-ui,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:20px 16px 60px}
+h1{font-weight:800;font-stretch:75%;font-size:40px;margin:4px 0 2px;color:var(--lime);text-shadow:3px 3px 0 var(--pink);letter-spacing:.5px}
+.sub{font-family:Kalam,cursive;color:#F6EFE1;opacity:.8;margin:0 0 16px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.chip{border:2px solid #F6EFE1;background:transparent;color:#F6EFE1;border-radius:999px;padding:6px 14px;font:800 14px 'Bricolage Grotesque';font-stretch:75%;letter-spacing:1px;cursor:pointer}
+.chip.on{background:var(--lime);color:var(--ink);border-color:var(--lime)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.card{grid-column:span 12;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:14px 16px;box-shadow:4px 4px 0 rgba(255,111,176,.9)}
+.s8{grid-column:span 8}.s6{grid-column:span 6}.s4{grid-column:span 4}.s3{grid-column:span 3}
+@media (max-width:760px){.s8,.s6,.s4{grid-column:span 12}.s3{grid-column:span 6}}
+.card h2{margin:0 0 2px;font-weight:800;font-stretch:75%;font-size:17px;letter-spacing:1px}
+.card .why{font-family:Kalam,cursive;font-size:14px;opacity:.7;margin:0 0 10px}
+.tile .big{font-weight:800;font-stretch:75%;font-size:44px;line-height:1}.tile .lab{font-weight:800;font-stretch:75%;font-size:13px;letter-spacing:1px;opacity:.75}
+.tile .ch{font-family:Kalam,cursive;font-size:14px;margin-top:2px}.up{color:#2C7A3F}.down{color:#C2185B}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{padding:5px 6px;border-bottom:1px solid var(--line);text-align:left}th{font-weight:800;font-stretch:75%;letter-spacing:.5px;font-size:12px;opacity:.7}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.hb{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:14px}.hb .l{width:120px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hb .t{flex:1;height:14px;border-radius:7px;background:rgba(23,32,56,.08);overflow:hidden}.hb .f{display:block;height:100%;border-radius:7px;background:var(--sky)}.hb .v{width:64px;text-align:right;font-variant-numeric:tabular-nums}
+.coh td{text-align:center;font-variant-numeric:tabular-nums;font-size:13px;border:2px solid var(--paper);border-radius:6px}
+.empty{font-family:Kalam,cursive;opacity:.6;padding:6px 0}
+.key{max-width:420px;margin:60px auto;background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:18px}
+.key input{width:100%;height:46px;border-radius:12px;border:2.5px solid var(--ink);padding:0 12px;font:16px 'Bricolage Grotesque';margin:8px 0}
+.key button,.btn{height:44px;border-radius:999px;border:3px solid var(--ink);background:var(--lime);font:800 16px 'Bricolage Grotesque';font-stretch:75%;letter-spacing:1px;padding:0 18px;cursor:pointer}
+svg text{font-family:'Bricolage Grotesque';font-size:11px;fill:#172038}
+.legend{display:flex;gap:14px;font-size:13px;margin-bottom:6px}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+</style></head><body><div class="wrap" id="app"></div>
+<script>
+const API = 'https://gsd-push.declanwayne91.workers.dev', $ = (s) => document.querySelector(s), esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+let KEY = null; try { KEY = localStorage.getItem('stuckStatsKey'); } catch (e) {}
+let DAYS = 56, D = null;
+const fmt = (n) => n == null ? '–' : typeof n === 'string' ? n : Number(n).toLocaleString('en-GB');
+const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
+const nice = (s) => String(s || '(none)').replace(/-/g, ' ');
+function askKey(msg) {
+  $('#app').innerHTML = '<div class="key"><h1 style="font-size:30px;color:#172038;text-shadow:3px 3px 0 #FF6FB0">ST*CK STATS</h1><p class="sub" style="color:#172038">' + (msg || 'Paste the dashboard key. It stays in this browser.') + '</p>'
+    + '<input id="k" type="password" autocomplete="off" placeholder="dashboard key"><button id="go">OPEN</button></div>';
+  $('#go').onclick = () => { KEY = $('#k').value.trim(); try { localStorage.setItem('stuckStatsKey', KEY); } catch (e) {} load(); };
+}
+function load() {
+  if (!KEY) return askKey();
+  $('#app').innerHTML = '<p class="sub" style="padding:40px 0">Adding it all up…</p>';
+  fetch(API + '/a/stats', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: KEY, days: DAYS }) })
+    .then((r) => r.status === 401 ? Promise.reject('key') : r.json()).then((j) => { D = j; draw(); })
+    .catch((e) => e === 'key' ? (KEY = null, askKey('That key didn’t work. Try again.')) : ($('#app').innerHTML = '<p class="sub">Couldn’t reach the server. <a href="#" style="color:#C6FF4D" onclick="load();return false">Try again</a></p>'));
+}
+const sumEv = (ev, d) => D.ev.filter((r) => r.ev === ev && (d === undefined || r.d === d)).reduce((a, r) => a + r.n, 0);
+const peopleEv = (ev) => Math.max(0, ...D.ev.filter((r) => r.ev === ev).map((r) => r.people));
+const byD = (ev) => D.ev.filter((r) => r.ev === ev).map((r) => ({ d: r.d, n: r.n, people: r.people })).sort((a, b) => b.n - a.n);
+function hbars(rows, max, colour, val) { if (!rows.length) return '<div class="empty">Nothing yet.</div>'; max = max || Math.max(...rows.map((r) => r.v), 1);
+  return rows.map((r) => '<div class="hb"><span class="l" title="' + esc(r.l) + '">' + esc(r.l) + '</span><span class="t"><span class="f" style="width:' + (100 * r.v / max) + '%;background:' + (colour || 'var(--sky)') + '"></span></span><span class="v">' + (val ? val(r) : fmt(r.v)) + '</span></div>').join(''); }
+function weeklyChart() { const W = D.weekly.slice(-12); if (!W.length) return '<div class="empty">Nothing yet.</div>';
+  const w = 900, h = 220, pl = 34, pb = 26, max = Math.max(4, ...W.map((x) => x.users)), bw = (w - pl) / W.length, y = (v) => h - pb - (h - pb - 10) * v / max;
+  let g = ''; const step = Math.max(1, Math.ceil(max / 4)); for (let v = 0; v <= max; v += step) g += '<line x1="' + pl + '" x2="' + w + '" y1="' + y(v) + '" y2="' + y(v) + '" stroke="rgba(23,32,56,.1)"/><text x="' + (pl - 6) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + v + '</text>';
+  W.forEach((x, i) => { const cx = pl + i * bw + bw / 2, b = Math.min(26, bw * 0.32);
+    g += '<rect x="' + (cx - b - 1) + '" y="' + y(x.users) + '" width="' + b + '" height="' + (h - pb - y(x.users)) + '" rx="3" fill="#6EC8FF"/><rect x="' + (cx + 1) + '" y="' + y(x.doers) + '" width="' + b + '" height="' + (h - pb - y(x.doers)) + '" rx="3" fill="#FF6FB0"/>'
+      + '<text x="' + cx + '" y="' + (h - 8) + '" text-anchor="middle">' + new Date(x.week + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + '</text>'; });
+  return '<div class="legend"><span><i style="background:#6EC8FF"></i>weekly users</span><span><i style="background:#FF6FB0"></i>weekly doers</span></div><svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" role="img" aria-label="Weekly users and doers">' + g + '</svg>'; }
+function tile(lab, v, prev, unit) { const ch = prev == null ? '' : v - prev; return '<div class="card tile s3"><div class="lab">' + lab + '</div><div class="big">' + fmt(v) + (unit || '') + '</div>'
+  + (prev == null ? '<div class="ch">&nbsp;</div>' : '<div class="ch ' + (ch > 0 ? 'up' : ch < 0 ? 'down' : '') + '">' + (ch > 0 ? '▲ ' : ch < 0 ? '▼ ' : '') + (ch === 0 ? 'same as last week' : Math.abs(ch) + ' on last week') + '</div>') + '</div>'; }
+function draw() {
+  const W = D.weekly, cur = W[W.length - 1] || {}, prv = W[W.length - 2] || {};
+  const R = D.retention, rt = (x, b) => x ? '<b style="font-size:26px;font-stretch:75%">' + x.pct + '%</b> <span style="opacity:.6">of ' + x.n + '</span>' + ' <span style="opacity:.6">· benchmark ' + b + '</span>' : '<span class="empty">not enough data yet</span>';
+  const cellCol = (p) => 'background:rgba(198,255,77,' + (0.12 + 0.88 * p / 100) + ')';
+  const coh = D.cohorts.length ? '<table class="coh"><tr><th>started</th><th class="n">people</th>' + [...Array(9)].map((_, k) => '<th>wk ' + k + '</th>').join('') + '</tr>'
+    + D.cohorts.map((c) => '<tr><td style="text-align:left">' + new Date(c.week + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + '</td><td class="n">' + c.n + '</td>' + [...Array(9)].map((_, k) => k < c.cells.length ? '<td style="' + cellCol(c.cells[k]) + '">' + c.cells[k] + '%</td>' : '<td></td>').join('') + '</tr>').join('') + '</table>' : '<div class="empty">Nothing yet.</div>';
+  const F = D.funnel, n0 = D.newInstalls;
+  const funnel = hbars([{ l: 'opened the app', v: n0 }, { l: 'finished setup', v: F.setup }, { l: 'did a first thing', v: F.did }, { l: 'stuck a sticker', v: F.stuck }], n0, '#FF6FB0', (r) => fmt(r.v) + ' · ' + pct(r.v, n0) + '%');
+  const AREAS = [['Today', 'Today'], ['My List', 'MyList'], ['Gym', 'GymHub|Session|WorkoutOverview|LegDay|PullDay|GymProfile|Guide'], ['Kitchen', 'Recipes|Cook|PlanWeek|UseItUp'], ['Hydro', 'HydroLearn'], ['Sticker book', 'StickerAlbum|StickerBook|CoverEdit'], ['Friends', 'Friends'], ['Profile', 'Profile']];
+  const reach = AREAS.map(([l, re]) => { const rx = new RegExp('^(' + re + ')'); return { l, v: Math.max(0, ...D.reach.filter((r) => rx.test(r.d)).map((r) => r.people)) }; }).sort((a, b) => b.v - a.v);
+  const top = (ev) => hbars(byD(ev).slice(0, 10).map((r) => ({ l: nice(r.d), v: r.n })), 0, '#FFD23F');
+  const kv = (rows) => '<table>' + rows.map(([l, v]) => '<tr><td>' + l + '</td><td class="n"><b>' + fmt(v) + '</b></td></tr>').join('') + '</table>';
+  const notifs = byD('notif_open').map((r) => ({ l: nice(r.d), v: r.n })), choice = byD('notif_choice').map((r) => ({ l: nice(r.d), v: r.n }));
+  const errs = byD('error').slice(0, 8).map((r) => ({ l: r.d, v: r.n }));
+  const opens = sumEv('screen'), added = sumEv('task_add'), done = sumEv('task_done');
+  $('#app').innerHTML = '<h1>ST*CK STATS</h1><p class="sub">' + fmt(D.installs) + (D.installs === 1 ? ' install' : ' installs') + ' so far · last ' + D.days + ' days · up to ' + D.today + '</p>'
+    + '<div class="bar">' + [28, 56, 90, 365].map((d) => '<button class="chip' + (d === DAYS ? ' on' : '') + '" data-d="' + d + '">' + (d === 365 ? '1 YEAR' : d + ' DAYS') + '</button>').join('') + '<button class="chip" id="out" style="margin-left:auto">FORGET KEY</button></div>'
+    + '<div class="grid">'
+    + tile('WEEKLY DOERS', cur.doers || 0, W.length > 1 ? prv.doers || 0 : null) + tile('WEEKLY USERS', cur.users || 0, W.length > 1 ? prv.users || 0 : null) + tile('DAU / MAU', D.dauMau, null, '%') + tile('NEW THIS WEEK', cur.newInstalls || 0, W.length > 1 ? prv.newInstalls || 0 : null)
+    + '<div class="card"><h2>USERS AND DOERS, BY WEEK</h2><p class="why">Doers completed at least one thing that week: the number to grow.</p>' + weeklyChart() + '</div>'
+    + '<div class="card s4"><h2>COMING BACK</h2><p class="why">Share of new installs active again exactly N days later.</p><p>Day 1: ' + rt(R.d1, '38–52%') + '</p><p>Day 7: ' + rt(R.d7, '18–32%') + '</p><p>Day 30: ' + rt(R.d30, '8–20%') + '</p></div>'
+    + '<div class="card s8"><h2>WEEKLY COHORTS</h2><p class="why">People grouped by the week they started; share active in each week after.</p><div style="overflow-x:auto">' + coh + '</div></div>'
+    + '<div class="card s6"><h2>FIRST STEPS</h2><p class="why">New installs in this window: how far they got.</p>' + funnel + '</div>'
+    + '<div class="card s6"><h2>WHAT GETS USED</h2><p class="why">People who opened each area in the last 7 days.</p>' + hbars(reach) + '</div>'
+    + '<div class="card s6"><h2>TOP COOK-ALONGS</h2><p class="why">Recipes finished, most first.</p>' + top('cook_done') + '</div>'
+    + '<div class="card s6"><h2>TOP WORKOUTS</h2><p class="why">Workouts finished, by type.</p>' + top('workout_done') + '</div>'
+    + '<div class="card s4"><h2>DOING</h2>' + kv([['Tasks ticked', done], ['Workouts', sumEv('workout_done')], ['Cook-alongs', sumEv('cook_done')], ['Water goals hit', sumEv('water_goal')]]) + '</div>'
+    + '<div class="card s4"><h2>REWARDS</h2>' + kv([['Stickers stuck', sumEv('sticker_stuck')], ['Weekly packs opened', sumEv('screen', 'WeekWrap')], ['Monthly packs opened', sumEv('screen', 'MonthWrap')], ['Pins earned', sumEv('pin_earned')], ['Book opens', sumEv('book_open')]]) + '</div>'
+    + '<div class="card s4"><h2>SOCIAL</h2>' + kv([['Invites opened', sumEv('friend_invite')], ['Friends added', sumEv('friend_added')], ['Cheers sent', sumEv('cheer_sent')], ['Shared lists made', sumEv('list_shared')], ['Shared tasks added', sumEv('task_add', 'shared')]]) + '</div>'
+    + '<div class="card s6"><h2>NOTIFICATIONS</h2><p class="why">Taps on alerts, by kind.</p>' + hbars(notifs, 0, '#6EC8FF') + '<p class="why" style="margin-top:10px">Choices made (allowed, refused, turned off).</p>' + hbars(choice, 0, '#C6FF4D') + '</div>'
+    + '<div class="card s6"><h2>HEALTH CHECKS</h2><p class="why">Errors should stay near zero; watch the guardrails.</p>'
+    + kv([['Errors per 1,000 screens', opens ? Math.round(1000 * sumEv('error') / opens) : 0], ['Tasks added vs ticked', fmt(added) + ' / ' + fmt(done)], ['Start fresh used', sumEv('start_fresh')], ['Home-screen app opens', pct(sumEv('app_open', 'app'), sumEv('app_open')) + '%']])
+    + '<p class="why" style="margin-top:10px">Errors by page.</p>' + hbars(errs, 0, '#FF6FB0') + '<p class="why" style="margin-top:10px">App versions in use this week.</p>' + hbars(Object.entries(D.versions).map(([l, v]) => ({ l, v })), 0, '#B9A7FF') + '</div>'
+    + '</div>';
+  document.querySelectorAll('.chip[data-d]').forEach((b) => b.onclick = () => { DAYS = +b.dataset.d; load(); });
+  $('#out').onclick = () => { try { localStorage.removeItem('stuckStatsKey'); } catch (e) {} KEY = null; askKey(); };
+}
+load();
+</script></body></html>

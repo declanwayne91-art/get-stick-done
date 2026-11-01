@@ -106,7 +106,41 @@ window.GSN = (function () {
     return sub().then(function (s) { return Promise.all([s ? post('/unsubscribe', { endpoint: s.endpoint }).catch(function () {}) : null, fk ? post('/f/push', { secret: fk, sub: null }).catch(function () {}) : null])
       .then(function () { return s ? s.unsubscribe() : null; }); }).catch(function () {});
   }
-  return { on: on, tap: tap, keepAwake: keepAwake, canPush: canPush, nudges: nudges, glass: glass, testNudge: testNudge, readGlasses: readGlasses, friendSub: friendSub, allOff: allOff };
+  function counted(kind, fn) { return function (x) { return fn(x).then(function (r) { try { if (window.GSA && (kind === 'water' || x)) GSA.track('notif_choice', kind + '-' + (r === null ? (typeof Notification !== 'undefined' && Notification.permission === 'denied' ? 'denied' : 'none') : (typeof r === 'string' ? r : 'on'))); } catch (e) {} return r; }); }; }   // usage counts: allowed / refused / off
+  return { on: on, tap: tap, keepAwake: keepAwake, canPush: canPush, nudges: counted('water', nudges), glass: glass, testNudge: testNudge, readGlasses: readGlasses, friendSub: counted('friends', friendSub), allOff: allOff };
+})();</script>
+<script>/* usage counts (analytics): anonymous counts of what gets used, so the app can get better. Nothing typed is ever sent.
+   A random install id + { day, event, detail } -> count, queued here and sent in one go when the app is put away.
+   Switched off in Me > settings (gsd.analyticsOff), which also deletes what this phone sent. See push_analytics.js. */
+(function () {
+  var API = window.GSD_API_TEST || window.GSD_API, Q = 'gsb.aq', VER = '20261101';
+  function off() { try { return localStorage.getItem('gsb.analyticsOff') === '1'; } catch (e) { return true; } }
+  function day() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function id() { var k = null; try { k = localStorage.getItem('gsb.aid'); if (!k) { k = Array.from(crypto.getRandomValues(new Uint8Array(12)), function (x) { return x.toString(16).padStart(2, '0'); }).join(''); localStorage.setItem('gsb.aid', k); } } catch (e) {} return k; }
+  function idb(v) { try { var r = indexedDB.open('gsd', 1); r.onupgradeneeded = function () { r.result.createObjectStore('kv'); }; r.onsuccess = function () { r.result.transaction('kv', 'readwrite').objectStore('kv').put(v, 'analytics'); }; } catch (e) {} }
+  function track(ev, d, n) { if (off()) return; try { var q = JSON.parse(localStorage.getItem(Q) || '{}') || {}, k = day() + '|' + ev + '|' + (d == null ? '' : String(d).slice(0, 40));
+    q[k] = (q[k] || 0) + (n || 1); localStorage.setItem(Q, JSON.stringify(q)); } catch (e) {} }
+  function flush() { if (off() || !API) return; var q; try { q = JSON.parse(localStorage.getItem(Q) || '{}') || {}; } catch (e) { return; } var ks = Object.keys(q).slice(0, 300); if (!ks.length) return;
+    var body = JSON.stringify({ id: id(), v: VER, ev: ks.map(function (k) { var p = k.split('|'); return [p[0], p[1], p[2], q[k]]; }) }), ok = false;
+    try { ok = navigator.sendBeacon(API + '/a/e', new Blob([body], { type: 'text/plain' })); } catch (e) {}
+    if (ok) { ks.forEach(function (k) { delete q[k]; }); try { localStorage.setItem(Q, JSON.stringify(q)); } catch (e) {} } }
+  function setOff(b) { try { if (b) { localStorage.setItem('gsb.analyticsOff', '1'); localStorage.removeItem(Q);
+      var k = localStorage.getItem('gsb.aid'); if (k && API) fetch(API + '/a/forget', { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ id: k }), keepalive: true }).catch(function () {});
+      localStorage.removeItem('gsb.aid'); } else localStorage.removeItem('gsb.analyticsOff'); } catch (e) {} idb({ off: !!b, id: b ? null : id(), api: API }); }
+  window.GSA = { track: track, flush: flush, off: off, setOff: setOff };
+  if (off()) return;
+  var page = (location.pathname.split('/').pop() || 'index').replace(/\.html$/, '') || 'index';
+  var standalone = false; try { standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch (e) {}
+  track('screen', page);
+  try { if (sessionStorage.getItem('gsb.aOpen') !== day()) { sessionStorage.setItem('gsb.aOpen', day()); track('app_open', standalone ? 'app' : 'web'); } } catch (e) {}
+  idb({ off: false, id: id(), api: API });   // the service worker counts taps on notifications with these
+  addEventListener('error', function (e) { var m = String((e && e.message) || 'x'), h = 0; for (var i = 0; i < m.length; i++) h = (h * 31 + m.charCodeAt(i)) | 0; track('error', page + ':' + (h >>> 0).toString(36)); });
+  // calls to the app's own server that are worth counting (friends, cheers, shared lists)
+  var MAP = { '/f/add': 'friend_added', '/f/cheer': 'cheer_sent', '/l/new': 'list_shared', '/l/add': ['task_add', 'shared'] };
+  if (API && window.fetch) { var f0 = window.fetch; window.fetch = function (u, o) { try { var s = String((u && u.url) || u); if (s.indexOf(API) === 0 || (window.GSD_API_TEST && s.indexOf(window.GSD_API_TEST) === 0)) { var p = s.replace(/^https?:\/\/[^/]+/, ''), m = MAP[p]; if (m) track(m.join ? m[0] : m, m.join ? m[1] : null); } } catch (e) {} return f0.apply(this, arguments); }; }
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flush(); });
+  addEventListener('pagehide', flush);
+  setTimeout(flush, 4000);   // anything left from last time
 })();</script>
 <title>Get St*ck Done!</title>
 <script>/* size the phone frame before anything paints, so nothing (e.g. the nav bar) shows in the wrong place while the page loads */
@@ -303,7 +337,7 @@ class Component extends DCLogic {
         return { total: E.length, count: stk.length, stk, cats, days, active: days.filter((n) => n).length, xp: gained, lvFrom: lvOf(before), lvTo: lvOf(before + gained), lv: L.lv, pct: Math.round(100 * L.into / L.next),
                  top: top ? { id: top, name: RNAME[top] || top, n: dish[top] } : null, packs: L.packs }; };
       const stuckList = () => J('gsb.stuck', []);
-      const stick = (id) => { const a = stuckList(); if (a.indexOf(id) < 0) { a.push(id); try { localStorage.setItem('gsb.stuck', JSON.stringify(a)); } catch (e) {} } };
+      const stick = (id) => { const a = stuckList(); if (a.indexOf(id) < 0) { try { if (window.GSA) GSA.track('sticker_stuck', String(id).split('-')[0]); } catch (e) {} a.push(id); try { localStorage.setItem('gsb.stuck', JSON.stringify(a)); } catch (e) {} } };
       const waiting = () => { const s = new Set(stuckList()); return read().slots.filter((x) => !s.has(x.id)).length; };
       // stickers so far: this week (Mon-Sun) and this month, by day and by kind
       const CATS = ['tasks', 'workouts', 'meals', 'water'];
@@ -497,7 +531,7 @@ class Component extends DCLogic {
         + '<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; padding-top: 4px">' + 'MTWTFSS'.split('').map((d) => '<span class="bri" style="text-align: center; font-size: 13px; opacity: 0.6">' + d + '</span>').join('') + cells + '</div>'
         + '<span class="kal" style="font-size: 14px; opacity: 0.75">lime: a few · yellow: plenty · pink: huge days</span></div>'; };
     // where the last button goes: the week sticker if you earned one; then the month's pack if that's waiting too; else Today
-    const onward = () => MODE === 'week' && PK && PK.mDue ? ['OPEN MY MONTH →', 'MonthWrap.html?v=1793575465'] : ['BACK TO TODAY →', 'Today.html?v=1793575465'];
+    const onward = () => MODE === 'week' && PK && PK.mDue ? ['OPEN MY MONTH →', 'MonthWrap.html?v=1793577382'] : ['BACK TO TODAY →', 'Today.html?v=1793577382'];
     const paintStats = () => {
       const c = R.cats, names = MODE === 'week' ? ['tasks ticked', 'workouts', 'meals cooked', 'water goals hit'] : ['tasks ticked', 'workouts', 'meals cooked', 'water goal days'];
       const tiles = [['tasks', 'task'], ['workouts', 'workout'], ['meals', 'meal'], ['water', 'water']].map(([k, ic], i) => c[k] ? '<div class="wstat" style="transform: rotate(' + [-1.5, 1, 1.2, -1][i] + 'deg)"><div style="display: flex; align-items: center; justify-content: space-between">'
@@ -536,7 +570,7 @@ class Component extends DCLogic {
         + '<span style="font-size: 18px; line-height: 1.35; color: #F6EFE1; text-align: center; font-weight: 700">You got stuff done on ' + m.days + (m.days === 1 ? ' day' : ' days') + '. Every ' + (wk ? 'week' : 'month') + ' you get something done earns ' + (wk ? 'one.' : 'a holo one.') + '</span>'
         + '<span class="kal" style="font-size: 15px; color: #F6EFE1; opacity: 0.7; text-align: center">' + (wk ? PKART.name('wk', m.d) + ' · one of 12 designs' : PKART.name('mo', m.d) + ' · ' + new Date(from).toLocaleDateString('en-GB', { month: 'long' }) + '’s own sticker') + '</span>'
         + '<div style="flex: 1"></div>'
-        + '<a href="StickerAlbum.html?v=1793575465#new" class="press bri" style="width: 100%; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 22px; box-shadow: 4px 4px 0 #FF6FB0; display: flex; align-items: center; justify-content: center; text-decoration: none">STICK IT IN MY BOOK →</a>'
+        + '<a href="StickerAlbum.html?v=1793577382#new" class="press bri" style="width: 100%; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 22px; box-shadow: 4px 4px 0 #FF6FB0; display: flex; align-items: center; justify-content: center; text-decoration: none">STICK IT IN MY BOOK →</a>'
         + '<a href="' + go[1] + '" class="press bri" style="width: 100%; height: 54px; box-sizing: border-box; border-radius: 18px; border: 2px solid rgba(246,239,225,0.5); color: #F6EFE1; font-size: 18px; display: flex; align-items: center; justify-content: center; text-decoration: none">' + go[0].replace('BACK TO TODAY →', 'BACK TO TODAY') + '</a>';
       box.style.display = 'flex'; buzz([10, 40, 16]);
       if (!reduce) { const a = $('mineArt'); if (a.animate) a.animate([{ transform: 'scale(1.8) rotate(-20deg)', opacity: 0 }, { transform: 'scale(0.92) rotate(2deg)', opacity: 1, offset: 0.6 }, { transform: 'none', opacity: 1 }], { duration: 420, easing: 'cubic-bezier(.3,1.4,.5,1)' }); } };
@@ -560,6 +594,6 @@ class Component extends DCLogic {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793575465"></script>
-<script src="dc.js?v=1793575465"></script>
+<script src="morphdom.js?v=1793577382"></script>
+<script src="dc.js?v=1793577382"></script>
 </body></html>
