@@ -387,7 +387,7 @@ class Component extends DCLogic {
         + '<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; padding-top: 4px">' + 'MTWTFSS'.split('').map((d) => '<span class="bri" style="text-align: center; font-size: 13px; opacity: 0.6">' + d + '</span>').join('') + cells + '</div>'
         + '<span class="kal" style="font-size: 14px; opacity: 0.75">lime: a few · yellow: plenty · pink: huge days</span></div>'; };
     // where the last button goes: the week sticker if you earned one; then the month's pack if that's waiting too; else Today
-    const onward = () => MODE === 'week' && PK && PK.mDue ? ['OPEN MY MONTH →', 'MonthWrap.html?v=1793544002'] : ['BACK TO TODAY →', 'Today.html?v=1793544002'];
+    const onward = () => MODE === 'week' && PK && PK.mDue ? ['OPEN MY MONTH →', 'MonthWrap.html?v=1793544558'] : ['BACK TO TODAY →', 'Today.html?v=1793544558'];
     const paintStats = () => {
       const c = R.cats, names = MODE === 'week' ? ['tasks ticked', 'workouts', 'meals cooked', 'water goals hit'] : ['tasks ticked', 'workouts', 'meals cooked', 'water goal days'];
       const tiles = [['tasks', 'task'], ['workouts', 'workout'], ['meals', 'meal'], ['water', 'water']].map(([k, ic], i) => c[k] ? '<div class="wstat" style="transform: rotate(' + [-1.5, 1, 1.2, -1][i] + 'deg)"><div style="display: flex; align-items: center; justify-content: space-between">'
@@ -426,7 +426,7 @@ class Component extends DCLogic {
         + '<span style="font-size: 18px; line-height: 1.35; color: #F6EFE1; text-align: center; font-weight: 700">You got stuff done on ' + m.days + (m.days === 1 ? ' day' : ' days') + '. Every ' + (wk ? 'week' : 'month') + ' you get something done earns ' + (wk ? 'one.' : 'a foil one.') + '</span>'
         + '<span class="kal" style="font-size: 15px; color: #F6EFE1; opacity: 0.7; text-align: center">' + PKART.name(wk ? 'wk' : 'mo', m.d) + ' · one of ' + (wk ? 12 : 4) + ' designs</span>'
         + '<div style="flex: 1"></div>'
-        + '<a href="StickerAlbum.html?v=1793544002#new" class="press bri" style="width: 100%; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 22px; box-shadow: 4px 4px 0 #FF6FB0; display: flex; align-items: center; justify-content: center; text-decoration: none">STICK IT IN MY BOOK →</a>'
+        + '<a href="StickerAlbum.html?v=1793544558#new" class="press bri" style="width: 100%; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 22px; box-shadow: 4px 4px 0 #FF6FB0; display: flex; align-items: center; justify-content: center; text-decoration: none">STICK IT IN MY BOOK →</a>'
         + '<a href="' + go[1] + '" class="press bri" style="width: 100%; height: 54px; box-sizing: border-box; border-radius: 18px; border: 2px solid rgba(246,239,225,0.5); color: #F6EFE1; font-size: 18px; display: flex; align-items: center; justify-content: center; text-decoration: none">' + go[0].replace('BACK TO TODAY →', 'BACK TO TODAY') + '</a>';
       box.style.display = 'flex'; buzz([10, 40, 16]);
       if (!reduce) { const a = $('mineArt'); if (a.animate) a.animate([{ transform: 'scale(1.8) rotate(-20deg)', opacity: 0 }, { transform: 'scale(0.92) rotate(2deg)', opacity: 1, offset: 0.6 }, { transform: 'none', opacity: 1 }], { duration: 420, easing: 'cubic-bezier(.3,1.4,.5,1)' }); } };
@@ -450,6 +450,6 @@ class Component extends DCLogic {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793544002"></script>
-<script src="dc.js?v=1793544002"></script>
+<script src="morphdom.js?v=1793544558"></script>
+<script src="dc.js?v=1793544558"></script>
 </body></html>
