@@ -86,6 +86,10 @@ export async function lists(path, b, env, out) {
     const t = cleanText(b.t); if (!t) return out({ error: 'empty' }, 400);
     const n = (await DB.prepare('SELECT COUNT(*) AS n, MAX(ord) AS o FROM items WHERE list = ?').bind(L.id).first()); if (n.n >= MAX_ITEMS) return out({ error: 'full' }, 400);
     await DB.prepare('INSERT INTO items (id, list, t, size, by, at, for_id, ord) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').bind(rid(), L.id, t, SIZES.includes(b.size) ? b.size : '', me.id, now, await forId(L, b.for), (n.o || 0) + 1).run();
+    // everyone else on the list hears about it. Several added in a row (EMPTY YOUR HEAD) share one tag, so the alert updates rather than stacking up
+    const burst = (await DB.prepare('SELECT COUNT(*) AS n FROM items WHERE list = ? AND by = ? AND at > ?').bind(L.id, me.id, now - 90000).first()).n;
+    await tell(L, burst > 1 ? { title: me.name + ' added ' + burst + ' things to ' + L.name, body: 'Latest: ' + t, tag: 'list-add-' + L.id }
+                            : { title: me.name + ' added “' + t + '”', body: L.name, tag: 'list-add-' + L.id });
     return out({ ok: true, list: await view(L) });
   }
   if (path === '/l/leave') {
