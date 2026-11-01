@@ -74,6 +74,11 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 .ml-nm .t{font-size:17px;font-weight:700;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ml-isdone .ml-nm .t{text-decoration:line-through;opacity:0.5}
 .ml-hon{color:#E0A800;font-size:14px}
+.ml-hbtn{border:2px solid #172038;border-radius:8px;padding:3px 9px;font-size:16px;letter-spacing:1px;color:#172038;cursor:pointer;transform:rotate(-1deg);box-shadow:2px 2px 0 #172038}
+.ml-swatch{display:flex;gap:10px;margin:0 2px 10px;padding:8px 10px;background:#FFFFFF;border-radius:14px;box-shadow:0 3px 0 #CDB894}
+.ml-swatch button,.ml-dsw button{width:34px;height:34px;border-radius:50%;border:2.5px solid #172038;cursor:pointer;padding:0}
+.ml-swatch button[aria-checked="true"],.ml-dsw button[aria-checked="true"]{box-shadow:0 0 0 3px #FBF4E6,0 0 0 5.5px #172038}
+.ml-dsw{display:flex;gap:10px;align-items:center}
 .ml-chip{flex-shrink:0;font-size:11px;letter-spacing:0.5px;border-radius:999px;padding:2px 8px;color:#172038}
 .ml-go{flex-shrink:0;display:flex;align-items:center;height:30px;border-radius:999px;border:2px solid #172038;background:#C6FF4D;color:#172038;font-size:11px;letter-spacing:0.5px;padding:0 8px;white-space:nowrap;text-decoration:none}
 .ml-bd{flex-shrink:0;height:30px;border-radius:999px;border:2px solid #172038;background:#6EC8FF;color:#172038;font-size:11px;letter-spacing:0.5px;padding:0 8px;white-space:nowrap}
@@ -135,7 +140,7 @@ button[aria-label^="Go to step"]::after{content:'';position:absolute;inset:-3px}
 a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"]::after,button[aria-label$="add your weight"]::after,button[aria-label$="change the weight"]::after,button[aria-label$=": bodyweight"]::after{content:'';position:absolute;inset:-8px -3px}
 .snav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;height:58px;text-decoration:none;color:#F6EFE1;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;opacity:0.8;border-radius:14px;-webkit-tap-highlight-color:transparent}.snav-s{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#172038;box-shadow:0 0 0 2.5px #FFFFFF,0 0 0 4.5px #172038;transform:rotate(var(--r));transition:transform .18s cubic-bezier(.2,1.4,.4,1)}.snav:hover .snav-s,.snav:focus-visible .snav-s,.snav:active .snav-s{transform:rotate(var(--r)) scale(1.2)}.snav,.snav:hover,.snav:visited{color:#F6EFE1}.snav.on,.snav.on:hover{opacity:1;color:#C6FF4D}.snav.on .snav-s{box-shadow:0 0 0 2.5px #FFFFFF,0 0 0 4.5px #172038,2px 4px 0 4.5px rgba(0,0,0,0.45)}.snav:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}@media (prefers-reduced-motion: reduce){.snav-s{transition:none}}.dcbar{position:absolute;left:12px;right:12px;bottom:14px;height:68px;border-radius:22px;background:#0E1428;border:2px solid rgba(246,239,225,0.15);display:flex;align-items:center;gap:4px;padding:0 6px;box-sizing:border-box}.dcnav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;border-radius:16px;height:52px;text-decoration:none;border:none;background:transparent;cursor:pointer}.dcnav.on{background:#C6FF4D;color:#172038}.dcnav:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}.dcback{flex:1;height:48px;border-radius:16px;border:2px solid rgba(246,239,225,0.4);background:transparent;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:17px;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;cursor:pointer}.dcback.home{flex:0 0 auto;padding:0 18px;background:#C6FF4D;border-color:#C6FF4D;color:#172038}</style>
 </head><body data-extra="84">
-<div id="dc-frame"><div id="dc-stage"></div></div><div id="dc-bar"><div class="dcbar" role="navigation" aria-label="Back"><button type="button" class="dcback" onclick="if (history.length > 1) history.back(); else location.href = 'Today.html?v=1793530361'">‹ BACK</button><a class="dcback home" href="Today.html?v=1793530361" aria-label="Home"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M20.0 12.0 L22.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 17.6 L19.4 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 20.0 L12.0 22.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 17.6 L4.7 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M4.0 12.0 L1.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 6.4 L4.7 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 4.0 L12.0 1.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 6.4 L19.4 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg><span>HOME</span></a></div></div>
+<div id="dc-frame"><div id="dc-stage"></div></div><div id="dc-bar"><div class="dcbar" role="navigation" aria-label="Back"><button type="button" class="dcback" onclick="if (history.length > 1) history.back(); else location.href = 'Today.html?v=1793531093'">‹ BACK</button><a class="dcback home" href="Today.html?v=1793531093" aria-label="Home"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M20.0 12.0 L22.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 17.6 L19.4 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 20.0 L12.0 22.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 17.6 L4.7 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M4.0 12.0 L1.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 6.4 L4.7 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 4.0 L12.0 1.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 6.4 L19.4 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg><span>HOME</span></a></div></div>
 <script type="text/x-dc-template" id="dc-tpl">
 <div id="ml-root" style="width: 390px; height: 844px; position: relative; overflow: hidden; background-color: #FBF4E6; background-image: linear-gradient(rgba(139,94,52,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(139,94,52,0.08) 1px, transparent 1px); background-size: 20px 20px; color: #172038; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif">
   <span class="title-die bri" style="position: absolute; left: 18px; top: 16px; font-size: 38px; color: #172038; text-shadow: 3px 3px 0 #C6FF4D; transform: rotate(-2deg); transform-origin: left">MY LIST</span>
@@ -157,6 +162,7 @@ a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"
       <span class="kal" style="font-size: 17px; opacity: 0.8">One thing per line. Paste a list from your notes, or just type.</span>
       <label for="ml-dumpT" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">A title for these, if you like</label>
       <input id="ml-dumpT" type="text" maxlength="24" enterkeyhint="done" placeholder="give it a title (optional), e.g. weekend jobs" style="flex-shrink: 0; height: 46px; border-radius: 14px; border: 3px solid #172038; background: #FFFFFF; padding: 0 14px; font-size: 17px; font-family: 'Atkinson Hyperlegible', sans-serif; font-weight: 700; color: #172038">
+      <div id="ml-dumpCol" class="ml-dsw" role="radiogroup" aria-label="Colour for this list" style="display: none"><span class="bri" style="font-size: 14px; letter-spacing: 0.5px; margin-right: 2px">COLOUR</span></div>
       <label for="ml-dumpIn" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Your list, one thing per line</label>
       <textarea id="ml-dumpIn" style="flex: 1; min-height: 260px; border-radius: 16px; border: 3px solid #172038; background-color: #FFFFFF; background-image: linear-gradient(transparent 33px, #E8DFCC 33px); background-size: 100% 34px; background-position: 0 10px; background-attachment: local; padding: 12px 14px; font-size: 19px; line-height: 34px; font-family: 'Atkinson Hyperlegible', sans-serif; color: #172038; resize: none"></textarea>
       <span id="ml-dumpN" class="bri" style="align-self: flex-start; font-size: 13px; background: #FFFFFF; border: 2px solid #172038; border-radius: 999px; padding: 1px 10px"></span>
@@ -261,7 +267,7 @@ a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"
       </div>
       <span class="bri" style="font-size: 15px; letter-spacing: 0.5px">WHO’S IN?</span>
       <div id="ml-sqWho" class="ml-group" style="padding: 0 12px"></div>
-      <div id="ml-sqNone" style="display: none; flex-direction: column; gap: 8px"><span style="font-size: 17px; line-height: 1.3">Add a friend first: shared lists are friends only.</span><a href="Friends.html?v=1793530361" class="ml-big bri press" style="text-decoration: none">FRIENDS →</a></div>
+      <div id="ml-sqNone" style="display: none; flex-direction: column; gap: 8px"><span style="font-size: 17px; line-height: 1.3">Add a friend first: shared lists are friends only.</span><a href="Friends.html?v=1793531093" class="ml-big bri press" style="text-decoration: none">FRIENDS →</a></div>
       <button type="button" id="ml-sqGo" class="bri press" style="flex-shrink: 0; height: 60px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 22px; box-shadow: 4px 4px 0 #172038"></button>
     </div>
   </div>
@@ -276,7 +282,7 @@ a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"
       <div id="ml-wWho" style="align-self: stretch; display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 16px; background: rgba(246,239,225,0.08); text-align: left"></div>
       <span style="flex: 1"></span>
       <button type="button" id="ml-wCheer" class="bri press" style="align-self: stretch; height: 58px; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 22px"></button>
-      <a id="ml-wStick" href="StickerAlbum.html?v=1793530361#new" class="bri press" style="align-self: stretch; height: 50px; border-radius: 16px; border: 2px solid rgba(246,239,225,0.5); color: #F6EFE1; font-size: 18px; display: flex; align-items: center; justify-content: center; text-decoration: none">STICK IT IN MY BOOK →</a>
+      <a id="ml-wStick" href="StickerAlbum.html?v=1793531093#new" class="bri press" style="align-self: stretch; height: 50px; border-radius: 16px; border: 2px solid rgba(246,239,225,0.5); color: #F6EFE1; font-size: 18px; display: flex; align-items: center; justify-content: center; text-decoration: none">STICK IT IN MY BOOK →</a>
       <button type="button" id="ml-wX" class="ml-link kal" style="color: #F6EFE1">back to my list</button>
     </div>
   </div>
@@ -372,7 +378,12 @@ window.GST = (() => {
   const libLen = (k, long) => LIB[k] ? LIB[k][long ? 'long' : 'short'].length : 0;
   // what a tick tells the stickers: pinned (Mission control), which ready-made list (Inbox zero), and whether it cleared a list of 3+ (Over the moon)
   const tickInfo = (L, t) => ({ pin: !!t.pin, lib: match(t.t), clear: !t.shared && open(L).length === 0 && L.filter((x) => x.done).length >= 3 });
-  return { load, save, make, open, top, pins, pinShared, touch, energy, setEnergy, match, tickInfo, stepsFor, useLib, libLen, dkey, LIB, api, canShare, shared, saveShared, sync, putList, dropList, sharedOpen, tickShared, finished };
+  // list colours: each heading on MINE (WORK STUFF...) has a colour, used for its heading and its tag on Today. Lime unless you pick.
+  const GCOLS = [['#C6FF4D', 'lime'], ['#6EC8FF', 'blue'], ['#FFD23F', 'yellow'], ['#FF9A3C', 'orange'], ['#A98BFF', 'purple'], ['#FF6FB0', 'pink']];
+  const gcols = () => { try { return JSON.parse(localStorage.getItem('gsd.groupCols') || '{}') || {}; } catch (e) { return {}; } };
+  const gcol = (g) => gcols()[g] || GCOLS[0][0];
+  const setGcol = (g, c) => { const m = gcols(); m[g] = c; try { localStorage.setItem('gsd.groupCols', JSON.stringify(m)); } catch (e) {} };
+  return { GCOLS, gcol, setGcol, load, save, make, open, top, pins, pinShared, touch, energy, setEnergy, match, tickInfo, stepsFor, useLib, libLen, dkey, LIB, api, canShare, shared, saveShared, sync, putList, dropList, sharedOpen, tickShared, finished };
 })();
 
 
@@ -548,7 +559,7 @@ window.GST = (() => {
       if (t.done) { buzz(12); won(GSP.act('task', t.care || null, GST.tickInfo(L, t))); } else { buzz(4); GSP.unact('task', t.care || null); } };
 
     // ---- the list
-    let openDone = false;
+    let openDone = false, colFor = null, onToday = () => false;
     const chip = (t) => { if (canBreak(t)) return ''; if (t.steps && t.steps.length) return '<span class="ml-chip bri" style="background:#6EC8FF">' + t.steps.filter((x) => x.done).length + ' of ' + t.steps.length + '</span>';
       return t.size && SIZE[t.size] ? '<span class="ml-chip bri" style="background:' + SIZE[t.size][1] + '">' + SIZE[t.size][0] + '</span>' : ''; };
     const canBreak = (t) => !t.done && !t.care && !t.link && !(t.steps && t.steps.length) && !!GST.match(t.t);
@@ -557,8 +568,10 @@ window.GST = (() => {
         // the name gets the whole width; BREAK IT DOWN, OPEN LIST and which shared list it's from sit on a small line underneath
         + ((sub) => '<div class="ml-mid"><button type="button" class="ml-nm' + (sub ? ' two' : '') + '"><span class="t"></span>' + (t.care ? '<span class="ml-hon" aria-hidden="true">★</span>' : '') + chip(t) + '</button>' + (sub ? '<div class="ml-sub2">' + sub + '</div>' : '') + '</div>')(
           (canBreak(t) ? '<button type="button" class="ml-bd bri">BREAK IT DOWN</button>' : '')
-          + (t.link === 'shop' && !t.done ? '<a class="ml-go bri" href="PlanWeek.html?v=1793530361#shop" aria-label="Open your shopping list">OPEN LIST</a>' : '')
-          + (t.shared ? '<span class="ml-chip bri" style="background:#FFB3D1">' + String(t.shared.name).toUpperCase().replace(/[<>&"]/g, '') + '</span>' : ''))
+          + (t.link === 'shop' && !t.done ? '<a class="ml-go bri" href="PlanWeek.html?v=1793531093#shop" aria-label="Open your shopping list">OPEN LIST</a>' : '')
+          + (t.shared ? '<span class="ml-chip bri" style="background:#FFB3D1">' + String(t.shared.name).toUpperCase().replace(/[<>&"]/g, '') + '</span>' : '')
+          + (kind === 'today' && t.group ? '<span class="ml-chip bri" style="background:' + GST.gcol(t.group) + '">' + esc(t.group.toUpperCase()) + '</span>' : '')   // which of your lists it's from, in that list's colour
+          + (kind === 'next' && onToday(t) ? '<span class="ml-chip bri" style="background:#FFFFFF;border:1.5px solid #172038">ON TODAY</span>' : ''))   // the same task as up in ON TODAY: tick either, it's one tick
         + (kind === 'done' || t.shared && !t.mine ? '' : '<button type="button" class="ml-pin" aria-pressed="' + (t.pin ? 'true' : 'false') + '">' + pinSvg(t.pin) + '</button>')
         + (t.shared ? '' : '<button type="button" class="ml-del">' + MINUS + '</button>')
         + (kind === 'next' ? '<span class="ml-grip" role="button" tabindex="0">' + GRIP + '</span>' : '');
@@ -606,11 +619,21 @@ window.GST = (() => {
       const shMine = GST.sharedOpen().filter((t) => t.mine && onIds.indexOf(t.id) < 0);   // every shared job you've called (or that's set for you), not just the top 3
       if (!L.length && !T.list.length && !shMine.length) { box.innerHTML = '<span class="kal ml-empty">what do you want to get done?</span>'; return; }
       const add = (h) => { const d = document.createElement('div'); d.innerHTML = h; while (d.firstChild) box.appendChild(d.firstChild); };
+      onToday = (t) => onIds.indexOf(t.id) >= 0;
       if (T.list.length) { add(head('ON TODAY', 'your top 3, shown on Today', true)); T.list.forEach((t) => box.appendChild(rowEl(t, 'today'))); }
       // headings (set on + ADD A LIST, or in a task's sheet): your own tasks grouped under a title, each with its own order
       const loose = next.filter((t) => !t.group), heads = [...new Set(next.filter((t) => t.group).map((t) => t.group))];
       if (loose.length) { add(head('UP NEXT', loose.length > 1 ? 'drag to change the order' : '')); const g = document.createElement('div'); g.className = 'ml-group'; g.id = 'ml-next'; loose.forEach((t) => g.appendChild(rowEl(t, 'next'))); box.appendChild(g); }
-      heads.forEach((h) => { const ts = next.filter((t) => t.group === h); add(head(esc(h.toUpperCase()), ts.length + (ts.length === 1 ? ' thing' : ' things'))); const g = document.createElement('div'); g.className = 'ml-group'; ts.forEach((t) => g.appendChild(rowEl(t, 'next'))); box.appendChild(g); });
+      // a list keeps every one of its tasks, even the ones also up in ON TODAY (same task: one tick, one sticker)
+      const heads2 = [...new Set(GST.open(L).filter((t) => t.group).map((t) => t.group))];
+      heads2.forEach((h) => { const ts = GST.open(L).filter((t) => t.group === h), c = GST.gcol(h);
+        add('<div class="ml-head"><button type="button" class="ml-hbtn bri" data-g="' + esc(h) + '" aria-expanded="' + (colFor === h ? 'true' : 'false') + '" aria-label="' + esc(h) + ': change its colour" style="background:' + c + '">' + esc(h.toUpperCase()) + '</button><span class="kal">' + ts.length + (ts.length === 1 ? ' thing' : ' things') + '</span></div>');
+        const hb = box.lastElementChild.querySelector('.ml-hbtn'); hb.addEventListener('click', () => { colFor = colFor === h ? null : h; buzz(5); paint(); });
+        if (colFor === h) { const sw = document.createElement('div'); sw.className = 'ml-swatch'; sw.setAttribute('role', 'radiogroup'); sw.setAttribute('aria-label', 'Colour for ' + h);
+          GST.GCOLS.forEach(([v, n]) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', v === c ? 'true' : 'false'); b.setAttribute('aria-label', n); b.style.background = v;
+            b.addEventListener('click', () => { GST.setGcol(h, v); colFor = null; buzz(8); paint(); }); sw.appendChild(b); }); box.appendChild(sw); }
+        const g = document.createElement('div'); g.className = 'ml-group'; ts.forEach((t) => g.appendChild(rowEl(t, 'next'))); box.appendChild(g); });
+      if (false) heads.forEach((h) => { const ts = next.filter((t) => t.group === h); add(head(esc(h.toUpperCase()), ts.length + (ts.length === 1 ? ' thing' : ' things'))); const g = document.createElement('div'); g.className = 'ml-group'; ts.forEach((t) => g.appendChild(rowEl(t, 'next'))); box.appendChild(g); });
       if (shMine.length) { add(head('FROM SHARED LISTS', 'yours to do')); const g = document.createElement('div'); g.className = 'ml-group'; shMine.forEach((t) => g.appendChild(rowEl(t, 'shared'))); box.appendChild(g); }
       if (shelf.length) { const b = document.createElement('button'); b.type = 'button'; b.className = 'ml-fold bri press'; b.innerHTML = '<span>MAYBE ONE DAY · ' + shelf.length + '</span><span aria-hidden="true">›</span>'; b.addEventListener('click', openTidy); box.appendChild(b); }
       if (done.length) { const b = document.createElement('button'); b.type = 'button'; b.className = 'ml-fold bri press'; b.setAttribute('aria-expanded', openDone ? 'true' : 'false');
@@ -638,7 +661,9 @@ window.GST = (() => {
       box.innerHTML = '<div class="ml-shead"><span class="bri" style="font-size:15px;white-space:nowrap"></span><span class="ml-bar"><span style="width:' + (SL.items.length ? Math.round(100 * done / SL.items.length) : 0) + '%"></span></span><span class="kal" style="font-size:15px;white-space:nowrap">' + done + ' of ' + SL.items.length + '</span></div>';
       box.querySelector('.ml-shead .bri').textContent = SL.name.toUpperCase() + ' · ' + (REP[SL.rep] || '');
       if (!SL.items.length) { const e = document.createElement('span'); e.className = 'kal ml-empty'; e.textContent = 'what do you want to get done?'; box.appendChild(e); }
-      const g = document.createElement('div'); g.className = 'ml-group';
+      // still to do first; done ones tuck underneath in a fold (a job you've just ticked waits a moment before it moves)
+      const now = Date.now(), todo = SL.items.filter((x) => !x.done || (stay[x.id] || 0) > now), gone = SL.items.filter((x) => todo.indexOf(x) < 0);
+      const g = document.createElement('div'); g.className = 'ml-group'; const g2 = document.createElement('div'); g2.className = 'ml-group';
       SL.items.forEach((x) => { const r = document.createElement('div'); r.className = 'ml-row' + (x.done ? ' ml-isdone' : ''); r.dataset.id = x.id;
         let chip = '';
         if (x.done && x.for === '*') chip = '<span class="ml-who bri" style="background:#C6FF4D">EVERYONE ✓</span>';   // a shared job: everyone gets the credit
@@ -654,19 +679,23 @@ window.GST = (() => {
         r.querySelector('.ml-nm').addEventListener('click', () => openItem(SL, x));
         const db = r.querySelector('.ml-del'); if (db) { db.setAttribute('aria-label', 'Remove ' + x.t); db.addEventListener('click', () => removeShared(SL, x)); }
         const cb = r.querySelector('.ml-call'); if (cb) { cb.setAttribute('aria-label', 'Anyone can do this. Tap to call it: ' + x.t); cb.addEventListener('click', () => call(SL, x, true)); }
-        g.appendChild(r); });
-      if (SL.items.length) box.appendChild(g);
+        (todo.indexOf(x) >= 0 ? g : g2).appendChild(r); });
+      if (todo.length) box.appendChild(g);
+      if (gone.length) { const fb = document.createElement('button'); fb.type = 'button'; fb.className = 'ml-fold bri press'; const op = sDoneOpen || !todo.length; fb.setAttribute('aria-expanded', op ? 'true' : 'false');
+        fb.innerHTML = '<span>✓ ' + gone.length + ' DONE</span><span aria-hidden="true">' + (op ? '▴' : '▾') + '</span>'; fb.addEventListener('click', () => { sDoneOpen = !op; buzz(5); paint(); }); box.appendChild(fb);
+        if (op) box.appendChild(g2); }
       const f = document.createElement('div'); f.className = 'ml-foot';
       f.innerHTML = '<span class="ml-avs">' + SL.members.map(av).join('') + '</span><span style="display:flex;gap:4px"><button type="button" class="ml-link kal ml-ref" aria-label="Refresh this list">↻ refresh</button><button type="button" class="ml-link kal ml-inv">+ add friends</button><button type="button" class="ml-link kal ml-leave">leave this list</button></span>';
       f.querySelector('.ml-inv').addEventListener('click', () => openSquad(SL));
       f.querySelector('.ml-ref').addEventListener('click', (e) => { const b = e.currentTarget; b.textContent = 'refreshing…'; b.disabled = true; buzz(6);   // see friends' ticks now, not in 30 seconds
         GST.sync().then(() => { paint(); teamCheck(); }).catch(() => { b.textContent = 'can’t reach it, try again'; b.disabled = false; }); }); f.querySelector('.ml-leave').addEventListener('click', () => leave(SL));
-      if (done) { const c = document.createElement('button'); c.type = 'button'; c.className = 'ml-fold bri press'; c.innerHTML = '<span>CLEAR</span><span aria-hidden="true">✓</span>'; c.setAttribute('aria-label', 'Clear the ' + done + ' done');
+      if (done && (sDoneOpen || !todo.length)) { const c = document.createElement('button'); c.type = 'button'; c.className = 'ml-fold bri press'; c.innerHTML = '<span>CLEAR</span><span aria-hidden="true">✓</span>'; c.setAttribute('aria-label', 'Clear the ' + done + ' done');
         c.addEventListener('click', () => { SL.items = SL.items.filter((x) => !x.done); GST.putList(SL); buzz(8); paint(); send('/l/clear', {}, SL).catch(() => {}); }); box.appendChild(c); }
       box.appendChild(f); };
     const oops = () => toast('COULDN’T SYNC', 'Check your connection and try again.');
     const send = (path, body, SL) => GST.api(path, Object.assign({ list: SL.id }, body)).then((j) => { if (j.list) GST.putList(j.list); paint(); teamCheck(); return j; }).catch((e) => { oops(); sync(); throw e; });
-    const sharedTick = (SL, x) => { const on = !x.done, w = { shared: { list: SL.id, item: x.id } }, r = GST.tickShared(w, on);
+    let sDoneOpen = false; const stay = {};
+    const sharedTick = (SL, x) => { const on = !x.done; if (on) { stay[x.id] = Date.now() + 900; setTimeout(() => { if (tab === SL.id) paint(); }, 950); } const w = { shared: { list: SL.id, item: x.id } }, r = GST.tickShared(w, on);
       if (on) { buzz(12); won(GSP.act('task', null)); won(GSP.act('teamtick', { carry: r.carry })); x._carry = r.carry; } else { buzz(4); GSP.unact('task', null); GSP.unact('teamtick', { carry: !!x._carry }); }
       paint(); const n = root.querySelector('[data-id="' + x.id + '"] .ml-tk'); pop(n);
       r.p.then(() => { paint(); teamCheck(); }).catch(() => { oops(); sync(); }); };
@@ -753,6 +782,13 @@ window.GST = (() => {
     $('ml-addForm').addEventListener('submit', (e) => { e.preventDefault(); const v = $('ml-addIn').value.trim(); if (!v) { $('ml-addIn').focus(); return; }
       if (tab !== 'mine') { const SL = GST.shared().lists.find((x) => x.id === tab); $('ml-addIn').value = ''; lotsLabel(); buzz(8); if (SL) send('/l/add', { t: v }, SL).catch(() => {}); return; }
       const t = GST.make(v); L.push(t); save(); $('ml-addIn').value = ''; lotsLabel(); buzz(8); paint(); const r = root.querySelector('[data-id="' + t.id + '"]'); if (r) { r.scrollIntoView({ block: 'nearest' }); pop(r); } });
+    // a list with a title gets a colour (lime unless you pick another)
+    let dumpCol = null;
+    const paintDumpCol = () => { const w = $('ml-dumpCol'), g = $('ml-dumpT').value.trim(); w.style.display = g ? 'flex' : 'none'; const cur = dumpCol || (g ? GST.gcol(g) : GST.GCOLS[0][0]);
+      w.querySelectorAll('button').forEach((b) => b.setAttribute('aria-checked', b.dataset.c === cur ? 'true' : 'false')); };
+    GST.GCOLS.forEach(([v, n]) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-label', n); b.dataset.c = v; b.style.background = v;
+      b.addEventListener('click', () => { dumpCol = v; buzz(5); paintDumpCol(); }); $('ml-dumpCol').appendChild(b); });
+    $('ml-dumpT').addEventListener('input', paintDumpCol);
     const lines = () => $('ml-dumpIn').value.split(/\n/).map((x) => x.replace(/^\s*[-*•·\d.)\]]*\s*(\[[ x]\])?\s*/i, '').trim()).filter(Boolean);
     const dumpCount = () => { const n = lines().length; $('ml-dumpN').textContent = n + (n === 1 ? ' thing' : ' things'); $('ml-dumpGo').textContent = n ? 'ADD ' + n + (n === 1 ? ' THING →' : ' THINGS →') : 'ADD THEM →'; $('ml-dumpGo').disabled = !n; };
     const sheetOpen = (id) => { const el = $(id); el.style.display = 'block'; if (el.animate && !reduce) el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 180 }); const s = el.querySelector('.ml-sheet'); if (s && s.animate && !reduce) s.animate([{ transform: 'translateY(60px)' }, { transform: 'none' }], { duration: 260, easing: 'cubic-bezier(.2,.9,.3,1)' }); };
@@ -761,12 +797,13 @@ window.GST = (() => {
     const lotsLabel = () => { $('ml-lots').textContent = $('ml-addIn').value.trim() ? '+ ADD' : '+ ADD A LIST'; };
     $('ml-addIn').addEventListener('input', lotsLabel);
     $('ml-lots').addEventListener('click', () => { if ($('ml-addIn').value.trim()) { $('ml-addForm').requestSubmit(); lotsLabel(); return; }
-      $('ml-dumpIn').value = ''; $('ml-dumpT').value = ''; $('ml-dumpT').style.display = tab === 'mine' ? 'block' : 'none'; dumpCount(); sheetOpen('ml-dump'); setTimeout(() => $('ml-dumpIn').focus(), 60); buzz(6); });
+      $('ml-dumpIn').value = ''; $('ml-dumpT').value = ''; $('ml-dumpT').style.display = tab === 'mine' ? 'block' : 'none'; dumpCol = null; paintDumpCol(); dumpCount(); sheetOpen('ml-dump'); setTimeout(() => $('ml-dumpIn').focus(), 60); buzz(6); });
     $('ml-dumpIn').addEventListener('input', dumpCount);
     $('ml-dumpX').addEventListener('click', () => sheetClose('ml-dump'));
     $('ml-dumpGo').addEventListener('click', () => { const xs = lines(); if (!xs.length) return; won(GSP.act('dump', xs.length));
       if (tab !== 'mine') { const SL = GST.shared().lists.find((x) => x.id === tab); sheetClose('ml-dump'); if (SL) xs.reduce((pr, x) => pr.then(() => GST.api('/l/add', { list: SL.id, t: x }).then((j) => { GST.putList(j.list); paint(); })), Promise.resolve()).catch(oops); return; }
-      const grp = $('ml-dumpT').value.trim().slice(0, 24); xs.forEach((x) => { const t = GST.make(x); if (grp) t.group = grp; L.push(t); }); save(); sheetClose('ml-dump'); buzz([8, 30, 8]); paint(); toast(xs.length + (xs.length === 1 ? ' THING ADDED' : ' THINGS ADDED'), ''); });
+      const grp = $('ml-dumpT').value.trim().slice(0, 24); if (grp && (dumpCol || !L.some((x) => x.group === grp))) GST.setGcol(grp, dumpCol || GST.GCOLS[0][0]);
+      xs.forEach((x) => { const t = GST.make(x); if (grp) t.group = grp; L.push(t); }); save(); sheetClose('ml-dump'); buzz([8, 30, 8]); paint(); toast(xs.length + (xs.length === 1 ? ' THING ADDED' : ' THINGS ADDED'), ''); });
 
     // ---- tap a task: its sheet
     let cur = null;
@@ -884,6 +921,6 @@ window.GST = (() => {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793530361"></script>
-<script src="dc.js?v=1793530361"></script>
+<script src="morphdom.js?v=1793531093"></script>
+<script src="dc.js?v=1793531093"></script>
 </body></html>
