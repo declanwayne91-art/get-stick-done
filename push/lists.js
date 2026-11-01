@@ -51,6 +51,7 @@ export async function lists(path, b, env, out) {
       .map((x) => ({ id: x.id, t: x.t, size: x.size || '', by: x.by, at: x.at, for: x.for_id || null, dibs: x.dibs || null, done: x.done_by || null, doneAt: x.done_at || null }));
     return { id: L.id, name: L.name, rep: L.rep, owner: L.owner, period: L.period, members: mem.map((u) => ({ id: u.id, name: u.name, plate: u.plate })), items }; };
   const tell = async (L, msg, skip) => { for (const u of await people(L.id)) if (u.id !== me.id && u.id !== skip) await alert(env, u, Object.assign({ url: 'MyList.html' }, msg)); };
+  const tellOne = async (L, uid, msg) => { if (!uid || uid === '*' || uid === me.id) return false; const u = (await people(L.id)).find((x) => x.id === uid); if (u) await alert(env, u, Object.assign({ url: 'MyList.html' }, msg)); return !!u; };   // a job set for one person: only they hear
   const item = async (L, iid) => DB.prepare('SELECT * FROM items WHERE id = ? AND list = ?').bind(String(iid || '').slice(0, 40), L.id).first();
   const forId = async (L, v) => { if (!v) return null; if (v === '*') return '*';   // EVERYONE: a job you all share
     return (await DB.prepare('SELECT 1 FROM members WHERE list = ? AND user = ?').bind(L.id, String(v).slice(0, 40)).first()) ? String(v).slice(0, 40) : null; };
@@ -86,6 +87,8 @@ export async function lists(path, b, env, out) {
     const t = cleanText(b.t); if (!t) return out({ error: 'empty' }, 400);
     const n = (await DB.prepare('SELECT COUNT(*) AS n, MAX(ord) AS o FROM items WHERE list = ?').bind(L.id).first()); if (n.n >= MAX_ITEMS) return out({ error: 'full' }, 400);
     await DB.prepare('INSERT INTO items (id, list, t, size, by, at, for_id, ord) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').bind(rid(), L.id, t, SIZES.includes(b.size) ? b.size : '', me.id, now, await forId(L, b.for), (n.o || 0) + 1).run();
+    const fid = await forId(L, b.for);
+    if (fid && fid !== '*' && fid !== me.id) { await tellOne(L, fid, { title: me.name + ' set “' + t + '” for you', body: L.name, tag: 'list-add-' + L.id }); return out({ ok: true, list: await view(L) }); }
     // everyone else on the list hears about it. Several added in a row (EMPTY YOUR HEAD) share one tag, so the alert updates rather than stacking up
     const burst = (await DB.prepare('SELECT COUNT(*) AS n FROM items WHERE list = ? AND by = ? AND at > ?').bind(L.id, me.id, now - 90000).first()).n;
     await tell(L, burst > 1 ? { title: me.name + ' added ' + burst + ' things to ' + L.name, body: 'Latest: ' + t, tag: 'list-add-' + L.id }
@@ -105,6 +108,7 @@ export async function lists(path, b, env, out) {
   if (path === '/l/edit') {
     const t = b.t != null ? cleanText(b.t) || it.t : it.t, size = b.size != null ? (SIZES.includes(b.size) ? b.size : '') : it.size, f = b.for !== undefined ? await forId(L, b.for) : it.for_id;
     await DB.prepare('UPDATE items SET t = ?, size = ?, for_id = ?' + (f === '*' ? ', dibs = NULL' : '') + ' WHERE id = ?').bind(t, size, f, it.id).run();   // EVERYONE: nothing left to call
+    if (f !== it.for_id) await tellOne(L, f, { title: me.name + ' set “' + t + '” for you', body: L.name, tag: 'list-add-' + L.id });
     return out({ ok: true, list: await view(L) });
   }
   if (path === '/l/del') { await DB.prepare('DELETE FROM items WHERE id = ?').bind(it.id).run(); return out({ ok: true, list: await view(L) }); }
