@@ -167,7 +167,7 @@ window.GSN = (function () {
 .pp-wrap .pp-hole{opacity:0}
 .pp-wrap.done .pp-hole{opacity:1}
 .pp-wrap.done .pp-punch{animation:ppLift .5s ease-out forwards}
-.pp-wrap .pp-card{clip-path:polygon(0 0,112px 0,112px 35px,100% 35px,100% 100%,0 100%)}
+.pp-wrap .pp-card{clip-path:polygon(0 0,112px 0,112px 35px,100% 35px,100% 100%,0 100%);transform-origin:50% 0;transform:perspective(800px) rotateX(56deg)}
 .pp-wrap.done .pp-card{animation:ppOut .55s ease-out forwards}
 .pp-wrap.down .pp-body{animation:ppSquash .2s ease-out}
 .pp-wrap .pp-star{opacity:0}
@@ -175,7 +175,7 @@ window.GSN = (function () {
 .pp-wrap .pp-conf{opacity:0}
 .pp-wrap.done .pp-conf{animation:ppConf .9s ease-out forwards}
 @keyframes ppLift{to{transform:translate(60px,-160px) rotate(8deg);opacity:0}}
-@keyframes ppOut{0%{clip-path:polygon(0 0,112px 0,112px 35px,100% 35px,100% 100%,0 100%)}35%{clip-path:polygon(0 0,112px 0,112px 0,100% 0,100% 100%,0 100%);transform:translate(0,40px)}100%{clip-path:polygon(0 0,112px 0,112px 0,100% 0,100% 100%,0 100%);transform:translate(-4px,74px) rotate(-3deg)}}
+@keyframes ppOut{0%{clip-path:polygon(0 0,112px 0,112px 35px,100% 35px,100% 100%,0 100%);transform:perspective(800px) rotateX(56deg)}30%{clip-path:polygon(0 0,112px 0,112px 0,100% 0,100% 100%,0 100%);transform:perspective(800px) translateY(30px) rotateX(40deg)}100%{clip-path:polygon(0 0,112px 0,112px 0,100% 0,100% 100%,0 100%);transform:perspective(800px) translate(-4px,70px) rotateX(0) rotate(-3deg)}}
 @keyframes ppSquash{50%{transform:scale(1.03,.95)}}
 @keyframes ppFall{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(-30px,220px) rotate(220deg)}}
 @keyframes ppConf{0%{opacity:1;transform:translate(0,0)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(180deg)}}
@@ -299,7 +299,7 @@ a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"
     <span class="title-die bri" style="font-size: 40px; color: #172038; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-3deg)">STUCK!</span>
     <span class="bri" style="padding: 7px 14px 5px; background-color: rgba(198,255,77,0.92); background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.3) 0 6px, transparent 6px 12px); color: #172038; font-size: 19px; letter-spacing: 0.5px; transform: rotate(2deg); box-shadow: 0 4px 8px -4px rgba(0,0,0,0.4)">PEEL IT. STICK IT. DONE!</span>
     <span class="kal" style="font-size: 15px; opacity: 0.8">long-press a sticker to move it</span>
-    <a id="sbk-toToday" href="Today.html?v=1793608304" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
+    <a id="sbk-toToday" href="Today.html?v=1793610647" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
     <button type="button" id="sbk-whatNext" class="press bri" style="margin-top: 4px; width: 100%; height: 56px; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 23px">HOW DO I GET MORE? →</button>
     <button type="button" id="sbk-againBtn" class="kal" style="border: none; background: transparent; color: #F6EFE1; font-size: 13px; text-decoration: underline">(demo: peel it again)</button>
   </div>
@@ -537,6 +537,6 @@ class Component extends DCLogic {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793608304"></script>
-<script src="dc.js?v=1793608304"></script>
+<script src="morphdom.js?v=1793610647"></script>
+<script src="dc.js?v=1793610647"></script>
 </body></html>
