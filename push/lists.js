@@ -103,6 +103,14 @@ export async function lists(path, b, env, out) {
     if (!left) await DB.batch([DB.prepare('DELETE FROM items WHERE list = ?').bind(L.id), DB.prepare('DELETE FROM lists WHERE id = ?').bind(L.id)]);
     return out({ ok: true });
   }
+  if (path === '/l/finish') {   // a JUST ONCE list with every job ticked: close it for the whole team
+    if (L.rep !== 'once') return out({ error: 'it repeats' }, 400);
+    const c = await DB.prepare('SELECT COUNT(*) AS n, SUM(CASE WHEN done_by IS NULL THEN 1 ELSE 0 END) AS open FROM items WHERE list = ?').bind(L.id).first();
+    if (!c.n || c.open) return out({ error: 'not all done' }, 400);
+    await tell(L, { title: me.name + ' closed ' + L.name, body: 'All done. Nice teamwork!', tag: 'list-' + L.id });
+    await DB.batch([DB.prepare('DELETE FROM items WHERE list = ?').bind(L.id), DB.prepare('DELETE FROM members WHERE list = ?').bind(L.id), DB.prepare('DELETE FROM lists WHERE id = ?').bind(L.id)]);
+    return out({ ok: true });
+  }
   if (path === '/l/clear') { await DB.prepare('DELETE FROM items WHERE list = ? AND done_by IS NOT NULL').bind(L.id).run(); return out({ ok: true, list: await view(L) }); }
   const it = await item(L, b.item); if (!it) return out({ error: 'no such item' }, 404);
   if (path === '/l/edit') {
