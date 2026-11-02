@@ -106,7 +106,7 @@ window.GSN = (function () {
     if (!on) return sub().then(function (s) { return s ? post('/g/off', { endpoint: s.endpoint }).catch(function () {}) : null; }).then(function () { return 'off'; }).catch(function () { return 'off'; });
     var g = {}; try { g = JSON.parse(localStorage.getItem('gsb.gymDays') || '{}') || {}; } catch (e) {}
     var days = {}; Object.keys(g.d || {}).forEach(function (k) { var e = g.d[k]; if (!e) return;
-      days[k] = e.rot ? ['Gym day today 💪', 'Your next session is ready on Today. Tap to start.'] : [(e.t === 'gym' ? e.title.charAt(0) + e.title.slice(1).toLowerCase() : 'Active day') + ' today 💪', (e.grow ? 'Your next ' + String(e.title).replace(/^YOUR NEXT /, '').toLowerCase() : e.title) + ' is ready on Today. Tap to start.']; });
+      days[k] = e.rot ? ['Gym day today 💪', 'Your next session is waiting on your Today screen. Tap to start.'] : [(e.t === 'gym' ? e.title.charAt(0) + e.title.slice(1).toLowerCase() : 'Active day') + ' today 💪', (e.grow ? 'Your next ' + String(e.title).replace(/^YOUR NEXT /, '').toLowerCase() : e.title) + ' is waiting on your Today screen. Tap to start.']; });
     return friendSub(ask).then(function (s) { if (!s) return typeof Notification !== 'undefined' && Notification.permission === 'denied' ? 'denied' : 'error';
       return post('/g/set', { sub: s, days: days, at: g.at || 8, tz: Intl.DateTimeFormat().resolvedOptions().timeZone }).then(function (j) { return j && j.ok ? 'on' : 'error'; }); }).catch(function () { return 'error'; });
   }
@@ -391,8 +391,8 @@ a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"
   <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; gap: 10px">
     <sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}"><button type="button" class="press bri" onClick="{{back}}" aria-label="Back" style="width: 62px; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #FFFFFF; color: #172038; font-size: 26px">←</button></sc-if>
     <sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{next}}" style="flex: 1; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{nextText}}</button></sc-if>
-    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793626299" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
-    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793626299" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
+    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793626990" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
+    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793626990" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
   </div>
 </div>
 </script>
@@ -527,6 +527,6 @@ class Component extends DCLogic {
 }
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793626299"></script>
-<script src="dc.js?v=1793626299"></script>
+<script src="morphdom.js?v=1793626990"></script>
+<script src="dc.js?v=1793626990"></script>
 </body></html>
