@@ -2,16 +2,24 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Get St*ck Done!</title>
 <script>/* size the phone frame before anything paints, so nothing (e.g. the nav bar) shows in the wrong place while the page loads */
-(function () { var W = 390, H = 844, B = 844, E = 0, r = document.documentElement.style;
+(function () { var W = 390, H = 844, B = 844, E = 0, r = document.documentElement.style, last = '';
   /* iPhone: installed on the home screen the app runs edge to edge, so keep clear of the clock / battery bar and the home-bar strip at the bottom */
+  /* (iPhone fix, 2 Nov 2026: the top gap used to be read with the bottom strip added on, pushing the page down and shrinking it) */
+  function fit() { var a = document.activeElement; if (last && a && (/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) || a.isContentEditable)) return;   /* the keyboard is up: don't shrink the page under it */
   var pr = document.createElement('div'); pr.style.cssText = 'position:fixed;left:0;top:0;width:1px;visibility:hidden;pointer-events:none;height:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)';
-  document.documentElement.appendChild(pr); var it = pr.offsetHeight || 0, ib = Math.max(0, (parseFloat(getComputedStyle(pr).paddingBottom) || 0) - 20); pr.remove();
-  var w = innerWidth, h = innerHeight - it - ib;
+  document.documentElement.appendChild(pr); var cs = getComputedStyle(pr), it = parseFloat(cs.height) || 0, ib = Math.max(0, (parseFloat(cs.paddingBottom) || 0) - 20); pr.remove();
+  var w = innerWidth, h = innerHeight - it - ib; if (!w || !h) return;
+  var key = w + 'x' + h + ':' + it; if (key === last) return; last = key;
   /* the nav bar is drawn at exactly Today's size and place (Today's board is 844 with the bar inside); the board above it fits the rest */
   /* a shorter board (B < 844, e.g. the sticker book) grows to fill the width instead */
   var kT = Math.min(w / W, h / H), t = Math.max(0, (h - H * kT) / 2), k = E ? Math.min(w / W, (H - E) * kT / B) : Math.min(w / W, h / B);
   r.setProperty('--k', k); r.setProperty('--l', Math.max(0, (w - W * k) / 2) + 'px'); r.setProperty('--t', (it + t) + 'px');
-  r.setProperty('--bk', kT); r.setProperty('--bl', Math.max(0, (w - W * kT) / 2) + 'px'); r.setProperty('--bt', (it + t + (H - E) * kT) + 'px'); })();</script>
+  r.setProperty('--bk', kT); r.setProperty('--bl', Math.max(0, (w - W * kT) / 2) + 'px'); r.setProperty('--bt', (it + t + (H - E) * kT) + 'px'); }
+  fit();
+  /* iPhone can report the wrong height for a moment when the app opens from the home screen, and Safari's bars change it: fit again whenever it changes */
+  var again = function () { fit(); setTimeout(fit, 250); };
+  addEventListener('resize', fit); addEventListener('focusout', function () { setTimeout(fit, 350); }); addEventListener('orientationchange', again); addEventListener('pageshow', again); addEventListener('load', fit);
+  setTimeout(fit, 300); })();</script>
 <script>/* merged duplicate recipes: move saved plans, tonight's pick and the cooked log over to the recipe we kept */
 (function () { var M = {"din-tai-fung-egg-fried-rice": "chilli-crisp-fried-rice"}; try { ['gsd.plan', 'gsd.tonight', 'gsd.progress', 'gsd.planAdd', 'gsd.useUp', 'gsd.workout', 'gsd.lastWorkout'].forEach(function (k) { var v = localStorage.getItem(k); if (!v) return; var n = v;
   for (var o in M) n = n.split(o).join(M[o]); n = n.split('Couch to 5K week').join('Stick With It · week'); if (n !== v) localStorage.setItem(k, n); }); } catch (e) {} })();</script>
@@ -424,7 +432,7 @@ class Component extends DCLogic {
         + '<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; padding-top: 4px">' + 'MTWTFSS'.split('').map((d) => '<span class="bri" style="text-align: center; font-size: 13px; opacity: 0.6">' + d + '</span>').join('') + cells + '</div>'
         + '<span class="kal" style="font-size: 14px; opacity: 0.75">lime: a few · yellow: plenty · pink: huge days</span></div>'; };
     // where the last button goes: the week sticker if you earned one; then the month's pack if that's waiting too; else Today
-    const onward = () => MODE === 'week' && PK && PK.mDue ? ['OPEN MY MONTH →', 'MonthWrap.html?v=1793648372'] : ['BACK TO TODAY →', 'Today.html?v=1793648372'];
+    const onward = () => MODE === 'week' && PK && PK.mDue ? ['OPEN MY MONTH →', 'MonthWrap.html?v=1793652554'] : ['BACK TO TODAY →', 'Today.html?v=1793652554'];
     const paintStats = () => {
       const c = R.cats, names = MODE === 'week' ? ['tasks ticked', 'workouts', 'meals cooked', 'water goals hit'] : ['tasks ticked', 'workouts', 'meals cooked', 'water goal days'];
       const tiles = [['tasks', 'task'], ['workouts', 'workout'], ['meals', 'meal'], ['water', 'water']].map(([k, ic], i) => c[k] ? '<div class="wstat" style="transform: rotate(' + [-1.5, 1, 1.2, -1][i] + 'deg)"><div style="display: flex; align-items: center; justify-content: space-between">'
@@ -463,7 +471,7 @@ class Component extends DCLogic {
         + '<span style="font-size: 18px; line-height: 1.35; color: #F6EFE1; text-align: center; font-weight: 700">You got stuff done on ' + m.days + (m.days === 1 ? ' day' : ' days') + '. Every ' + (wk ? 'week' : 'month') + ' you get something done earns ' + (wk ? 'one.' : 'a holo one.') + '</span>'
         + '<span class="kal" style="font-size: 15px; color: #F6EFE1; opacity: 0.7; text-align: center">' + (wk ? 'ready to stamp in your book' : PKART.name('mo', m.d) + ' · ' + new Date(from).toLocaleDateString('en-GB', { month: 'long' }) + '’s own sticker') + '</span>'
         + '<div style="flex: 1"></div>'
-        + '<a href="StickerAlbum.html?v=1793648372#new" class="press bri" style="width: 100%; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 22px; box-shadow: 4px 4px 0 #FF6FB0; display: flex; align-items: center; justify-content: center; text-decoration: none">' + (wk ? 'STAMP IT IN MY BOOK →' : 'STICK IT IN MY BOOK →') + '</a>'
+        + '<a href="StickerAlbum.html?v=1793652554#new" class="press bri" style="width: 100%; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 22px; box-shadow: 4px 4px 0 #FF6FB0; display: flex; align-items: center; justify-content: center; text-decoration: none">' + (wk ? 'STAMP IT IN MY BOOK →' : 'STICK IT IN MY BOOK →') + '</a>'
         + '<a href="' + go[1] + '" class="press bri" style="width: 100%; height: 54px; box-sizing: border-box; border-radius: 18px; border: 2px solid rgba(246,239,225,0.5); color: #F6EFE1; font-size: 18px; display: flex; align-items: center; justify-content: center; text-decoration: none">' + go[0].replace('BACK TO TODAY →', 'BACK TO TODAY') + '</a>';
       box.style.display = 'flex'; buzz([10, 40, 16]);
       if (!reduce) { const a = $('mineArt'); if (a.animate) a.animate([{ transform: 'scale(1.8) rotate(-20deg)', opacity: 0 }, { transform: 'scale(0.92) rotate(2deg)', opacity: 1, offset: 0.6 }, { transform: 'none', opacity: 1 }], { duration: 420, easing: 'cubic-bezier(.3,1.4,.5,1)' }); } };
@@ -487,6 +495,6 @@ class Component extends DCLogic {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793648372"></script>
-<script src="dc.js?v=1793648372"></script>
+<script src="morphdom.js?v=1793652554"></script>
+<script src="dc.js?v=1793652554"></script>
 </body></html>
