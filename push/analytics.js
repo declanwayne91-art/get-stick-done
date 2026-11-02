@@ -47,7 +47,8 @@ export async function analytics(path, b, env, out) {
     await env.DB.prepare('INSERT INTO a_admin (k, at) VALUES (?, ?)').bind(await sha(k), Date.now()).run(); return out({ ok: true });
   }
   if (path === '/a/stats') {
-    const k = String(b.key || ''); if (!k || !(await env.DB.prepare('SELECT 1 FROM a_admin WHERE k = ?').bind(await sha(k)).first())) return out({ error: 'no' }, 401);
+    const k = String(b.key || ''), h = k ? await sha(k) : '';   // the key's hash is in wrangler.toml (STATS_HASH), or set with /a/claim
+    if (!k || !((env.STATS_HASH && h === env.STATS_HASH) || await env.DB.prepare('SELECT 1 FROM a_admin WHERE k = ?').bind(h).first())) return out({ error: 'no' }, 401);
     return out(await stats(env, Math.max(7, Math.min(400, Math.floor(+b.days) || 56))));
   }
   return out({ error: 'not found' }, 404);

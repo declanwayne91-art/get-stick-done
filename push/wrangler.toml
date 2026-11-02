@@ -15,3 +15,7 @@ id = "__KV_ID__"
 binding = "DB"
 database_name = "gsd-friends"
 database_id = "__D1_ID__"
+
+# the usage dashboard key, as a SHA-256 hash (the key itself is only with Dex)
+[vars]
+STATS_HASH = "d4e62956a0bfac05acd28b53f538fb26e8044584fdb441f709e3cc1b6f615615"
