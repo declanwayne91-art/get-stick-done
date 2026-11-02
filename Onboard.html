@@ -19,7 +19,27 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&amp;family=Kalam:wght@400;700&amp;family=Atkinson+Hyperlegible:wght@400;700&amp;display=swap" rel="stylesheet">
-<style>
+<style>/* punch >> */
+.pp-wrap .pp-plunger{transition:transform .12s ease-in}
+.pp-wrap.down .pp-plunger,.pp-wrap.done .pp-plunger{transform:translateY(12px)}
+.pp-wrap .pp-hole{opacity:0}
+.pp-wrap.done .pp-hole{opacity:1}
+.pp-wrap.done .pp-punch{animation:ppLift .5s ease-out forwards}
+.pp-wrap .pp-card{clip-path:polygon(0 0,112px 0,112px 35px,100% 35px,100% 100%,0 100%)}
+.pp-wrap.done .pp-card{animation:ppOut .55s ease-out forwards}
+.pp-wrap.down .pp-body{animation:ppSquash .2s ease-out}
+.pp-wrap .pp-star{opacity:0}
+.pp-wrap.done .pp-star{animation:ppFall 1s ease-in forwards}
+.pp-wrap .pp-conf{opacity:0}
+.pp-wrap.done .pp-conf{animation:ppConf .9s ease-out forwards}
+@keyframes ppLift{to{transform:translate(60px,-160px) rotate(8deg);opacity:0}}
+@keyframes ppOut{0%{clip-path:polygon(0 0,112px 0,112px 35px,100% 35px,100% 100%,0 100%)}35%{clip-path:polygon(0 0,112px 0,112px 0,100% 0,100% 100%,0 100%);transform:translate(0,40px)}100%{clip-path:polygon(0 0,112px 0,112px 0,100% 0,100% 100%,0 100%);transform:translate(-4px,74px) rotate(-3deg)}}
+@keyframes ppSquash{50%{transform:scale(1.03,.95)}}
+@keyframes ppFall{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(-30px,220px) rotate(220deg)}}
+@keyframes ppConf{0%{opacity:1;transform:translate(0,0)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(180deg)}}
+@media (prefers-reduced-motion: reduce){.pp-wrap *{animation:none!important;transition:none!important}}
+/* << punch */
+
 body{margin:0}
 button{font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none;padding:0}
 button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
@@ -218,8 +238,8 @@ a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"
   <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; gap: 10px">
     <sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}"><button type="button" class="press bri" onClick="{{back}}" aria-label="Back" style="width: 62px; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #FFFFFF; color: #172038; font-size: 26px">←</button></sc-if>
     <sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{next}}" style="flex: 1; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{nextText}}</button></sc-if>
-    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793605895" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
-    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="StickerBook.html?v=1793605895" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">OPEN MY STICKER BOOK →</a></sc-if>
+    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793608304" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
+    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="StickerBook.html?v=1793608304" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">OPEN MY STICKER BOOK →</a></sc-if>
   </div>
 </div>
 </script>
@@ -354,6 +374,6 @@ class Component extends DCLogic {
 }
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793605895"></script>
-<script src="dc.js?v=1793605895"></script>
+<script src="morphdom.js?v=1793608304"></script>
+<script src="dc.js?v=1793608304"></script>
 </body></html>
