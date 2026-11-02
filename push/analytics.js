@@ -4,7 +4,7 @@
 // - Stored in D1 as one row per day / install / event / detail with a count: no times, no text anyone typed.
 // - Kept 13 months (tidied by the nightly cron). Switched off on the phone = nothing is sent (Me > settings).
 // - The dashboard (app/stats.html) asks POST /a/stats with the admin key: totals and shares only, worked out here.
-//   The key is set once with POST /a/claim right after the first deploy (refused once a key exists).
+//   The key's SHA-256 hash is STATS_HASH in push/wrangler.toml; only Dex has the key itself.
 const SCHEMA = [
   'CREATE TABLE IF NOT EXISTS a_ev (day TEXT NOT NULL, id TEXT NOT NULL, ev TEXT NOT NULL, d TEXT NOT NULL DEFAULT \'\', n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (day, id, ev, d))',
   'CREATE INDEX IF NOT EXISTS a_ev_day ON a_ev (day)',
@@ -41,13 +41,8 @@ export async function analytics(path, b, env, out) {
     await env.DB.batch([env.DB.prepare('DELETE FROM a_ev WHERE id = ?').bind(id), env.DB.prepare('DELETE FROM a_inst WHERE id = ?').bind(id)]);
     return out({ ok: true });
   }
-  if (path === '/a/claim') {   // set the dashboard key, once
-    const k = String(b.key || ''); if (k.length < 24 || k.length > 128) return out({ error: 'bad key' }, 400);
-    const have = await env.DB.prepare('SELECT COUNT(*) AS n FROM a_admin').first(); if (have.n) return out({ error: 'already set' }, 403);
-    await env.DB.prepare('INSERT INTO a_admin (k, at) VALUES (?, ?)').bind(await sha(k), Date.now()).run(); return out({ ok: true });
-  }
   if (path === '/a/stats') {
-    const k = String(b.key || ''), h = k ? await sha(k) : '';   // the key's hash is in wrangler.toml (STATS_HASH), or set with /a/claim
+    const k = String(b.key || ''), h = k ? await sha(k) : '';   // the key's hash is in wrangler.toml (STATS_HASH),
     if (!k || !((env.STATS_HASH && h === env.STATS_HASH) || await env.DB.prepare('SELECT 1 FROM a_admin WHERE k = ?').bind(h).first())) return out({ error: 'no' }, 401);
     return out(await stats(env, Math.max(7, Math.min(400, Math.floor(+b.days) || 56))));
   }
