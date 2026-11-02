@@ -16,11 +16,13 @@
 //   GET  /health       -> ok
 //   POST /f/...        friends: see friends.js (D1, binding DB)
 //   POST /l/...        shared lists: see lists.js (same D1)
+//   POST /g/...        MY GYM DAYS morning nudge: see gym.js (KV, gym:<id>)
 // Cron: every 15 minutes. Slots are start + every, start + 2*every ... up to end (8am-9pm every 2 h = 10, 12 ... 8pm).
 
 import { friends, tidy } from './friends.js';
 import { lists } from './lists.js';
-import { analytics, tidyAnalytics } from './analytics.js';   // anonymous usage counts (push_analytics.js)
+import { analytics, tidyAnalytics } from './analytics.js';
+import { gym, runGym } from './gym.js';   // MY GYM DAYS morning nudge (push_gym.js)   // anonymous usage counts (push_analytics.js)
 
 const ORIGINS = ['https://declanwayne91-art.github.io', 'http://127.0.0.1:8765', 'http://localhost:8765'];
 const WINDOW_MIN = 30;   // a slot can still be sent up to 30 min late (cron runs every 15)
@@ -77,6 +79,7 @@ export default {
       if (path.startsWith('/f/')) return await friends(path, b, env, out);
       if (path.startsWith('/l/')) return await lists(path, b, env, out);
       if (path.startsWith('/a/')) return await analytics(path, b, env, out);
+      if (path.startsWith('/g/')) return await gym(path, b, env, out, idOf);
       const endpoint = (b.sub && b.sub.endpoint) || b.endpoint || '';
       if (!/^https:\/\//.test(endpoint) || endpoint.length > 1000) return out({ error: 'bad endpoint' }, 400);
       const id = await idOf(endpoint);
@@ -93,5 +96,5 @@ export default {
       return out({ error: 'not found' }, 404);
     } catch (e) { return out({ error: 'server' }, 500); }
   },
-  async scheduled(evt, env, ctx) { ctx.waitUntil(run(env)); if (new Date().getUTCHours() === 4 && new Date().getUTCMinutes() < 15) { ctx.waitUntil(tidy(env).catch(() => {})); ctx.waitUntil(tidyAnalytics(env).catch(() => {})); } },
+  async scheduled(evt, env, ctx) { ctx.waitUntil(run(env)); ctx.waitUntil(runGym(env, local).catch(() => {})); if (new Date().getUTCHours() === 4 && new Date().getUTCMinutes() < 15) { ctx.waitUntil(tidy(env).catch(() => {})); ctx.waitUntil(tidyAnalytics(env).catch(() => {})); } },
 };
