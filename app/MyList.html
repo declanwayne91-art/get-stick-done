@@ -256,6 +256,9 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 .ml-isdone .ml-nm .t{text-decoration:line-through;opacity:0.5}
 .ml-hon{color:#E0A800;font-size:14px}
 .ml-foc{width:26px;height:26px;flex-shrink:0;border-radius:7px;border:2.5px solid #172038;background:#FFFFFF;color:#172038;font:800 16px/1 'Bricolage Grotesque',sans-serif;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer}.ml-foc[aria-checked="true"]{background:#C6FF4D;box-shadow:2px 2px 0 #172038}
+.ml-hren{width:28px;height:28px;flex-shrink:0;border-radius:99px;border:2px solid rgba(23,32,56,0.35);background:#FFFFFF;display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer}
+.ml-hedit{display:flex;align-items:center;gap:6px;min-width:0}.ml-hedit input{width:150px;max-width:44vw;height:30px;border:2.5px solid #172038;border-radius:8px;padding:0 8px;font-size:16px;letter-spacing:1px;color:#172038;text-transform:uppercase;box-shadow:2px 2px 0 #172038;outline:none}
+.ml-hok{width:30px;height:30px;border-radius:99px;border:2.5px solid #172038;background:#C6FF4D;color:#172038;font-size:16px;padding:0;cursor:pointer;flex-shrink:0}
 .ml-hbtn{border:2px solid #172038;border-radius:8px;padding:3px 9px;font-size:16px;letter-spacing:1px;color:#172038;cursor:pointer;transform:rotate(-1deg);box-shadow:2px 2px 0 #172038}
 .ml-swatch{display:flex;gap:10px;margin:0 2px 10px;padding:8px 10px;background:#FFFFFF;border-radius:14px;box-shadow:0 3px 0 #CDB894}
 .ml-swatch button,.ml-dsw button{width:34px;height:34px;border-radius:50%;border:2.5px solid #172038;cursor:pointer;padding:0}
@@ -325,7 +328,7 @@ button[aria-label^="Go to step"]::after{content:'';position:absolute;inset:-3px}
 a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"]::after,button[aria-label$="add your weight"]::after,button[aria-label$="change the weight"]::after,button[aria-label$=": bodyweight"]::after{content:'';position:absolute;inset:-8px -3px}
 .snav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;height:58px;text-decoration:none;color:#F6EFE1;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;opacity:0.8;border-radius:14px;-webkit-tap-highlight-color:transparent}.snav-s{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#172038;box-shadow:0 0 0 2.5px #FFFFFF,0 0 0 4.5px #172038;transform:rotate(var(--r));transition:transform .18s cubic-bezier(.2,1.4,.4,1)}.snav:hover .snav-s,.snav:focus-visible .snav-s,.snav:active .snav-s{transform:rotate(var(--r)) scale(1.2)}.snav,.snav:hover,.snav:visited{color:#F6EFE1}.snav.on,.snav.on:hover{opacity:1;color:#C6FF4D}.snav.on .snav-s{box-shadow:0 0 0 2.5px #FFFFFF,0 0 0 4.5px #172038,2px 4px 0 4.5px rgba(0,0,0,0.45)}.snav:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}@media (prefers-reduced-motion: reduce){.snav-s{transition:none}}.dcbar{position:absolute;left:12px;right:12px;bottom:14px;height:68px;border-radius:22px;background:#0E1428;border:2px solid rgba(246,239,225,0.15);display:flex;align-items:center;gap:4px;padding:0 6px;box-sizing:border-box}.dcnav{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:11px;letter-spacing:0.5px;border-radius:16px;height:52px;text-decoration:none;border:none;background:transparent;cursor:pointer}.dcnav.on{background:#C6FF4D;color:#172038}.dcnav:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}.dcback{flex:1;height:48px;border-radius:16px;border:2px solid rgba(246,239,225,0.4);background:transparent;color:#F6EFE1;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-stretch:80%;font-size:17px;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;cursor:pointer}.dcback.home{flex:0 0 auto;padding:0 18px;background:#C6FF4D;border-color:#C6FF4D;color:#172038}</style>
 </head><body data-extra="84">
-<div id="dc-frame"><div id="dc-stage"></div></div><div id="dc-bar"><div class="dcbar" role="navigation" aria-label="Back"><button type="button" class="dcback" onclick="if (history.length > 1) history.back(); else location.href = 'Today.html?v=1793738922'">‹ BACK</button><a class="dcback home" href="Today.html?v=1793738922" aria-label="Home"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M20.0 12.0 L22.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 17.6 L19.4 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 20.0 L12.0 22.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 17.6 L4.7 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M4.0 12.0 L1.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 6.4 L4.7 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 4.0 L12.0 1.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 6.4 L19.4 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg><span>HOME</span></a></div></div>
+<div id="dc-frame"><div id="dc-stage"></div></div><div id="dc-bar"><div class="dcbar" role="navigation" aria-label="Back"><button type="button" class="dcback" onclick="if (history.length > 1) history.back(); else location.href = 'Today.html?v=1793739974'">‹ BACK</button><a class="dcback home" href="Today.html?v=1793739974" aria-label="Home"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.4"></circle><path d="M20.0 12.0 L22.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 17.6 L19.4 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 20.0 L12.0 22.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 17.6 L4.7 19.4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M4.0 12.0 L1.5 12.0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M6.4 6.4 L4.7 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M12.0 4.0 L12.0 1.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M17.6 6.4 L19.4 4.7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg><span>HOME</span></a></div></div>
 <script type="text/x-dc-template" id="dc-tpl">
 <div id="ml-root" style="width: 390px; height: 844px; position: relative; overflow: hidden; background-color: #FBF4E6; background-image: linear-gradient(rgba(139,94,52,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(139,94,52,0.08) 1px, transparent 1px); background-size: 20px 20px; color: #172038; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif">
   <span class="title-die bri" style="position: absolute; left: 18px; top: 16px; font-size: 38px; color: #172038; text-shadow: 3px 3px 0 #C6FF4D; transform: rotate(-2deg); transform-origin: left">MY LIST</span>
@@ -454,7 +457,7 @@ a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"
       </div>
       <span class="bri" style="font-size: 15px; letter-spacing: 0.5px">WHO’S IN?</span>
       <div id="ml-sqWho" class="ml-group" style="padding: 0 12px"></div>
-      <div id="ml-sqNone" style="display: none; flex-direction: column; gap: 8px"><span style="font-size: 17px; line-height: 1.3">Add a friend first: shared lists are friends only.</span><a href="Friends.html?v=1793738922" class="ml-big bri press" style="text-decoration: none">FRIENDS →</a></div>
+      <div id="ml-sqNone" style="display: none; flex-direction: column; gap: 8px"><span style="font-size: 17px; line-height: 1.3">Add a friend first: shared lists are friends only.</span><a href="Friends.html?v=1793739974" class="ml-big bri press" style="text-decoration: none">FRIENDS →</a></div>
       <button type="button" id="ml-sqGo" class="bri press" style="flex-shrink: 0; height: 60px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 22px; box-shadow: 4px 4px 0 #172038"></button>
     </div>
   </div>
@@ -469,7 +472,7 @@ a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"
       <div id="ml-wWho" style="align-self: stretch; display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 16px; background: rgba(246,239,225,0.08); text-align: left"></div>
       <span style="flex: 1"></span>
       <button type="button" id="ml-wCheer" class="bri press" style="align-self: stretch; height: 58px; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 22px"></button>
-      <a id="ml-wStick" href="StickerAlbum.html?v=1793738922#new" class="bri press" style="align-self: stretch; height: 50px; border-radius: 16px; border: 2px solid rgba(246,239,225,0.5); color: #F6EFE1; font-size: 18px; display: flex; align-items: center; justify-content: center; text-decoration: none">STICK IT IN MY BOOK →</a>
+      <a id="ml-wStick" href="StickerAlbum.html?v=1793739974#new" class="bri press" style="align-self: stretch; height: 50px; border-radius: 16px; border: 2px solid rgba(246,239,225,0.5); color: #F6EFE1; font-size: 18px; display: flex; align-items: center; justify-content: center; text-decoration: none">STICK IT IN MY BOOK →</a>
       <button type="button" id="ml-wX" class="ml-link kal" style="color: #F6EFE1">back to my list</button>
     </div>
   </div>
@@ -803,7 +806,7 @@ window.GST = (() => {
         // the name gets the whole width; BREAK IT DOWN, OPEN LIST and which shared list it's from sit on a small line underneath
         + ((sub) => '<div class="ml-mid"><button type="button" class="ml-nm' + (sub ? ' two' : '') + '"><span class="t"></span>' + (t.care ? '<span class="ml-hon" aria-hidden="true">★</span>' : '') + chip(t) + '</button>' + (sub ? '<div class="ml-sub2">' + sub + '</div>' : '') + '</div>')(
           (canBreak(t) ? '<button type="button" class="ml-bd bri">BREAK IT DOWN</button>' : '')
-          + (t.link === 'shop' && !t.done ? '<a class="ml-go bri" href="PlanWeek.html?v=1793738922#shop" aria-label="Open your shopping list">OPEN LIST</a>' : '')
+          + (t.link === 'shop' && !t.done ? '<a class="ml-go bri" href="PlanWeek.html?v=1793739974#shop" aria-label="Open your shopping list">OPEN LIST</a>' : '')
           + (t.shared ? '<span class="ml-chip bri" style="background:#FFB3D1">' + String(t.shared.name).toUpperCase().replace(/[<>&"]/g, '') + '</span>' : '')
           + (kind === 'today' && t.group ? '<span class="ml-chip bri" style="background:' + GST.gcol(t.group) + '">' + esc(t.group.toUpperCase()) + '</span>' : '')   // which of your lists it's from, in that list's colour
           + (kind === 'next' && onToday(t) ? '<span class="ml-chip bri" style="background:#FFFFFF;border:1.5px solid #172038">ON TODAY</span>' : ''))   // the same task as up in ON TODAY: tick either, it's one tick
@@ -865,10 +868,25 @@ window.GST = (() => {
       const heads2 = [...new Set(GST.open(L).filter((t) => t.group).map((t) => t.group))];
       heads2.forEach((h) => { const ts = GST.open(L).filter((t) => t.group === h), c = GST.gcol(h);
         add('<div class="ml-head"><button type="button" class="ml-hbtn bri" data-g="' + esc(h) + '" aria-expanded="' + (colFor === h ? 'true' : 'false') + '" aria-label="' + esc(h) + ': change its colour" style="background:' + c + '">' + esc(h.toUpperCase()) + '</button>'
+          + '<button type="button" class="ml-hren press" aria-label="Rename ' + esc(h) + '"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#172038" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 4.5l4 4L8 20H4v-4z"/><path d="M13.5 6.5l4 4"/></svg></button>'
           + '<button type="button" class="ml-foc press" role="checkbox" aria-checked="' + GST.isFocus(h) + '" aria-label="Put ' + esc(h) + ' first on Today">' + (GST.isFocus(h) ? '✓' : '') + '</button>'
           + '<span class="kal">' + (GST.isFocus(h) ? 'first on Today' : ts.length + (ts.length === 1 ? ' thing' : ' things')) + '</span><button type="button" class="ml-hadd bri press" aria-label="Add to ' + esc(h) + '">+ ADD</button></div>');
         box.lastElementChild.querySelector('.ml-foc').addEventListener('click', () => { const on = !GST.isFocus(h); GST.setFocus(h, on); buzz(on ? [8, 30, 8] : 6); toast(on ? h.toUpperCase() + ' GOES FIRST' : 'BACK TO NORMAL', on ? 'Today fills up from ' + h + ' first.' : 'Today picks from everything again.'); paint(); });   // FIRST ON TODAY
         box.lastElementChild.querySelector('.ml-hadd').addEventListener('click', () => { openDump(h); });   // add more to this list any time
+        // (3 Nov 2026, Dex) rename a list: the pencil turns its name into a box; Enter or ✓ saves, Esc keeps the old name
+        box.lastElementChild.querySelector('.ml-hren').addEventListener('click', (ev) => { const hd = ev.currentTarget.closest('.ml-head'), pill = hd.querySelector('.ml-hbtn'); buzz(5);
+          const f = document.createElement('span'); f.className = 'ml-hedit';
+          f.innerHTML = '<input class="bri" maxlength="30" aria-label="New name for ' + esc(h) + '" style="background:' + c + '"><button type="button" class="ml-hok bri press" aria-label="Save the new name">✓</button>';
+          const inp = f.querySelector('input'); inp.value = h; pill.replaceWith(f); hd.querySelector('.ml-hren').style.display = 'none'; inp.focus(); inp.select();
+          let gone = false; const finish = (keep) => { if (gone) return; gone = true; const nv = inp.value.trim().replace(/\s+/g, ' ').slice(0, 30);
+            if (keep && nv && nv !== h) { L.forEach((t) => { if (t.group === h) { t.group = nv; GST.touch(t); } }); save();
+              try { const m = JSON.parse(localStorage.getItem('gsb.groupCols') || '{}') || {}; if (m[h] && !m[nv]) m[nv] = m[h]; delete m[h]; localStorage.setItem('gsb.groupCols', JSON.stringify(m)); } catch (e) {}
+              if (GST.isFocus(h)) { GST.setFocus(h, false); GST.setFocus(nv, true); }
+              buzz([8, 30, 8]); toast('RENAMED', h + ' is now ' + nv + '.'); }
+            paint(); };
+          inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); finish(true); } else if (e.key === 'Escape') finish(false); });
+          f.querySelector('.ml-hok').addEventListener('pointerdown', (e) => { e.preventDefault(); finish(true); });
+          inp.addEventListener('blur', () => setTimeout(() => finish(true), 120)); });
         const hb = box.lastElementChild.querySelector('.ml-hbtn'); hb.addEventListener('click', () => { colFor = colFor === h ? null : h; buzz(5); paint(); });
         if (colFor === h) { const sw = document.createElement('div'); sw.className = 'ml-swatch'; sw.setAttribute('role', 'radiogroup'); sw.setAttribute('aria-label', 'Colour for ' + h);
           GST.GCOLS.forEach(([v, n]) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', v === c ? 'true' : 'false'); b.setAttribute('aria-label', n); b.style.background = v;
@@ -1188,6 +1206,6 @@ window.GST = (() => {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793738922"></script>
-<script src="dc.js?v=1793738922"></script>
+<script src="morphdom.js?v=1793739974"></script>
+<script src="dc.js?v=1793739974"></script>
 </body></html>
