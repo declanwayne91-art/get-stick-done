@@ -147,7 +147,7 @@ window.GSN = (function () {
   idb({ off: false, id: id(), api: API });   // the service worker counts taps on notifications with these
   addEventListener('error', function (e) { var m = String((e && e.message) || 'x'), h = 0; for (var i = 0; i < m.length; i++) h = (h * 31 + m.charCodeAt(i)) | 0; track('error', page + ':' + (h >>> 0).toString(36)); });
   // calls to the app's own server that are worth counting (friends, cheers, shared lists)
-  var MAP = { '/f/add': 'friend_added', '/f/cheer': 'cheer_sent', '/l/new': 'list_shared', '/l/add': ['task_add', 'shared'] };
+  var MAP = { '/f/add': 'friend_added', '/f/cheer': 'cheer_sent', '/f/meal': 'meal_shared', '/f/mealre': 'meal_reacted', '/l/new': 'list_shared', '/l/add': ['task_add', 'shared'] };
   if (API && window.fetch) { var f0 = window.fetch; window.fetch = function (u, o) { try { var s = String((u && u.url) || u); if (s.indexOf(API) === 0 || (window.GSD_API_TEST && s.indexOf(window.GSD_API_TEST) === 0)) { var p = s.replace(/^https?:\/\/[^/]+/, ''), m = MAP[p]; if (m) track(m.join ? m[0] : m, m.join ? m[1] : null); } } catch (e) {} return f0.apply(this, arguments); }; }
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') flush(); });
   addEventListener('pagehide', flush);
@@ -267,8 +267,8 @@ a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"
     <span id="sp-tapeT" class="bri title-die" role="status" style="display: block; font-size: 40px; color: #C6FF4D; text-shadow: 3px 3px 0 #111111; letter-spacing: 0.5px; white-space: nowrap"></span></div>
   <button type="button" id="sp-tap" class="press" style="position: absolute; left: 0; right: 0; top: 488px; margin: 0 auto; width: max-content; padding: 6px 10px; border: none; background: transparent; transform: rotate(2deg)"><span class="bri title-die" style="display: block; font-size: 22px; color: #172038; letter-spacing: 0.5px">OR TAP HERE TO START</span></button>
   <button type="button" id="sp-skip" class="press" style="display: none; position: absolute; left: 0; right: 0; top: 488px; margin: 0 auto; width: max-content; padding: 6px 10px; border: none; background: transparent; transform: rotate(2deg)"><span class="bri title-die" style="display: block; font-size: 22px; color: #172038; letter-spacing: 0.5px">TAP ANYWHERE TO GO IN</span></button>
-  <a id="sp-toToday" href="Today.html?v=1793713056" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
-  <a id="sp-toOnboard" href="Onboard.html?v=1793713056" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Set up</a>
+  <a id="sp-toToday" href="Today.html?v=1793715235" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
+  <a id="sp-toOnboard" href="Onboard.html?v=1793715235" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Set up</a>
   <div class="sp-demo" style="position: absolute; left: 0; right: 0; bottom: 16px; display: flex; justify-content: center; align-items: center; gap: 6px"><span class="kal" style="font-size: 12px; opacity: 0.55">demo:</span><button type="button" id="sp-demoFirst">first time</button><button type="button" id="sp-demoBack">welcome back</button></div>
 </div>
 </script>
@@ -454,6 +454,6 @@ class Component extends DCLogic {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793713056"></script>
-<script src="dc.js?v=1793713056"></script>
+<script src="morphdom.js?v=1793715235"></script>
+<script src="dc.js?v=1793715235"></script>
 </body></html>
