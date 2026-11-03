@@ -234,7 +234,7 @@ button:focus-visible{box-shadow:0 0 0 3px #FF6FB0}
 .prepmid>*{flex-shrink:0}
 .pic > svg{height:calc(100% - 12px) !important;width:auto !important;max-width:100%}
 .ovw-card{display:flex;gap:10px;align-items:flex-start;background:#FFFFFF;border-radius:12px;padding:10px 12px;box-shadow:0 3px 0 #CDB894,0 8px 12px -8px rgba(90,60,30,0.4)}.ovw-n{flex:none;width:30px;height:30px;border-radius:30px;background:#172038;color:#C6FF4D;display:flex;align-items:center;justify-content:center;font-size:17px}.ovw-t{align-self:flex-start;margin-top:2px;padding:2px 9px;border-radius:999px;background:#FF6FB0;border:2px solid #172038;font-size:13px;white-space:nowrap}
-</style>
+.dotrow::-webkit-scrollbar{display:none}</style>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&display=swap" rel="stylesheet">
 <style data-lm>.lm{font-family:"DM Mono",ui-monospace,monospace !important;font-weight:500;text-transform:uppercase;color:#FFFFFF !important;letter-spacing:3px;background-image:linear-gradient(rgba(255,255,255,0.22),rgba(255,255,255,0) 45%,rgba(0,0,0,0.12)) !important;text-shadow:0 -1px 0 rgba(0,0,0,0.55),0 1px 0 rgba(255,255,255,0.4) !important;box-shadow:inset 0 2px 0 rgba(255,255,255,0.28),inset 0 -3px 0 rgba(0,0,0,0.22),0 3px 5px rgba(60,40,20,0.35) !important;border-radius:3px}[style*="DM Mono"][style*="background: #"]{background-image:linear-gradient(rgba(255,255,255,0.22),rgba(255,255,255,0) 45%,rgba(0,0,0,0.12));text-shadow:0 -1px 0 rgba(0,0,0,0.55),0 1px 0 rgba(255,255,255,0.4) !important;box-shadow:inset 0 2px 0 rgba(255,255,255,0.28),inset 0 -3px 0 rgba(0,0,0,0.22),0 3px 5px rgba(60,40,20,0.35) !important;border-radius:3px}</style>
 <style>
@@ -590,7 +590,7 @@ class Component extends DCLogic {
         + '<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; padding-top: 4px">' + 'MTWTFSS'.split('').map((d) => '<span class="bri" style="text-align: center; font-size: 13px; opacity: 0.6">' + d + '</span>').join('') + cells + '</div>'
         + '<span class="kal" style="font-size: 14px; opacity: 0.75">lime: a few · yellow: plenty · pink: huge days</span></div>'; };
     // where the last button goes: the week sticker if you earned one; then the month's pack if that's waiting too; else Today
-    const onward = () => MODE === 'week' && PK && PK.mDue ? ['OPEN MY MONTH →', 'MonthWrap.html?v=1793741631'] : ['BACK TO TODAY →', 'Today.html?v=1793741631'];
+    const onward = () => MODE === 'week' && PK && PK.mDue ? ['OPEN MY MONTH →', 'MonthWrap.html?v=1793742415'] : ['BACK TO TODAY →', 'Today.html?v=1793742415'];
     const paintStats = () => {
       const c = R.cats, names = MODE === 'week' ? ['tasks ticked', 'workouts', 'meals cooked', 'water goals hit'] : ['tasks ticked', 'workouts', 'meals cooked', 'water goal days'];
       const tiles = [['tasks', 'task'], ['workouts', 'workout'], ['meals', 'meal'], ['water', 'water']].map(([k, ic], i) => c[k] ? '<div class="wstat" style="transform: rotate(' + [-1.5, 1, 1.2, -1][i] + 'deg)"><div style="display: flex; align-items: center; justify-content: space-between">'
@@ -629,7 +629,7 @@ class Component extends DCLogic {
         + '<span style="font-size: 18px; line-height: 1.35; color: #F6EFE1; text-align: center; font-weight: 700">You got stuff done on ' + m.days + (m.days === 1 ? ' day' : ' days') + '. Every ' + (wk ? 'week' : 'month') + ' you get something done earns ' + (wk ? 'one.' : 'a holo one.') + '</span>'
         + '<span class="kal" style="font-size: 15px; color: #F6EFE1; opacity: 0.7; text-align: center">' + (wk ? 'ready to stamp in your book' : PKART.name('mo', m.d) + ' · ' + new Date(from).toLocaleDateString('en-GB', { month: 'long' }) + '’s own sticker') + '</span>'
         + '<div style="flex: 1"></div>'
-        + '<a href="StickerAlbum.html?v=1793741631#new" class="press bri" style="width: 100%; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 22px; box-shadow: 4px 4px 0 #FF6FB0; display: flex; align-items: center; justify-content: center; text-decoration: none">' + (wk ? 'STAMP IT IN MY BOOK →' : 'STICK IT IN MY BOOK →') + '</a>'
+        + '<a href="StickerAlbum.html?v=1793742415#new" class="press bri" style="width: 100%; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 22px; box-shadow: 4px 4px 0 #FF6FB0; display: flex; align-items: center; justify-content: center; text-decoration: none">' + (wk ? 'STAMP IT IN MY BOOK →' : 'STICK IT IN MY BOOK →') + '</a>'
         + '<a href="' + go[1] + '" class="press bri" style="width: 100%; height: 54px; box-sizing: border-box; border-radius: 18px; border: 2px solid rgba(246,239,225,0.5); color: #F6EFE1; font-size: 18px; display: flex; align-items: center; justify-content: center; text-decoration: none">' + go[0].replace('BACK TO TODAY →', 'BACK TO TODAY') + '</a>';
       box.style.display = 'flex'; buzz([10, 40, 16]);
       if (!reduce) { const a = $('mineArt'); if (a.animate) a.animate([{ transform: 'scale(1.8) rotate(-20deg)', opacity: 0 }, { transform: 'scale(0.92) rotate(2deg)', opacity: 1, offset: 0.6 }, { transform: 'none', opacity: 1 }], { duration: 420, easing: 'cubic-bezier(.3,1.4,.5,1)' }); } };
@@ -653,6 +653,6 @@ class Component extends DCLogic {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793741631"></script>
-<script src="dc.js?v=1793741631"></script>
+<script src="morphdom.js?v=1793742415"></script>
+<script src="dc.js?v=1793742415"></script>
 </body></html>
