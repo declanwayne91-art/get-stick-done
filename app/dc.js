@@ -54,7 +54,7 @@
 
   // ---- templating
   const get = (ctx, p) => p.split('.').reduce((o, k) => (o == null ? o : o[k]), ctx);
-  const esc = (x) => String(x).replace(/"/g, '&quot;');
+  const esc = (x) => String(x).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');   // (3 Nov 2026 audit) values are text, never markup: a friend's shared list item can't run as code
   let fns = [];
   const reFor = /<sc-for\s+list="\{\{\s*([\w.]+)\s*\}\}"\s+as="(\w+)"[^>]*>/g;
   function expand(str, ctx) {
