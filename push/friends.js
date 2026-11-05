@@ -13,6 +13,8 @@
 //   /f/push   { secret, sub }                          friend alerts: this phone's push subscription (null = off)
 //   /f/meal   { secret, to: [ids], r, day, name, mid }  share one night's dinner (PLAN MY WEEK's paper plane); each friend gets a 'meal'
 //   /f/mealre { secret, to, mid, re, day, name }        react to one: re 1 = YES CHEF!, 0 = NOT FOR ME; the sender gets a 'mealre'
+//   /f/night  { secret, to: [ids], date, time, what, mid } invite friends to a game night (5 Nov 2026, the gaming page); each gets a 'night'
+//   /f/nightre { secret, to, mid, re, date, time, what }  answer one: re 1 = I'M IN!, 0 = CAN'T MAKE IT; the host gets a 'nightre'
 // A new friend or a cheer sends that friend an encrypted push (send.js): "Dex sent you a cheer!" / "NICE ONE!".
 
 import { push } from './send.js';
@@ -35,7 +37,7 @@ export const init = (env) => ready || (ready = env.DB.batch(SCHEMA.map((q) => en
 
 const ABC = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';   // no 0/O, 1/I/L
 const PLATES = ['cream', 'lime', 'pink', 'sky', 'holo', 'sunset', 'gold', 'aurora', 'galaxy'];   // makeprofile.py PLATES (+ levelart.py)
-const MAX_FRIENDS = 100, CHEERS_A_DAY = 60, CHEER_GAP = 30e3, MEALS_A_DAY = 40;
+const MAX_FRIENDS = 100, CHEERS_A_DAY = 60, CHEER_GAP = 30e3, MEALS_A_DAY = 40, NIGHTS_A_DAY = 40;
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 // a shared meal, checked: recipe id, day of the week, the recipe's name (shown in the alert) and the sender's id for it
 export function cleanMeal(b) {
@@ -43,6 +45,16 @@ export function cleanMeal(b) {
   const name = String(b.name || '').normalize('NFC').replace(/[^\p{L}\p{N} '’&,.()\-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 60);
   return r && mid && name && day >= 0 && day <= 6 ? { r, day, name, mid } : null;
 }
+// a game night, checked: the date (YYYY-MM-DD, today up to two weeks on), the time (HH:MM), what you're playing (optional) and the host's id for it
+export function cleanNight(b) {
+  const date = typeof b.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(b.date) ? b.date : null, time = typeof b.time === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(b.time) ? b.time : null;
+  const mid = typeof b.mid === 'string' && /^[a-z0-9]{6,24}$/.test(b.mid) ? b.mid : null;
+  const what = String(b.what || '').normalize('NFC').replace(/[^\p{L}\p{N} '’&,.!?()\-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 40);
+  const t = date ? Date.parse(date + 'T12:00:00Z') : NaN;
+  return date && time && mid && isFinite(t) && t > Date.now() - 2 * 864e5 && t < Date.now() + 16 * 864e5 ? { date, time, what, mid } : null;
+}
+const nightWhen = (n) => { const d = new Date(n.date + 'T12:00:00Z'), [h, m] = n.time.split(':').map(Number);
+  return DAYS[(d.getUTCDay() + 6) % 7] + ', ' + ((h + 11) % 12 + 1) + (m ? ':' + String(m).padStart(2, '0') : '') + (h < 12 ? ' am' : ' pm'); };
 const rand = (n, abc = ABC) => { const b = crypto.getRandomValues(new Uint8Array(n)); return Array.from(b, (x) => abc[x % abc.length]).join(''); };
 const hex = (buf) => Array.from(new Uint8Array(buf), (x) => x.toString(16).padStart(2, '0')).join('');
 export const hash = async (s) => hex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)));
@@ -156,6 +168,31 @@ export async function friends(path, b, env, out) {
     await env.DB.prepare('INSERT INTO events (dest, src, kind, c, d, at) VALUES (?, ?, ?, ?, ?, ?)').bind(other, me.id, 'mealre', re, JSON.stringify(m), now).run();
     const them = await env.DB.prepare('SELECT id, push FROM users WHERE id = ?').bind(other).first();
     await alert(env, them, { title: me.name + ': ' + (re ? 'YES CHEF!' : 'NOT FOR ME'), body: 'your ' + DAYS[m.day] + ' dinner, ' + m.name, tag: 'mealre-' + m.mid + '-' + me.id, url: 'PlanWeek.html' });
+    return out({ ok: true });
+  }
+  if (path === '/f/night') {   // a game night, to one or more friends (only real friends get it)
+    const n = cleanNight(b); if (!n) return out({ error: 'bad night' }, 400);
+    const to = [...new Set((Array.isArray(b.to) ? b.to : []).map((x) => String(x || '').slice(0, 40)))].slice(0, 20);
+    const recent = await env.DB.prepare('SELECT COUNT(*) AS n FROM events WHERE src = ? AND kind = ? AND at > ?').bind(me.id, 'night', now - 864e5).first();
+    if (recent.n + to.length > NIGHTS_A_DAY) return out({ error: 'slow down' }, 429);
+    let sent = 0;
+    for (const id of to) {
+      if (!(await linked(id))) continue;
+      await env.DB.prepare('INSERT INTO events (dest, src, kind, c, d, at) VALUES (?, ?, ?, ?, ?, ?)').bind(id, me.id, 'night', null, JSON.stringify(n), now).run(); sent++;
+      const them = await env.DB.prepare('SELECT id, push FROM users WHERE id = ?').bind(id).first();
+      await alert(env, them, { title: me.name + ' invited you to a game night', body: nightWhen(n) + (n.what ? ' · ' + n.what : '') + ' · I’M IN! or CAN’T MAKE IT?', tag: 'night-' + n.mid, url: 'Hobbies.html#game' });
+    }
+    return sent ? out({ ok: true, sent }) : out({ error: 'not friends' }, 404);
+  }
+  if (path === '/f/nightre') {   // I'M IN! (1) or CAN'T MAKE IT (0), back to the host
+    const n = cleanNight(b), re = +b.re === 1 ? 1 : 0; if (!n) return out({ error: 'bad night' }, 400);
+    if (!(await linked(other))) return out({ error: 'not friends' }, 404);
+    const sent = await env.DB.prepare('SELECT id FROM events WHERE dest = ? AND src = ? AND kind = ? AND d LIKE ?').bind(me.id, other, 'night', '%"mid":"' + n.mid + '"%').first();
+    if (!sent) return out({ error: 'no such night' }, 404);   // you can only answer a night you were invited to
+    await env.DB.prepare('DELETE FROM events WHERE dest = ? AND src = ? AND kind = ? AND seen = 0 AND d LIKE ?').bind(other, me.id, 'nightre', '%"mid":"' + n.mid + '"%').run();   // changed your mind: the newest one counts
+    await env.DB.prepare('INSERT INTO events (dest, src, kind, c, d, at) VALUES (?, ?, ?, ?, ?, ?)').bind(other, me.id, 'nightre', re, JSON.stringify(n), now).run();
+    const them = await env.DB.prepare('SELECT id, push FROM users WHERE id = ?').bind(other).first();
+    await alert(env, them, { title: me.name + ': ' + (re ? 'I’M IN!' : 'CAN’T MAKE IT'), body: 'your game night, ' + nightWhen(n), tag: 'nightre-' + n.mid + '-' + me.id, url: 'Hobbies.html#game' });
     return out({ ok: true });
   }
   if (path === '/f/remove' || path === '/f/block') {
