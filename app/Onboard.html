@@ -124,7 +124,7 @@ window.GSN = (function () {
    A random install id + { day, event, detail } -> count, queued here and sent in one go when the app is put away.
    Switched off in Me > settings (gsd.analyticsOff), which also deletes what this phone sent. See push_analytics.js. */
 (function () {
-  var API = window.GSD_API_TEST || window.GSD_API, Q = 'gsb.aq', VER = '20261105';
+  var API = window.GSD_API_TEST || window.GSD_API, Q = 'gsb.aq', VER = '20261106';
   function off() { try { return localStorage.getItem('gsb.analyticsOff') === '1'; } catch (e) { return true; } }
   function day() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
   function id() { var k = null; try { k = localStorage.getItem('gsb.aid'); if (!k) { k = Array.from(crypto.getRandomValues(new Uint8Array(12)), function (x) { return x.toString(16).padStart(2, '0'); }).join(''); localStorage.setItem('gsb.aid', k); } } catch (e) {} return k; }
@@ -399,8 +399,8 @@ a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"
   <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; gap: 10px">
     <sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}"><button type="button" class="press bri" onClick="{{back}}" aria-label="Back" style="width: 62px; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #FFFFFF; color: #172038; font-size: 26px">←</button></sc-if>
     <sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{next}}" style="flex: 1; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{nextText}}</button></sc-if>
-    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793922138" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
-    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793922138" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
+    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793923636" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
+    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1793923636" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
   </div>
 </div>
 </script>
@@ -537,6 +537,6 @@ class Component extends DCLogic {
 }
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1793922138"></script>
-<script src="dc.js?v=1793922138"></script>
+<script src="morphdom.js?v=1793923636"></script>
+<script src="dc.js?v=1793923636"></script>
 </body></html>
