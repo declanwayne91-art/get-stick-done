@@ -8,7 +8,8 @@
 //   /f/add    { secret, code }   -> { friend }         become friends (both ways); they get a "hello"
 //   /f/list   { secret }         -> { friends, inbox } your friends and cheers you haven't seen
 //   /f/seen   { secret, id }                           you've seen that one
-//   /f/cheer  { secret, to, c }                        send a cheer (c = which one)
+//   /f/cheer  { secret, to, c, about? }                send a cheer (c = which one; about = what it's for, 9 Nov 2026)
+//   /f/now    { secret, now }                          what you're reading / playing / learning [{ h, t, by, k }] (9 Nov 2026)
 //   /f/remove { secret, id }   /f/block { secret, id } (block = remove, and they can't add you again)
 //   /f/push   { secret, sub }                          friend alerts: this phone's push subscription (null = off)
 //   /f/meal   { secret, to: [ids], r, day, name, mid }  share one night's dinner (PLAN MY WEEK's paper plane); each friend gets a 'meal'
@@ -32,7 +33,8 @@ export const init = (env) => ready || (ready = env.DB.batch(SCHEMA.map((q) => en
   .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN push TEXT').run().catch(() => {}))
   .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN n INTEGER').run().catch(() => {}))   // stickers stuck in total (shown on your friend card)
   .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN p INTEGER').run().catch(() => {}))
-  .then(() => env.DB.prepare('ALTER TABLE events ADD COLUMN d TEXT').run().catch(() => {}))   // (3 Nov 2026) a shared meal's details: { r, day, name, mid }   // pins earned   // friend alerts: the phone's push address (added later; already there = fine)
+  .then(() => env.DB.prepare('ALTER TABLE events ADD COLUMN d TEXT').run().catch(() => {}))
+  .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN nw TEXT').run().catch(() => {}))   // (9 Nov 2026) what you're reading / playing / learning: [{ h, t, by, k }]   // (3 Nov 2026) a shared meal's details: { r, day, name, mid }   // pins earned   // friend alerts: the phone's push address (added later; already there = fine)
   .catch((e) => { ready = null; throw e; }));
 
 const ABC = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';   // no 0/O, 1/I/L
@@ -60,6 +62,16 @@ const hex = (buf) => Array.from(new Uint8Array(buf), (x) => x.toString(16).padSt
 export const hash = async (s) => hex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)));
 export const cleanCode = (s) => { s = String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, '').replace(/^STCK/, ''); return s.length === 5 && [...s].every((ch) => ABC.includes(ch)) ? s : null; };
 const showCode = (c) => 'STCK-' + c;
+// (9 Nov 2026) what you're into right now (your profile's plate and friends' cards): up to 3, one per hobby
+const NOWH = ['read', 'game', 'music'];
+const cleanText = (x, n) => String(x || '').normalize('NFC').replace(/[\u0000-\u001f\u007f<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, n);
+export function cleanNow(a) {
+  if (!Array.isArray(a)) return null; const out = [], seen = new Set();
+  for (const x of a.slice(0, 3)) { if (!x || !NOWH.includes(x.h) || seen.has(x.h)) continue; const t = cleanText(x.t, 80); if (!t) continue; seen.add(x.h);
+    out.push({ h: x.h, t, ...(cleanText(x.by, 60) ? { by: cleanText(x.by, 60) } : {}), ...(typeof x.k === 'string' && /^[a-z0-9_-]{1,24}$/.test(x.k) ? { k: x.k } : {}) }); }
+  return out.length ? out : null;
+}
+export const cleanAbout = (x) => cleanText(x, 80) || null;
 export function cleanPlate(p) {
   p = p && typeof p === 'object' ? p : {};
   const name = String(p.name || '').normalize('NFC').replace(/[^\p{L}\p{N} '’.\-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 20) || 'A friend';
@@ -80,7 +92,8 @@ export function cleanSub(x, env) {   // env.TEST_PUSH_HTTP (local tests only) al
   const k = x.keys || {}; if (typeof k.p256dh !== 'string' || typeof k.auth !== 'string' || k.p256dh.length > 120 || k.auth.length > 40) return null;
   return JSON.stringify({ endpoint: x.endpoint, keys: { p256dh: k.p256dh, auth: k.auth } });
 }
-export const pub = (u) => u && { id: u.id, name: u.name, plate: u.plate, lv: u.lv, st: u.st, pin: u.pin, n: u.n == null ? null : u.n, p: u.p == null ? null : u.p };
+const nowOf = (u) => { try { return u.nw ? JSON.parse(u.nw) : null; } catch (e) { return null; } };
+export const pub = (u) => u && { id: u.id, name: u.name, plate: u.plate, lv: u.lv, st: u.st, pin: u.pin, n: u.n == null ? null : u.n, p: u.p == null ? null : u.p, now: nowOf(u) };
 
 export async function friends(path, b, env, out) {
   if (!env.DB) return out({ error: 'friends not set up' }, 503);
@@ -101,6 +114,7 @@ export async function friends(path, b, env, out) {
     return out({ ok: true, code: showCode(me.code) });
   }
   if (!me) return out({ error: 'not registered' }, 401);
+  if (path === '/f/now') { const n = cleanNow(b.now); await env.DB.prepare('UPDATE users SET nw = ?, seen = ? WHERE id = ?').bind(n ? JSON.stringify(n) : null, now, me.id).run(); return out({ ok: true }); }   // what you're into, for friends' cards
   if (path === '/f/n') {   // your sticker count (from the book) and pins (from your profile); either can be left out
     const c = (v) => v == null ? null : Math.max(0, Math.min(1000000, Math.floor(+v) || 0));
     await env.DB.prepare('UPDATE users SET n = COALESCE(?, n), p = COALESCE(?, p), seen = ? WHERE id = ?').bind(c(b.n), c(b.p), now, me.id).run(); return out({ ok: true }); }
@@ -128,9 +142,9 @@ export async function friends(path, b, env, out) {
   }
   if (path === '/f/list') {
     await env.DB.prepare('UPDATE users SET seen = ? WHERE id = ?').bind(now, me.id).run();
-    const fr = (await env.DB.prepare('SELECT u.id, u.name, u.plate, u.lv, u.st, u.pin, u.n, u.p, l.at AS since FROM links l JOIN users u ON u.id = l.b WHERE l.a = ? ORDER BY l.at DESC LIMIT ?').bind(me.id, MAX_FRIENDS).all()).results;
+    const fr = (await env.DB.prepare('SELECT u.id, u.name, u.plate, u.lv, u.st, u.pin, u.n, u.p, u.nw, l.at AS since FROM links l JOIN users u ON u.id = l.b WHERE l.a = ? ORDER BY l.at DESC LIMIT ?').bind(me.id, MAX_FRIENDS).all()).results;
     const inbox = (await env.DB.prepare('SELECT e.id, e.src, e.kind, e.c, e.d, e.at FROM events e JOIN links l ON l.a = e.dest AND l.b = e.src WHERE e.dest = ? AND e.seen = 0 ORDER BY e.at LIMIT 20').bind(me.id).all()).results;
-    return out({ ok: true, code: showCode(me.code), friends: fr, inbox });
+    return out({ ok: true, code: showCode(me.code), friends: fr.map((u) => ({ ...u, nw: undefined, now: nowOf(u) })), inbox });
   }
   if (path === '/f/push') { await env.DB.prepare('UPDATE users SET push = ? WHERE id = ?').bind(cleanSub(b.sub, env), me.id).run(); return out({ ok: true, on: !!cleanSub(b.sub, env) }); }
   if (path === '/f/seen') { await env.DB.prepare('UPDATE events SET seen = 1 WHERE id = ? AND dest = ?').bind(Math.floor(+b.id) || 0, me.id).run(); return out({ ok: true }); }
@@ -140,9 +154,10 @@ export async function friends(path, b, env, out) {
     if (!(await linked(other))) return out({ error: 'not friends' }, 404);
     const recent = await env.DB.prepare('SELECT COUNT(*) AS n, MAX(CASE WHEN dest = ? THEN at END) AS last FROM events WHERE src = ? AND kind = ? AND at > ?').bind(other, me.id, 'cheer', now - 864e5).first();
     if (recent.n >= CHEERS_A_DAY || (recent.last && now - recent.last < CHEER_GAP)) return out({ error: 'slow down' }, 429);
-    await env.DB.prepare('INSERT INTO events (dest, src, kind, c, at) VALUES (?, ?, ?, ?, ?)').bind(other, me.id, 'cheer', c, now).run();
+    const ab = cleanAbout(b.about);   // (9 Nov 2026) a cheer about what they're reading / playing / learning
+    await env.DB.prepare('INSERT INTO events (dest, src, kind, c, d, at) VALUES (?, ?, ?, ?, ?, ?)').bind(other, me.id, 'cheer', c, ab ? JSON.stringify({ ab }) : null, now).run();
     const them = await env.DB.prepare('SELECT id, push FROM users WHERE id = ?').bind(other).first();
-    await alert(env, them, { title: me.name + ' sent you a cheer!', body: CHEERS[c] || 'Open Friends to see it', tag: 'cheer-' + me.id, image: 'icons/watch-sticker.png' });
+    await alert(env, them, { title: me.name + ' sent you a cheer!', body: (CHEERS[c] || 'Open Friends to see it') + (ab ? ' · about ' + ab : ''), tag: 'cheer-' + me.id, image: 'icons/watch-sticker.png' });
     return out({ ok: true });
   }
   if (path === '/f/meal') {   // one night's dinner, to one or more friends (only real friends get it)
