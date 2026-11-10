@@ -26,7 +26,7 @@ import { analytics, tidyAnalytics } from './analytics.js';
 import { gym, runGym } from './gym.js';   // MY GYM DAYS morning nudge (push_gym.js)
 import { plans } from './plans.js';   // SHARE MY WEEK (push_plans.js)
 
-const ORIGINS = ['https://declanwayne91-art.github.io', 'http://127.0.0.1:8765', 'http://localhost:8765'];
+const ORIGINS = ['https://getstickdone.app', 'https://www.getstickdone.app', 'https://declanwayne91-art.github.io', 'http://127.0.0.1:8765', 'http://localhost:8765'];
 const WINDOW_MIN = 30;   // a slot can still be sent up to 30 min late (cron runs every 15)
 
 import { push, vapid, b64u, utf8 } from './send.js';
