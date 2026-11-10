@@ -30,7 +30,7 @@ svg text{font-family:'Bricolage Grotesque';font-size:11px;fill:#172038}
 .legend{display:flex;gap:14px;font-size:13px;margin-bottom:6px}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
 </style></head><body><div class="wrap" id="app"></div>
 <script>
-const API = 'https://gsd-push.declanwayne91.workers.dev', $ = (s) => document.querySelector(s), esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const API = 'https://api.getstickdone.app', $ = (s) => document.querySelector(s), esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 let KEY = null; try { KEY = localStorage.getItem('stuckStatsKey'); } catch (e) {}
 let DAYS = 56, D = null;
 const fmt = (n) => n == null ? '–' : typeof n === 'string' ? n : Number(n).toLocaleString('en-GB');
