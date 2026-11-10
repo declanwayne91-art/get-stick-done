@@ -24,7 +24,8 @@ import { friends, tidy } from './friends.js';
 import { lists } from './lists.js';
 import { analytics, tidyAnalytics } from './analytics.js';
 import { gym, runGym } from './gym.js';   // MY GYM DAYS morning nudge (push_gym.js)
-import { plans } from './plans.js';   // SHARE MY WEEK (push_plans.js)
+import { plans } from './plans.js';
+import { moves, tidyMoves } from './move.js';   // MOVE TO A NEW PHONE (push_move.js)   // SHARE MY WEEK (push_plans.js)
 
 const ORIGINS = ['https://getstickdone.app', 'https://www.getstickdone.app', 'https://declanwayne91-art.github.io', 'http://127.0.0.1:8765', 'http://localhost:8765'];
 const WINDOW_MIN = 30;   // a slot can still be sent up to 30 min late (cron runs every 15)
@@ -83,6 +84,7 @@ export default {
       if (path.startsWith('/a/')) return await analytics(path, b, env, out);
       if (path.startsWith('/g/')) return await gym(path, b, env, out, idOf);
       if (path.startsWith('/p/')) return await plans(path, b, env, out);
+      if (path.startsWith('/m/')) return await moves(path, b, env, out);
       const endpoint = (b.sub && b.sub.endpoint) || b.endpoint || '';
       if (!/^https:\/\//.test(endpoint) || endpoint.length > 1000) return out({ error: 'bad endpoint' }, 400);
       const id = await idOf(endpoint);
@@ -99,5 +101,5 @@ export default {
       return out({ error: 'not found' }, 404);
     } catch (e) { return out({ error: 'server' }, 500); }
   },
-  async scheduled(evt, env, ctx) { ctx.waitUntil(run(env)); ctx.waitUntil(runGym(env, local).catch(() => {})); if (new Date().getUTCHours() === 4 && new Date().getUTCMinutes() < 15) { ctx.waitUntil(tidy(env).catch(() => {})); ctx.waitUntil(tidyAnalytics(env).catch(() => {})); } },
+  async scheduled(evt, env, ctx) { ctx.waitUntil(run(env)); ctx.waitUntil(runGym(env, local).catch(() => {})); if (new Date().getUTCHours() === 4 && new Date().getUTCMinutes() < 15) { ctx.waitUntil(tidy(env).catch(() => {})); ctx.waitUntil(tidyAnalytics(env).catch(() => {})); ctx.waitUntil(tidyMoves(env).catch(() => {})); } },
 };
