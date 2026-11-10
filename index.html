@@ -1,97 +1,391 @@
-<title>Get St*ck Done Alpha</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Get St*ck Done! · the sticker-book life organiser</title>
+<meta name="description" content="Get organised without the overwhelm. Tasks, meals, workouts and hobbies in one friendly app, with a sticker to peel for every little win.">
+<meta name="theme-color" content="#172038">
+<link rel="canonical" href="https://getstickdone.app/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://getstickdone.app/">
+<meta property="og:title" content="Get St*ck Done! · the sticker-book life organiser">
+<meta property="og:description" content="Get organised without the overwhelm. Tasks, meals, workouts and hobbies in one friendly app, with a sticker to peel for every little win.">
+<meta property="og:image" content="https://getstickdone.app/app/icons/icon-512.png">
+<link rel="icon" href="app/icons/icon-192.png">
+<link rel="apple-touch-icon" href="app/icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&family=Kalam:wght@400;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,800&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
 <style>
-/* one committed look: the app's navy world, so dark in both host themes. Phone in the middle, demo menu beside it (wide) or behind a DEMO pill (phone). */
-:root{color-scheme:dark;--bg:#0B1022;--navy:#172038;--ink:#F6EFE1;--lime:#C6FF4D;--pink:#FF6FB0;--line:rgba(246,239,225,0.18);--panel:#141C36}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0B1022;--navy:#172038;--ink:#F6EFE1;--lime:#C6FF4D;--pink:#FF6FB0;--line:rgba(246,239,225,0.18);--panel:#141C36;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0B1022;--navy:#172038;--ink:#F6EFE1;--lime:#C6FF4D;--pink:#FF6FB0;--line:rgba(246,239,225,0.18);--panel:#141C36;color-scheme:dark}
-*{box-sizing:border-box}
-html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:'Atkinson Hyperlegible',system-ui,sans-serif;overflow:hidden;overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
-.bri{font-family:'Bricolage Grotesque',sans-serif;font-stretch:75%;font-weight:800;line-height:0.95}
-.kal{font-family:Kalam,cursive;font-weight:700}
-#app{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;gap:36px}
-#phone{position:relative;width:100vw;height:100dvh;background:var(--navy);overflow:hidden}
-#phone iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:var(--navy)}
-#pill{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 2px);transform:translateX(-50%);z-index:30;height:24px;padding:0 10px;border-radius:999px;border:1.5px solid var(--line);background:rgba(11,16,34,0.72);color:var(--ink);font-size:11px;letter-spacing:1px;display:flex;align-items:center;gap:5px;cursor:pointer;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
-#pill:focus-visible,#panel button:focus-visible{outline:3px solid #6EC8FF;outline-offset:2px}
-#scrim{position:fixed;inset:0;background:rgba(5,8,20,0.55);z-index:40;display:none}
-#panel{position:fixed;left:0;right:0;bottom:0;max-height:82dvh;z-index:41;background:var(--panel);border-top:2px solid var(--line);border-radius:22px 22px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom));overflow-y:auto;transform:translateY(105%);transition:transform 0.25s cubic-bezier(.2,.9,.3,1)}
-#panel.open{transform:none}
-#panel h1{margin:0;font-size:28px;color:var(--lime);text-shadow:2px 2px 0 var(--pink)}
-#panel .sub{margin:4px 0 14px;font-size:14px;opacity:0.75}
-.row{display:flex;gap:8px;margin-bottom:14px}
-.row button{flex:1;height:44px;border-radius:14px;border:2px solid var(--ink);background:transparent;color:var(--ink);font-size:17px;cursor:pointer}
-.row button.hot{background:var(--lime);color:var(--navy);border-color:var(--lime)}
-.row button.warn{border-color:var(--pink);color:var(--pink)}
-.grp{margin:12px 0 6px;font-size:12px;letter-spacing:1.5px;opacity:0.6;text-transform:uppercase}
-.scr{display:block;width:100%;text-align:left;min-height:42px;padding:8px 12px;margin:0 0 4px;border-radius:12px;border:1.5px solid transparent;background:rgba(246,239,225,0.05);color:var(--ink);font-family:inherit;font-size:16px;cursor:pointer}
-.scr[aria-current="page"]{border-color:var(--lime);background:rgba(198,255,77,0.12)}
-.note{font-size:13px;line-height:1.35;opacity:0.7;margin-top:14px}
-#close{position:absolute;right:12px;top:12px;width:40px;height:40px;border-radius:40px;border:none;background:rgba(246,239,225,0.1);color:var(--ink);font-size:20px;cursor:pointer}
-/* wide screens: the phone sits framed in the middle and the demo menu is always open beside it */
-@media (min-width: 900px){
-  #phone{width:calc(min(100dvh - 48px, 844px) * 390 / 844);height:min(100dvh - 48px, 844px);border-radius:38px;border:4px solid #2A3358;box-shadow:0 30px 60px rgba(0,0,0,0.5)}
-  #pill,#scrim,#close{display:none !important}
-  #panel{position:relative;inset:auto;width:330px;max-height:min(100dvh - 48px, 844px);transform:none;border:2px solid var(--line);border-radius:22px;transition:none}
-}
-@media (prefers-reduced-motion: reduce){#panel{transition:none}}
+html{scroll-behavior:smooth}
+body{margin:0;background:#172038}
+img{max-width:100%}
+header>a:first-child{flex:none}
+header>div{flex-wrap:wrap;min-width:0}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
 </style>
-<div id="app">
-  <div id="phone"><iframe id="screen" title="Get St*ck Done app" src="Splash.html?v=1794265170"></iframe></div>
-  <div id="scrim"></div>
-  <aside id="panel" aria-label="Demo menu">
-    <button type="button" id="close" aria-label="Close demo menu">✕</button>
-    <h1 class="bri">GET ST*CK DONE!</h1>
-    <p class="sub kal">alpha demo · tap through it like the real app</p>
-    <div class="row"><button type="button" id="back" class="kal">‹ back</button><button type="button" id="home" class="kal hot">home</button></div>
-    <div class="row"><button type="button" id="restart" class="kal">start again</button><button type="button" id="reset" class="kal warn">reset demo</button></div>
-    <div id="list"></div>
-    <p class="note">Everything you do is saved in this browser only (your setup, plan, cover and stickers). <b>Reset demo</b> wipes it and starts as a brand-new user. Some numbers (level, streak-free stats, friends) are sample data.</p>
-  </aside>
+</head>
+<body>
+<div style="container-type: inline-size; width: 100%; box-sizing: border-box; overflow: hidden; background-color: #172038; background-image: radial-gradient(rgba(255,255,255,0.06) 1.2px, transparent 1.2px); background-size: 18px 18px; color: #F6EFE1; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 18px; line-height: 1.5">
+
+<header style="max-width: 1160px; margin: 0 auto; padding: 22px 24px 0; display: flex; align-items: center; justify-content: space-between; gap: 16px">
+<a href="#top" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: #F6EFE1">
+<img src="site/icon.webp" alt="" style="width: 46px; height: 46px; border-radius: 12px; border: 3px solid #0B1020; box-shadow: 3px 3px 0 #FF6FB0">
+</a>
+<div style="display: flex; align-items: center; justify-content: flex-end; gap: 7px">
+<a href="#test" style="display: inline-flex; flex-direction: column; justify-content: center; flex: none; min-height: 40px; padding: 0 11px; border-radius: 12px; border: 3px solid #0B1020; background: #C6FF4D; color: #172038; text-align: left; white-space: nowrap; text-decoration: none; box-shadow: 3px 3px 0 #FF6FB0"><span style="font-size: 10px; line-height: 1.15">help us test</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 14px; line-height: 1.1">SIGN UP</span></a>
+<span style="display: inline-flex; flex-direction: column; justify-content: center; flex: none; min-height: 40px; padding: 0 11px; border-radius: 12px; border: 3px solid #0B1020; background: #FBF4E6; color: #172038; text-align: left; white-space: nowrap"><span style="font-size: 10px; line-height: 1.15">coming soon</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 14px; line-height: 1.1">GOOGLE PLAY</span></span>
+<span style="display: inline-flex; flex-direction: column; justify-content: center; flex: none; min-height: 40px; padding: 0 11px; border-radius: 12px; border: 2px dashed #8E97B0; color: #D5DBEA; text-align: left; white-space: nowrap"><span style="font-size: 10px; line-height: 1.15">coming soon</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 14px; line-height: 1.1">iOS</span></span>
 </div>
-<button type="button" id="pill" class="bri" aria-expanded="false" aria-controls="panel">DEMO ▾</button>
+</header>
+
+<section id="top" style="max-width: 1160px; margin: 0 auto; padding: clamp(36px, 6cqw, 84px) 24px clamp(48px, 7cqw, 96px); display: flex; flex-wrap: wrap; align-items: center; gap: clamp(32px, 5cqw, 72px)">
+<div style="flex: 1 1 440px; min-width: 0; display: flex; flex-direction: column; gap: 22px">
+<img src="site/logo-face.webp" alt="Get St*ck Done!" style="display: block; width: min(100%, 470px); margin: 0 0 -6px -10px; transform: rotate(-3deg); filter: drop-shadow(5px 7px 0 rgba(0,0,0,0.35))">
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: clamp(38px, 5.6cqw, 74px); line-height: 0.94; color: #C6FF4D; text-shadow: 4px 4px 0 #FF6FB0" aria-label="Get your St*ck together!">GET YOUR <span style="white-space: nowrap">ST<svg aria-hidden="true" viewBox="0 0 100 100" style="display: inline-block; width: 0.6em; height: 0.6em; margin: 0 0.03em; vertical-align: 0.04em; overflow: visible"><g stroke="#FF6FB0" stroke-width="24" stroke-linecap="round"><line x1="50" y1="8" x2="50" y2="92"></line><line x1="13.6" y1="29" x2="86.4" y2="71"></line><line x1="13.6" y1="71" x2="86.4" y2="29"></line></g></svg>CK</span> TOGETHER!</h1>
+<span style="align-self: flex-start; background: #FBF4E6; color: #172038; border: 3px solid #0B1020; border-radius: 12px; padding: 4px 14px; font-family: 'Kalam', cursive; font-weight: 700; font-size: clamp(18px, 2cqw, 22px); line-height: 1.3; box-shadow: 3px 3px 0 #FFD23F; transform: rotate(-2deg); transform-origin: left center">the sticker-book life organiser</span>
+<p style="margin: 0; max-width: 520px; font-size: clamp(18px, 1.7cqw, 22px); color: #F6EFE1">Get organised without the overwhelm. Tasks, meals, workouts and hobbies in one friendly app that helps most when making decisions or getting started is the hardest part!</p>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px 22px; margin-top: 6px">
+<a href="/app/" style="display: inline-flex; align-items: center; min-height: 62px; padding: 0 30px; border-radius: 20px; border: 4px solid #0B1020; background: #C6FF4D; color: #172038; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 24px; text-decoration: none; box-shadow: 5px 5px 0 #FF6FB0">TRY IT NOW →</a>
+</div>
+</div>
+<div style="flex: 1 1 340px; min-width: 0; display: flex; justify-content: center">
+<div style="position: relative; width: min(72%, 330px)">
+<img src="site/k-taco.webp" alt="" style="position: absolute; left: -24%; top: 4%; width: 50%; transform: rotate(-12deg); filter: drop-shadow(4px 6px 0 rgba(0,0,0,0.35)); z-index: 2">
+<img src="site/x-trophy.webp" alt="" style="position: absolute; right: -26%; top: -4%; width: 40%; transform: rotate(10deg); filter: drop-shadow(4px 6px 0 rgba(0,0,0,0.35)); z-index: 2">
+<img src="site/d-gochunoodles.webp" alt="" style="position: absolute; right: -32%; bottom: 14%; width: 50%; transform: rotate(8deg); filter: drop-shadow(4px 6px 0 rgba(0,0,0,0.35)); z-index: 2">
+<img src="site/x-drop.webp" alt="" style="position: absolute; left: -28%; bottom: 4%; width: 42%; transform: rotate(-8deg); filter: drop-shadow(4px 6px 0 rgba(0,0,0,0.35)); z-index: 2">
+<div style="position: relative; aspect-ratio: 390 / 844; border-radius: 44px; border: 9px solid #0B1020; outline: 3px solid #F6EFE1; overflow: hidden; background: #172038; box-shadow: 12px 12px 0 #FF6FB0; transform: rotate(2deg)">
+<img src="site/t-today6.webp" alt="The app’s home screen: a short to-do list, tonight’s dinner, a water counter and your next workout" style="display: block; width: 100%; height: 100%; object-fit: cover">
+</div>
+</div>
+</div>
+</section>
+
+<section style="max-width: 1160px; margin: 0 auto; padding: clamp(24px, 3cqw, 40px) 24px clamp(56px, 8cqw, 110px); display: flex; flex-direction: column; align-items: center; gap: clamp(28px, 4cqw, 48px); text-align: center">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 16px">
+<span style="background: #6EC8FF; color: #172038; border: 3px solid #0B1020; border-radius: 10px; padding: 2px 12px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 16px; transform: rotate(-2deg)">YOUR REWARD</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: clamp(40px, 6.4cqw, 86px); line-height: 0.92; color: #C6FF4D; text-shadow: 4px 4px 0 #FF6FB0">355+ STICKERS TO COLLECT.</h2>
+<span style="font-family: 'Kalam', cursive; font-weight: 700; font-size: clamp(20px, 2.2cqw, 28px); line-height: 1.25; color: #FFD23F; transform: rotate(-1deg)">Remember sticker books? This one’s for grown-ups.</span>
+<p style="margin: 0; max-width: 620px">Every task you tick off, meal you cook and workout you finish earns a sticker to peel and stick in your book. Fun challenges earn you even more stickers, and pin badges mark your greatest achievements.</p>
+</div>
+<div style="position: relative; display: flex; justify-content: center; gap: 5%; width: min(80%, 640px)">
+<img loading="lazy" decoding="async" src="site/k-heat.webp" alt="" style="position: absolute; left: -14%; top: 12%; width: 26%; transform: rotate(-12deg); filter: drop-shadow(4px 6px 0 rgba(0,0,0,0.35)); z-index: 2">
+<img loading="lazy" decoding="async" src="site/k-pow.webp" alt="" style="position: absolute; right: -13%; top: 40%; width: 25%; transform: rotate(10deg); filter: drop-shadow(4px 6px 0 rgba(0,0,0,0.35)); z-index: 2">
+<img loading="lazy" decoding="async" src="site/c-mushroom.webp" alt="" style="position: absolute; left: -10%; bottom: 4%; width: 20%; transform: rotate(8deg); filter: drop-shadow(4px 6px 0 rgba(0,0,0,0.35)); z-index: 2">
+<div style="flex: 1; min-width: 0; max-width: 290px; aspect-ratio: 390 / 844; border-radius: 40px; border: 9px solid #0B1020; outline: 3px solid #F6EFE1; overflow: hidden; background: #172038; box-shadow: -10px 10px 0 #6EC8FF; transform: rotate(-3deg)">
+<img loading="lazy" decoding="async" src="site/s-cover.webp" alt="A sticker book cover covered in food and trophy stickers" style="display: block; width: 100%; height: 100%; object-fit: cover">
+</div>
+<div style="flex: 1; min-width: 0; max-width: 290px; aspect-ratio: 390 / 844; border-radius: 40px; border: 9px solid #0B1020; outline: 3px solid #F6EFE1; overflow: hidden; background: #172038; box-shadow: 10px 10px 0 #FF6FB0; transform: rotate(3deg); margin-top: 7%">
+<img loading="lazy" decoding="async" src="site/s-contents.webp" alt="The book’s contents page with a progress bar for each section" style="display: block; width: 100%; height: 100%; object-fit: cover">
+</div>
+</div>
+<span style="font-family: 'Kalam', cursive; font-size: 20px; color: #FFD23F; transform: rotate(-1deg)">the cover is yours to decorate</span>
+<div style="width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 14px; text-align: left">
+<div style="background: #6EC8FF; color: #172038; border: 3px solid #0B1020; border-radius: 20px; padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 24px; line-height: 1">COLLECT</span><span style="font-size: 16px; line-height: 1.35">355+ stickers to collect across themed pages like Kitchen, Gym, Hobbies and Seasons, with more added over time.</span></div>
+<div style="background: #FFD23F; color: #172038; border: 3px solid #0B1020; border-radius: 20px; padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 24px; line-height: 1">COMPLETE</span><span style="font-size: 16px; line-height: 1.35">Take on fun challenges, like hitting your water goal, cooking a new recipe or finishing a book. Every challenge earns stickers for you to collect!</span></div>
+<div style="background: #FF6FB0; color: #172038; border: 3px solid #0B1020; border-radius: 20px; padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 24px; line-height: 1">UNLOCK</span><span style="font-size: 16px; line-height: 1.35">Pin badges mark your greatest achievements. Level up to unlock new colours for your profile, then show them off to your friends.</span></div>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 18px">
+<span style="font-family: 'Kalam', cursive; font-weight: 700; font-size: 26px; color: #C6FF4D; transform: rotate(-2deg)">go on, peel one</span>
+<div style="position: relative; width: 340px; height: 392px; text-align: left">
+<div aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 340px; height: 262px; box-sizing: border-box; border-radius: 6px 18px 18px 6px; background-color: #FBF4E6; background-image: linear-gradient(rgba(23,32,56,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(23,32,56,0.06) 1px, transparent 1px); background-size: 20px 20px; box-shadow: 0 3px 0 #E6DCC8"></div>
+<span style="position: absolute; left: 16px; top: 12px; background: #FFFFFF; color: #172038; border: 3px solid #172038; border-radius: 10px; padding: 1px 10px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 22px; line-height: 1.15; text-shadow: 2px 2px 0 #FF6FB0; transform: rotate(-2deg); box-shadow: 2px 3px 0 rgba(23,32,56,0.25)">FIRSTS</span>
+<span style="position: absolute; left: 20px; top: 52px; font-family: 'Kalam', cursive; font-size: 15px; color: #5A6072">the start of everything</span>
+<img loading="lazy" decoding="async" src="site/x-drop.webp" alt="" data-st="ghost0"><img loading="lazy" decoding="async" src="site/x-drop.webp" alt="" data-st="stuck0"><span style="position: absolute; left: 6px; top: 178px; width: 120px; text-align: center; font-family: 'Kalam', cursive; font-size: 13px; line-height: 1.15; color: #172038">First water goal</span>
+<img loading="lazy" decoding="async" src="site/x-gym.webp" alt="" data-st="ghost1"><img loading="lazy" decoding="async" src="site/x-gym.webp" alt="" data-st="stuck1"><span style="position: absolute; left: 110px; top: 196px; width: 120px; text-align: center; font-family: 'Kalam', cursive; font-size: 13px; line-height: 1.15; color: #172038">First workout</span>
+<img loading="lazy" decoding="async" src="site/d-smashtacos.webp" alt="" data-st="ghost2"><img loading="lazy" decoding="async" src="site/d-smashtacos.webp" alt="" data-st="stuck2"><span style="position: absolute; left: 214px; top: 178px; width: 120px; text-align: center; font-family: 'Kalam', cursive; font-size: 13px; line-height: 1.15; color: #172038">First recipe cooked</span>
+<span style="position: absolute; left: 50%; top: 240px; transform: translateX(-50%); z-index: 5; padding: 4px 14px; border-radius: 999px; background: #172038; color: #F6EFE1; font-family: 'Kalam', cursive; font-size: 14px; white-space: nowrap"><span data-tx="peelMsg"></span></span>
+<div data-st="trayStyle"><span data-st="trayText"><span style="position: absolute; left: 126px; right: 10px; top: 12px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 17px; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span data-tx="trayName"></span></span><span style="position: absolute; left: 126px; right: 10px; top: 33px; font-family: 'Kalam', cursive; font-size: 13px; color: #5A6072; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span data-tx="trayWhere"></span></span><button data-on-click="stick" style="position: absolute; left: 126px; right: 14px; top: 58px; height: 40px; border-radius: 12px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 15px; box-shadow: 3px 3px 0 #FF6FB0; white-space: nowrap; cursor: pointer">STICK IT FOR ME →</button></span><span data-st="doneStyle">Page complete. Hundreds more to collect.</span></div>
+<button data-at-aria-label="liveAria" data-on-pointerdown="down" data-on-pointermove="move" data-on-pointerup="up" data-on-pointercancel="up" data-st="liveStyle"><span data-st="innStyle"><span data-st="faceStyle"><img loading="lazy" decoding="async" src="site/x-drop.webp" alt="" draggable="false" data-st="art0"><img loading="lazy" decoding="async" src="site/x-gym.webp" alt="" draggable="false" data-st="art1"><img loading="lazy" decoding="async" src="site/d-smashtacos.webp" alt="" draggable="false" data-st="art2"></span><span data-st="fwStyle"><img loading="lazy" decoding="async" src="site/x-drop.webp" alt="" draggable="false" data-st="fart0"><img loading="lazy" decoding="async" src="site/x-gym.webp" alt="" draggable="false" data-st="fart1"><img loading="lazy" decoding="async" src="site/d-smashtacos.webp" alt="" draggable="false" data-st="fart2"></span></span></button>
+</div>
+</div>
+</section>
+
+<section style="background: #0F1629; border-top: 4px solid #0B1020; border-bottom: 4px solid #0B1020">
+<div style="max-width: 1160px; margin: 0 auto; padding: clamp(40px, 5cqw, 64px) 24px; display: flex; flex-direction: column; gap: 28px">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: clamp(32px, 4.2cqw, 52px); line-height: 1; color: #F6EFE1">ONE APP FOR YOUR WHOLE DAY.</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px">
+<div style="background: #FF6FB0; color: #172038; border: 3px solid #0B1020; border-radius: 20px; padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 6px; transform: rotate(-1deg)">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 24px; line-height: 1">TO-DO LISTS</span>
+<span style="font-size: 16px; line-height: 1.35">Make a list for anything and break big jobs into little steps. Every little win earns a sticker.</span>
+</div>
+<div style="background: #C6FF4D; color: #172038; border: 3px solid #0B1020; border-radius: 20px; padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 6px; transform: rotate(1deg)">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 24px; line-height: 1">WORKOUTS</span>
+<span style="font-size: 16px; line-height: 1.35">Follow a guided gym session or just log a walk. Your progress is saved, so you can build up over time.</span>
+</div>
+<div style="background: #FFD23F; color: #172038; border: 3px solid #0B1020; border-radius: 20px; padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 6px; transform: rotate(-1deg)">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 24px; line-height: 1">MEALS</span>
+<span style="font-size: 16px; line-height: 1.35">Plan a whole week of dinners in a few taps, shop from a list that’s written for you, then cook along with step-by-step guidance built into the app.</span>
+</div>
+<div style="background: #A98BFF; color: #172038; border: 3px solid #0B1020; border-radius: 20px; padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 6px; transform: rotate(1deg)">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 24px; line-height: 1">HOBBIES</span>
+<span style="font-size: 16px; line-height: 1.35">Keep track of the books you read, the music you learn and the games you play. Hobbies earn stickers too.</span>
+</div>
+<div style="background: #5FD3C4; color: #172038; border: 3px solid #0B1020; border-radius: 20px; padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 6px; transform: rotate(1deg)">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 24px; line-height: 1">FRIENDS</span>
+<span style="font-size: 16px; line-height: 1.35">Team up on a shared list, see what friends are into and send each other a cheer.</span>
+</div>
+</div>
+</div>
+</section>
+
+<section style="max-width: 1160px; margin: 0 auto; padding: clamp(56px, 8cqw, 110px) 24px; display: flex; flex-wrap: wrap-reverse; align-items: center; gap: clamp(32px, 6cqw, 90px)">
+<div style="flex: 1 1 300px; min-width: 0; display: flex; justify-content: center">
+<div style="position: relative; width: min(76%, 300px)">
+<img loading="lazy" decoding="async" src="site/c-egg.webp" alt="" style="position: absolute; left: -24%; top: 10%; width: 38%; transform: rotate(-10deg); filter: drop-shadow(4px 6px 0 rgba(0,0,0,0.35)); z-index: 2">
+<div style="aspect-ratio: 390 / 844; border-radius: 42px; border: 9px solid #0B1020; outline: 3px solid #F6EFE1; overflow: hidden; background: #172038; box-shadow: -12px 12px 0 #C6FF4D; transform: rotate(-2deg)">
+<img loading="lazy" decoding="async" src="site/s-list.webp" alt="My list: three things on today, with more waiting under Up next" style="display: block; width: 100%; height: 100%; object-fit: cover">
+</div>
+</div>
+</div>
+<div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+<span style="align-self: flex-start; background: #FF6FB0; color: #172038; border: 3px solid #0B1020; border-radius: 10px; padding: 2px 12px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 16px; transform: rotate(-2deg)">TO-DO LISTS</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: clamp(36px, 5cqw, 64px); line-height: 0.95; color: #F6EFE1">LISTS THAT WORK THE WAY YOU DO.</h2>
+<p style="margin: 0; max-width: 520px">A long to-do list is hard to face. So create a list for anything, break the big jobs down into little steps and earn a sticker for every little win. Share lists with your friends and team up to get St*ck Done together!</p>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px">
+<li style="display: flex; gap: 12px; align-items: baseline"><span aria-hidden="true" style="flex: none; width: 14px; height: 14px; border-radius: 50%; background: #C6FF4D; border: 2px solid #0B1020"></span><span>Make your own lists for shopping, packing, chores or anything else you need to get done</span></li>
+</ul>
+</div>
+</section>
+
+<section style="background: #FBF4E6; color: #172038; border-top: 4px solid #0B1020; border-bottom: 4px solid #0B1020; background-image: linear-gradient(rgba(23,32,56,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(23,32,56,0.05) 1px, transparent 1px); background-size: 22px 22px">
+<div style="max-width: 1160px; margin: 0 auto; padding: clamp(56px, 8cqw, 110px) 24px; display: flex; flex-wrap: wrap; align-items: center; gap: clamp(32px, 6cqw, 80px)">
+<div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+<span style="align-self: flex-start; background: #FFD23F; color: #172038; border: 3px solid #172038; border-radius: 10px; padding: 2px 12px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 16px; transform: rotate(-2deg)">MEALS</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: clamp(36px, 5cqw, 64px); line-height: 0.95">A WEEK OF DINNERS IN A FEW TAPS.</h2>
+<p style="margin: 0; max-width: 520px">Deciding what to eat every night is tiring. So plan the whole week in a few taps, or let the app choose for you. Your shopping list is written for you from the week’s recipes, sorted by aisle and ready to tick off in the shop.</p>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px">
+<li style="display: flex; gap: 12px; align-items: baseline"><span aria-hidden="true" style="flex: none; width: 14px; height: 14px; border-radius: 50%; background: #FF6FB0; border: 2px solid #172038"></span><span>Cook along one step at a time, with built-in timers</span></li>
+<li style="display: flex; gap: 12px; align-items: baseline"><span aria-hidden="true" style="flex: none; width: 14px; height: 14px; border-radius: 50%; background: #C6FF4D; border: 2px solid #172038"></span><span>Tell the app what’s in your fridge and it finds recipes that use up those ingredients</span></li>
+<li style="display: flex; gap: 12px; align-items: baseline"><span aria-hidden="true" style="flex: none; width: 14px; height: 14px; border-radius: 50%; background: #6EC8FF; border: 2px solid #172038"></span><span>77+ recipes, from smash burger tacos and Marry Me chicken to hot honey halloumi wraps, with allergen labels and tips for feeding little ones</span></li>
+</ul>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-top: 6px">
+<img loading="lazy" decoding="async" src="site/d-smashtacos.webp" alt="" style="width: 104px; transform: rotate(-6deg)">
+<img loading="lazy" decoding="async" src="site/d-marryme.webp" alt="" style="width: 104px; transform: rotate(5deg)">
+<img loading="lazy" decoding="async" src="site/d-halloumiwraps.webp" alt="" style="width: 104px; transform: rotate(-4deg)">
+<span style="font-family: 'Kalam', cursive; font-size: 18px; color: #172038; transform: rotate(-2deg)">every dish has its own sticker</span>
+</div>
+</div>
+<div style="flex: 1 1 380px; min-width: 0; display: flex; justify-content: center">
+<div style="position: relative; display: flex; gap: 4%; width: min(100%, 520px)">
+<div style="flex: 1; min-width: 0; aspect-ratio: 390 / 844; border-radius: 34px; border: 8px solid #0B1020; overflow: hidden; background: #172038; box-shadow: 8px 8px 0 #FFD23F; transform: rotate(-3deg)">
+<img loading="lazy" decoding="async" src="site/t-plan6.webp" alt="Plan my week: a meal for each day and a shopping list button" style="display: block; width: 100%; height: 100%; object-fit: cover">
+</div>
+<div style="flex: 1; min-width: 0; aspect-ratio: 390 / 844; border-radius: 34px; border: 8px solid #0B1020; overflow: hidden; background: #172038; box-shadow: 8px 8px 0 #FF6FB0; transform: rotate(3deg); margin-top: 9%">
+<img loading="lazy" decoding="async" src="site/s-recipes.webp" alt="The recipe list with mood tags and cooking times" style="display: block; width: 100%; height: 100%; object-fit: cover">
+</div>
+<img loading="lazy" decoding="async" src="site/k-egg.webp" alt="End-of-cook sticker that says Egg-cellent!" style="position: absolute; left: 28%; bottom: -10%; width: 44%; transform: rotate(-7deg); filter: drop-shadow(4px 6px 0 rgba(0,0,0,0.3))">
+</div>
+</div>
+</div>
+</section>
+
+<section style="max-width: 1160px; margin: 0 auto; padding: clamp(56px, 8cqw, 110px) 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 24px">
+<div style="background: #C6FF4D; color: #172038; border: 4px solid #0B1020; border-radius: 28px; padding: 28px 28px 0; display: flex; flex-direction: column; gap: 14px; overflow: hidden">
+<span style="align-self: flex-start; background: #172038; color: #C6FF4D; border-radius: 10px; padding: 2px 12px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 16px">WORKOUTS</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: clamp(32px, 3.8cqw, 48px); line-height: 0.95">MOVE YOUR WAY.</h2>
+<p style="margin: 0">Not every day is a gym day, so pick what suits you: a gym session, walk, run, cycle, swim or stretch. Gym sessions take you through each exercise set by set, with how-to guides and rest timers. The app saves your progress, so you can build up bit by bit and your goals feel achievable.</p>
+<div style="display: flex; justify-content: center; align-items: flex-end; gap: 14px; margin-top: 10px">
+<div style="flex: 1 1 0; min-width: 0; max-width: 240px; aspect-ratio: 10 / 15; border-radius: 28px 28px 0 0; border: 7px solid #0B1020; border-bottom: 0; overflow: hidden; background: #172038">
+<img loading="lazy" decoding="async" src="site/t-legday.webp" alt="A leg day workout: each exercise with its weight, sets and a how-to button" style="display: block; width: 100%">
+</div>
+<div style="flex: 1 1 0; min-width: 0; max-width: 240px; aspect-ratio: 10 / 15; border-radius: 28px 28px 0 0; border: 7px solid #0B1020; border-bottom: 0; overflow: hidden; background: #172038">
+<img loading="lazy" decoding="async" src="site/t-gprof.webp" alt="My progress: active minutes this week, each type of exercise and challenge stickers" style="display: block; width: 100%">
+</div>
+</div>
+</div>
+<div style="background: #A98BFF; color: #172038; border: 4px solid #0B1020; border-radius: 28px; padding: 28px 28px 0; display: flex; flex-direction: column; gap: 14px; overflow: hidden">
+<span style="align-self: flex-start; background: #172038; color: #D9CCFF; border-radius: 10px; padding: 2px 12px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 16px">HOBBIES</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: clamp(32px, 3.8cqw, 48px); line-height: 0.95">TIME FOR YOU.</h2>
+<p style="margin: 0">Hobbies count as getting St*ck done too. Tick off the days you read, and every book you finish goes on your library shelf. Keep track of the music you’re learning and the games you’re playing, with challenges that earn stickers. Friends can see what you’re into and cheer you on.</p>
+<div style="display: flex; justify-content: center; align-items: flex-end; gap: 14px; margin-top: 10px">
+<div style="flex: 1 1 0; min-width: 0; max-width: 240px; aspect-ratio: 10 / 15; border-radius: 28px 28px 0 0; border: 7px solid #0B1020; border-bottom: 0; overflow: hidden; background: #172038">
+<img loading="lazy" decoding="async" src="site/t-hobbies.webp" alt="My hobbies: a reading tile and a music tile, with stamps from friends" style="display: block; width: 100%">
+</div>
+<div style="flex: 1 1 0; min-width: 0; max-width: 240px; aspect-ratio: 10 / 15; border-radius: 28px 28px 0 0; border: 7px solid #0B1020; border-bottom: 0; overflow: hidden; background: #172038">
+<img loading="lazy" decoding="async" src="site/t-library.webp" alt="My library: a wooden bookshelf holding the books you have finished" style="display: block; width: 100%">
+</div>
+</div>
+</div>
+</section>
+
+<section style="background: #0F1629; border-top: 4px solid #0B1020; border-bottom: 4px solid #0B1020">
+<div style="max-width: 1160px; margin: 0 auto; padding: clamp(56px, 7cqw, 96px) 24px; display: flex; flex-direction: column; gap: 30px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: clamp(36px, 5cqw, 64px); line-height: 0.95; color: #F6EFE1">KIND BY DESIGN.</h2>
+<span style="font-family: 'Kalam', cursive; font-size: 20px; color: #FFD23F; transform: rotate(-2deg)">for the days when deciding is the hard part</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 20px">
+<div style="background: #FBF4E6; color: #172038; border: 4px solid #0B1020; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 8px; box-shadow: 6px 6px 0 #FFD23F">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 26px; line-height: 1">LESS TO DECIDE</span>
+<span>Too tired to choose dinner? Tap once and the app picks for you.</span>
+</div>
+<div style="background: #FBF4E6; color: #172038; border: 4px solid #0B1020; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 8px; box-shadow: 6px 6px 0 #FF6FB0">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 26px; line-height: 1">NO STREAK GUILT</span>
+<span>Miss a day and nothing breaks. No lost streaks and no telling off. You just pick up where you left off.</span>
+</div>
+<div style="background: #FBF4E6; color: #172038; border: 4px solid #0B1020; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 8px; box-shadow: 6px 6px 0 #C6FF4D">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 26px; line-height: 1">LITTLE WINS COUNT</span>
+<span>You don’t need a perfect day. Tick one thing off, drink your water or take a short walk, and you’ve earned a sticker.</span>
+</div>
+<div style="background: #FBF4E6; color: #172038; border: 4px solid #0B1020; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 8px; box-shadow: 6px 6px 0 #6EC8FF">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 26px; line-height: 1">YOURS TO SHAPE</span>
+<span>Hide the sections you don’t use and build your own lists, so the app only shows what matters to you.</span>
+</div>
+</div>
+</div>
+</section>
+
+<section id="test" style="max-width: 1160px; margin: 0 auto; padding: clamp(40px, 6cqw, 80px) 24px 0">
+<div style="display: flex; flex-direction: column; align-items: flex-start; gap: 18px; background: #FBF4E6; color: #172038; border: 4px solid #0B1020; border-radius: 30px; box-shadow: 8px 8px 0 #6EC8FF; padding: clamp(26px, 4cqw, 48px)">
+<span style="background: #172038; color: #F6EFE1; border-radius: 12px; padding: 5px 14px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 15px; letter-spacing: 0.02em">ANDROID TESTERS WANTED</span>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: clamp(34px, 5cqw, 60px); line-height: 0.95; color: #172038">HELP US TEST GET ST*CK DONE!</h2>
+<p style="margin: 0; max-width: 640px">We’re looking for Android users to try the app before it launches. Use it for two weeks, tell us what you think, and earn a Founding tester pin badge.</p>
+<div style="display: flex; flex-direction: column; gap: 14px; margin-top: 4px">
+<div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap"><span style="display: inline-flex; align-items: center; justify-content: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: #172038; color: #C6FF4D; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px">1</span><a href="#test" style="display: inline-flex; align-items: center; min-height: 54px; padding: 0 18px; border-radius: 18px; border: 4px solid #0B1020; background: #C6FF4D; color: #172038; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: clamp(17px, 4.6cqw, 20px); text-decoration: none; box-shadow: 5px 5px 0 #FF6FB0; white-space: nowrap">JOIN THE GROUP →</a><span style="font-size: 16px; color: #3A4460">Sign in with your Google account.</span></div>
+<div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap"><span style="display: inline-flex; align-items: center; justify-content: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: #172038; color: #C6FF4D; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 22px">2</span><a href="#test" style="display: inline-flex; align-items: center; min-height: 54px; padding: 0 18px; border-radius: 18px; border: 4px solid #0B1020; background: #C6FF4D; color: #172038; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: clamp(17px, 4.6cqw, 20px); text-decoration: none; box-shadow: 5px 5px 0 #FF6FB0; white-space: nowrap">GET THE APP →</a><span style="font-size: 16px; color: #3A4460">Opt in to the test and install from Google Play.</span></div>
+</div>
+<p style="margin: 0; max-width: 640px; font-size: 15px; color: #3A4460">Joining the group shares your Google account email with us as the organiser. We only use it to give you access to the test.</p>
+</div>
+</section>
+
+<section id="get" style="max-width: 1160px; margin: 0 auto; padding: clamp(64px, 9cqw, 120px) 24px; display: flex; flex-direction: column; align-items: center; gap: 22px; text-align: center">
+<div style="display: flex; align-items: flex-end; justify-content: center; gap: 0">
+<img loading="lazy" decoding="async" src="site/c-lime.webp" alt="" style="width: clamp(76px, 10cqw, 120px); transform: rotate(-8deg)">
+<img loading="lazy" decoding="async" src="site/c-pepper.webp" alt="" style="width: clamp(88px, 12cqw, 140px)">
+<img loading="lazy" decoding="async" src="site/c-garlic.webp" alt="" style="width: clamp(76px, 10cqw, 120px); transform: rotate(8deg)">
+</div>
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: clamp(44px, 7cqw, 92px); line-height: 0.92; color: #C6FF4D; text-shadow: 4px 4px 0 #FF6FB0">GET THE APP.</h2>
+<p style="margin: 0; max-width: 520px">Coming soon to Google Play and iOS.</p>
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 14px">
+<span style="display: inline-flex; flex-direction: column; justify-content: center; min-height: 60px; padding: 0 24px; border-radius: 16px; border: 3px solid #0B1020; background: #C6FF4D; color: #172038; text-align: left; box-shadow: 4px 4px 0 #FF6FB0"><span style="font-size: 13px; line-height: 1.2">coming soon</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 20px; line-height: 1.1">GOOGLE PLAY</span></span>
+<span style="display: inline-flex; flex-direction: column; justify-content: center; min-height: 60px; padding: 0 24px; border-radius: 16px; border: 3px dashed #8E97B0; color: #D5DBEA; text-align: left"><span style="font-size: 13px; line-height: 1.2">coming soon</span><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 20px; line-height: 1.1">iOS</span></span>
+
+</div>
+
+</section>
+
+<footer style="border-top: 4px solid #0B1020; background: #0F1629">
+<div style="max-width: 1160px; margin: 0 auto; padding: 26px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 24px; font-size: 15px; color: #D5DBEA">
+<span style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-stretch: 80%; font-size: 18px; color: #F6EFE1">GET ST*CK DONE!</span><span style="font-family: 'Kalam', cursive; font-size: 17px; color: #FFD23F">the sticker-book life organiser</span></span>
+<span>[PRIVACY] · [CONTACT] · © 2026</span>
+</div>
+</footer>
+
+</div>
 <script>
+var view = null;
+class DCLogic { constructor(p) { this.props = p || {}; this.state = {}; } setState(u) { Object.assign(this.state, typeof u === 'function' ? u(this.state) : u); draw(); } forceUpdate() { draw(); } }
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+const T = 92; this.T = T; this.C = [T * 0.13, T * 0.87]; this.REST = [this.C[0] + 13, this.C[1] - 11];
+/* each sticker peels in its own cut-out shape (the picture itself), not on a round backing: the fold cuts the picture's square, and the lifted part is the picture mirrored and turned paper-white */
+this.outline = [[0, 0], [T, 0], [T, T], [0, T]];
+this.SLOTS = [{ cx: 66, cy: 132, w: 82, rot: -5 }, { cx: 170, cy: 150, w: 82, rot: 3 }, { cx: 274, cy: 132, w: 82, rot: -4 }];
+this.TRAY = [18, 288];
+this.m = { idx: 0, mode: 'ready', P: this.REST.slice(), x: 18, y: 288, rot: -3, scale: 1, lifted: false, filled: [false, false, false], msg: 0 };
+this.down = null; this.early = false; this.dead = false;
+this.onDown = this.onDown.bind(this); this.onMove = this.onMove.bind(this); this.onUp = this.onUp.bind(this); this.auto = this.auto.bind(this);
+}
+componentWillUnmount() { this.dead = true; }
+/* the same peel, drag and drop as the app's sticker book (makealbum.py): peel from the bottom-left corner until it lifts off, then drop it on the page */
+anim(from, to, ms, ease, step, end) {
+const t0 = performance.now();
+const f = (t) => { if (this.dead) return; const u = Math.min(1, (t - t0) / Math.max(1, ms)); step(from.map((v, i) => v + (to[i] - v) * ease(u))); this.forceUpdate(); if (u < 1) requestAnimationFrame(f); else if (end) end(); };
+requestAnimationFrame(f);
+}
+spring(u) { return 1 + 2.2 * Math.pow(u - 1, 3) + 1.2 * Math.pow(u - 1, 2); }
+board(ev) { const r = ev.currentTarget.parentElement.getBoundingClientRect(), k = (r.width / 340) || 1; return [(ev.clientX - r.left) / k, (ev.clientY - r.top) / k]; }
+onDown(ev) {
+const m = this.m; if (m.mode !== 'ready') return; if (ev.preventDefault) ev.preventDefault(); try { ev.currentTarget.setPointerCapture(ev.pointerId); } catch (x) {}
+const f = this.board(ev), Lp = [f[0] - m.x, f[1] - m.y], C = this.C;
+this.down = { fx: f[0], fy: f[1], t: performance.now(), moved: false, last: f };
+if (Math.hypot(C[0] - Lp[0], C[1] - Lp[1]) < 50) { m.mode = 'peeling'; this.down.grab = [C[0] - Lp[0], C[1] - Lp[1]]; } else m.msg = 1;
+this.forceUpdate();
+}
+onMove(ev) {
+const d0 = this.down, m = this.m; if (!d0) return; const f = this.board(ev); d0.last = f; if (Math.hypot(f[0] - d0.fx, f[1] - d0.fy) > 6) d0.moved = true;
+if (m.mode === 'peeling') { const P = [f[0] - m.x + d0.grab[0], f[1] - m.y + d0.grab[1]]; if (Math.hypot(this.C[0] - P[0], this.C[1] - P[1]) >= 0.9 * this.T) this.release(P); else { m.P = P; this.forceUpdate(); } }
+else if (m.mode === 'free') { m.tx = f[0] - m.gx; m.ty = f[1] - m.gy; }
+}
+release(P) {
+const m = this.m, T = this.T, C = this.C; m.mode = 'releasing'; const dx = P[0] - C[0], dy = P[1] - C[1], d = Math.hypot(dx, dy) || 1;
+this.anim(P, [C[0] + dx / d * 2.15 * T, C[1] + dy / d * 2.15 * T], 170, (u) => u * u, (v) => { m.P = v; }, () => {
+m.P = null; m.lifted = true; m.gx = T * 0.2; m.gy = T * 0.8; const f = (this.down && this.down.last) || [m.x + m.gx, m.y + m.gy]; m.tx = f[0] - m.gx; m.ty = f[1] - m.gy; m.mode = 'free'; m.msg = 3;
+const loop = () => { if (this.dead || m.mode !== 'free') return; const nx = m.x + (m.tx - m.x) * 0.38, vx = nx - m.x; m.x = nx; m.y += (m.ty - m.y) * 0.38; m.rot += (Math.max(-12, Math.min(12, vx * 0.9)) - m.rot) * 0.25; m.scale += (1.08 - m.scale) * 0.3; this.forceUpdate(); requestAnimationFrame(loop); };
+requestAnimationFrame(loop); if (this.early) { this.early = false; this.drop(); } });
+}
+drop() {
+const m = this.m, T = this.T, cx = m.x + T / 2, cy = m.y + T / 2;
+if (cx > 0 && cx < 340 && cy > 0 && cy < 262) { this.land(); return; }
+m.mode = 'returning';
+this.anim([m.x, m.y, m.rot, m.scale], [this.TRAY[0], this.TRAY[1], -3, 1], 300, this.spring, (v) => { m.x = v[0]; m.y = v[1]; m.rot = v[2]; m.scale = v[3]; }, () => { m.mode = 'ready'; m.lifted = false; m.P = this.REST.slice(); m.msg = 0; this.forceUpdate(); });
+}
+land() {
+const m = this.m, T = this.T, s = this.SLOTS[m.idx]; m.mode = 'landing';
+this.anim([m.x, m.y, m.rot, m.scale], [s.cx - T / 2, s.cy - T / 2, s.rot, 0.92], 300, (u) => 1 - Math.pow(1 - u, 3), (v) => { m.x = v[0]; m.y = v[1]; m.rot = v[2]; m.scale = v[3]; }, () => {
+m.filled[m.idx] = true; m.idx += 1; m.lifted = false;
+if (m.idx >= 3) { m.mode = 'done'; m.msg = 4; } else { m.mode = 'ready'; m.x = this.TRAY[0]; m.y = this.TRAY[1]; m.rot = -3; m.scale = 1; m.P = this.REST.slice(); m.msg = 0; }
+this.forceUpdate(); });
+}
+auto() {
+const m = this.m, C = this.C, T = this.T; if (m.mode !== 'ready') return; m.mode = 'releasing';
+this.anim(m.P || this.REST, [C[0] + 0.707 * 2.15 * T, C[1] - 0.707 * 2.15 * T], 320, (u) => u * u, (v) => { m.P = v; }, () => { m.P = null; m.lifted = true; this.land(); });
+}
+onUp() {
+const d0 = this.down, m = this.m; if (!d0) return; const quick = !d0.moved && performance.now() - d0.t < 300; this.down = null;
+if (m.mode === 'peeling') { m.mode = 'ready'; if (quick) { this.auto(); return; } this.anim(m.P || this.REST, this.REST, 220, this.spring, (v) => { m.P = v; }); m.msg = 2; }
+else if (m.mode === 'free') this.drop(); else if (m.mode === 'releasing') this.early = true; else if (m.mode === 'ready' && quick) this.auto();
+this.forceUpdate();
+}
+renderVals() {
+const m = this.m, T = this.T, C = this.C, S = this.SLOTS, done = m.mode === 'done';
+const poly = (pts) => 'polygon(' + pts.map((p) => p[0].toFixed(1) + 'px ' + p[1].toFixed(1) + 'px').join(', ') + ')';
+let faceClip = 'none', faceOp = 1, flapOn = false, flapClip = 'none', flapM = '1, 0, 0, 1, 0, 0';
+if (m.P) { const dx = C[0] - m.P[0], dy = C[1] - m.P[1], d = Math.hypot(dx, dy);
+if (d >= 0.5) { const n = [dx / d, dy / d], M = [(C[0] + m.P[0]) / 2, (C[1] + m.P[1]) / 2], side = (p) => (p[0] - M[0]) * n[0] + (p[1] - M[1]) * n[1], keep = [], cut = [], o = this.outline;
+for (let i = 0; i < o.length; i++) { const a = o[i], b = o[(i + 1) % o.length], sa = side(a), sb = side(b); if (sa <= 0) keep.push(a); else cut.push(a);
+if ((sa <= 0) !== (sb <= 0)) { const t = sa / (sa - sb), q = [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]; keep.push(q); cut.push(q); } }
+faceClip = keep.length > 2 ? poly(keep) : 'polygon(0 0, 0 0, 0 0)'; faceOp = d > T * 1.9 ? 0 : 1;
+flapOn = cut.length > 2 && faceOp === 1; if (flapOn) flapClip = poly(cut);
+const mn = M[0] * n[0] + M[1] * n[1]; flapM = [1 - 2 * n[0] * n[0], -2 * n[0] * n[1], -2 * n[0] * n[1], 1 - 2 * n[1] * n[1], 2 * mn * n[0], 2 * mn * n[1]].map((q) => q.toFixed(4)).join(', '); } }
+const v = {};
+v.liveStyle = 'position: absolute; left: 0; top: 0; width: ' + T + 'px; height: ' + T + 'px; padding: 0; border: 0; background: none; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; z-index: ' + (m.lifted ? 9 : 6) + '; display: ' + (done ? 'none' : 'block') + '; transform: translate(' + m.x.toFixed(1) + 'px, ' + m.y.toFixed(1) + 'px)';
+v.innStyle = 'position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; filter: drop-shadow(' + (m.lifted ? '0 16px 12px rgba(60,40,20,0.35)' : '1px 2px 1px rgba(60,40,20,0.3)') + '); transform: rotate(' + m.rot.toFixed(2) + 'deg) scale(' + m.scale.toFixed(3) + ')';
+v.faceStyle = 'position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; pointer-events: none; opacity: ' + faceOp + '; clip-path: ' + faceClip;
+v.fwStyle = 'position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; transform-origin: 0 0; transform: matrix(' + flapM + '); clip-path: ' + flapClip + '; display: ' + (flapOn ? 'block' : 'none');
+for (let i = 0; i < 3; i++) { const s = S[i], box = 'position: absolute; left: ' + (s.cx - s.w / 2) + 'px; top: ' + (s.cy - s.w / 2) + 'px; width: ' + s.w + 'px; height: ' + s.w + 'px; object-fit: contain; pointer-events: none; ';
+v['art' + i] = 'position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: contain; display: ' + (m.idx === i ? 'block' : 'none');
+v['fart' + i] = v['art' + i] + '; filter: brightness(0) invert(0.94) sepia(0.15)';
+v['ghost' + i] = box + 'filter: brightness(0); opacity: ' + (m.filled[i] ? 0 : (m.idx === i && !done ? 0.2 : 0.11));
+v['stuck' + i] = box + 'transform: rotate(' + s.rot + 'deg); filter: drop-shadow(1px 2px 0 rgba(60,40,20,0.25)); display: ' + (m.filled[i] ? 'block' : 'none'); }
+v.trayStyle = 'position: absolute; left: 0; top: 276px; width: 340px; height: 116px; box-sizing: border-box; border-radius: 16px; background-color: #FFFFFF; background-image: repeating-linear-gradient(135deg, rgba(23,32,56,0.04) 0 2px, transparent 2px 9px); box-shadow: 0 -4px 0 #FF6FB0; color: #172038';
+v.trayText = 'display: ' + (done ? 'none' : 'block');
+v.doneStyle = 'position: absolute; left: 16px; right: 16px; top: 0; bottom: 0; align-items: center; justify-content: center; text-align: center; font-family: \'Kalam\', cursive; font-weight: 700; font-size: 20px; line-height: 1.3; display: ' + (done ? 'flex' : 'none');
+v.trayName = ['Water goal', 'First workout', 'Smash burger tacos'][Math.min(m.idx, 2)]; v.trayWhere = ['Firsts > First water goal', 'Firsts > First workout', 'Firsts > First recipe cooked'][Math.min(m.idx, 2)];
+v.liveAria = 'Peel the ' + v.trayName + ' sticker and stick it on the page';
+v.peelMsg = ['Pop it on the page and it’ll find its space.', 'Peel it from the bottom-left corner.', 'Almost! Keep peeling until it lifts off.', 'Drop it on the page. It knows where it goes.', 'That’s how every win feels.'][m.msg];
+v.down = this.onDown; v.move = this.onMove; v.up = this.onUp; v.stick = this.auto;
+return v;
+}
+}
+
+function draw() {
+  if (!view) return;
+  var v = view.renderVals();
+  document.querySelectorAll('[data-st]').forEach(function (e) { var s = v[e.dataset.st]; if (s != null && e._st !== s) { e.style.cssText = s; e._st = s; } });
+  document.querySelectorAll('[data-tx]').forEach(function (e) { var s = v[e.dataset.tx]; s = s == null ? '' : String(s); if (e._tx !== s) { e.textContent = s; e._tx = s; } });
+  document.querySelectorAll('*').forEach(function (e) { if (!e.attributes) return; for (var i = 0; i < e.attributes.length; i++) { var a = e.attributes[i]; if (a.name.indexOf('data-at-') === 0) { var s = v[a.value]; if (s != null) e.setAttribute(a.name.slice(8), s); } } });
+}
+view = new Component({});
 (function () {
-  const MENU = {"Start": [["Splash", "Splash"], ["Onboard", "Set up (onboarding)"], ["StickerBook", "Your first sticker"]], "Every day": [["Today", "Today (home)"], ["MyList", "My List"], ["UseItUp", "Use it up"], ["Recipes", "All recipes"], ["PlanWeek", "Plan my week + shopping"]], "Gym": [["GymHub", "Pick a workout"], ["Session", "Workout session (walk, run, swim\u2026)"], ["GymProfile", "My progress"], ["LegDay", "Leg day"], ["GuideSquat", "How-to: goblet squat"], ["PullDay", "Pull day"], ["GuidePulldown", "How-to: lat pulldown"], ["WorkoutOverview", "Push day"], ["GuideCurl", "How-to: barbell curl"], ["GuideRDL", "How-to: romanian deadlift"], ["GuideLunge", "How-to: walking lunge"], ["GuideLegPress", "How-to: leg press"], ["GuideCalf", "How-to: calf raise"], ["GuideSeatedRow", "How-to: seated row"], ["GuideDBRow", "How-to: dumbbell row"], ["GuideFacePull", "How-to: face pull"], ["GuideHammer", "How-to: hammer curl"], ["GuideBench", "How-to: bench press"], ["GuideOHP", "How-to: overhead press"], ["GuideDips", "How-to: dips"], ["GuideLateral", "How-to: lateral raise"]], "Kitchen": [["CookRice", "Cook: chilli-crisp fried rice"], ["CookGnocchi", "Cook: crispy gnocchi"], ["CookTacos", "Cook: smash burger tacos"], ["CookV2", "Cook: chicken Alfredo"], ["CookGochunoodles", "Cook: Gochujang butter noodles"], ["CookMarryme", "Cook: Marry Me chicken"], ["CookGreencurry", "Cook: Thai green chicken curry"], ["CookTarkadal", "Cook: Tarka dal"], ["CookTunapasta", "Cook: Lemon & chilli tuna spaghetti"], ["CookKoftaflat", "Cook: Lamb kofta flatbreads, whipped feta"], ["CookHalloumiwraps", "Cook: Hot honey halloumi wraps"], ["CookTunamelt", "Cook: Gochujang tuna melt"], ["CookTunabowl", "Cook: Spicy tuna crispy rice bowl"], ["CookVodkapasta", "Cook: Spicy vodka pasta (Gigi Hadid-style)"], ["CookHothoneysalmon", "Cook: Hot honey salmon & smashed cucumber"], ["CookHarissaorzo", "Cook: Harissa chicken orzo"], ["CookGochupork", "Cook: Sticky gochujang pork bowls"], ["CookShawarma", "Cook: Chicken shawarma bowls"], ["CookFetapasta", "Cook: Baked feta pasta"], ["CookMisosalmon", "Cook: Miso salmon, crispy chilli rice"], ["CookBeefcurry", "Cook: Japanese-style beef curry"], ["CookPbcurry", "Cook: Peanut butter chicken curry"], ["CookButterchicken", "Cook: Butter chicken"], ["CookChana", "Cook: Chana masala"], ["CookSaagpaneer", "Cook: Saag paneer"], ["CookKeema", "Cook: Keema matar"], ["CookKorma", "Cook: Chicken korma"], ["CookKeralaprawn", "Cook: Keralan prawn curry"], ["CookRoganjosh", "Cook: Lamb rogan josh"], ["CookPanang", "Cook: Panang beef curry"], ["CookMassaman", "Cook: Massaman beef curry"], ["CookKhaosoi", "Cook: Khao soi"], ["CookRedsquash", "Cook: Thai red curry with squash & chickpeas"], ["CookDuckpancakes", "Cook: Crispy duck pancakes"], ["CookPeruchicken", "Cook: Peruvian-style chicken & green sauce"], ["CookAssassina", "Cook: Spaghetti all\u2019assassina"], ["CookGreekchicken", "Cook: Greek lemon chicken & potatoes"], ["CookJambalaya", "Cook: Quick chicken jambalaya"], ["CookHainanese", "Cook: Hainanese chicken rice"], ["CookPeanutnoodles", "Cook: Spicy peanut noodles with prawns"], ["CookTonkatsu", "Cook: Pork tonkatsu"], ["CookMapotofu", "Cook: Mapo tofu"], ["CookAubkatsu", "Cook: Aubergine katsu curry"], ["CookPavbhaji", "Cook: Pav bhaji"], ["CookBeantacos", "Cook: Crispy black bean tacos"], ["CookMejadra", "Cook: Mejadra"], ["CookCottagepie", "Cook: Cottage pie with cheddar-leek mash"], ["CookBangers", "Cook: Sausages, French onion gravy & mustard mash"], ["CookToad", "Cook: Hot honey toad in the hole"], ["CookFishpie", "Cook: Fish pie with a salt & vinegar crisp lid"], ["CookCaulicheese", "Cook: Buffalo cauliflower cheese"], ["CookRarebit", "Cook: Marmite & beer rarebit"], ["CookLeeksoup", "Cook: Leek & potato soup with crispy skins"], ["CookTomsoup", "Cook: Roast tomato soup with grilled-cheese croutons"], ["CookOnionsoup", "Cook: French onion soup with a cheesy toast lid"], ["CookMinestrone", "Cook: Pesto minestrone"], ["CookOrzosoup", "Cook: Lemony chicken & orzo soup"], ["CookChorizobeans", "Cook: Smoky chicken, chorizo & butter beans"], ["CookLasagnesoup", "Cook: One-pot lasagne soup"], ["CookMushrisotto", "Cook: No-stir baked mushroom risotto"], ["CookFishstew", "Cook: Coconut & lime fish stew"], ["CookPotpie", "Cook: One-pot chicken & leek pie"], ["CookLentilpie", "Cook: Lentil & mushroom cottage pie"], ["CookPestosalmon", "Cook: Pesto salmon traybake"], ["CookTuscansalmon", "Cook: Creamy Tuscan salmon pasta"], ["CookSteakfrites", "Cook: Steak frites with garlic butter"], ["CookChimisteak", "Cook: Chimichurri steak with smashed potatoes"], ["CookFajitas", "Cook: Chicken fajita traybake"], ["CookChilli", "Cook: Chilli con carne"], ["CookJerk", "Cook: Jerk chicken with rice & peas"], ["CookJollof", "Cook: Jollof rice with chicken"], ["CookPaella", "Cook: Chorizo & prawn paella"], ["CookSweetsour", "Cook: Sweet & sour pork"], ["CookKungpao", "Cook: Kung pao tofu"], ["CookCaramelsalmon", "Cook: Vietnamese caramel salmon"], ["CookShakshuka", "Cook: Shakshuka with feta"], ["CookCodtacos", "Cook: Crispy cod tacos"]], "Book and me": [["StickerAlbum", "Sticker book"], ["CoverEdit", "Decorate your cover"], ["StickerAlbum#new", "New stickers to stick"], ["Profile", "My profile"], ["Hobbies", "My hobbies"], ["Friends", "Friends"]], "Wraps": [["WeekWrap", "Your week (pack)"], ["MonthWrap", "Your month (pack)"]], "Extras": [["HydroLearn", "Hydro Homie: why hydrate?"]]}, BUILD = '1794265170';
-  // a newer build is out? reload onto it (a new URL, so no cached copy)
-  try { fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then((r) => r.json()).then((j) => { if (j && j.v && j.v !== BUILD) location.replace(location.pathname + '?v=' + j.v); }).catch(() => {}); } catch (e) {}
-  const $ = (id) => document.getElementById(id), frame = $('screen'), panel = $('panel'), scrim = $('scrim'), pill = $('pill');
-  const wide = () => matchMedia('(min-width: 900px)').matches;
-  const open = (on) => { panel.classList.toggle('open', on); scrim.style.display = on && !wide() ? 'block' : 'none'; pill.setAttribute('aria-expanded', on ? 'true' : 'false'); if (on) $('close').focus(); };
-  pill.addEventListener('click', () => open(true)); scrim.addEventListener('click', () => open(false)); $('close').addEventListener('click', () => { open(false); pill.focus(); });
-  addEventListener('keydown', (e) => { if (e.key === 'Escape') open(false); });
-  const go = (f) => { const [n, h] = f.split('#'); frame.src = n + '.html?v=' + BUILD + (h ? '#' + h : ''); if (!wide()) open(false); };
-
-  // the screen list
-  const list = $('list');
-  Object.keys(MENU).forEach((g) => {
-    const h = document.createElement('div'); h.className = 'grp'; h.textContent = g; list.appendChild(h);
-    MENU[g].forEach(([f, lab]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'scr'; b.dataset.f = f; b.textContent = lab; b.addEventListener('click', () => go(f)); list.appendChild(b); });
-  });
-  const current = () => { try { return frame.contentWindow.location.pathname.split('/').pop().replace('.html', ''); } catch (e) { return ''; } };
-
-  $('back').addEventListener('click', () => { try { frame.contentWindow.history.back(); } catch (e) {} if (!wide()) open(false); });
-  $('home').addEventListener('click', () => go('Today'));
-  $('restart').addEventListener('click', () => go('Splash'));
-  let armed = 0;
-  $('reset').addEventListener('click', () => {
-    const b = $('reset');
-    if (Date.now() - armed > 3000) { armed = Date.now(); b.textContent = 'tap again to wipe it'; setTimeout(() => { b.textContent = 'reset demo'; }, 3000); return; }
-    try { Object.keys(localStorage).filter((k) => k.startsWith('gsd.')).forEach((k) => localStorage.removeItem(k)); } catch (e) {}
-    b.textContent = 'reset demo'; armed = 0; go('Splash');
-  });
-
-  // small bits of glue where a canvas board was a dead end, so the demo flows like the app would
-  const glue = {};   // per-screen demo glue (none needed right now)
-  frame.addEventListener('load', () => {
-    const f = current();
-    list.querySelectorAll('.scr').forEach((b) => b.toggleAttribute('aria-current', b.dataset.f === f));
-    list.querySelectorAll('.scr[aria-current]').forEach((b) => b.setAttribute('aria-current', 'page'));
-    if (glue[f]) { let n = 0; const t = setInterval(() => { let done = false; try { done = glue[f](frame.contentDocument); } catch (e) {} if (done || ++n > 40) clearInterval(t); }, 100); }
-  });
-  if (wide()) open(true);
-  addEventListener('resize', () => { if (wide()) { panel.classList.add('open'); scrim.style.display = 'none'; } });
+  var v = view.renderVals();
+  document.querySelectorAll('*').forEach(function (e) { if (!e.attributes) return; for (var i = 0; i < e.attributes.length; i++) { var a = e.attributes[i]; if (a.name.indexOf('data-on-') === 0) { (function (ev, fn) { e.addEventListener(ev, function (x) { var f = view.renderVals()[fn]; if (f) f(x); }); })(a.name.slice(8), a.value); } } });
+  draw();
+  if (view.componentDidMount) view.componentDidMount();
 })();
 </script>
+</body>
+</html>
