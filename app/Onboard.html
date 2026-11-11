@@ -45,7 +45,7 @@ document.addEventListener('touchstart', function () {}, { passive: true });</scr
    so timers run on time and the tap arrives when it should. */
 window.GSN = (function () {
   var lock = null, hooked = false;
-  function on() { try { var p = JSON.parse(localStorage.getItem('gsb.profile') || 'null'); return !!(p && p.watch) && 'Notification' in window && Notification.permission === 'granted'; } catch (e) { return false; } }
+  function on() { return false; }   // (11 Nov 2026, Dex) WATCH TAPS shelved: taps for timers/rest/stickers only fired while the app was on screen, so they're off for everyone until they can be done properly. Water nudges, friend alerts and gym nudges are server pushes and stay.
   function tap(img, title, body, tag) {
     if (!on()) return;
     var o = { body: body || '', tag: tag || img, renotify: true, icon: 'icons/icon-192.png', badge: 'icons/badge-96.png', image: 'icons/watch-' + img + '.png', vibrate: [60, 80, 60], data: { url: location.href } };
@@ -124,7 +124,7 @@ window.GSN = (function () {
    A random install id + { day, event, detail } -> count, queued here and sent in one go when the app is put away.
    Switched off in Me > settings (gsd.analyticsOff), which also deletes what this phone sent. See push_analytics.js. */
 (function () {
-  var API = window.GSD_API_TEST || window.GSD_API, Q = 'gsb.aq', VER = '20261110';
+  var API = window.GSD_API_TEST || window.GSD_API, Q = 'gsb.aq', VER = '20261111';
   function off() { try { return localStorage.getItem('gsb.analyticsOff') === '1'; } catch (e) { return true; } }
   function day() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
   function id() { var k = null; try { k = localStorage.getItem('gsb.aid'); if (!k) { k = Array.from(crypto.getRandomValues(new Uint8Array(12)), function (x) { return x.toString(16).padStart(2, '0'); }).join(''); localStorage.setItem('gsb.aid', k); } } catch (e) {} return k; }
@@ -344,7 +344,7 @@ a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"
 
     <sc-if value="{{s4}}" hint-placeholder-val="{{ false }}">
       <span class="title-die bri" style="font-size: 36px; text-shadow: 3px 3px 0 #6EC8FF; transform: rotate(-2deg); transform-origin: left; white-space: nowrap">HYDRO HOMIE</span>
-      <div style="display: flex; align-items: center; gap: 8px"><svg width="120" viewBox="-8 -18 236 240" style="overflow: visible"><g filter="url(#kst)" transform="translate(10 0)"><path d="M56 128 Q34 120 30 98" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M144 124 Q166 106 164 78" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M86 178 Q84 188 84 198" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M114 178 Q116 188 116 198" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><ellipse cx="81" cy="200" rx="9" ry="5" fill="#2A1A10"></ellipse><ellipse cx="119" cy="200" rx="9" ry="5" fill="#2A1A10"></ellipse><path d="M100 26 C100 26 150 92 152 124 C154 160 130 182 100 182 C70 182 46 160 48 124 C50 92 100 26 100 26 Z" fill="#6EC8FF" stroke="#2A1A10" stroke-width="4" stroke-linejoin="round"></path><path d="M78 88 Q66 110 66 132" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.85"></path><circle cx="74" cy="148" r="4" fill="#FFFFFF" opacity="0.8"></circle><path d="M130 104 Q148 132 136 166" stroke="url(#kht)" stroke-width="14" fill="none"></path><path d="M56 150 Q100 170 144 150 Q140 176 100 180 Q60 176 56 150 Z" fill="#3FA9E6" opacity="0.55"></path><ellipse cx="89.0" cy="124" rx="4.2" ry="6.8" fill="#2A1A10"></ellipse><circle cx="90.4" cy="121.4" r="1.7" fill="#FFFFFF"></circle><ellipse cx="111.0" cy="124" rx="4.2" ry="6.8" fill="#2A1A10"></ellipse><circle cx="112.4" cy="121.4" r="1.7" fill="#FFFFFF"></circle><path d="M93 142 Q100 151.1 107 142 Z" fill="#2A1A10"></path><path d="M96.8 147.2 Q100 144.4 103.2 147.2 Q100 150.1 96.8 147.2 Z" fill="#FF7A8A"></path><ellipse cx="80.0" cy="140" rx="4.5" ry="2.6" fill="#FF8FA0" opacity="0.75"></ellipse><ellipse cx="120.0" cy="140" rx="4.5" ry="2.6" fill="#FF8FA0" opacity="0.75"></ellipse><path d="M176 70 l8 -6" stroke="#6EC8FF" stroke-width="4" stroke-linecap="round"></path><path d="M178 86 l10 0" stroke="#6EC8FF" stroke-width="4" stroke-linecap="round"></path></g></svg><span class="q">Want a gentle nudge to drink water? A quick push on your phone, or a soft tap on your watch if you wear one.</span></div>
+      <div style="display: flex; align-items: center; gap: 8px"><svg width="120" viewBox="-8 -18 236 240" style="overflow: visible"><g filter="url(#kst)" transform="translate(10 0)"><path d="M56 128 Q34 120 30 98" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M144 124 Q166 106 164 78" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M86 178 Q84 188 84 198" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><path d="M114 178 Q116 188 116 198" stroke="#2A1A10" stroke-width="6" fill="none" stroke-linecap="round"></path><ellipse cx="81" cy="200" rx="9" ry="5" fill="#2A1A10"></ellipse><ellipse cx="119" cy="200" rx="9" ry="5" fill="#2A1A10"></ellipse><path d="M100 26 C100 26 150 92 152 124 C154 160 130 182 100 182 C70 182 46 160 48 124 C50 92 100 26 100 26 Z" fill="#6EC8FF" stroke="#2A1A10" stroke-width="4" stroke-linejoin="round"></path><path d="M78 88 Q66 110 66 132" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.85"></path><circle cx="74" cy="148" r="4" fill="#FFFFFF" opacity="0.8"></circle><path d="M130 104 Q148 132 136 166" stroke="url(#kht)" stroke-width="14" fill="none"></path><path d="M56 150 Q100 170 144 150 Q140 176 100 180 Q60 176 56 150 Z" fill="#3FA9E6" opacity="0.55"></path><ellipse cx="89.0" cy="124" rx="4.2" ry="6.8" fill="#2A1A10"></ellipse><circle cx="90.4" cy="121.4" r="1.7" fill="#FFFFFF"></circle><ellipse cx="111.0" cy="124" rx="4.2" ry="6.8" fill="#2A1A10"></ellipse><circle cx="112.4" cy="121.4" r="1.7" fill="#FFFFFF"></circle><path d="M93 142 Q100 151.1 107 142 Z" fill="#2A1A10"></path><path d="M96.8 147.2 Q100 144.4 103.2 147.2 Q100 150.1 96.8 147.2 Z" fill="#FF7A8A"></path><ellipse cx="80.0" cy="140" rx="4.5" ry="2.6" fill="#FF8FA0" opacity="0.75"></ellipse><ellipse cx="120.0" cy="140" rx="4.5" ry="2.6" fill="#FF8FA0" opacity="0.75"></ellipse><path d="M176 70 l8 -6" stroke="#6EC8FF" stroke-width="4" stroke-linecap="round"></path><path d="M178 86 l10 0" stroke="#6EC8FF" stroke-width="4" stroke-linecap="round"></path></g></svg><span class="q">Want a gentle nudge to drink water? We’ll send a quick reminder to your phone.</span></div>
       <div style="display: flex; gap: 10px"><sc-for list="{{hydroOpts}}" as="o" hint-placeholder-count="2"><button type="button" class="chipb bri press" onClick="{{o.tap}}" aria-pressed="{{o.on}}" style="background: {{o.bg}}">{{o.label}}</button></sc-for></div>
       <span class="hint">{{hydroHint}}</span>
       <button type="button" class="press kal" onClick="{{openLearn}}" style="align-self: flex-start; border: none; background: transparent; padding: 0; color: #172038; font-size: 17px; text-decoration: underline">Learn more about hydration</button>
@@ -399,8 +399,8 @@ a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"
   <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; gap: 10px">
     <sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}"><button type="button" class="press bri" onClick="{{back}}" aria-label="Back" style="width: 62px; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #FFFFFF; color: #172038; font-size: 26px">←</button></sc-if>
     <sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{next}}" style="flex: 1; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{nextText}}</button></sc-if>
-    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1794354859" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
-    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1794354859" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
+    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1794384581" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
+    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1794384581" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
   </div>
 </div>
 </script>
@@ -426,7 +426,7 @@ class Component extends DCLogic {
   steps() {   // 10 = WHAT ARE YOU HERE FOR?; an area you didn't pick skips its questions (Me can ask them later: #only=<area>)
     const s = this.s, h = s.here;
     if (s.only) return { kitchen: [1, 2], gym: [3], water: [4] }[s.only];
-    return [0, 10].concat(h.kitchen ? [1, 2] : [], h.gym ? [3] : [], h.water ? [4] : [], [5, 6]);
+    return [0, 10].concat(h.kitchen ? [1, 2] : [], h.gym ? [3] : [], h.water ? [4] : [], [6]);   // 5 (GOT A WATCH?) shelved 11 Nov 2026
   }
   buzz(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
   hr(h) { const hh = ((h % 24) + 24) % 24; return (hh % 12 === 0 ? 12 : hh % 12) + (hh < 12 ? 'am' : 'pm'); }
@@ -537,8 +537,8 @@ class Component extends DCLogic {
 }
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1794354859"></script>
-<script src="dc.js?v=1794354859"></script>
+<script src="morphdom.js?v=1794384581"></script>
+<script src="dc.js?v=1794384581"></script>
 <a id="mv-in" href="Move.html" style="display:none;position:fixed;z-index:50;transform:translateX(-50%);white-space:nowrap;font-family:Kalam,cursive;font-size:15px;color:#172038;opacity:0.75;text-decoration:underline;padding:8px">Moving from another phone?</a>
 <script>(function () { var a = document.getElementById('mv-in');
   function place() { var inp = document.querySelector('input[aria-label="Your name"]'), nx = null;
