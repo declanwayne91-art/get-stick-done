@@ -11,6 +11,7 @@
 //   /f/cheer  { secret, to, c, about? }                send a cheer (c = which one; about = what it's for, 9 Nov 2026)
 //   /f/now    { secret, now }                          what you're reading / playing / learning [{ h, t, by, k }] (9 Nov 2026)
 //   /f/remove { secret, id }   /f/block { secret, id } (block = remove, and they can't add you again)
+//   /f/delete { secret }                               delete my profile: name plate, code, friends, blocks, cheers, and my place on shared lists and plans
 //   /f/push   { secret, sub }                          friend alerts: this phone's push subscription (null = off)
 //   /f/meal   { secret, to: [ids], r, day, name, mid }  share one night's dinner (PLAN MY WEEK's paper plane); each friend gets a 'meal'
 //   /f/mealre { secret, to, mid, re, day, name }        react to one: re 1 = YES CHEF!, 0 = NOT FOR ME; the sender gets a 'mealre'
@@ -148,6 +149,26 @@ export async function friends(path, b, env, out) {
   }
   if (path === '/f/push') { await env.DB.prepare('UPDATE users SET push = ? WHERE id = ?').bind(cleanSub(b.sub, env), me.id).run(); return out({ ok: true, on: !!cleanSub(b.sub, env) }); }
   if (path === '/f/seen') { await env.DB.prepare('UPDATE events SET seen = 1 WHERE id = ? AND dest = ?').bind(Math.floor(+b.id) || 0, me.id).run(); return out({ ok: true }); }
+  if (path === '/f/delete') {   // delete my friend profile: everything this server holds about me (11 Nov 2026)
+    const D = env.DB, soft = async (f) => { try { await f(); } catch (e) { /* that table was never made: nothing to remove */ } };
+    await soft(async () => {   // shared lists: leave each one (as /l/leave does); the last one out deletes the list
+      for (const r of (await D.prepare('SELECT list FROM members WHERE user = ?').bind(me.id).all()).results) {
+        await D.batch([D.prepare('DELETE FROM members WHERE list = ? AND user = ?').bind(r.list, me.id),
+          D.prepare('UPDATE items SET for_id = NULL WHERE list = ? AND for_id = ?').bind(r.list, me.id), D.prepare('UPDATE items SET dibs = NULL WHERE list = ? AND dibs = ?').bind(r.list, me.id)]);
+        if (!(await D.prepare('SELECT COUNT(*) AS n FROM members WHERE list = ?').bind(r.list).first()).n) await D.batch([D.prepare('DELETE FROM items WHERE list = ?').bind(r.list), D.prepare('DELETE FROM lists WHERE id = ?').bind(r.list)]);
+      }
+    });
+    await soft(async () => {   // shared meal plans: leave each one (as /p/leave does), handing it on if it was mine
+      for (const r of (await D.prepare('SELECT plan FROM plan_members WHERE user = ?').bind(me.id).all()).results) {
+        await D.prepare('DELETE FROM plan_members WHERE plan = ? AND user = ?').bind(r.plan, me.id).run();
+        const nx = await D.prepare('SELECT user FROM plan_members WHERE plan = ? ORDER BY at LIMIT 1').bind(r.plan).first();
+        if (!nx) await D.prepare('DELETE FROM plans WHERE id = ?').bind(r.plan).run(); else await D.prepare('UPDATE plans SET owner = ? WHERE id = ? AND owner = ?').bind(nx.user, r.plan, me.id).run();
+      }
+    });
+    await D.batch([D.prepare('DELETE FROM links WHERE a = ? OR b = ?').bind(me.id, me.id), D.prepare('DELETE FROM blocks WHERE a = ? OR b = ?').bind(me.id, me.id),
+      D.prepare('DELETE FROM events WHERE dest = ? OR src = ?').bind(me.id, me.id), D.prepare('DELETE FROM users WHERE id = ?').bind(me.id)]);
+    return out({ ok: true });
+  }
   const other = String(b.id || b.to || '').slice(0, 40);
   if (path === '/f/cheer') {
     const c = Math.floor(+b.c); if (!(c >= 0 && c < 20)) return out({ error: 'bad cheer' }, 400);
