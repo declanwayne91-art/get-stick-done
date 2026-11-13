@@ -3,14 +3,14 @@
 // and the time zone, and the last day it sent. Nothing else. One nudge a day at most, sent by the 15-minute cron.
 //   POST /g/set  { sub, days: { '0'..'6': [title, body] }, at: hour, tz }   save (no days = forget)
 //   POST /g/off  { endpoint }                                              forget
-import { push } from './send.js';
+import { push, okPush } from './send.js';
 
 const WINDOW_MIN = 30;
 const hour = (x) => (Number.isFinite(+x) ? Math.min(21, Math.max(5, Math.round(+x))) : 8);
 
 export async function gym(path, b, env, out, idOf) {
   const endpoint = (b.sub && b.sub.endpoint) || b.endpoint || '';
-  if (!/^https:\/\//.test(endpoint) || endpoint.length > 1000) return out({ error: 'bad endpoint' }, 400);
+  if (!okPush(endpoint, env)) return out({ error: 'bad endpoint' }, 400);
   const id = 'gym:' + (await idOf(endpoint)).slice(4);
   if (path === '/g/off') { await env.SUBS.delete(id); return out({ ok: true }); }
   if (path === '/g/set') {
@@ -38,7 +38,8 @@ export async function runGym(env, local) {
     const page = await env.SUBS.list({ prefix: 'gym:', cursor }); cursor = page.list_complete ? null : page.cursor;
     for (const k of page.keys) {
       const rec = await env.SUBS.get(k.name, 'json'); if (!rec) continue;
-      const due = gymDue(rec, local, now); if (!due) continue;
+      let due = null; try { due = gymDue(rec, local, now); } catch (e) { continue; }
+      if (!due) continue;
       const st = await push(env, rec.sub, 'gym', { t: 'gym', title: due.d[0], body: due.d[1] }).catch(() => 0);
       if (st === 404 || st === 410) { await env.SUBS.delete(k.name); continue; }
       rec.last = due.day; await env.SUBS.put(k.name, JSON.stringify(rec));

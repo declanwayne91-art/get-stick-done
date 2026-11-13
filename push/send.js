@@ -10,6 +10,17 @@ const utf8 = (s) => new TextEncoder().encode(s);
 const cat = (...a) => { const o = new Uint8Array(a.reduce((n, x) => n + x.length, 0)); let i = 0; for (const x of a) { o.set(x, i); i += x.length; } return o; };
 export { b64u, unb64u, utf8 };
 
+// (audit, 12 Nov 2026) a push address must belong to a real browser push service. Without this the worker could be told to
+// POST to any https address (/test does it straight away). env.TEST_PUSH_HTTP (local tests only) also allows 127.0.0.1.
+const PUSH_HOSTS = /(^|\.)(fcm\.googleapis\.com|android\.googleapis\.com|push\.services\.mozilla\.com|notify\.windows\.com|push\.apple\.com)$/;
+export function okPush(endpoint, env) {
+  if (typeof endpoint !== 'string' || endpoint.length > 1000) return false;
+  let u; try { u = new URL(endpoint); } catch (e) { return false; }
+  if (env && env.TEST_PUSH_HTTP && (u.protocol === 'http:' || u.protocol === 'https:') && (u.hostname === '127.0.0.1' || /\.example$/.test(u.hostname))) return true;
+  return u.protocol === 'https:' && !u.port && PUSH_HOSTS.test(u.hostname);
+}
+export const okTz = (tz) => { try { new Intl.DateTimeFormat('en-GB', { timeZone: tz }); return true; } catch (e) { return false; } };
+
 export async function vapid(env) {
   let v = await env.SUBS.get('vapid', 'json');
   if (!v) {

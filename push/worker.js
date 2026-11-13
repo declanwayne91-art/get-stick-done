@@ -30,12 +30,13 @@ import { moves, tidyMoves } from './move.js';   // MOVE TO A NEW PHONE (push_mov
 const ORIGINS = ['https://getstickdone.app', 'https://www.getstickdone.app', 'https://declanwayne91-art.github.io', 'http://127.0.0.1:8765', 'http://localhost:8765'];
 const WINDOW_MIN = 30;   // a slot can still be sent up to 30 min late (cron runs every 15)
 
-import { push, vapid, b64u, utf8 } from './send.js';
+import { push, vapid, b64u, utf8, okPush, okTz } from './send.js';
 export { push };
 async function idOf(endpoint) { return 'sub:' + b64u(await crypto.subtle.digest('SHA-256', utf8(endpoint))).slice(0, 32); }
 
 // local time in the phone's zone: { day: '2026-10-30', min: minutes since midnight }
 export function local(tz, now = new Date()) {
+  if (!okTz(tz)) tz = 'Europe/London';
   const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: tz || 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(now).map((x) => [x.type, x.value]));
   return { day: `${p.year}-${p.month}-${p.day}`, min: (+p.hour) * 60 + (+p.minute) };
 }
@@ -57,7 +58,8 @@ async function run(env) {
     const page = await env.SUBS.list({ prefix: 'sub:', cursor }); cursor = page.list_complete ? null : page.cursor;
     for (const k of page.keys) {
       const rec = await env.SUBS.get(k.name, 'json'); if (!rec) continue;
-      const slot = dueSlot(rec, now); if (!slot) continue;
+      let slot = null; try { slot = dueSlot(rec, now); } catch (e) { continue; }   // (audit) one odd record (a time zone the server doesn't know) must not stop everyone else's nudges
+      if (!slot) continue;
       const st = await push(env, rec.sub).catch(() => 0);
       if (st === 404 || st === 410) { await env.SUBS.delete(k.name); continue; }
       if (slot.startsWith('snooze@')) delete rec.snooze; else rec.last = slot;
@@ -86,11 +88,11 @@ export default {
       if (path.startsWith('/p/')) return await plans(path, b, env, out);
       if (path.startsWith('/m/')) return await moves(path, b, env, out);
       const endpoint = (b.sub && b.sub.endpoint) || b.endpoint || '';
-      if (!/^https:\/\//.test(endpoint) || endpoint.length > 1000) return out({ error: 'bad endpoint' }, 400);
+      if (!okPush(endpoint, env)) return out({ error: 'bad endpoint' }, 400);
       const id = await idOf(endpoint);
       if (path === '/subscribe') {
         const old = (await env.SUBS.get(id, 'json')) || {};
-        const rec = { ...old, sub: { endpoint, keys: (b.sub && b.sub.keys) || {} }, every: clamp(b.every, 1, 6, 2), start: clamp(b.start, 0, 23, 8), end: clamp(b.end, 1, 24, 21), tz: String(b.tz || 'Europe/London').slice(0, 64), goal: clamp(b.goal, 1, 20, 6), at: old.at || Date.now() };
+        const rec = { ...old, sub: { endpoint, keys: (b.sub && b.sub.keys) || {} }, every: clamp(b.every, 1, 6, 2), start: clamp(b.start, 0, 23, 8), end: clamp(b.end, 1, 24, 21), tz: okTz(String(b.tz || '').slice(0, 64)) ? String(b.tz).slice(0, 64) : 'Europe/London', goal: clamp(b.goal, 1, 20, 6), at: old.at || Date.now() };
         await env.SUBS.put(id, JSON.stringify(rec)); return out({ ok: true });
       }
       if (path === '/unsubscribe') { await env.SUBS.delete(id); return out({ ok: true }); }

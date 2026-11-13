@@ -1,7 +1,7 @@
 {
  "name": "Get St*ck Done!",
  "short_name": "Get St*ck Done!",
- "description": "An ADHD-friendly sticker-book life organiser: tasks, gym, cooking, water.",
+ "description": "The sticker-book life organiser: tasks, meals, workouts and hobbies. A sticker for every little win.",
  "id": "./",
  "start_url": "./?source=app",
  "scope": "./",

@@ -19,7 +19,7 @@
 //   /f/nightre { secret, to, mid, re, date, time, what }  answer one: re 1 = I'M IN!, 0 = CAN'T MAKE IT; the host gets a 'nightre'
 // A new friend or a cheer sends that friend an encrypted push (send.js): "Dex sent you a cheer!" / "NICE ONE!".
 
-import { push } from './send.js';
+import { push, okPush } from './send.js';
 
 const SCHEMA = [
   'CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, key TEXT UNIQUE NOT NULL, code TEXT UNIQUE NOT NULL, name TEXT, plate TEXT, lv INTEGER, st TEXT, pin TEXT, created INTEGER, seen INTEGER)',
@@ -35,12 +35,14 @@ export const init = (env) => ready || (ready = env.DB.batch(SCHEMA.map((q) => en
   .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN n INTEGER').run().catch(() => {}))   // stickers stuck in total (shown on your friend card)
   .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN p INTEGER').run().catch(() => {}))
   .then(() => env.DB.prepare('ALTER TABLE events ADD COLUMN d TEXT').run().catch(() => {}))
-  .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN nw TEXT').run().catch(() => {}))   // (9 Nov 2026) what you're reading / playing / learning: [{ h, t, by, k }]   // (3 Nov 2026) a shared meal's details: { r, day, name, mid }   // pins earned   // friend alerts: the phone's push address (added later; already there = fine)
+  .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN nw TEXT').run().catch(() => {}))
+  .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN lk INTEGER').run().catch(() => {}))   // (audit, 12 Nov 2026) friend-code lookups today, and which day: stops one account guessing codes
+  .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN lkd TEXT').run().catch(() => {}))   // (9 Nov 2026) what you're reading / playing / learning: [{ h, t, by, k }]   // (3 Nov 2026) a shared meal's details: { r, day, name, mid }   // pins earned   // friend alerts: the phone's push address (added later; already there = fine)
   .catch((e) => { ready = null; throw e; }));
 
 const ABC = '23456789ABCDEFGHJKMNPQRSTUVWXYZ';   // no 0/O, 1/I/L
 const PLATES = ['cream', 'lime', 'pink', 'sky', 'holo', 'sunset', 'gold', 'aurora', 'galaxy'];   // makeprofile.py PLATES (+ levelart.py)
-const MAX_FRIENDS = 100, CHEERS_A_DAY = 60, CHEER_GAP = 30e3, MEALS_A_DAY = 40, NIGHTS_A_DAY = 40;
+const LOOKUPS_A_DAY = 40, MAX_FRIENDS = 100, CHEERS_A_DAY = 60, CHEER_GAP = 30e3, MEALS_A_DAY = 40, NIGHTS_A_DAY = 40;
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 // a shared meal, checked: recipe id, day of the week, the recipe's name (shown in the alert) and the sender's id for it
 export function cleanMeal(b) {
@@ -88,8 +90,7 @@ export async function alert(env, them, msg) {
   if (st === 404 || st === 410) await env.DB.prepare('UPDATE users SET push = NULL WHERE id = ?').bind(them.id).run();
 }
 export function cleanSub(x, env) {   // env.TEST_PUSH_HTTP (local tests only) also allows http://127.0.0.1
-  const okUrl = (u) => /^https:\/\//.test(u) || (!!(env && env.TEST_PUSH_HTTP) && /^http:\/\/127\.0\.0\.1:/.test(u));
-  if (!x || typeof x !== 'object' || !okUrl(x.endpoint || '') || x.endpoint.length > 1000) return null;
+  if (!x || typeof x !== 'object' || !okPush(x.endpoint || '', env)) return null;   // (audit) real push services only
   const k = x.keys || {}; if (typeof k.p256dh !== 'string' || typeof k.auth !== 'string' || k.p256dh.length > 120 || k.auth.length > 40) return null;
   return JSON.stringify({ endpoint: x.endpoint, keys: { p256dh: k.p256dh, auth: k.auth } });
 }
@@ -124,6 +125,9 @@ export async function friends(path, b, env, out) {
   const blockedEither = async (id) => !!(await env.DB.prepare('SELECT 1 FROM blocks WHERE (a = ? AND b = ?) OR (a = ? AND b = ?)').bind(me.id, id, id, me.id).first());
 
   if (path === '/f/peek' || path === '/f/add') {
+    { const day = new Date(now).toISOString().slice(0, 10), used = me.lkd === day ? (me.lk || 0) : 0;   // a code is short: cap how many one account can try in a day
+      if (used >= LOOKUPS_A_DAY) return out({ error: 'slow down' }, 429);
+      await env.DB.prepare('UPDATE users SET lk = ?, lkd = ? WHERE id = ?').bind(used + 1, day, me.id).run(); }
     const them = await byCode();
     if (!them || await blockedEither(them.id)) return out({ error: 'no such code' }, 404);   // a block looks the same as a wrong code
     if (them.id === me.id) return out({ error: 'self' }, 400);
