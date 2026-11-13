@@ -264,17 +264,6 @@ button[aria-label^="Go to step"]::after{content:'';position:absolute;inset:-3px}
 #pf-lvBtn::after,#pf-watch::after,button[aria-label^="How "]::after{content:'';position:absolute;inset:-7px}
 a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"]::after,button[aria-label$="add your weight"]::after,button[aria-label$="change the weight"]::after,button[aria-label$=": bodyweight"]::after{content:'';position:absolute;inset:-8px -3px}
 </style>
-<style>html.gs-wait #dc-stage{visibility:hidden;animation:gsw 0s 2.5s forwards}html.gs-wait #dc-stage *{transition:none !important}@keyframes gsw{to{visibility:visible}}</style>
-<script>(function(){var d=document.documentElement,t0=performance.now(),pend=0,done=false,F=window.fetch;d.classList.add('gs-wait');
-if(F)window.fetch=function(u){var p=F.apply(this,arguments);try{var s=String((u&&u.url)||u);if(!done&&/api\.getstickdone\.app|workers\.dev/.test(s)&&s.indexOf('/a/')<0){pend++;var f=function(){pend--};p.then(f,f);}}catch(e){}return p;};
-function show(){if(done)return;done=true;requestAnimationFrame(function(){d.classList.remove('gs-wait')});}
-function pics(){var st=document.getElementById('dc-stage'),h=innerHeight,w=[];if(!st)return Promise.resolve();
-[].forEach.call(st.querySelectorAll('img'),function(i){if(!i.getAttribute('src')||!i.decode)return;var r=i.getBoundingClientRect();if(r.width&&r.bottom>0&&r.top<h)w.push(i.decode().catch(function(){}));});
-if(document.fonts&&document.fonts.ready)w.push(document.fonts.ready);return Promise.all(w);}
-function go(){var last=performance.now(),mo=new MutationObserver(function(){last=performance.now()});mo.observe(document.body,{childList:true,subtree:true,attributes:true,characterData:true});
-(function tick(){var n=performance.now();if(n-t0>1400){mo.disconnect();return show();}
-if(n-last>90&&pend<=0){mo.disconnect();var left=Math.max(60,1400-(n-t0));return Promise.race([pics(),new Promise(function(k){setTimeout(k,left)})]).then(show,show);}setTimeout(tick,30);})();}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();})();</script>
 </head><body data-extra="0">
 <div id="dc-frame"><div id="dc-stage"></div></div>
 <script type="text/x-dc-template" id="dc-tpl">
@@ -408,8 +397,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; gap: 10px">
     <sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}"><button type="button" class="press bri" onClick="{{back}}" aria-label="Back" style="width: 62px; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #FFFFFF; color: #172038; font-size: 26px">←</button></sc-if>
     <sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{next}}" style="flex: 1; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{nextText}}</button></sc-if>
-    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1794557249" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
-    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1794557249" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
+    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1794562813" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
+    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1794562813" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
   </div>
 </div>
 </script>
@@ -546,8 +535,8 @@ class Component extends DCLogic {
 }
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1794557249"></script>
-<script src="dc.js?v=1794557249"></script>
+<script src="morphdom.js?v=1794562813"></script>
+<script src="dc.js?v=1794562813"></script>
 <a id="mv-in" href="Move.html" style="display:none;position:fixed;z-index:50;transform:translateX(-50%);white-space:nowrap;font-family:Kalam,cursive;font-size:15px;color:#172038;opacity:0.75;text-decoration:underline;padding:8px">Moving from another phone?</a>
 <script>(function () { var a = document.getElementById('mv-in');
   function place() { var inp = document.querySelector('input[aria-label="Your name"]'), nx = null;

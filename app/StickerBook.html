@@ -264,17 +264,6 @@ button[aria-label^="Go to step"]::after{content:'';position:absolute;inset:-3px}
 #pf-lvBtn::after,#pf-watch::after,button[aria-label^="How "]::after{content:'';position:absolute;inset:-7px}
 a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"]::after,button[aria-label$="add your weight"]::after,button[aria-label$="change the weight"]::after,button[aria-label$=": bodyweight"]::after{content:'';position:absolute;inset:-8px -3px}
 </style>
-<style>html.gs-wait #dc-stage{visibility:hidden;animation:gsw 0s 2.5s forwards}html.gs-wait #dc-stage *{transition:none !important}@keyframes gsw{to{visibility:visible}}</style>
-<script>(function(){var d=document.documentElement,t0=performance.now(),pend=0,done=false,F=window.fetch;d.classList.add('gs-wait');
-if(F)window.fetch=function(u){var p=F.apply(this,arguments);try{var s=String((u&&u.url)||u);if(!done&&/api\.getstickdone\.app|workers\.dev/.test(s)&&s.indexOf('/a/')<0){pend++;var f=function(){pend--};p.then(f,f);}}catch(e){}return p;};
-function show(){if(done)return;done=true;requestAnimationFrame(function(){d.classList.remove('gs-wait')});}
-function pics(){var st=document.getElementById('dc-stage'),h=innerHeight,w=[];if(!st)return Promise.resolve();
-[].forEach.call(st.querySelectorAll('img'),function(i){if(!i.getAttribute('src')||!i.decode)return;var r=i.getBoundingClientRect();if(r.width&&r.bottom>0&&r.top<h)w.push(i.decode().catch(function(){}));});
-if(document.fonts&&document.fonts.ready)w.push(document.fonts.ready);return Promise.all(w);}
-function go(){var last=performance.now(),mo=new MutationObserver(function(){last=performance.now()});mo.observe(document.body,{childList:true,subtree:true,attributes:true,characterData:true});
-(function tick(){var n=performance.now();if(n-t0>1400){mo.disconnect();return show();}
-if(n-last>90&&pend<=0){mo.disconnect();var left=Math.max(60,1400-(n-t0));return Promise.race([pics(),new Promise(function(k){setTimeout(k,left)})]).then(show,show);}setTimeout(tick,30);})();}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();})();</script>
 </head><body data-extra="0">
 <div id="dc-frame"><div id="dc-stage"></div></div>
 <script type="text/x-dc-template" id="dc-tpl">
@@ -327,7 +316,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     <span class="title-die bri" style="font-size: 40px; color: #172038; text-shadow: 3px 3px 0 #FF6FB0; transform: rotate(-3deg)">STUCK!</span>
     <span class="bri" style="padding: 7px 14px 5px; background-color: rgba(198,255,77,0.92); background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.3) 0 6px, transparent 6px 12px); color: #172038; font-size: 19px; letter-spacing: 0.5px; transform: rotate(2deg); box-shadow: 0 4px 8px -4px rgba(0,0,0,0.4)">PEEL IT. STICK IT. DONE!</span>
     <span class="kal" style="font-size: 15px; opacity: 0.8">long-press a sticker to move it</span>
-    <a id="sbk-toToday" href="Today.html?v=1794557249" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
+    <a id="sbk-toToday" href="Today.html?v=1794562813" tabindex="-1" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; overflow: hidden; opacity: 0">Today</a>
     <button type="button" id="sbk-whatNext" class="press bri" style="margin-top: 4px; width: 100%; height: 56px; border-radius: 18px; border: 3px solid #F6EFE1; background: #C6FF4D; color: #172038; font-size: 23px">HOW DO I GET MORE? →</button>
     <button type="button" id="sbk-againBtn" class="kal" style="border: none; background: transparent; color: #F6EFE1; font-size: 13px; text-decoration: underline">(demo: peel it again)</button>
   </div>
@@ -565,6 +554,6 @@ class Component extends DCLogic {
 
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1794557249"></script>
-<script src="dc.js?v=1794557249"></script>
+<script src="morphdom.js?v=1794562813"></script>
+<script src="dc.js?v=1794562813"></script>
 </body></html>
