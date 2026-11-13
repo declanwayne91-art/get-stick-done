@@ -26,7 +26,7 @@ input::placeholder{color:rgba(23,32,56,.3)}
 <script>window.GSD_API = 'https://api.getstickdone.app';</script>
 <script>/* MOVE TO A NEW PHONE (movephone.py) */
 window.GSMove = (function () {
-  var P = 'gsb.', SKIP = [P + 'aid', P + 'analyticsOff', P + 'aq', P + 'moveOut'], ALPHA = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789', LIFE = 600000;
+  var P = 'gsb.', SKIP = [P + 'aid', P + 'analyticsOff', P + 'aq', P + 'moveOut', P + 'plateImgs'], ALPHA = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789', LIFE = 600000;
   function api() { return window.GSD_API_TEST || window.GSD_API || ''; }
   function post(path, body) { return fetch(api() + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { j.status = r.status; return j; }); }); }
   function ok() { return !!(api() && window.crypto && crypto.subtle && window.TextEncoder); }
