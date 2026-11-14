@@ -105,6 +105,9 @@ function draw() {
     + '<div class="card s6"><h2>HEALTH CHECKS</h2><p class="why">Errors should stay near zero; watch the guardrails.</p>'
     + kv([['Errors per 1,000 screens', opens ? Math.round(1000 * sumEv('error') / opens) : 0], ['Tasks added vs ticked', fmt(added) + ' / ' + fmt(done)], ['Start fresh used', sumEv('start_fresh')], ['Home-screen app opens', pct(sumEv('app_open', 'app'), sumEv('app_open')) + '%']])
     + '<p class="why" style="margin-top:10px">Errors by page.</p>' + hbars(errs, 0, '#FF6FB0') + '<p class="why" style="margin-top:10px">App versions in use this week.</p>' + hbars(Object.entries(D.versions).map(([l, v]) => ({ l, v })), 0, '#B9A7FF') + '</div>'
+    + '<div class="card s12" style="grid-column:1/-1"><h2>WHAT BROKE</h2><p class="why">The browser’s own error text, newest first (last 90 days at most). Nothing anyone typed.</p>'
+    + ((D.errors || []).length ? '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px"><tr style="text-align:left;opacity:.6"><th>screen</th><th>error</th><th>version</th><th>phones</th><th>times</th><th>last seen</th></tr>'
+      + D.errors.map((r) => '<tr style="border-top:1px solid rgba(255,255,255,.12)"><td style="padding:6px 8px 6px 0;white-space:nowrap">' + esc(r.page) + '</td><td style="padding:6px 8px 6px 0">' + esc(r.msg) + '</td><td style="white-space:nowrap">' + esc(r.ver || '?') + '</td><td>' + fmt(r.phones) + '</td><td>' + fmt(r.n) + '</td><td style="white-space:nowrap">' + esc(r.last) + '</td></tr>').join('') + '</table></div>' : '<p class="why">No errors reported.</p>') + '</div>'
     + '</div>';
   document.querySelectorAll('.chip[data-d]').forEach((b) => b.onclick = () => { DAYS = +b.dataset.d; load(); });
   $('#out').onclick = () => { try { localStorage.removeItem('stuckStatsKey'); } catch (e) {} KEY = null; askKey(); };

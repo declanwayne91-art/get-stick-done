@@ -140,11 +140,12 @@ window.GSN = (function () {
   function idb(v) { try { var r = indexedDB.open('gsd', 1); r.onupgradeneeded = function () { r.result.createObjectStore('kv'); }; r.onsuccess = function () { r.result.transaction('kv', 'readwrite').objectStore('kv').put(v, 'analytics'); }; } catch (e) {} }
   function track(ev, d, n) { if (off()) return; try { var q = JSON.parse(localStorage.getItem(Q) || '{}') || {}, k = day() + '|' + ev + '|' + (d == null ? '' : String(d).slice(0, 40));
     q[k] = (q[k] || 0) + (n || 1); localStorage.setItem(Q, JSON.stringify(q)); } catch (e) {} }
-  function flush() { if (off() || !API) return; var q; try { q = JSON.parse(localStorage.getItem(Q) || '{}') || {}; } catch (e) { return; } var ks = Object.keys(q).slice(0, 300); if (!ks.length) return;
-    var body = JSON.stringify({ id: id(), v: VER, ev: ks.map(function (k) { var p = k.split('|'); return [p[0], p[1], p[2], q[k]]; }) }), ok = false;
+  function flush() { if (off() || !API) return; var q, eq = {}; try { q = JSON.parse(localStorage.getItem(Q) || '{}') || {}; } catch (e) { return; } try { eq = JSON.parse(localStorage.getItem('gsb.aerr') || '{}') || {}; } catch (e) {}
+    var ks = Object.keys(q).slice(0, 300), es = Object.keys(eq).slice(0, 20); if (!ks.length && !es.length) return;
+    var body = JSON.stringify({ id: id(), v: VER, ev: ks.map(function (k) { var p = k.split('|'); return [p[0], p[1], p[2], q[k]]; }), err: es.map(function (k) { var i = k.indexOf('|'), j = k.indexOf('|', i + 1); return [k.slice(0, i), k.slice(i + 1, j), k.slice(j + 1), eq[k]]; }) }), ok = false;
     try { ok = navigator.sendBeacon(API + '/a/e', new Blob([body], { type: 'text/plain' })); } catch (e) {}
-    if (ok) { ks.forEach(function (k) { delete q[k]; }); try { localStorage.setItem(Q, JSON.stringify(q)); } catch (e) {} } }
-  function setOff(b) { try { if (b) { localStorage.setItem('gsb.analyticsOff', '1'); localStorage.removeItem(Q);
+    if (ok) { ks.forEach(function (k) { delete q[k]; }); try { localStorage.setItem(Q, JSON.stringify(q)); localStorage.removeItem('gsb.aerr'); } catch (e) {} } }
+  function setOff(b) { try { if (b) { localStorage.setItem('gsb.analyticsOff', '1'); localStorage.removeItem(Q); localStorage.removeItem('gsb.aerr');
       var k = localStorage.getItem('gsb.aid'); if (k && API) fetch(API + '/a/forget', { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ id: k }), keepalive: true }).catch(function () {});
       localStorage.removeItem('gsb.aid'); } else localStorage.removeItem('gsb.analyticsOff'); } catch (e) {} idb({ off: !!b, id: b ? null : id(), api: API }); }
   window.GSA = { track: track, flush: flush, off: off, setOff: setOff };
@@ -155,6 +156,14 @@ window.GSN = (function () {
   try { if (sessionStorage.getItem('gsb.aOpen') !== day()) { sessionStorage.setItem('gsb.aOpen', day()); track('app_open', standalone ? 'app' : 'web'); } } catch (e) {}
   idb({ off: false, id: id(), api: API });   // the service worker counts taps on notifications with these
   addEventListener('error', function (e) { var m = String((e && e.message) || 'x'), h = 0; for (var i = 0; i < m.length; i++) h = (h * 31 + m.charCodeAt(i)) | 0; track('error', page + ':' + (h >>> 0).toString(36)); });
+  // error reports (14 Nov 2026): the count above says THAT a screen broke; this says WHAT broke. It is the browser's own error
+  // text plus the file and line, the screen and the app version. Anything in quotes longer than a short name is cut, so a
+  // snippet of something typed can't ride along. Same off switch as the counts; at most 12 different errors wait to be sent.
+  var EQ = 'gsb.aerr';
+  function scrub(m) { return String(m || '').replace(/(["'`])([^"'`]{24})[^"'`]*\1/g, '$1$2…$1').replace(/https?:\/\/[^\s)]+\/([^\/\s)?]+)[^\s)]*/g, '$1').replace(/\s+/g, ' ').slice(0, 200); }
+  function report(m) { if (off()) return; try { var q = JSON.parse(localStorage.getItem(EQ) || '{}') || {}, k = day() + '|' + page + '|' + scrub(m); if (!q[k] && Object.keys(q).length >= 12) return; q[k] = (q[k] || 0) + 1; localStorage.setItem(EQ, JSON.stringify(q)); } catch (e) {} }
+  addEventListener('error', function (e) { if (e && e.message && !/ResizeObserver|^Script error/i.test(e.message)) report(e.message + (e.lineno ? ' [' + String(e.filename || '').split('/').pop().split('?')[0] + ':' + e.lineno + ']' : '')); });
+  addEventListener('unhandledrejection', function (e) { var r = e && e.reason; if (r && r.message && !/fetch|network|load/i.test(r.message)) report('(promise) ' + r.message); });
   // calls to the app's own server that are worth counting (friends, cheers, shared lists)
   var MAP = { '/f/add': 'friend_added', '/f/cheer': 'cheer_sent', '/f/meal': 'meal_shared', '/f/mealre': 'meal_reacted', '/l/new': 'list_shared', '/l/add': ['task_add', 'shared'] };
   if (API && window.fetch) { var f0 = window.fetch; window.fetch = function (u, o) { try { var s = String((u && u.url) || u); if (s.indexOf(API) === 0 || (window.GSD_API_TEST && s.indexOf(window.GSD_API_TEST) === 0)) { var p = s.replace(/^https?:\/\/[^/]+/, ''), m = MAP[p]; if (m) track(m.join ? m[0] : m, m.join ? m[1] : null); } } catch (e) {} return f0.apply(this, arguments); }; }
@@ -407,8 +416,8 @@ a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"
   <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; gap: 10px">
     <sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}"><button type="button" class="press bri" onClick="{{back}}" aria-label="Back" style="width: 62px; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #FFFFFF; color: #172038; font-size: 26px">←</button></sc-if>
     <sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{next}}" style="flex: 1; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{nextText}}</button></sc-if>
-    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1794661437" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
-    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1794661437" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
+    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1794662614" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
+    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1794662614" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
   </div>
 </div>
 </script>
@@ -545,8 +554,8 @@ class Component extends DCLogic {
 }
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1794661437"></script>
-<script src="dc.js?v=1794661437"></script>
+<script src="morphdom.js?v=1794662614"></script>
+<script src="dc.js?v=1794662614"></script>
 <a id="mv-in" href="Move.html" style="display:none;position:fixed;z-index:50;transform:translateX(-50%);white-space:nowrap;font-family:Kalam,cursive;font-size:15px;color:#172038;opacity:0.75;text-decoration:underline;padding:8px">Moving from another phone?</a>
 <script>(function () { var a = document.getElementById('mv-in');
   function place() { var inp = document.querySelector('input[aria-label="Your name"]'), nx = null;

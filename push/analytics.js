@@ -10,6 +10,9 @@ const SCHEMA = [
   'CREATE INDEX IF NOT EXISTS a_ev_day ON a_ev (day)',
   'CREATE TABLE IF NOT EXISTS a_inst (id TEXT PRIMARY KEY, first TEXT NOT NULL, last TEXT NOT NULL, ver TEXT)',
   'CREATE TABLE IF NOT EXISTS a_admin (k TEXT PRIMARY KEY, at INTEGER)',
+  // error reports (14 Nov 2026): what broke, on which screen, in which version. The browser's own error text, nothing typed. Kept 90 days.
+  'CREATE TABLE IF NOT EXISTS a_err (day TEXT NOT NULL, id TEXT NOT NULL, page TEXT NOT NULL, msg TEXT NOT NULL, ver TEXT, n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (day, id, page, msg))',
+  'CREATE INDEX IF NOT EXISTS a_err_day ON a_err (day)',
 ];
 let ready = null;
 const init = (env) => ready || (ready = env.DB.batch(SCHEMA.map((q) => env.DB.prepare(q))).catch((e) => { ready = null; throw e; }));
@@ -30,7 +33,10 @@ export async function analytics(path, b, env, out) {
     const lo = daysAgo(10), hi = daysAgo(-1), ver = String(b.v || '').slice(0, 20);
     const rows = (Array.isArray(b.ev) ? b.ev : []).slice(0, 300).filter((r) => Array.isArray(r) && okDay(r[0]) && r[0] >= lo && r[0] <= hi && EVENTS.includes(r[1]))
       .map((r) => [r[0], r[1], String(r[2] == null ? '' : r[2]).replace(/[^a-z0-9_.:~-]/gi, '').slice(0, 40), Math.max(1, Math.min(500, Math.floor(+r[3]) || 1))]);
-    if (!rows.length) return out({ ok: true, n: 0 });
+    const errs = (Array.isArray(b.err) ? b.err : []).slice(0, 20).filter((r) => Array.isArray(r) && okDay(r[0]) && r[0] >= lo && r[0] <= hi)
+      .map((r) => [r[0], String(r[1] || '').replace(/[^a-z0-9_-]/gi, '').slice(0, 40), String(r[2] || '').replace(/[\u0000-\u001f\u007f]/g, ' ').slice(0, 200), Math.max(1, Math.min(500, Math.floor(+r[3]) || 1))]).filter((r) => r[1] && r[2]);
+    if (errs.length) await env.DB.batch(errs.map((r) => env.DB.prepare('INSERT INTO a_err (day, id, page, msg, ver, n) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT (day, id, page, msg) DO UPDATE SET n = n + excluded.n').bind(r[0], id, r[1], r[2], ver, r[3])));
+    if (!rows.length) return out({ ok: true, n: 0, e: errs.length });
     const first = rows.reduce((m, r) => (r[0] < m ? r[0] : m), rows[0][0]), last = rows.reduce((m, r) => (r[0] > m ? r[0] : m), rows[0][0]);
     const q = rows.map((r) => env.DB.prepare('INSERT INTO a_ev (day, id, ev, d, n) VALUES (?, ?, ?, ?, ?) ON CONFLICT (day, id, ev, d) DO UPDATE SET n = n + excluded.n').bind(r[0], id, r[1], r[2], r[3]));
     q.push(env.DB.prepare('INSERT INTO a_inst (id, first, last, ver) VALUES (?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET first = MIN(first, excluded.first), last = MAX(last, excluded.last), ver = excluded.ver').bind(id, first, last, ver));
@@ -38,7 +44,7 @@ export async function analytics(path, b, env, out) {
   }
   if (path === '/a/forget') {   // switching analytics off deletes what this phone sent
     const id = String(b.id || ''); if (!/^[a-z0-9]{16,40}$/.test(id)) return out({ error: 'bad id' }, 400);
-    await env.DB.batch([env.DB.prepare('DELETE FROM a_ev WHERE id = ?').bind(id), env.DB.prepare('DELETE FROM a_inst WHERE id = ?').bind(id)]);
+    await env.DB.batch([env.DB.prepare('DELETE FROM a_ev WHERE id = ?').bind(id), env.DB.prepare('DELETE FROM a_inst WHERE id = ?').bind(id), env.DB.prepare('DELETE FROM a_err WHERE id = ?').bind(id)]);
     return out({ ok: true });
   }
   if (path === '/a/stats') {
@@ -60,6 +66,7 @@ async function stats(env, days) {
   const fq = (w) => DB.prepare('SELECT COUNT(DISTINCT id) AS n FROM a_ev WHERE ' + w + ' AND id IN (SELECT id FROM a_inst WHERE first >= ?)').bind(from).first().then((r) => r.n);
   const funnel = { setup: await fq("ev = 'onboard_step' AND d = '6'"), did: await fq("ev IN ('task_done','workout_done','cook_done','water_goal')"), stuck: await fq("ev = 'sticker_stuck'") };
   const total = (await DB.prepare('SELECT COUNT(*) AS n FROM a_inst').first()).n;
+  const errors = await all('SELECT page, msg, ver, SUM(n) AS n, COUNT(DISTINCT id) AS phones, MAX(day) AS last FROM a_err WHERE day >= ? GROUP BY page, msg, ver ORDER BY last DESC, n DESC LIMIT 40', daysAgo(Math.min(days, 90) - 1));
   const D = (s) => new Date(s + 'T00:00:00Z'), add = (s, n) => new Date(D(s).getTime() + n * 864e5).toISOString().slice(0, 10);
   const monday = (s) => { const d = D(s), w = (d.getUTCDay() + 6) % 7; return add(s, -w); };
   const byDay = {}, seen = {}; act.forEach((r) => { (byDay[r.day] = byDay[r.day] || { u: new Set(), d: new Set() }).u.add(r.id); if (r.done > 0) byDay[r.day].d.add(r.id); (seen[r.id] = seen[r.id] || new Set()).add(r.day); });
@@ -78,10 +85,10 @@ async function stats(env, days) {
     return { week: w, n: ids.length, cells }; });
   const vers = {}; inst.filter((x) => x.last >= daysAgo(6)).forEach((x) => { vers[x.ver || '?'] = (vers[x.ver || '?'] || 0) + 1; });
   return { ok: true, today: t, from, days, installs: total, dauMau: mau ? Math.round(100 * dau7 / mau) : 0, mau, wau: last(7), retention: { d1: ret(1), d7: ret(7), d30: ret(30) },
-    daily, weekly, cohorts, ev, reach, funnel, newInstalls: inst.filter((x) => x.first >= from).length, versions: vers };
+    daily, weekly, cohorts, ev, reach, funnel, newInstalls: inst.filter((x) => x.first >= from).length, versions: vers, errors };
 }
 
 export async function tidyAnalytics(env) {   // 13 months, then gone
   if (!env.DB) return; await init(env); const cut = daysAgo(396);
-  await env.DB.batch([env.DB.prepare('DELETE FROM a_ev WHERE day < ?').bind(cut), env.DB.prepare('DELETE FROM a_inst WHERE last < ?').bind(cut)]);
+  await env.DB.batch([env.DB.prepare('DELETE FROM a_ev WHERE day < ?').bind(cut), env.DB.prepare('DELETE FROM a_inst WHERE last < ?').bind(cut), env.DB.prepare('DELETE FROM a_err WHERE day < ?').bind(daysAgo(90))]);
 }
