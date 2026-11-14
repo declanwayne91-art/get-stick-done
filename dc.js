@@ -86,7 +86,7 @@
   // appears in one go. It waits ONLY for this screen's own on-show pictures, and never longer than HOLD_MS: if they are slow,
   // the screen shows anyway and they arrive late as before. A screen with no pictures does not wait at all.
   // Roll back: the GitHub branch save-2026-11-14 is the app as it was before this.
-  var HOLD_MS = 150;
+  var HOLD_MS = 150, HOLD_MANY_MS = 300;
   function holdForPics(stage) {
     var done = false, show = function () { if (done) return; done = true; stage.style.visibility = ''; };
     try {
@@ -98,7 +98,8 @@
       }
       (window.__pics || []).forEach(function (p) { if (!p.complete && p.decode) wait.push(p.decode().catch(function () {})); });
       if (!wait.length) return show();
-      Promise.all(wait).then(show); setTimeout(show, HOLD_MS);
+      // A screen showing a lot of pictures at once (Use it up has 31 ingredients) gets longer: unpacking that many overran 150 ms on Dex's phone.
+      Promise.all(wait).then(show); setTimeout(show, wait.length > 16 ? HOLD_MANY_MS : HOLD_MS);
     } catch (e) { show(); }
   }
 
