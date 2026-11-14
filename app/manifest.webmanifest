@@ -2,6 +2,8 @@
  "name": "Get St*ck Done!",
  "short_name": "Get St*ck Done!",
  "description": "The sticker-book life organiser: tasks, meals, workouts and hobbies. A sticker for every little win.",
+ "lang": "en-GB",
+ "dir": "ltr",
  "id": "./",
  "start_url": "./?source=app",
  "scope": "./",
