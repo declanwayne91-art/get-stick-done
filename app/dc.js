@@ -94,7 +94,12 @@
         if (from === document.activeElement && (from.tagName === 'INPUT' || from.tagName === 'TEXTAREA')) to.value = from.value;
         return true; } });
     }
-    if (!mounted) { mounted = true; if (inst.componentDidMount) setTimeout(() => inst.componentDidMount(), 0); }
+    if (!mounted) { mounted = true;
+      // (13 Nov 2026) The first render is the design's placeholder (its example date, example counts); the screen's own code fills in
+      // the real thing a tick later. A paint could slip in between, so the placeholder flashed before the real screen. Keep the
+      // board unseen for that one tick. Nothing waits: the real screen shows exactly when it did before.
+      stage.style.visibility = 'hidden';
+      setTimeout(() => { try { if (inst.componentDidMount) inst.componentDidMount(); } finally { stage.style.visibility = ''; } }, 0); }
   }
   // wait for the fonts (so text measures right), but never more than a moment: after the first page they're cached anyway
   let started = false; const start = () => { if (started) return; started = true; render(); };

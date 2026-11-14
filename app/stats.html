@@ -1,4 +1,13 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<!doctype html><html lang="en"><head>
+<script>(function(){try{var K='gsb.pics.'+(location.pathname.split('/').pop()||'index').replace(/\.html$/,''),L=[];try{L=JSON.parse(localStorage.getItem(K)||'[]')}catch(e){}
+var keep=window.__pics=[];L.forEach(function(u){var i=new Image();i.decoding='sync';i.src=u;try{i.decode().catch(function(){})}catch(e){}keep.push(i)});
+var save=function(){try{var H=innerHeight,W=innerWidth,out=[],seen={},add=function(u){u=String(u||'').replace(location.origin,'');if(u.charAt(0)==='/'&&!seen[u]){seen[u]=1;out.push(u)}},
+vis=function(e){var r=e.getBoundingClientRect();return r.width>0&&r.height>0&&r.top<H&&r.bottom>0&&r.left<W&&r.right>0};
+var a=document.body.getElementsByTagName('*'),n=Math.min(a.length,6000);for(var i=0;i<n&&out.length<36;i++){var e=a[i];if(e.tagName==='IMG'){if(vis(e))add(e.currentSrc||e.src)}
+else if(e.tagName!=='SCRIPT'&&e.tagName!=='STYLE'){var b=getComputedStyle(e).backgroundImage;if(e.className&&!e.firstChild)b+=getComputedStyle(e,'::after').backgroundImage;if(b.indexOf('url(')>=0&&vis(e)){var m=b.match(/url\("?([^")]+)"?\)/);if(m)add(m[1])}}}
+if(out.length)localStorage.setItem(K,JSON.stringify(out));return out.length}catch(e){return 0}};
+addEventListener('load',function(){setTimeout(function(){if(!save())setTimeout(save,2500)},1200)})}catch(e){}})();</script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex"><title>St*ck Stats</title>
 <link rel="stylesheet" href="../fonts/fonts-b88118e1.css">
 <script>try{["700 1em 'Bricolage Grotesque'","400 1em Kalam","700 1em Kalam","400 1em 'Atkinson Hyperlegible'","700 1em 'Atkinson Hyperlegible'","500 1em 'DM Mono'"].forEach(function(f){document.fonts.load(f)})}catch(e){}</script>

@@ -1,5 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<html lang="en"><head>
+<script>(function(){try{var K='gsb.pics.'+(location.pathname.split('/').pop()||'index').replace(/\.html$/,''),L=[];try{L=JSON.parse(localStorage.getItem(K)||'[]')}catch(e){}
+var keep=window.__pics=[];L.forEach(function(u){var i=new Image();i.decoding='sync';i.src=u;try{i.decode().catch(function(){})}catch(e){}keep.push(i)});
+var save=function(){try{var H=innerHeight,W=innerWidth,out=[],seen={},add=function(u){u=String(u||'').replace(location.origin,'');if(u.charAt(0)==='/'&&!seen[u]){seen[u]=1;out.push(u)}},
+vis=function(e){var r=e.getBoundingClientRect();return r.width>0&&r.height>0&&r.top<H&&r.bottom>0&&r.left<W&&r.right>0};
+var a=document.body.getElementsByTagName('*'),n=Math.min(a.length,6000);for(var i=0;i<n&&out.length<36;i++){var e=a[i];if(e.tagName==='IMG'){if(vis(e))add(e.currentSrc||e.src)}
+else if(e.tagName!=='SCRIPT'&&e.tagName!=='STYLE'){var b=getComputedStyle(e).backgroundImage;if(e.className&&!e.firstChild)b+=getComputedStyle(e,'::after').backgroundImage;if(b.indexOf('url(')>=0&&vis(e)){var m=b.match(/url\("?([^")]+)"?\)/);if(m)add(m[1])}}}
+if(out.length)localStorage.setItem(K,JSON.stringify(out));return out.length}catch(e){return 0}};
+addEventListener('load',function(){setTimeout(function(){if(!save())setTimeout(save,2500)},1200)})}catch(e){}})();</script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <script>window.GSD_BETA = true;</script>
 <script>/* typing: the keyboard's Done / Enter finishes. Once the page has dealt with Enter (adding a task, a step...),
    the field lets go so the keyboard closes. Tapping anywhere outside a field closes it too (number pads have no Done key). */
@@ -124,7 +133,7 @@ window.GSN = (function () {
    A random install id + { day, event, detail } -> count, queued here and sent in one go when the app is put away.
    Switched off in Me > settings (gsd.analyticsOff), which also deletes what this phone sent. See push_analytics.js. */
 (function () {
-  var API = window.GSD_API_TEST || window.GSD_API, Q = 'gsb.aq', VER = '20261113';
+  var API = window.GSD_API_TEST || window.GSD_API, Q = 'gsb.aq', VER = '20261114';
   function off() { try { return localStorage.getItem('gsb.analyticsOff') === '1'; } catch (e) { return true; } }
   function day() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
   function id() { var k = null; try { k = localStorage.getItem('gsb.aid'); if (!k) { k = Array.from(crypto.getRandomValues(new Uint8Array(12)), function (x) { return x.toString(16).padStart(2, '0'); }).join(''); localStorage.setItem('gsb.aid', k); } } catch (e) {} return k; }
@@ -398,8 +407,8 @@ a[aria-label="All recipes"]::after,button[aria-label="Show the ingredients list"
   <div style="position: absolute; left: 16px; right: 16px; bottom: 22px; display: flex; gap: 10px">
     <sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}"><button type="button" class="press bri" onClick="{{back}}" aria-label="Back" style="width: 62px; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #FFFFFF; color: #172038; font-size: 26px">←</button></sc-if>
     <sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}"><button type="button" class="press bri" onClick="{{next}}" style="flex: 1; height: 62px; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038">{{nextText}}</button></sc-if>
-    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1794567472" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
-    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1794567472" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
+    <sc-if value="{{onlyLast}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1794625761" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; display: flex; align-items: center; justify-content: center; text-decoration: none">DONE →</a></sc-if>
+    <sc-if value="{{s5}}" hint-placeholder-val="{{ false }}"><a href="Today.html?v=1794625761" class="press bri" onClick="{{saveNow}}" style="flex: 1; height: 62px; box-sizing: border-box; border-radius: 18px; border: 3px solid #172038; background: #C6FF4D; color: #172038; font-size: 24px; box-shadow: 4px 4px 0 #172038; text-decoration: none; display: flex; align-items: center; justify-content: center">TO MY TODAY →</a></sc-if>
   </div>
 </div>
 </script>
@@ -536,8 +545,8 @@ class Component extends DCLogic {
 }
 </script>
 <script type="application/json" id="dc-props">{"$preview":{"width":390,"height":844}}</script>
-<script src="morphdom.js?v=1794567472"></script>
-<script src="dc.js?v=1794567472"></script>
+<script src="morphdom.js?v=1794625761"></script>
+<script src="dc.js?v=1794625761"></script>
 <a id="mv-in" href="Move.html" style="display:none;position:fixed;z-index:50;transform:translateX(-50%);white-space:nowrap;font-family:Kalam,cursive;font-size:15px;color:#172038;opacity:0.75;text-decoration:underline;padding:8px">Moving from another phone?</a>
 <script>(function () { var a = document.getElementById('mv-in');
   function place() { var inp = document.querySelector('input[aria-label="Your name"]'), nx = null;
