@@ -5,6 +5,7 @@
 // - Kept 13 months (tidied by the nightly cron). Switched off on the phone = nothing is sent (Me > settings).
 // - The dashboard (app/stats.html) asks POST /a/stats with the admin key: totals and shares only, worked out here.
 //   The key's SHA-256 hash is STATS_HASH in push/wrangler.toml; only Dex has the key itself.
+import { init as friendsInit, wipeUser } from './friends.js';   // reports about friend profiles, and removing one (14 Nov 2026)
 const SCHEMA = [
   'CREATE TABLE IF NOT EXISTS a_ev (day TEXT NOT NULL, id TEXT NOT NULL, ev TEXT NOT NULL, d TEXT NOT NULL DEFAULT \'\', n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (day, id, ev, d))',
   'CREATE INDEX IF NOT EXISTS a_ev_day ON a_ev (day)',
@@ -47,10 +48,26 @@ export async function analytics(path, b, env, out) {
     await env.DB.batch([env.DB.prepare('DELETE FROM a_ev WHERE id = ?').bind(id), env.DB.prepare('DELETE FROM a_inst WHERE id = ?').bind(id), env.DB.prepare('DELETE FROM a_err WHERE id = ?').bind(id)]);
     return out({ ok: true });
   }
-  if (path === '/a/stats') {
+  if (path === '/a/stats' || path === '/a/reports' || path === '/a/act') {
     const k = String(b.key || ''), h = k ? await sha(k) : '';   // the key's hash is in wrangler.toml (STATS_HASH),
     if (!k || !((env.STATS_HASH && h === env.STATS_HASH) || await env.DB.prepare('SELECT 1 FROM a_admin WHERE k = ?').bind(h).first())) return out({ error: 'no' }, 401);
-    return out(await stats(env, Math.max(7, Math.min(400, Math.floor(+b.days) || 56))));
+    if (path === '/a/stats') return out(await stats(env, Math.max(7, Math.min(400, Math.floor(+b.days) || 56))));
+    // REPORTS (14 Nov 2026): friend profiles someone reported, for Dex to look at. One entry per reported profile.
+    await friendsInit(env); const DB = env.DB, about = String(b.about || '').slice(0, 40);
+    if (path === '/a/act') {   // dismiss = leave them be; remove = delete the profile; ban = delete it and stop that phone making another
+      const u = about ? await DB.prepare('SELECT id, key FROM users WHERE id = ?').bind(about).first() : null;
+      if (b.act === 'dismiss') await DB.prepare("UPDATE reports SET state = 'done' WHERE about = ?").bind(about).run();
+      else if (b.act === 'remove' || b.act === 'ban') {
+        if (u && b.act === 'ban') await DB.prepare('INSERT OR IGNORE INTO banned (key, at) VALUES (?, ?)').bind(u.key, Date.now()).run();
+        if (u) await wipeUser(env, u.id);
+        await DB.prepare('DELETE FROM reports WHERE about = ?').bind(about).run();
+      } else return out({ error: 'bad act' }, 400);
+    }
+    const rows = (await DB.prepare("SELECT r.about, r.at, r.snap, u.name, u.code, u.lv, u.nw, u.created, u.seen, (SELECT COUNT(*) FROM links WHERE a = r.about OR b = r.about) AS friends FROM reports r LEFT JOIN users u ON u.id = r.about WHERE r.state = 'open' ORDER BY r.at DESC LIMIT 200").all()).results;
+    const by = {}; rows.forEach((r) => { let snap = null; try { snap = JSON.parse(r.snap); } catch (e) {} let now = null; try { now = r.nw ? JSON.parse(r.nw) : null; } catch (e) {}
+      const o = (by[r.about] = by[r.about] || { about: r.about, gone: !r.code, name: r.name, code: r.code ? 'STCK-' + r.code : null, lv: r.lv, now, created: r.created, seen: r.seen, friends: r.friends, n: 0, last: 0, then: [] });
+      o.n++; o.last = Math.max(o.last, r.at); if (snap && o.then.length < 5) o.then.push({ at: r.at, ...snap }); });
+    return out({ ok: true, reports: Object.values(by) });
   }
   return out({ error: 'not found' }, 404);
 }

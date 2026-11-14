@@ -55,8 +55,26 @@ function load() {
   if (!KEY) return askKey();
   $('#app').innerHTML = '<p class="sub" style="padding:40px 0">Adding it all up…</p>';
   fetch(API + '/a/stats', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: KEY, days: DAYS }) })
-    .then((r) => r.status === 401 ? Promise.reject('key') : r.json()).then((j) => { D = j; draw(); })
+    .then((r) => r.status === 401 ? Promise.reject('key') : r.json()).then((j) => { D = j; draw(); reports(); })
     .catch((e) => e === 'key' ? (KEY = null, askKey('That key didn’t work. Try again.')) : ($('#app').innerHTML = '<p class="sub">Couldn’t reach the server. <a href="#" style="color:#C6FF4D" onclick="load();return false">Try again</a></p>'));
+}
+// REPORTS (14 Nov 2026): friend profiles someone reported with REPORT on their ⋯ sheet. Nothing here says who reported them.
+let R = [];
+const admin = (path, body) => fetch(API + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({ key: KEY }, body || {})) }).then((r) => r.json());
+function reports(j) { (j ? Promise.resolve(j) : admin('/a/reports')).then((j) => { R = (j && j.reports) || []; drawReports(); }).catch(() => {}); }
+function act(about, what, name) {
+  const ask = { dismiss: 'Dismiss the report about “' + name + '”? Their profile stays as it is.', remove: 'Remove “' + name + '”’s friend profile? They disappear from every friend’s list. They could make a new one.', ban: 'Remove “' + name + '”’s friend profile AND stop that phone making another?' }[what];
+  if (!confirm(ask)) return; admin('/a/act', { about, act: what }).then(reports).catch(() => alert('That didn’t work. Try again.'));
+}
+function drawReports() {
+  const old = document.getElementById('reports'); if (old) old.remove(); const c = document.querySelector('.card'); if (!c) return;
+  const day = (t) => t ? new Date(t).toISOString().slice(0, 10) : '?', nowTxt = (n) => (n || []).map((x) => esc(({ read: 'reading', game: 'playing', music: 'learning' })[x.h] || x.h) + ' “' + esc(x.t) + '”' + (x.by ? ' (' + esc(x.by) + ')' : '')).join(', ') || 'nothing';
+  const btn = (r, w, label, col) => '<button onclick="act(\'' + esc(r.about) + '\',\'' + w + '\',' + esc(JSON.stringify(r.name || 'this person')).replace(/"/g, '&quot;') + ')" style="font:inherit;font-weight:700;font-size:13px;padding:7px 12px;border-radius:10px;border:2px solid #0B1020;background:' + col + ';color:#0B1020;cursor:pointer">' + label + '</button>';
+  const rows = R.map((r) => '<div style="border-top:1px solid var(--line);padding:12px 0"><div style="display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline"><b style="font-size:18px">' + esc(r.gone ? '(profile already gone)' : r.name || '?') + '</b><span class="why" style="margin:0">' + (r.code ? esc(r.code) + ' · ' : '') + 'level ' + fmt(r.lv || 1) + ' · ' + fmt(r.friends || 0) + ' friends · joined ' + day(r.created) + '</span></div>'
+    + '<p class="why" style="margin:6px 0">Reported by <b>' + fmt(r.n) + '</b> ' + (r.n === 1 ? 'person' : 'people') + ', last on ' + day(r.last) + '. Showing now: ' + nowTxt(r.now) + '.</p>'
+    + r.then.map((t) => '<p class="why" style="margin:4px 0 4px 12px">When reported (' + day(t.at) + '): name “' + esc(t.name) + '”, ' + nowTxt(t.now) + ((t.lists || []).length ? ', shared lists: ' + t.lists.map((x) => '“' + esc(x) + '”').join(', ') : '') + '</p>').join('')
+    + '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">' + btn(r, 'dismiss', 'DISMISS', '#F6EFE1') + (r.gone ? '' : btn(r, 'remove', 'REMOVE PROFILE', '#FFD23F') + btn(r, 'ban', 'REMOVE AND BLOCK THIS PHONE', '#FF8A80')) + '</div></div>').join('');
+  c.parentNode.insertAdjacentHTML('afterbegin', '<div id="reports" class="card" style="grid-column:1/-1"><h2>REPORTS' + (R.length ? ' · ' + R.length : '') + '</h2><p class="why">Friend profiles someone reported. You only see what that person chose to share. Slurs are already stopped before anyone sees them.</p>' + (rows || '<p class="why">No reports.</p>') + '</div>');
 }
 const sumEv = (ev, d) => D.ev.filter((r) => r.ev === ev && (d === undefined || r.d === d)).reduce((a, r) => a + r.n, 0);
 const peopleEv = (ev) => Math.max(0, ...D.ev.filter((r) => r.ev === ev).map((r) => r.people));
@@ -107,7 +125,7 @@ function draw() {
     + '<p class="why" style="margin-top:10px">Errors by page.</p>' + hbars(errs, 0, '#FF6FB0') + '<p class="why" style="margin-top:10px">App versions in use this week.</p>' + hbars(Object.entries(D.versions).map(([l, v]) => ({ l, v })), 0, '#B9A7FF') + '</div>'
     + '<div class="card s12" style="grid-column:1/-1"><h2>WHAT BROKE</h2><p class="why">The browser’s own error text, newest first (last 90 days at most). Nothing anyone typed.</p>'
     + ((D.errors || []).length ? '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px"><tr style="text-align:left;opacity:.6"><th>screen</th><th>error</th><th>version</th><th>phones</th><th>times</th><th>last seen</th></tr>'
-      + D.errors.map((r) => '<tr style="border-top:1px solid rgba(255,255,255,.12)"><td style="padding:6px 8px 6px 0;white-space:nowrap">' + esc(r.page) + '</td><td style="padding:6px 8px 6px 0">' + esc(r.msg) + '</td><td style="white-space:nowrap">' + esc(r.ver || '?') + '</td><td>' + fmt(r.phones) + '</td><td>' + fmt(r.n) + '</td><td style="white-space:nowrap">' + esc(r.last) + '</td></tr>').join('') + '</table></div>' : '<p class="why">No errors reported.</p>') + '</div>'
+      + D.errors.map((r) => '<tr style="border-top:1px solid var(--line)"><td style="padding:6px 8px 6px 0;white-space:nowrap">' + esc(r.page) + '</td><td style="padding:6px 8px 6px 0">' + esc(r.msg) + '</td><td style="white-space:nowrap">' + esc(r.ver || '?') + '</td><td>' + fmt(r.phones) + '</td><td>' + fmt(r.n) + '</td><td style="white-space:nowrap">' + esc(r.last) + '</td></tr>').join('') + '</table></div>' : '<p class="why">No errors reported.</p>') + '</div>'
     + '</div>';
   document.querySelectorAll('.chip[data-d]').forEach((b) => b.onclick = () => { DAYS = +b.dataset.d; load(); });
   $('#out').onclick = () => { try { localStorage.removeItem('stuckStatsKey'); } catch (e) {} KEY = null; askKey(); };

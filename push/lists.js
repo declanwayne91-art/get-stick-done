@@ -12,6 +12,7 @@
 //   /l/clear  { list }                             take the done ones off the list
 //   /l/leave  { list }                             the last one out deletes it
 import { init, hash, alert } from './friends.js';
+import { slur } from './words.js';   // a slur can't go on a shared list: treated as if nothing was typed (14 Nov 2026)
 
 const SCHEMA = [
   'CREATE TABLE IF NOT EXISTS lists (id TEXT PRIMARY KEY, name TEXT NOT NULL, owner TEXT NOT NULL, rep TEXT NOT NULL, period TEXT, created INTEGER)',
@@ -24,7 +25,7 @@ let ready = null;
 const initL = (env) => ready || (ready = env.DB.batch(SCHEMA.map((q) => env.DB.prepare(q))).catch((e) => { ready = null; throw e; }));
 const MAX_LISTS = 20, MAX_MEMBERS = 8, MAX_ITEMS = 150, REPS = ['once', 'day', 'week'], SIZES = ['q', 'm', 'b'];
 const rid = () => Array.from(crypto.getRandomValues(new Uint8Array(12)), (x) => 'abcdefghijklmnopqrstuvwxyz0123456789'[x % 36]).join('');
-export const cleanText = (t, n) => String(t || '').normalize('NFC').replace(/[\u0000-\u001f\u007f<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, n || 60);
+export const cleanText = (t, n, names) => { const s = String(t || '').normalize('NFC').replace(/[\u0000-\u001f\u007f<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, n || 60); return slur(s, names) ? '' : s; };
 export function period(rep, now) {
   const d = new Date(now == null ? Date.now() : now);
   if (rep === 'day') return d.toISOString().slice(0, 10);
@@ -62,7 +63,7 @@ export async function lists(path, b, env, out) {
     return out({ ok: true, me: me.id, lists: outL });
   }
   if (path === '/l/new') {
-    const name = cleanText(b.name, 24) || 'Our list', rep = REPS.includes(b.rep) ? b.rep : 'once';
+    const name = cleanText(b.name, 24, true) || 'Our list', rep = REPS.includes(b.rep) ? b.rep : 'once';
     const mine = (await DB.prepare('SELECT COUNT(*) AS n FROM members WHERE user = ?').bind(me.id).first()).n; if (mine >= MAX_LISTS) return out({ error: 'too many lists' }, 400);
     const who = (await friendsOf(b.members)).slice(0, MAX_MEMBERS - 1); if (!who.length) return out({ error: 'pick a friend' }, 400);
     const id = rid(), q = [DB.prepare('INSERT INTO lists (id, name, owner, rep, period, created) VALUES (?, ?, ?, ?, ?, ?)').bind(id, name, me.id, rep, period(rep, now), now)];

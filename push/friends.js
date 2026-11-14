@@ -20,12 +20,17 @@
 // A new friend or a cheer sends that friend an encrypted push (send.js): "Dex sent you a cheer!" / "NICE ONE!".
 
 import { push, okPush } from './send.js';
+import { slur } from './words.js';   // slurs can't be shared with friends (14 Nov 2026): treated as if nothing was typed
 
 const SCHEMA = [
   'CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, key TEXT UNIQUE NOT NULL, code TEXT UNIQUE NOT NULL, name TEXT, plate TEXT, lv INTEGER, st TEXT, pin TEXT, created INTEGER, seen INTEGER)',
   'CREATE TABLE IF NOT EXISTS links (a TEXT NOT NULL, b TEXT NOT NULL, at INTEGER, PRIMARY KEY (a, b))',
   'CREATE TABLE IF NOT EXISTS blocks (a TEXT NOT NULL, b TEXT NOT NULL, PRIMARY KEY (a, b))',
   'CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY AUTOINCREMENT, dest TEXT NOT NULL, src TEXT NOT NULL, kind TEXT NOT NULL, c INTEGER, at INTEGER, seen INTEGER DEFAULT 0)',
+  // (14 Nov 2026) REPORT on a friend's ⋯ sheet: who reported whom, and what the reported profile was showing at the time. Dex acts on
+  // them from the stats page. banned = phones whose friend profile he removed and blocked (the hash of their secret, nothing else).
+  "CREATE TABLE IF NOT EXISTS reports (who TEXT NOT NULL, about TEXT NOT NULL, at INTEGER, snap TEXT, state TEXT DEFAULT 'open', PRIMARY KEY (who, about))",
+  'CREATE TABLE IF NOT EXISTS banned (key TEXT PRIMARY KEY, at INTEGER)',
   'CREATE INDEX IF NOT EXISTS events_dest ON events (dest, seen)',
   'CREATE INDEX IF NOT EXISTS events_src ON events (src, at)',
 ];
@@ -48,13 +53,14 @@ const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
 export function cleanMeal(b) {
   const r = typeof b.r === 'string' && /^[a-z0-9-]{1,48}$/.test(b.r) ? b.r : null, day = Math.floor(+b.day), mid = typeof b.mid === 'string' && /^[a-z0-9]{6,24}$/.test(b.mid) ? b.mid : null;
   const name = String(b.name || '').normalize('NFC').replace(/[^\p{L}\p{N} '’&,.()\-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 60);
+  if (slur(name)) return null;
   return r && mid && name && day >= 0 && day <= 6 ? { r, day, name, mid } : null;
 }
 // a game night, checked: the date (YYYY-MM-DD, today up to two weeks on), the time (HH:MM), what you're playing (optional) and the host's id for it
 export function cleanNight(b) {
   const date = typeof b.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(b.date) ? b.date : null, time = typeof b.time === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(b.time) ? b.time : null;
   const mid = typeof b.mid === 'string' && /^[a-z0-9]{6,24}$/.test(b.mid) ? b.mid : null;
-  const what = String(b.what || '').normalize('NFC').replace(/[^\p{L}\p{N} '’&,.!?()\-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 40);
+  let what = String(b.what || '').normalize('NFC').replace(/[^\p{L}\p{N} '’&,.!?()\-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 40); if (slur(what)) what = '';
   const t = date ? Date.parse(date + 'T12:00:00Z') : NaN;
   return date && time && mid && isFinite(t) && t > Date.now() - 2 * 864e5 && t < Date.now() + 16 * 864e5 ? { date, time, what, mid } : null;
 }
@@ -67,7 +73,7 @@ export const cleanCode = (s) => { s = String(s || '').toUpperCase().replace(/[^A
 const showCode = (c) => 'STCK-' + c;
 // (9 Nov 2026) what you're into right now (your profile's plate and friends' cards): up to 3, one per hobby
 const NOWH = ['read', 'game', 'music'];
-const cleanText = (x, n) => String(x || '').normalize('NFC').replace(/[\u0000-\u001f\u007f<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, n);
+const cleanText = (x, n) => { const s = String(x || '').normalize('NFC').replace(/[\u0000-\u001f\u007f<>]/g, '').replace(/\s+/g, ' ').trim().slice(0, n); return slur(s) ? '' : s; };
 export function cleanNow(a) {
   if (!Array.isArray(a)) return null; const out = [], seen = new Set();
   for (const x of a.slice(0, 3)) { if (!x || !NOWH.includes(x.h) || seen.has(x.h)) continue; const t = cleanText(x.t, 80); if (!t) continue; seen.add(x.h);
@@ -77,9 +83,10 @@ export function cleanNow(a) {
 export const cleanAbout = (x) => cleanText(x, 80) || null;
 export function cleanPlate(p) {
   p = p && typeof p === 'object' ? p : {};
-  const name = String(p.name || '').normalize('NFC').replace(/[^\p{L}\p{N} '’.\-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 20) || 'A friend';
+  let name = String(p.name || '').normalize('NFC').replace(/[^\p{L}\p{N} '’.\-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 20) || 'A friend';
+  const hid = slur(name, true); if (hid) name = 'A friend';   // a slur as a name is never shown to friends: they see "A friend" (the app tells its owner)
   const key = (x) => (typeof x === 'string' && /^[a-z0-9-]{1,32}$/.test(x) ? x : null);
-  return { name, plate: PLATES.includes(p.plate) ? p.plate : 'cream', lv: Math.max(1, Math.min(99, Math.floor(+p.lv) || 1)), st: key(p.st), pin: key(p.pin) };
+  return { hid, name, plate: PLATES.includes(p.plate) ? p.plate : 'cream', lv: Math.max(1, Math.min(99, Math.floor(+p.lv) || 1)), st: key(p.st), pin: key(p.pin) };
 }
 // what a friend alert says (cheers in the Friends screen's order)
 const CHEERS = ['NICE ONE!', 'GAINS!', '✱ HIGH FIVE', 'PROUD!', 'YUM!', 'STICK WITH IT!'];
@@ -97,12 +104,34 @@ export function cleanSub(x, env) {   // env.TEST_PUSH_HTTP (local tests only) al
 const nowOf = (u) => { try { return u.nw ? JSON.parse(u.nw) : null; } catch (e) { return null; } };
 export const pub = (u) => u && { id: u.id, name: u.name, plate: u.plate, lv: u.lv, st: u.st, pin: u.pin, n: u.n == null ? null : u.n, p: u.p == null ? null : u.p, now: nowOf(u) };
 
+// everything this server holds about one friend profile, gone: used by 'delete my friend profile' and by Dex removing a reported profile
+export async function wipeUser(env, id) {
+  const D = env.DB, soft = async (f) => { try { await f(); } catch (e) { /* that table was never made: nothing to remove */ } };
+  await soft(async () => {   // shared lists: leave each one (as /l/leave does); the last one out deletes the list
+    for (const r of (await D.prepare('SELECT list FROM members WHERE user = ?').bind(id).all()).results) {
+      await D.batch([D.prepare('DELETE FROM members WHERE list = ? AND user = ?').bind(r.list, id),
+        D.prepare('UPDATE items SET for_id = NULL WHERE list = ? AND for_id = ?').bind(r.list, id), D.prepare('UPDATE items SET dibs = NULL WHERE list = ? AND dibs = ?').bind(r.list, id)]);
+      if (!(await D.prepare('SELECT COUNT(*) AS n FROM members WHERE list = ?').bind(r.list).first()).n) await D.batch([D.prepare('DELETE FROM items WHERE list = ?').bind(r.list), D.prepare('DELETE FROM lists WHERE id = ?').bind(r.list)]);
+    }
+  });
+  await soft(async () => {   // shared meal plans: leave each one (as /p/leave does), handing it on if it was mine
+    for (const r of (await D.prepare('SELECT plan FROM plan_members WHERE user = ?').bind(id).all()).results) {
+      await D.prepare('DELETE FROM plan_members WHERE plan = ? AND user = ?').bind(r.plan, id).run();
+      const nx = await D.prepare('SELECT user FROM plan_members WHERE plan = ? ORDER BY at LIMIT 1').bind(r.plan).first();
+      if (!nx) await D.prepare('DELETE FROM plans WHERE id = ?').bind(r.plan).run(); else await D.prepare('UPDATE plans SET owner = ? WHERE id = ? AND owner = ?').bind(nx.user, r.plan, id).run();
+    }
+  });
+  await D.batch([D.prepare('DELETE FROM links WHERE a = ? OR b = ?').bind(id, id), D.prepare('DELETE FROM blocks WHERE a = ? OR b = ?').bind(id, id),
+    D.prepare('DELETE FROM events WHERE dest = ? OR src = ?').bind(id, id), D.prepare('DELETE FROM reports WHERE who = ? OR about = ?').bind(id, id), D.prepare('DELETE FROM users WHERE id = ?').bind(id)]);
+}
+
 export async function friends(path, b, env, out) {
   if (!env.DB) return out({ error: 'friends not set up' }, 503);
   await init(env);
   const secret = String(b.secret || '');
   if (secret.length < 32 || secret.length > 128) return out({ error: 'bad secret' }, 400);
   const key = await hash(secret), now = Date.now();
+  if (await env.DB.prepare('SELECT 1 FROM banned WHERE key = ?').bind(key).first()) return out({ error: 'banned' }, 403);   // removed and blocked from the stats page
   let me = await env.DB.prepare('SELECT * FROM users WHERE key = ?').bind(key).first();
   if (path === '/f/me') {
     const p = cleanPlate(b.plate);
@@ -113,7 +142,7 @@ export async function friends(path, b, env, out) {
       }
       if (!me) return out({ error: 'server' }, 500);
     } else await env.DB.prepare('UPDATE users SET name = ?, plate = ?, lv = ?, st = ?, pin = ?, seen = ? WHERE id = ?').bind(p.name, p.plate, p.lv, p.st, p.pin, now, me.id).run();
-    return out({ ok: true, code: showCode(me.code) });
+    return out({ ok: true, code: showCode(me.code), nameOk: !p.hid });
   }
   if (!me) return out({ error: 'not registered' }, 401);
   if (path === '/f/now') { const n = cleanNow(b.now); await env.DB.prepare('UPDATE users SET nw = ?, seen = ? WHERE id = ?').bind(n ? JSON.stringify(n) : null, now, me.id).run(); return out({ ok: true }); }   // what you're into, for friends' cards
@@ -153,26 +182,7 @@ export async function friends(path, b, env, out) {
   }
   if (path === '/f/push') { await env.DB.prepare('UPDATE users SET push = ? WHERE id = ?').bind(cleanSub(b.sub, env), me.id).run(); return out({ ok: true, on: !!cleanSub(b.sub, env) }); }
   if (path === '/f/seen') { await env.DB.prepare('UPDATE events SET seen = 1 WHERE id = ? AND dest = ?').bind(Math.floor(+b.id) || 0, me.id).run(); return out({ ok: true }); }
-  if (path === '/f/delete') {   // delete my friend profile: everything this server holds about me (11 Nov 2026)
-    const D = env.DB, soft = async (f) => { try { await f(); } catch (e) { /* that table was never made: nothing to remove */ } };
-    await soft(async () => {   // shared lists: leave each one (as /l/leave does); the last one out deletes the list
-      for (const r of (await D.prepare('SELECT list FROM members WHERE user = ?').bind(me.id).all()).results) {
-        await D.batch([D.prepare('DELETE FROM members WHERE list = ? AND user = ?').bind(r.list, me.id),
-          D.prepare('UPDATE items SET for_id = NULL WHERE list = ? AND for_id = ?').bind(r.list, me.id), D.prepare('UPDATE items SET dibs = NULL WHERE list = ? AND dibs = ?').bind(r.list, me.id)]);
-        if (!(await D.prepare('SELECT COUNT(*) AS n FROM members WHERE list = ?').bind(r.list).first()).n) await D.batch([D.prepare('DELETE FROM items WHERE list = ?').bind(r.list), D.prepare('DELETE FROM lists WHERE id = ?').bind(r.list)]);
-      }
-    });
-    await soft(async () => {   // shared meal plans: leave each one (as /p/leave does), handing it on if it was mine
-      for (const r of (await D.prepare('SELECT plan FROM plan_members WHERE user = ?').bind(me.id).all()).results) {
-        await D.prepare('DELETE FROM plan_members WHERE plan = ? AND user = ?').bind(r.plan, me.id).run();
-        const nx = await D.prepare('SELECT user FROM plan_members WHERE plan = ? ORDER BY at LIMIT 1').bind(r.plan).first();
-        if (!nx) await D.prepare('DELETE FROM plans WHERE id = ?').bind(r.plan).run(); else await D.prepare('UPDATE plans SET owner = ? WHERE id = ? AND owner = ?').bind(nx.user, r.plan, me.id).run();
-      }
-    });
-    await D.batch([D.prepare('DELETE FROM links WHERE a = ? OR b = ?').bind(me.id, me.id), D.prepare('DELETE FROM blocks WHERE a = ? OR b = ?').bind(me.id, me.id),
-      D.prepare('DELETE FROM events WHERE dest = ? OR src = ?').bind(me.id, me.id), D.prepare('DELETE FROM users WHERE id = ?').bind(me.id)]);
-    return out({ ok: true });
-  }
+  if (path === '/f/delete') { await wipeUser(env, me.id); return out({ ok: true }); }   // delete my friend profile: everything this server holds about me (11 Nov 2026)
   const other = String(b.id || b.to || '').slice(0, 40);
   if (path === '/f/cheer') {
     const c = Math.floor(+b.c); if (!(c >= 0 && c < 20)) return out({ error: 'bad cheer' }, 400);
@@ -233,6 +243,18 @@ export async function friends(path, b, env, out) {
     await env.DB.prepare('INSERT INTO events (dest, src, kind, c, d, at) VALUES (?, ?, ?, ?, ?, ?)').bind(other, me.id, 'nightre', re, JSON.stringify(n), now).run();
     const them = await env.DB.prepare('SELECT id, push FROM users WHERE id = ?').bind(other).first();
     await alert(env, them, { title: me.name + ': ' + (re ? 'I’M IN!' : 'CAN’T MAKE IT'), body: 'your game night, ' + nightWhen(n), tag: 'nightre-' + n.mid + '-' + me.id, url: 'Hobbies.html#game' });
+    return out({ ok: true });
+  }
+  if (path === '/f/report') {   // one tap on a friend's ⋯ sheet: tells Dex, and blocks them for you
+    const them = other && other !== me.id ? await env.DB.prepare('SELECT * FROM users WHERE id = ?').bind(other).first() : null;
+    if (!them || !(await env.DB.prepare('SELECT 1 FROM links WHERE (a = ? AND b = ?) OR (a = ? AND b = ?)').bind(me.id, other, other, me.id).first())) return out({ error: 'not friends' }, 403);
+    if ((await env.DB.prepare('SELECT COUNT(*) AS n FROM reports WHERE who = ? AND at > ?').bind(me.id, now - 864e5).first()).n >= 10) return out({ error: 'slow down' }, 429);
+    let lists = []; try { lists = (await env.DB.prepare('SELECT l.name FROM lists l JOIN members a ON a.list = l.id AND a.user = ? JOIN members b ON b.list = l.id AND b.user = ? LIMIT 10').bind(me.id, other).all()).results.map((r) => r.name); } catch (e) { /* no shared lists yet */ }
+    const snap = JSON.stringify({ name: them.name, lv: them.lv, now: nowOf(them), lists });
+    await env.DB.batch([env.DB.prepare("INSERT INTO reports (who, about, at, snap, state) VALUES (?, ?, ?, ?, 'open') ON CONFLICT (who, about) DO UPDATE SET at = excluded.at, snap = excluded.snap, state = 'open'").bind(me.id, other, now, snap),
+      env.DB.prepare('DELETE FROM links WHERE (a = ? AND b = ?) OR (a = ? AND b = ?)').bind(me.id, other, other, me.id),
+      env.DB.prepare('DELETE FROM events WHERE (dest = ? AND src = ?) OR (dest = ? AND src = ?)').bind(me.id, other, other, me.id),
+      env.DB.prepare('INSERT OR IGNORE INTO blocks (a, b) VALUES (?, ?)').bind(me.id, other)]);
     return out({ ok: true });
   }
   if (path === '/f/remove' || path === '/f/block') {
