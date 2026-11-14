@@ -81,6 +81,27 @@
   }));
 
   let mounted = false;
+  // HOLD TILL READY (14 Nov 2026). Dex: "the stickers still all pop in." Asking for the pictures early (picsready.py) was not
+  // enough on a real phone. So the screen stays unseen until the pictures that are on show have been unpacked, then everything
+  // appears in one go. It waits ONLY for this screen's own on-show pictures, and never longer than HOLD_MS: if they are slow,
+  // the screen shows anyway and they arrive late as before. A screen with no pictures does not wait at all.
+  // Roll back: the GitHub branch save-2026-11-14 is the app as it was before this.
+  var HOLD_MS = 150;
+  function holdForPics(stage) {
+    var done = false, show = function () { if (done) return; done = true; stage.style.visibility = ''; };
+    try {
+      var H = innerHeight, W = innerWidth, wait = [], imgs = stage.getElementsByTagName('img'), i, im, r;
+      for (i = 0; i < imgs.length && wait.length < 40; i++) {
+        im = imgs[i]; if (!im.getAttribute('src') || !im.decode || im.offsetParent === null) continue;
+        r = im.getBoundingClientRect(); if (r.top >= H || r.bottom < 0 || r.left >= W || r.right < 0) continue;
+        im.decoding = 'sync'; wait.push(im.decode().catch(function () {}));
+      }
+      (window.__pics || []).forEach(function (p) { if (!p.complete && p.decode) wait.push(p.decode().catch(function () {})); });
+      if (!wait.length) return show();
+      Promise.all(wait).then(show); setTimeout(show, HOLD_MS);
+    } catch (e) { show(); }
+  }
+
   function render() {
     if (mounted && !templated) return;
     const vals = (inst.renderVals && inst.renderVals()) || {};
@@ -99,7 +120,7 @@
       // the real thing a tick later. A paint could slip in between, so the placeholder flashed before the real screen. Keep the
       // board unseen for that one tick. Nothing waits: the real screen shows exactly when it did before.
       stage.style.visibility = 'hidden';
-      setTimeout(() => { try { if (inst.componentDidMount) inst.componentDidMount(); } finally { stage.style.visibility = ''; } }, 0); }
+      setTimeout(() => { try { if (inst.componentDidMount) inst.componentDidMount(); } finally { holdForPics(stage); } }, 0); }
   }
   // wait for the fonts (so text measures right), but never more than a moment: after the first page they're cached anyway
   let started = false; const start = () => { if (started) return; started = true; render(); };
