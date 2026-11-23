@@ -9,6 +9,9 @@
 //   /f/list   { secret }         -> { friends, inbox } your friends and cheers you haven't seen
 //   /f/seen   { secret, id }                           you've seen that one
 //   /f/cheer  { secret, to, c, about? }                send a cheer (c = which one; about = what it's for, 9 Nov 2026)
+//   /f/hob    { secret, hb }                           my hobby shelves for friends to look at (null = sharing off: shelves and milestones removed) (23 Nov 2026)
+//   /f/news   { secret, items: [{ kind, t }] }         my new milestones for friends' WHAT'S NEW
+//   /f/shelf  { secret, id }                           a friend's hobby shelves
 //   /f/now    { secret, now }                          what you're reading / playing / learning [{ h, t, by, k }] (9 Nov 2026)
 //   /f/remove { secret, id }   /f/block { secret, id } (block = remove, and they can't add you again)
 //   /f/delete { secret }                               delete my profile: name plate, code, friends, blocks, cheers, and my place on shared lists and plans
@@ -31,6 +34,8 @@ const SCHEMA = [
   // them from the stats page. banned = phones whose friend profile he removed and blocked (the hash of their secret, nothing else).
   "CREATE TABLE IF NOT EXISTS reports (who TEXT NOT NULL, about TEXT NOT NULL, at INTEGER, snap TEXT, state TEXT DEFAULT 'open', PRIMARY KEY (who, about))",
   'CREATE TABLE IF NOT EXISTS banned (key TEXT PRIMARY KEY, at INTEGER)',
+  // (23 Nov 2026) WHAT'S NEW: a friend's milestones (finished a book, a new level, a sticker earned). One row per thing, kept two weeks.
+  'CREATE TABLE IF NOT EXISTS news (id INTEGER PRIMARY KEY AUTOINCREMENT, src TEXT NOT NULL, kind TEXT NOT NULL, t TEXT NOT NULL, at INTEGER, UNIQUE (src, kind, t))',
   'CREATE INDEX IF NOT EXISTS events_dest ON events (dest, seen)',
   'CREATE INDEX IF NOT EXISTS events_src ON events (src, at)',
 ];
@@ -41,6 +46,7 @@ export const init = (env) => ready || (ready = env.DB.batch(SCHEMA.map((q) => en
   .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN p INTEGER').run().catch(() => {}))
   .then(() => env.DB.prepare('ALTER TABLE events ADD COLUMN d TEXT').run().catch(() => {}))
   .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN nw TEXT').run().catch(() => {}))
+  .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN hb TEXT').run().catch(() => {}))   // (23 Nov 2026) your hobby shelves, for friends to look at: see cleanHob
   .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN lk INTEGER').run().catch(() => {}))   // (audit, 12 Nov 2026) friend-code lookups today, and which day: stops one account guessing codes
   .then(() => env.DB.prepare('ALTER TABLE users ADD COLUMN lkd TEXT').run().catch(() => {}))   // (9 Nov 2026) what you're reading / playing / learning: [{ h, t, by, k }]   // (3 Nov 2026) a shared meal's details: { r, day, name, mid }   // pins earned   // friend alerts: the phone's push address (added later; already there = fine)
   .catch((e) => { ready = null; throw e; }));
@@ -81,6 +87,31 @@ export function cleanNow(a) {
   return out.length ? out : null;
 }
 export const cleanAbout = (x) => cleanText(x, 80) || null;
+// (23 Nov 2026) Hobby shelves a friend can look at. Only what the shelf picture needs: for each hobby the things on it (title, who by, kind, format,
+// whether it's finished / on the go / put down), which style and shelf bits each case has, and the counts that decide what's unlocked. No dates.
+const HKEY = (x, n = 24) => (typeof x === 'string' && new RegExp('^[a-z0-9_-]{1,' + n + '}$').test(x) ? x : null);
+const HNUM = (x, max) => Math.max(0, Math.min(max, Math.floor(+x) || 0));
+export function cleanHob(x) {
+  if (!x || typeof x !== 'object') return null; const out = {};
+  for (const h of NOWH) { const v = x[h]; if (!v || typeof v !== 'object' || !Array.isArray(v.items)) continue;
+    const items = []; for (const it of v.items.slice(0, 400)) { if (!it) continue; const t = cleanText(it.t, 80); if (!t) continue;   // a title the word filter stops just isn't on the shelf friends see
+      const o = { t, st: ['done', 'before', 'stopped', 'now'].includes(it.st) ? it.st : 'done' }; const by = cleanText(it.by, 60); if (by) o.by = by;
+      if (HKEY(it.kind)) o.kind = it.kind; if (HKEY(it.fmt)) o.fmt = it.fmt; items.push(o); }
+    const d = v.deco && typeof v.deco === 'object' ? v.deco : {}, st = {}, bits = {};
+    Object.keys(d.st || {}).slice(0, 40).forEach((k) => { if (/^\d{1,2}$/.test(k) && HKEY(d.st[k])) st[k] = d.st[k]; });
+    Object.keys(d.bits || {}).slice(0, 40).forEach((k) => { if (/^\d{1,2}$/.test(k) && Array.isArray(d.bits[k])) bits[k] = d.bits[k].slice(0, 3).map((sec) => (Array.isArray(sec) ? sec.slice(0, 3).map((b) => HKEY(b)).filter(Boolean) : [])); });
+    const s = v.s && typeof v.s === 'object' ? v.s : {}, kind = {}; Object.keys(s.kind || {}).slice(0, 40).forEach((k) => { if (HKEY(k)) kind[k] = HNUM(s.kind[k], 9999); });
+    out[h] = { items, deco: { st, bits }, s: { days: HNUM(s.days, 99999), fin: HNUM(s.fin, 9999), kind, kinds: Object.keys(kind).length, decDays: HNUM(s.decDays, 9999), decFin: HNUM(s.decFin, 9999), full: HNUM(s.full, 99) } }; }
+  const j = JSON.stringify(out); return Object.keys(out).length && j.length < 120000 ? j : null;
+}
+// a milestone for WHAT'S NEW: what they did, never what it unlocked. kind picks the wording on the phone; t is the title, the number or the sticker's name
+const NEWSK = ['fin_read', 'fin_game', 'fin_music', 'tot_read', 'tot_game', 'tot_music', 'lv', 'ch'];
+export function cleanNews(a) {
+  if (!Array.isArray(a)) return []; const out = [];
+  for (const x of a.slice(0, 12)) { if (!x || !NEWSK.includes(x.kind)) continue; const t = /^(tot_|lv)/.test(x.kind) ? String(HNUM(x.t, 9999) || '') : cleanText(x.t, 80); if (t) out.push({ kind: x.kind, t }); }
+  return out;
+}
+const NEWS_DAYS = 14, NEWS_A_DAY = 12;
 export function cleanPlate(p) {
   p = p && typeof p === 'object' ? p : {};
   let name = String(p.name || '').normalize('NFC').replace(/[^\p{L}\p{N} '’.\-]/gu, '').replace(/\s+/g, ' ').trim().slice(0, 20) || 'A friend';
@@ -103,6 +134,7 @@ export function cleanSub(x, env) {   // env.TEST_PUSH_HTTP (local tests only) al
 }
 const nowOf = (u) => { try { return u.nw ? JSON.parse(u.nw) : null; } catch (e) { return null; } };
 export const pub = (u) => u && { id: u.id, name: u.name, plate: u.plate, lv: u.lv, st: u.st, pin: u.pin, n: u.n == null ? null : u.n, p: u.p == null ? null : u.p, now: nowOf(u) };
+const hobsOf = (u) => { try { return u.hb ? Object.keys(JSON.parse(u.hb)) : []; } catch (e) { return []; } };   // which hobby shelves they share (just the names)
 
 // everything this server holds about one friend profile, gone: used by 'delete my friend profile' and by Dex removing a reported profile
 export async function wipeUser(env, id) {
@@ -122,7 +154,7 @@ export async function wipeUser(env, id) {
     }
   });
   await D.batch([D.prepare('DELETE FROM links WHERE a = ? OR b = ?').bind(id, id), D.prepare('DELETE FROM blocks WHERE a = ? OR b = ?').bind(id, id),
-    D.prepare('DELETE FROM events WHERE dest = ? OR src = ?').bind(id, id), D.prepare('DELETE FROM reports WHERE who = ? OR about = ?').bind(id, id), D.prepare('DELETE FROM users WHERE id = ?').bind(id)]);
+    D.prepare('DELETE FROM events WHERE dest = ? OR src = ?').bind(id, id), D.prepare('DELETE FROM news WHERE src = ?').bind(id), D.prepare('DELETE FROM reports WHERE who = ? OR about = ?').bind(id, id), D.prepare('DELETE FROM users WHERE id = ?').bind(id)]);
 }
 
 export async function friends(path, b, env, out) {
@@ -176,14 +208,29 @@ export async function friends(path, b, env, out) {
   }
   if (path === '/f/list') {
     await env.DB.prepare('UPDATE users SET seen = ? WHERE id = ?').bind(now, me.id).run();
-    const fr = (await env.DB.prepare('SELECT u.id, u.name, u.plate, u.lv, u.st, u.pin, u.n, u.p, u.nw, l.at AS since FROM links l JOIN users u ON u.id = l.b WHERE l.a = ? ORDER BY l.at DESC LIMIT ?').bind(me.id, MAX_FRIENDS).all()).results;
+    const fr = (await env.DB.prepare('SELECT u.id, u.name, u.plate, u.lv, u.st, u.pin, u.n, u.p, u.nw, u.hb, l.at AS since FROM links l JOIN users u ON u.id = l.b WHERE l.a = ? ORDER BY l.at DESC LIMIT ?').bind(me.id, MAX_FRIENDS).all()).results;
+    const news = (await env.DB.prepare('SELECT n.id, n.src, n.kind, n.t, n.at FROM news n JOIN links l ON l.a = ? AND l.b = n.src WHERE n.at > ? ORDER BY n.at DESC LIMIT 30').bind(me.id, now - NEWS_DAYS * 864e5).all()).results;   // friends' milestones, newest first
     const inbox = (await env.DB.prepare('SELECT e.id, e.src, e.kind, e.c, e.d, e.at FROM events e JOIN links l ON l.a = e.dest AND l.b = e.src WHERE e.dest = ? AND e.seen = 0 ORDER BY e.at LIMIT 20').bind(me.id).all()).results;
-    return out({ ok: true, code: showCode(me.code), friends: fr.map((u) => ({ ...u, nw: undefined, now: nowOf(u) })), inbox });
+    return out({ ok: true, code: showCode(me.code), friends: fr.map((u) => ({ ...u, nw: undefined, hb: undefined, now: nowOf(u), hobs: hobsOf(u) })), inbox, news });
   }
+  if (path === '/f/hob') {   // my hobby shelves for friends to look at; { hb: null } (sharing switched off) takes them and my milestones away again
+    const j = b.hb == null ? null : cleanHob(b.hb);
+    const q = [env.DB.prepare('UPDATE users SET hb = ?, seen = ? WHERE id = ?').bind(j, now, me.id)]; if (b.hb == null) q.push(env.DB.prepare('DELETE FROM news WHERE src = ?').bind(me.id));
+    await env.DB.batch(q); return out({ ok: true, on: !!j }); }
+  if (path === '/f/news') {   // my new milestones (the phone sends each one once)
+    const items = cleanNews(b.items); if (!items.length) return out({ ok: true, n: 0 });
+    const today = await env.DB.prepare('SELECT COUNT(*) AS n FROM news WHERE src = ? AND at > ?').bind(me.id, now - 864e5).first(); let room = NEWS_A_DAY - today.n, n = 0;
+    for (const it of items) { if (room <= 0) break; const r = await env.DB.prepare('INSERT OR IGNORE INTO news (src, kind, t, at) VALUES (?, ?, ?, ?)').bind(me.id, it.kind, it.t, now).run(); if (r.meta && r.meta.changes) { room--; n++; } }
+    await env.DB.prepare('DELETE FROM news WHERE at < ?').bind(now - 60 * 864e5).run();   // old ones go (kept a while past the two weeks so the same thing isn't announced twice)
+    return out({ ok: true, n }); }
   if (path === '/f/push') { await env.DB.prepare('UPDATE users SET push = ? WHERE id = ?').bind(cleanSub(b.sub, env), me.id).run(); return out({ ok: true, on: !!cleanSub(b.sub, env) }); }
   if (path === '/f/seen') { await env.DB.prepare('UPDATE events SET seen = 1 WHERE id = ? AND dest = ?').bind(Math.floor(+b.id) || 0, me.id).run(); return out({ ok: true }); }
   if (path === '/f/delete') { await wipeUser(env, me.id); return out({ ok: true }); }   // delete my friend profile: everything this server holds about me (11 Nov 2026)
   const other = String(b.id || b.to || '').slice(0, 40);
+  if (path === '/f/shelf') {   // a friend's hobby shelves (friends only)
+    if (!(await linked(other))) return out({ error: 'not friends' }, 404);
+    const u = await env.DB.prepare('SELECT name, hb FROM users WHERE id = ?').bind(other).first(); let hb = null; try { hb = u && u.hb ? JSON.parse(u.hb) : null; } catch (e) {}
+    return out({ ok: true, name: u ? u.name : 'A friend', hb }); }
   if (path === '/f/cheer') {
     const c = Math.floor(+b.c); if (!(c >= 0 && c < 20)) return out({ error: 'bad cheer' }, 400);
     if (!(await linked(other))) return out({ error: 'not friends' }, 404);
